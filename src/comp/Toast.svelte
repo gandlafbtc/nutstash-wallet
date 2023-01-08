@@ -4,7 +4,7 @@
 	export let message: string;
 </script>
 
-<div class="alert alert-{level}">
+<div class="alert alert-{level} flex flex-col gap-1">
 	<div>
 		<span class="font-bold">{messageTitle}</span>
 	</div>

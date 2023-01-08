@@ -1,9 +1,8 @@
 <script lang="ts">
 	
-	import Mint from '../comp/Mint.svelte';
+	import Mint from '../comp/mint/Mint.svelte';
 	import Setting from '../comp/Setting.svelte';
 	import Wallet from '../comp/Wallet.svelte';
-	import Toast from '../comp/Toast.svelte';
 	import Toasts from '../comp/Toasts.svelte';
 	let activeTab = 'wallet';
 
