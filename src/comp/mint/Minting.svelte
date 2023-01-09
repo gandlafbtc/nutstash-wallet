@@ -68,6 +68,7 @@
 		qrCode = undefined;
 		mintingHash = undefined
 		wallet = undefined
+		isComplete= false
 	};
 </script>
 
