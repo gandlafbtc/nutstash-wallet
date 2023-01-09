@@ -2,8 +2,9 @@
 	
 	import Mint from '../comp/mint/Mint.svelte';
 	import Setting from '../comp/Setting.svelte';
-	import Wallet from '../comp/Wallet.svelte';
+	import Wallet from '../comp/wallet/Wallet.svelte';
 	import Toasts from '../comp/Toasts.svelte';
+	import { theme } from '../stores/theme';
 	let activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
@@ -11,9 +12,10 @@
 	};
 </script>
 
-<div class="w-full grid lg:grid-cols-4 h-screen bg-gray-900 p-2">
-	<div />
-	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col xl:mx-0 xl:w-full">
+<div class="w-full grid lg:grid-cols-4 h-screen bg-gray-900 p-2" data-theme='{$theme}'>
+	<div class="hidden lg:flex"></div>
+
+	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col xl:mx-0 xl:w-full h-full">
 		<div class="dropdown">
 			<div class="bg-opacity-100">
 				<div class="tabs w-full flex-grow-0">
@@ -32,7 +34,10 @@
 								d="M2.273 5.625A4.483 4.483 0 015.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0018.75 3H5.25a3 3 0 00-2.977 2.625zM2.273 8.625A4.483 4.483 0 015.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0018.75 6H5.25a3 3 0 00-2.977 2.625zM5.25 9a3 3 0 00-3 3v6a3 3 0 003 3h13.5a3 3 0 003-3v-6a3 3 0 00-3-3H15a.75.75 0 00-.75.75 2.25 2.25 0 01-4.5 0A.75.75 0 009 9H5.25z"
 							/>
 						</svg>
-						Wallet</button
+						<p class="hidden lg:flex">
+							Wallet
+						</p>
+						</button
 					>
 					<button
 						on:click={() => changeTab('mint')}
@@ -55,7 +60,9 @@
 							/>
 							<path d="M12 7.875a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" />
 						</svg>
-						Mint</button
+						<p class="hidden lg:flex">
+
+						Mint</p></button
 					>
 					<button
 						on:click={() => changeTab('setting')}
@@ -74,7 +81,9 @@
 								clip-rule="evenodd"
 							/>
 						</svg>
-						Setting</button
+						<p class="hidden lg:flex">
+
+						Setting</p></button
 					>
 				</div>
 			</div>
@@ -97,5 +106,5 @@
 				<Toasts></Toasts>
 		</div>
 	</div>
-	<div />
+	<div class="hidden lg:flex" />
 </div>
