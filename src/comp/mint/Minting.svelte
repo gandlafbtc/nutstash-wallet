@@ -8,6 +8,8 @@
 	import { toast } from "../../stores/toasts";
 	import { token } from "../../stores/tokens";
 	import type { Token } from "../../model/token";
+	import { history } from "../../stores/history";
+	import { HistoryItemType } from "../../model/historyItem";
 
 
     export let mint:Mint
@@ -48,6 +50,16 @@
 				isLoading = true
 				const tokens: Array<Token> = await wallet.requestTokens(mintAmount, mintingHash);
 				token.update((state) => [...state, ...tokens]);
+
+				history.update((state) => [{
+				 type: HistoryItemType.MINT, amount:mintAmount ,date: new Date(), data: {
+					mintingHash,
+					mint: mint?.mintURL,
+					keyset: mint?.keysets[0],
+					invoice: qrCode,
+				 }
+			}, ...state]);
+
 				toast("success", `${mintAmount} Tokens have been minted.` ,'Success!')
 				isComplete = true
 				qrCode =undefined	

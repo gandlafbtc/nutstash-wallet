@@ -3,13 +3,14 @@
 
 
 	import { theme } from "../stores/theme";
+	import History from "./history/History.svelte";
 
 
     const setTheme = (t: string)=>{
         theme.set(t)
     }
 </script>
-<div class="flex justify-center items-center">
+<div class="flex justify-center items-center flex-col">
 
     <label for="">Theme:</label>
     <div class="dropdown" id="theme-dropdown">
@@ -20,4 +21,5 @@
             {/each}
         </ul>
     </div>
+    <History></History>
 </div>

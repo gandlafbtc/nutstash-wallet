@@ -7,6 +7,9 @@
 	import { token } from '../../stores/tokens';
 	import type { Token } from '../../model/token';
 	import { getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import { history } from '../../stores/history';
+	import { HistoryItemType } from '../../model/historyItem';
+	import { browser } from '$app/environment';
 
 	export let mint: Mint;
 
@@ -55,6 +58,17 @@
 					return state.filter((token) => !tokensToMelt.includes(token));
 				});
 				token.update((state) => [...state, ...change]);
+
+				history.update((state) => [{
+				 type: HistoryItemType.MELT, amount ,date: new Date(), data: {
+					preimage,
+					mint: mint?.mintURL,
+					keyset: mint?.keysets[0],
+					invoice,
+					change
+				 }
+			}, ...state]);
+
 				isPaySuccess = true;
 				isLoading=false
 				toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
@@ -121,8 +135,8 @@
 				<p>{amount}</p>
 			</div>
 			<div class="modal-action">
-				<label for="melt-modal-{mint.keysets[0]}" class="btn btn-outline" on:mouseup={resetState}
-					>cancel</label
+				<button class="btn btn-outline" on:click={resetState}
+					>cancel</button
 				>
 				{#if isPayable}
 					<button class="btn btn-warning" on:click={() => payInvoice()}>

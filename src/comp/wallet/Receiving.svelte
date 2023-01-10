@@ -7,6 +7,8 @@
 	import { browser } from '$app/environment';
 	import { token } from '../../stores/tokens';
 	import type { Mint } from '../../model/mint';
+	import { history } from '../../stores/history';
+	import { HistoryItemType } from '../../model/historyItem';
 
 	let mint: Mint | undefined;
 	let mintId: string = '';
@@ -22,19 +24,29 @@
 			return;
 		}
 
-		mint = findMintById($mints, mintId);
-		if (!mint) {
-			toast('warning', 'Can not recieve tokens from this mint', 'Not connected to this mint');
-			return;
-		}
-
+        
 		try {
+            mint = findMintById($mints, mintId);
+            if (!mint) {
+                toast('warning', 'Can not recieve tokens from this mint', 'Not connected to this mint');
+                return;
+            }
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
 			const receivedTokens: Array<Token> = await cashuWallet.recieve(encodedToken);
 
 			token.update((state) => [...state, ...receivedTokens]);
+            
+            history.update((state) => [{
+				 type: HistoryItemType.RECEIVE,amount ,date: new Date(), data: {
+					encodedToken,
+					mint: mint?.mintURL,
+					keyset: mint?.keysets[0],
+					receivedTokens,
+				 }
+			}, ...state]);
+
 			isComplete = true;
 		} catch {
 			toast('error', 'Tokens could not be received', 'an Error occured');
