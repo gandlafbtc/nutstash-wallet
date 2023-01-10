@@ -6,6 +6,7 @@
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 	import type { Token } from '../../model/token';
+	import { getTokensForMint, getTokensToSend } from '../util/walletUtils';
 
 	export let mint: Mint;
 
@@ -40,21 +41,9 @@
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
-		const tokensForMint: Array<Token> = $token.filter((token) => {
-			if (mint.keysets[0] === token.id) {
-				return true;
-			} else {
-				return false;
-			}
-		});
+		const tokensForMint: Array<Token> = getTokensForMint(mint, $token)
 
-		let tokenAmount = 0;
-		const tokensToMelt: Array<Token> = tokensForMint.filter((token) => {
-			if (tokenAmount < amount) {
-				tokenAmount += token.amount;
-				return true;
-			}
-		});
+		const tokensToMelt: Array<Token> = getTokensToSend(amount,tokensForMint)
 
 		try {
 			const { isPaid, preimage, change } = await cashuWallet.payLnInvoice(invoice, tokensToMelt);
@@ -77,6 +66,9 @@
 		}
 	};
 	const resetState = () => {
+		if (browser) {
+            document.getElementById("melt-modal-"+mint.keysets[0]).checked = false;
+        }
 		invoice = '';
 		amount = 0;
 		isPayable = false;

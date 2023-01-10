@@ -18,6 +18,8 @@
 	let isLoading: boolean = false
 	let isComplete: boolean = false
 
+	// todo clean up the states
+
     const copyInvoice = () => {
 		if (browser) {
 			let input = document.getElementById("invoice-input");
@@ -47,8 +49,8 @@
 				const tokens: Array<Token> = await wallet.requestTokens(mintAmount, mintingHash);
 				token.update((state) => [...state, ...tokens]);
 				toast("success", `${mintAmount} Tokens have been minted.` ,'Success!')
-				resetState();
 				isComplete = true
+				qrCode =undefined	
 				isLoading = false
 			}
 			else {
@@ -64,6 +66,9 @@
 	};
 
     const resetState = () => {
+		if (browser) {
+            document.getElementById("mint-modal-"+mint.keysets[0]).checked = false;
+        }
 		mintAmount = 10
 		qrCode = undefined;
 		mintingHash = undefined
@@ -78,10 +83,12 @@
 		{#if isLoading}
 			<LoadingCenter />
 		{:else if qrCode}
-			<div class="flex gap-2">
-				<QRCodeImage text={qrCode} scale={3} displayType="canvas" />
-				<div class="flex gap-2 flex-col justify-between">
-					<div class="flex flex-col">
+			<div class="grid grid-cols-2  gap-2">
+				<div class="col-span-2 lg:col-span-1 flex items-center justify-center">
+					<QRCodeImage text={qrCode} scale={3} displayType="canvas" />
+				</div>
+				<div class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between">
+					<div class="flex flex-col items-center">
 						<p>Pay this invoice before continuing</p>
 						<div>
 							<p class="font-bold">Amount:</p>
@@ -116,8 +123,8 @@
 						</div>
 					</div>
 					<div class="flex gap-2">
-						<label for="mint-modal-{mint.keysets[0]}" class="btn btn-outline" on:mouseup={resetState}
-							>cancel</label
+						<button class="btn btn-outline" on:mouseup={resetState}
+							>cancel</button
 						>
 						<button class="btn btn-success" on:click={mintTokens}>
 							<svg
@@ -159,7 +166,7 @@
 				</button>
 			</div>
 			<div class="modal-action">
-				<label for="mint-modal-{mint.keysets[0]}" class="btn btn-outline">ok</label>
+				<button class="btn btn-outline" on:click={resetState}>ok</button>
 			</div>
 		{:else}
 			<h3 class="font-bold text-lg">Request minting of new tokens:</h3>

@@ -41,9 +41,9 @@
 		<!-- head -->
 		<thead>
 			<tr>
-				<th>Mint URL</th>
 				<th>Keysets</th>
-				<th>Tokens from this Mint</th>
+				<th>Actions</th>
+				<th>Tokens</th>
 				<th />
 			</tr>
 		</thead>

@@ -12,6 +12,14 @@
 	};
 </script>
 <tr class="hover">
+    <td>
+        {#each mint.keysets as keyset, i}
+            {keyset}
+            {#if mint.keysets.length >= i + 2}
+                ,
+            {/if}
+        {/each}
+    </td>
     <td class="flex flex-col gap-2">
         <label for="mint-modal-{mint.keysets[0]}" class="btn btn-success flex gap-1">
             <svg
@@ -49,14 +57,7 @@
         >
     </td>
 
-    <td>
-        {#each mint.keysets as keyset, i}
-            {keyset}
-            {#if mint.keysets.length >= i + 2}
-                ,
-            {/if}
-        {/each}
-    </td>
+    
     <td
         >{$token.reduce((currVal, t) => {
             if (mint.keysets.includes(t.id)) {
