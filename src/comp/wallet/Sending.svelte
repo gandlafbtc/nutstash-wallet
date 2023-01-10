@@ -6,10 +6,10 @@
 	import { token } from '../../stores/tokens';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
-	import type { Token } from 'src/model/token';
 	import { browser } from '$app/environment';
 	import { tokenHistory } from '../../stores/tokenhistory';
 	import { QRCodeImage } from 'svelte-qrcode-image';
+	import Wallet from './Wallet.svelte';
 	let mint: Mint = $mints[0];
 	let amountToSend = 0;
 	let encodedToken: string ='';
@@ -52,7 +52,7 @@
         //add newly minted tokens that have been returned as change
         token.update((state)=>[...state,...returnChange])
 		
-        encodedToken = cashuWallet.getEncodedProofs(send);
+        encodedToken = CashuWallet.getEncodedProofs(send);
 
         tokenHistory.update((state)=> [encodedToken, ...state])
 

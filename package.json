@@ -35,7 +35,7 @@
 	"type": "module",
 	"dependencies": {
 		"@gandlaf21/bolt11-decode": "^3.0.4",
-		"@gandlaf21/cashu-js": "^0.2.0",
+		"@gandlaf21/cashu-js": "^0.2.1",
 		"daisyui": "^2.46.1",
 		"svelte-qrcode-image": "^1.0.0-rc.2"
 	}

@@ -82,7 +82,6 @@
 							/>
 						</svg>
 						<p class="hidden lg:flex">
-
 						Setting</p></button
 					>
 				</div>

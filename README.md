@@ -1,6 +1,26 @@
+⚠️ don't be reckless!
+This app is in early development and most likely buggy. It does handle real sats though, so be sure to use only amounts that are small enough to lose.
+
 # Cashu Wallet
 
 A web based Cashu Wallet that supports multiple mints
+
+## Roadmap
+
+* [x] Adding, removing Mints
+* [x] Mobile, web friendly
+* [x] Minting tokens through Lightning
+* [x] Melting tokens through Lightning
+* [x] Sending tokens
+* [x] receiving tokens
+* [ ] history for melt/mint
+* [ ] history for send/receive
+* [ ] PWA installable app
+* [ ] support multiple keysets
+* [ ] backup tokens
+
+
+
 
 ## Developing
 
