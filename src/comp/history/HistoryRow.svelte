@@ -12,7 +12,19 @@
 <tr>
     <td><HistoryIcon type={historyItem.type}></HistoryIcon></td>
     <td>{historyItem.amount}</td>
-    <td>{date.toLocaleDateString()} -- {date.toLocaleTimeString()}</td>
+    <td>
+      <p class="hidden lg:flex">
+        {date.toLocaleString("en-us", {
+          dateStyle: 'medium',
+          timeStyle: 'medium'
+        })}
+      </p>
+      <p class="flex lg:hidden">
+        {date.toLocaleString("en-us", {
+          dateStyle:'short',
+        })}
+      </p>
+    </td>
     <td>
         <label for="history-item-{i}" class="hover:text-primary cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

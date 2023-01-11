@@ -11,8 +11,7 @@
 		activeTab = tabName;
 	};
 </script>
-
-<div class="w-full grid lg:grid-cols-4 h-screen bg-gray-900 p-2" data-theme='{$theme}'>
+<div class="w-full grid lg:grid-cols-4 h-screen p-2 bg-primary" data-theme='{$theme}'>
 	<div class="hidden lg:flex"></div>
 
 	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col xl:mx-0 xl:w-full h-full">

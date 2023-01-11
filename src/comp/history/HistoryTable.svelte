@@ -6,11 +6,11 @@
     $: historySub = $history.slice(0,page)
 
     const loadMore = () => {
-        page++
+        page += 5
     }
 
 </script>
-<div class="overflow-x-auto overflow-y-scroll max-h-60">
+<div class="overflow-x-scroll overflow-y-scroll max-h-60">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
