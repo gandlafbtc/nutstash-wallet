@@ -60,7 +60,7 @@
 				token.update((state) => [...state, ...change]);
 
 				history.update((state) => [{
-				 type: HistoryItemType.MELT, amount ,date: new Date(), data: {
+				 type: HistoryItemType.MELT, amount ,date: Date.now(), data: {
 					preimage,
 					mint: mint?.mintURL,
 					keyset: mint?.keysets[0],
@@ -81,6 +81,7 @@
 	};
 	const resetState = () => {
 		if (browser) {
+			// @ts-expect-error
             document.getElementById("melt-modal-"+mint.keysets[0]).checked = false;
         }
 		invoice = '';

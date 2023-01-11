@@ -35,8 +35,18 @@ const getTokensForMint = (mint: Mint, tokens: Array<Token>) => {
     return tokenSubset
 }
 
+/**
+ * removes a set of tokens from another set of tokens, and returns the remaining.
+ * @param tokens 
+ * @param tokensToRemove 
+ * @returns 
+ */
 const getTokenSubset = (tokens: Array<Token>, tokensToRemove: Array<Token>) =>{
         return tokens.filter((token) => !tokensToRemove.includes(token));
 }
+
+const getAmountForTokenSet = (tokens: Array<Token>): number => {
+    return tokens.reduce((acc,t)=>{return acc+t.amount},0)
+}
     
-    export { getTokensToSend, getTokensForMint, getTokenSubset }
+    export { getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet }

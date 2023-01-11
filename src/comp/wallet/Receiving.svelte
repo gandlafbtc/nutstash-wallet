@@ -39,7 +39,7 @@
 			token.update((state) => [...state, ...receivedTokens]);
             
             history.update((state) => [{
-				 type: HistoryItemType.RECEIVE,amount ,date: new Date(), data: {
+				 type: HistoryItemType.RECEIVE,amount ,date: Date.now(), data: {
 					encodedToken,
 					mint: mint?.mintURL,
 					keyset: mint?.keysets[0],
@@ -74,6 +74,7 @@
 	};
 	const resetState = () => {
 		if (browser) {
+            // @ts-expect-error
 			document.getElementById('receive-modal').checked = false;
 		}
 		encodedToken = '';

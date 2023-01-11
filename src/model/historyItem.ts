@@ -1,7 +1,7 @@
 
 interface HistoryItem {
     type: HistoryItemType,
-    date: Date,
+    date: number,
     amount: number,
     data: object 
 }

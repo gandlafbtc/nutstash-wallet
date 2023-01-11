@@ -2,7 +2,7 @@
 	import { history } from "../../stores/history";
 	import HistoryRow from "./HistoryRow.svelte";
 
-    $: page = 2
+    $: page = 5
     $: historySub = $history.slice(0,page)
 
     const loadMore = () => {
@@ -25,6 +25,7 @@
                  <HistoryRow {historyItem} {i}></HistoryRow>
             {/each}
             <tr class="hover">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <td colspan="4" class="cursor-pointer w-full"  on:click={loadMore} >
                         load more
                 </td>

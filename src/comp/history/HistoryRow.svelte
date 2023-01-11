@@ -6,11 +6,13 @@
     export let historyItem: HistoryItem
     export let i: number
 
+    const date = new Date(historyItem.date)
+
 </script>
 <tr>
     <td><HistoryIcon type={historyItem.type}></HistoryIcon></td>
     <td>{historyItem.amount}</td>
-    <td>{historyItem.date ,historyItem.date}</td>
+    <td>{date.toLocaleDateString()} -- {date.toLocaleTimeString()}</td>
     <td>
         <label for="history-item-{i}" class="hover:text-primary cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -20,8 +22,6 @@
     </td>
 </tr>
 
-
-<!-- Put this part before </body> tag -->
 <input type="checkbox" id="history-item-{i}" class="modal-toggle" />
 <div class="modal">
   <div class="modal-box">

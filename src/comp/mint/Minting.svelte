@@ -25,7 +25,7 @@
     const copyInvoice = () => {
 		if (browser) {
 			let input = document.getElementById("invoice-input");
-			let originalText = input.value;
+			  // @ts-expect-error
 			input.select();
 			document.execCommand('copy');
 			toast('info', 'invoice has been copied to clipboard.', 'Copied!')
@@ -52,7 +52,7 @@
 				token.update((state) => [...state, ...tokens]);
 
 				history.update((state) => [{
-				 type: HistoryItemType.MINT, amount:mintAmount ,date: new Date(), data: {
+				 type: HistoryItemType.MINT, amount:mintAmount ,date: Date.now(), data: {
 					mintingHash,
 					mint: mint?.mintURL,
 					keyset: mint?.keysets[0],
@@ -79,6 +79,7 @@
 
     const resetState = () => {
 		if (browser) {
+			// @ts-expect-error
             document.getElementById("mint-modal-"+mint.keysets[0]).checked = false;
         }
 		mintAmount = 10
@@ -195,8 +196,8 @@
 				</p>
 			</div>
 			<div class="modal-action">
-				<label for="mint-modal-{mint.keysets[0]}" class="btn btn-outline" on:click={resetState}
-					>cancel</label
+				<button class="btn btn-outline" on:click={resetState}
+					>cancel</button
 				>
 				<button class="btn" on:click={() => mintRequest()}>request Mint</button>
 			</div>

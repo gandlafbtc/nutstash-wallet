@@ -5,19 +5,20 @@
 	import { mints } from '../../stores/mints';
 	import { token } from '../../stores/tokens';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
+	import { getAmountForTokenSet, getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
 	import { browser } from '$app/environment';
 	import { history } from '../../stores/history';
 	import { QRCodeImage } from 'svelte-qrcode-image';
 	import Wallet from './Wallet.svelte';
 	import { HistoryItemType } from '../../model/historyItem';
 	let mint: Mint = $mints[0];
+	let tokensForMint = getTokensForMint(mint, $token);
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
 
 	const send = async () => {
-		const tokensForMint = getTokensForMint(mint, $token);
+		tokensForMint = getTokensForMint(mint, $token);
 		const tokensToSend = getTokensToSend(amountToSend, tokensForMint);
 		if (amountToSend <= 0) {
 			toast('warning', 'amount must be larger than 0', 'Could not send');
@@ -52,7 +53,7 @@
 			encodedToken = CashuWallet.getEncodedProofs(send);
 
 			history.update((state) => [{
-				 type: HistoryItemType.SEND,amount:amountToSend,date: new Date(),data: {
+				 type: HistoryItemType.SEND,amount:amountToSend,date: Date.now(),data: {
 					encodedToken,
 					mint:mint.mintURL,
 					keyset:mint.keysets[0],
@@ -72,6 +73,7 @@
 	const copyToken = () => {
 		if (browser) {
 			let input = document.getElementById('send-token-input');
+			// @ts-expect-error
 			input.select();
 			document.execCommand('copy');
 			toast('info', 'Token has been copied to clipboard.', 'Copied!');
@@ -80,6 +82,7 @@
 
 	const resetState = () => {
 		if (browser) {
+			// @ts-expect-error
 			document.getElementById('send-modal').checked = false;
 		}
 		amountToSend = 0;
@@ -135,12 +138,19 @@
 					</label>
 					{#if mint}
 						<div class="dropdown" id="mint-send-dropdown">
+
+							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label tabindex="0" class="btn m-1">{mint.keysets[0]}</label>
+							
+							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<ul
 								tabindex="0"
 								class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
 							>
 								{#each $mints as m}
+									<!-- svelte-ignore a11y-missing-attribute -->
+									<!-- svelte-ignore a11y-click-events-have-key-events -->
 									<li on:click={() => (mint = m)}><a>{m.keysets[0]}</a></li>
 								{/each}
 							</ul>
@@ -149,7 +159,7 @@
 				</div>
 				<div class="flex gap-2">
 					<p class="font-bold">Available:</p>
-					<p />
+					<p>{getAmountForTokenSet(tokensForMint)}</p>
 				</div>
 				<label for="send-amount-input" />
 				<input
