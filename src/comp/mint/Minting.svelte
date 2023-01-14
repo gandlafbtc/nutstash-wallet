@@ -57,6 +57,7 @@
 					mint: mint?.mintURL,
 					keyset: mint?.keysets[0],
 					invoice: qrCode,
+					tokens
 				 }
 			}, ...state]);
 

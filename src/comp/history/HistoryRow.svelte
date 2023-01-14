@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { HistoryData } from "src/model/data/HistoryData";
 	import type { HistoryItem } from "src/model/historyItem";
 	import { dataset_dev } from "svelte/internal";
 	import HistoryIcon from "./HistoryIcon.svelte";
 
-    export let historyItem: HistoryItem
+    export let historyItem: HistoryItem<HistoryData>
     export let i: number
 
     const date = new Date(historyItem.date)

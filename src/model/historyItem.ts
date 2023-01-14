@@ -1,9 +1,8 @@
-
-interface HistoryItem {
+interface HistoryItem<HistoryData> {
     type: HistoryItemType,
     date: number,
     amount: number,
-    data: object 
+    data: HistoryData
 }
 
 enum HistoryItemType {

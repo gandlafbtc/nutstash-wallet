@@ -41,8 +41,8 @@
             history.update((state) => [{
 				 type: HistoryItemType.RECEIVE,amount ,date: Date.now(), data: {
 					encodedToken,
-					mint: mint?.mintURL,
-					keyset: mint?.keysets[0],
+					mint: mint?.mintURL??'',
+					keyset: mint?.keysets[0]??'',
 					receivedTokens,
 				 }
 			}, ...state]);

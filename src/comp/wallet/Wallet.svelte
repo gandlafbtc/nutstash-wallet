@@ -3,6 +3,7 @@
     import { mints } from "../../stores/mints";
 	import Sending from './Sending.svelte';
 	import Receiving from './Receiving.svelte';
+	import Tokens from '../tokens/Tokens.svelte';
 </script>
 
 <div class="flex flex-col w-full h-full items-center justify-center gap-10 ">
@@ -40,3 +41,5 @@
 <Receiving></Receiving>
 
 <Sending></Sending>
+
+<Tokens></Tokens>
