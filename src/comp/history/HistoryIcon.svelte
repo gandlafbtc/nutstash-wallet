@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { HistoryItemType } from '../../model/historyItem';
-	import HistoryTable from './HistoryTable.svelte';
 
 	export let type: HistoryItemType;
 </script>

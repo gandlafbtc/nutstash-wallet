@@ -1,9 +1,9 @@
 <script>
-	import { history } from "../../stores/history";
-	import TokenHistoryRow from "./TokenHistoryRow.svelte";
+	import { token } from "../../stores/tokens";
+	import TokenRow from "./TokenRow.svelte";
 
     $: page = 5
-    $: historySub = $history.slice(0,page)
+    $: tokenSub = $token.slice(0,page)
 
     const loadMore = () => {
         page += 5
@@ -14,15 +14,15 @@
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
-				<th>Action</th>
+				<th></th>
 				<th>Amount</th>
-				<th>Date</th>
-				<th>Token</th>
+				<th>Mint</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll">
-            {#each historySub as historyItem}
-                 <TokenHistoryRow {historyItem}></TokenHistoryRow>
+            {#each tokenSub as token}
+                 <TokenRow {token}></TokenRow>
             {/each}
             <tr class="hover">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->

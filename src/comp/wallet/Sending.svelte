@@ -8,8 +8,6 @@
 	import { getAmountForTokenSet, getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
 	import { browser } from '$app/environment';
 	import { history } from '../../stores/history';
-	import { QRCodeImage } from 'svelte-qrcode-image';
-	import Wallet from './Wallet.svelte';
 	import { HistoryItemType } from '../../model/historyItem';
 	let mint: Mint = $mints[0];
 	let tokensForMint = getTokensForMint(mint, $token);
@@ -97,14 +95,22 @@
 		{#if isLoading}
 			<LoadingCenter />
 		{:else if encodedToken}
-			<div class="grid grid-cols-2">
-				<div>
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+				<!-- <div>
 					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
+				</div> -->
+				<div>
+					<p class="text-lg font-bold">
+						Tokens are ready to be sent!
+					</p>
+					<p>
+						⚠️ Copy the new token and send it to to someone!
+					</p>
 				</div>
-				<div class="flex gap-2">
+				<div class="flex gap-2 flex-col">
 					<input
 						type="text"
-						class="w-32 input input-primary"
+						class="w-full input input-primary"
 						id="send-token-input"
 						readonly
 						value={encodedToken}
