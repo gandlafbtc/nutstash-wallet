@@ -26,7 +26,7 @@ const getTokensToSend = (amount: number, tokens: Array<Token>) => {
  */
 const getTokensForMint = (mint: Mint, tokens: Array<Token>) => {
     const tokenSubset = tokens.filter((token) => {
-        if (mint?.keysets[0] === token.id) {
+        if (mint?.keysets.includes(token.id)) {
             return true;
         } else {
             return false;
@@ -41,12 +41,24 @@ const getTokensForMint = (mint: Mint, tokens: Array<Token>) => {
  * @param tokensToRemove 
  * @returns 
  */
-const getTokenSubset = (tokens: Array<Token>, tokensToRemove: Array<Token>) =>{
-        return tokens.filter((token) => !tokensToRemove.includes(token));
+const getTokenSubset = (tokens: Array<Token>, tokensToRemove: Array<Token>) => {
+    return tokens.filter((token) => !tokensToRemove.includes(token));
 }
 
 const getAmountForTokenSet = (tokens: Array<Token>): number => {
-    return tokens.reduce((acc,t)=>{return acc+t.amount},0)
+    return tokens.reduce((acc, t) => { return acc + t.amount }, 0)
 }
-    
-    export { getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet }
+
+const getKeysetsOfTokens = (tokens: Array<Token>) => {
+    return removeDuplicatesFromArray(tokens.map(t => { return t.id }))
+}
+
+
+const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
+    return array.reduce((acc: Array<Type>, curr: Type) => {
+        if (acc.includes(curr)) { return acc }
+        else { return [...acc, curr] }
+    }, [])
+}
+
+export { getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray }

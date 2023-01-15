@@ -5,12 +5,12 @@
 	import { mints } from '../../stores/mints';
 	import { token } from '../../stores/tokens';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysetsOfTokens, getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
 	import { browser } from '$app/environment';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	let mint: Mint = $mints[0];
-	let tokensForMint = getTokensForMint(mint, $token);
+	$: tokensForMint = getTokensForMint(mint, $token);
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
@@ -54,7 +54,7 @@
 				 type: HistoryItemType.SEND,amount:amountToSend,date: Date.now(),data: {
 					encodedToken,
 					mint:mint.mintURL,
-					keyset:mint.keysets[0],
+					keyset: getKeysetsOfTokens([...tokensToSend,...returnChange]),
 					send,
 					returnChange
 				 }
@@ -147,7 +147,7 @@
 
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label tabindex="0" class="btn m-1">{mint.keysets[0]}</label>
+							<label tabindex="0" class="btn m-1">{mint.mintURL}</label>
 							
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<ul
@@ -157,7 +157,7 @@
 								{#each $mints as m}
 									<!-- svelte-ignore a11y-missing-attribute -->
 									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<li on:click={() => (mint = m)}><a>{m.keysets[0]}</a></li>
+									<li on:click={() => (mint = m)}><a>{m.mintURL}</a></li>
 								{/each}
 							</ul>
 						</div>

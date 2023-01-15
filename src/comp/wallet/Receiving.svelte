@@ -9,6 +9,7 @@
 	import type { Mint } from '../../model/mint';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
+	import { getKeysetsOfTokens } from '../util/walletUtils';
 
 	let mint: Mint | undefined;
 	let mintId: string = '';
@@ -42,7 +43,7 @@
 				 type: HistoryItemType.RECEIVE,amount ,date: Date.now(), data: {
 					encodedToken,
 					mint: mint?.mintURL??'',
-					keyset: mint?.keysets[0]??'',
+					keyset: getKeysetsOfTokens(receivedTokens),
 					receivedTokens,
 				 }
 			}, ...state]);
@@ -54,7 +55,7 @@
 	};
 
 	const findMintById = (mints: Array<Mint>, id: string) => {
-		return mints.filter((m) => m.keysets[0] === id)[0];
+		return mints.filter((m) => m.keysets.includes(id))[0];
 	};
 
 	const validateToken = () => {

@@ -2,7 +2,7 @@
 interface Mint {
     mintURL: string,
     keys: object,
-    keysets: string
+    keysets: Array<string>
 }
 
 export type {Mint}

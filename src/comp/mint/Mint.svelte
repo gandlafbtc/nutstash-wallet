@@ -15,18 +15,15 @@
 		console.log(mintURL, mintPort, mintAPIRoot);
 		const mint = new CashuMint(mintURL, mintAPIRoot, mintPort);
 		try {
-			const keysets = await mint.getKeySets();
 			if (
-				$mints.map((m) => {
-					return m.keysets[0].includes(keysets[0]);
-				}).length > 0
+				$mints.filter((m)=>m.mintURL===mint.mintUrl).length>0
 			) {
 				toast('warning', 'this mint has already been added.', "Didn't add mint!");
 				return;
 			}
+			const keysets = await mint.getKeySets();
 			const keys = await mint.getKeys();
 
-			console.log(keysets);
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
 				keys,
@@ -45,7 +42,7 @@
 	};
 </script>
 
-<div class="overflow-scroll">
+<div class="overflow-scroll flex flex-col gap-3">
 	<div class="max-h-64 overflow-scroll">
 		<table class="table w-full overflow-scroll">
 			<!-- head -->
@@ -71,7 +68,9 @@
 			</tbody>
 		</table>
 	</div>
-
+	<div class="pt-5">
+		<p class="text-xl font-bold">Add a new Mint:</p>
+	</div>
 	<div class="grid grid-cols-5 gap-2">
 		<div class="col-span-5">
 			<label for="mint-url-input"> Mint Host: </label>

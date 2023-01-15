@@ -10,6 +10,7 @@
 	import type { Token } from "../../model/token";
 	import { history } from "../../stores/history";
 	import { HistoryItemType } from "../../model/historyItem";
+	import { getKeysetsOfTokens } from "../util/walletUtils";
 
 
     export let mint:Mint
@@ -55,7 +56,7 @@
 				 type: HistoryItemType.MINT, amount:mintAmount ,date: Date.now(), data: {
 					mintingHash,
 					mint: mint?.mintURL,
-					keyset: mint?.keysets[0],
+					keyset: getKeysetsOfTokens(tokens),
 					invoice: qrCode,
 					tokens
 				 }

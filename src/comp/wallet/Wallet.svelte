@@ -4,6 +4,7 @@
 	import Sending from './Sending.svelte';
 	import Receiving from './Receiving.svelte';
 	import Tokens from '../tokens/Tokens.svelte';
+	import BackupButton from '../elements/BackupButton.svelte';
 </script>
 
 <div class="flex flex-col w-full h-full items-center justify-center gap-5">
@@ -66,7 +67,7 @@
 	</div>
     <Tokens />
 </div>
-
+<BackupButton></BackupButton>
 <Receiving />
 
 <Sending />

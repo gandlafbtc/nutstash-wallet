@@ -4,7 +4,7 @@ interface HistoryData {
      * mint url
      */
     mint: string
-    keyset: string
+    keyset: Array<string>
 }
 
 export type { HistoryData }

@@ -6,7 +6,7 @@
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 	import type { Token } from '../../model/token';
-	import { getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import { getKeysetsOfTokens, getTokensForMint, getTokensToSend } from '../util/walletUtils';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { browser } from '$app/environment';
@@ -63,7 +63,7 @@
 				 type: HistoryItemType.MELT, amount ,date: Date.now(), data: {
 					preimage,
 					mint: mint?.mintURL,
-					keyset: mint?.keysets[0],
+					keyset: getKeysetsOfTokens(tokensToMelt),
 					invoice,
 					change
 				 }
