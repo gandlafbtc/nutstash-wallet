@@ -45,9 +45,9 @@
 	};
 </script>
 
-<div>
-	<div class="overflow-x-auto max-h-64">
-		<table class="table w-full">
+<div class="overflow-scroll">
+	<div class="max-h-64 overflow-scroll">
+		<table class="table w-full overflow-scroll">
 			<!-- head -->
 			<thead>
 				<tr>
