@@ -6,75 +6,136 @@
 	import Melting from './Melting.svelte';
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
-	let mintURL = 'https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC';
-
+	let mintURL = 'https://legend.lnbits.com';
+	let mintAPIRoot = 'cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC';
+	let mintPort = '';
+	let showAdvanced = false;
 
 	const addMint = async () => {
-		const mint = new CashuMint(mintURL);
+		console.log(mintURL, mintPort, mintAPIRoot);
+		const mint = new CashuMint(mintURL, mintAPIRoot, mintPort);
 		try {
 			const keysets = await mint.getKeySets();
-			if ($mints.map((m)=>{return m.keysets[0].includes(keysets[0])}).length>0  ){
-				toast('warning','this mint has already been added.','Didn\'t add mint!')
-				return 
+			if (
+				$mints.map((m) => {
+					return m.keysets[0].includes(keysets[0]);
+				}).length > 0
+			) {
+				toast('warning', 'this mint has already been added.', "Didn't add mint!");
+				return;
 			}
 			const keys = await mint.getKeys();
 
 			console.log(keysets);
 			const storeMint: Mint = {
-				mintURL,
+				mintURL: mint.mintUrl,
 				keys,
 				keysets: keysets.keysets
 			};
-			
-			mints.update((state)=>[storeMint,...state]);
+
+			mints.update((state) => [storeMint, ...state]);
 			toast('success', 'Mint has been added', 'Success');
 		} catch {
 			toast('error', 'keys could not be loaded from:' + mintURL + '/keys', 'Could not add mint.');
 			throw new Error('Could not add Mint.');
 		}
 	};
-
+	const toggleAdvanced = () => {
+		showAdvanced = !showAdvanced;
+	};
 </script>
 
-<div class="overflow-x-auto">
-	<table class="table w-full">
-		<!-- head -->
-		<thead>
-			<tr>
-				<th>Keysets</th>
-				<th>Actions</th>
-				<th>Tokens</th>
-				<th />
-			</tr>
-		</thead>
-		<tbody>
-			{#if $mints.length === 0}
-				<tr class="hover">
-					<td colspan="4"> no mints added so far. </td>
+<div>
+	<div class="overflow-x-auto max-h-64">
+		<table class="table w-full">
+			<!-- head -->
+			<thead>
+				<tr>
+					<th>Keysets</th>
+					<th>Actions</th>
+					<th>Tokens</th>
+					<th />
 				</tr>
-			{/if}
-			{#each $mints as mint, mintIndex}
-				<Minting {mint} />
-				<Melting {mint} />
-				<MintRow {mint} {mintIndex}></MintRow>
-			{/each}
-		</tbody>
-	</table>
-</div>
+			</thead>
+			<tbody>
+				{#if $mints.length === 0}
+					<tr class="hover">
+						<td colspan="4"> no mints added so far. </td>
+					</tr>
+				{/if}
+				{#each $mints as mint, mintIndex}
+					<Minting {mint} />
+					<Melting {mint} />
+					<MintRow {mint} {mintIndex} />
+				{/each}
+			</tbody>
+		</table>
+	</div>
 
-<div class="grid grid-cols-5 gap-1">
-	<input
-		type="text"
-		bind:value={mintURL}
-		placeholder="Type here"
-		class="input w-full input-primary col-span-4"
-	/>
-	<button
-		class="btn btn-primary"
-		on:click={() => {
-			addMint();
-		}}
-	>
-		Add Mint
-	</button>
+	<div class="grid grid-cols-5 gap-2">
+		<div class="col-span-5">
+			<label for="mint-url-input"> Mint Host: </label>
+			<input
+				id="mint-url-input"
+				type="text"
+				bind:value={mintURL}
+				class="input w-full input-primary "
+			/>
+		</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div class="divider col-span-5 cursor-pointer" on:click={toggleAdvanced}>
+			{#if showAdvanced}
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+				</svg>
+			{:else}
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+				</svg>
+			{/if}
+			Advanced
+		</div>
+		{#if showAdvanced}
+			<div class="col-span-5">
+				<label for="mint-port-input"> Mint Port: </label>
+				<input
+					id="mint-port-input"
+					type="number"
+					bind:value={mintPort}
+					class="input w-full input-primary"
+				/>
+			</div>
+			<div class="col-span-5">
+				<label for="mint-api-input"> Mint API root: </label>
+				<input
+					id="mint-api-input"
+					type="text"
+					bind:value={mintAPIRoot}
+					class="input w-full input-primary"
+				/>
+			</div>
+		{/if}
+		<button
+			class="btn btn-primary h-full"
+			on:click={() => {
+				addMint();
+			}}
+		>
+			Add Mint
+		</button>
+	</div>
 </div>

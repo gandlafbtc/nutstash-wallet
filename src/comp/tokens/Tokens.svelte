@@ -18,6 +18,7 @@
 	>
 		History
 	</div>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
 		class="tab tab-lifted {activeTab === 'tokens' ? 'tab-active' : ''}"
 		on:click={() => changeTab('tokens')}
