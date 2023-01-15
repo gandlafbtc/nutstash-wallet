@@ -1,5 +1,5 @@
-import type { Mint } from "../../model/mint";
-import type { Token } from "../../model/token";
+import type { Mint } from "src/model/mint";
+import type { Token } from "src/model/token";
 
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -26,7 +26,7 @@ const getTokensToSend = (amount: number, tokens: Array<Token>) => {
  */
 const getTokensForMint = (mint: Mint, tokens: Array<Token>) => {
     const tokenSubset = tokens.filter((token) => {
-        if (mint.keysets[0] === token.id) {
+        if (mint?.keysets[0] === token.id) {
             return true;
         } else {
             return false;
