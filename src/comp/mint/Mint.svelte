@@ -9,7 +9,7 @@
 	let mintURL = 'https://legend.lnbits.com';
 	let mintAPIRoot = 'cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC';
 	let mintPort = '';
-	let showAdvanced = false;
+	let showAdvanced = true;
 
 	const addMint = async () => {
 		console.log(mintURL, mintPort, mintAPIRoot);
@@ -36,7 +36,7 @@
 			mints.update((state) => [storeMint, ...state]);
 			toast('success', 'Mint has been added', 'Success');
 		} catch {
-			toast('error', 'keys could not be loaded from:' + mintURL + '/keys', 'Could not add mint.');
+			toast('error', 'keys could not be loaded from:' + mint.mintUrl + '/keys', 'Could not add mint.');
 			throw new Error('Could not add Mint.');
 		}
 	};
