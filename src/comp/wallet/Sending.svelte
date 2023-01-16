@@ -59,7 +59,7 @@
 					returnChange
 				 }
 			}, ...state]);
-
+			toast("success", 'Copy the token and send it to someone', 'Sendable Token created.')
 			isLoading = false;
 		} catch {
 			resetState();
