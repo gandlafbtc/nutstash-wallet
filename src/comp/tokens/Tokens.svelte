@@ -13,14 +13,14 @@
 <div class="tabs">
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
-		class="tab tab-lifted {activeTab === 'history' ? 'tab-active' : ''}"
+		class="tab tab-bordered {activeTab === 'history' ? 'tab-active' : ''}"
 		on:click={() => changeTab('history')}
 	>
 		History
 	</div>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
-		class="tab tab-lifted {activeTab === 'tokens' ? 'tab-active' : ''}"
+		class="tab tab-bordered {activeTab === 'tokens' ? 'tab-active' : ''}"
 		on:click={() => changeTab('tokens')}
 	>
 		Tokens
