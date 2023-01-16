@@ -13,11 +13,12 @@ A web based Cashu Wallet that supports multiple mints
 * [x] Melting tokens through Lightning
 * [x] Sending tokens
 * [x] receiving tokens
-* [ ] history for melt/mint
-* [ ] history for send/receive
+* [x] history for melt/mint
+* [x] history for send/receive
+* [x] support multiple keysets
+* [x] support multiple mints
+* [x] backup tokens
 * [ ] PWA installable app
-* [ ] support multiple keysets
-* [ ] backup tokens
 
 
 
