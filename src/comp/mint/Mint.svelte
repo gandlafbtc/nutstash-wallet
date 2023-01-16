@@ -43,7 +43,7 @@
 </script>
 
 <div class="overflow-scroll flex flex-col gap-3">
-	<div class="max-h-64 overflow-scroll">
+	<div class="max-h-56 overflow-scroll">
 		<table class="table w-full overflow-scroll">
 			<!-- head -->
 			<thead>
@@ -72,13 +72,13 @@
 		<p class="text-xl font-bold">Add a new Mint:</p>
 	</div>
 	<div class="grid grid-cols-5 gap-2">
-		<div class="col-span-5">
+		<div class="col-span-5 grid grid-cols-5">
 			<label for="mint-url-input"> Mint Host: </label>
 			<input
 				id="mint-url-input"
 				type="text"
 				bind:value={mintURL}
-				class="input w-full input-primary "
+				class="input w-full input-primary col-span-4"
 			/>
 		</div>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -109,22 +109,22 @@
 			Advanced
 		</div>
 		{#if showAdvanced}
-			<div class="col-span-5">
+			<div class="col-span-5 grid grid-cols-5 items-center">
 				<label for="mint-port-input"> Mint Port: </label>
 				<input
 					id="mint-port-input"
 					type="number"
 					bind:value={mintPort}
-					class="input w-full input-primary"
+					class="input w-full input-primary col-span-4"
 				/>
 			</div>
-			<div class="col-span-5">
-				<label for="mint-api-input"> Mint API root: </label>
+			<div class="col-span-5 grid grid-cols-5">
+				<label for="mint-api-input w-32"> Mint API root: </label>
 				<input
 					id="mint-api-input"
 					type="text"
 					bind:value={mintAPIRoot}
-					class="input w-full input-primary"
+					class="input w-full input-primary col-span-4"
 				/>
 			</div>
 		{/if}

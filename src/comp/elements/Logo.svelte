@@ -1,0 +1,1 @@
+<img src="/nutstash.svg" alt="logo">
