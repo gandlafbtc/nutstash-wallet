@@ -76,7 +76,7 @@
 								clip-rule="evenodd"
 							/>
 						</svg>
-						<p class="hidden lg:flex">Setting</p></button
+						<p class="hidden lg:flex">Settings</p></button
 					>
 				</div>
 			</div>

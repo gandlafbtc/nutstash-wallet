@@ -1,11 +1,8 @@
 <script>
 	import { page } from '$app/stores';
+	import ResetHistoryButton from '../comp/elements/ResetHistoryButton.svelte';
 	import BackupButton from '../comp/elements/BackupButton.svelte';
-	import { history } from '../stores/history';
-
-	const resetHistory = () => {
-		history.set([]);
-	};
+	
 </script>
 
 <div class="h-screen w-screen flex items-center justify-center">
@@ -13,7 +10,7 @@
 
 {#if $page.status === 500}
         An error occured. 
-		<button on:click={resetHistory}> Reset History </button>
+		<ResetHistoryButton></ResetHistoryButton>
         <BackupButton></BackupButton>
 {/if}
 
