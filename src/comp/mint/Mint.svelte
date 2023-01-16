@@ -3,6 +3,7 @@
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { toast } from '../../stores/toasts';
+	import LoadingCenter from '../LoadingCenter.svelte';
 	import Melting from './Melting.svelte';
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
@@ -10,17 +11,17 @@
 	let mintAPIRoot = 'cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC';
 	let mintPort = '';
 	let showAdvanced = true;
+	let isLoading = false
 
 	const addMint = async () => {
 		console.log(mintURL, mintPort, mintAPIRoot);
 		const mint = new CashuMint(mintURL, mintAPIRoot, mintPort);
 		try {
-			if (
-				$mints.filter((m)=>m.mintURL===mint.mintUrl).length>0
-			) {
+			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
 				toast('warning', 'this mint has already been added.', "Didn't add mint!");
 				return;
 			}
+			isLoading =true
 			const keysets = await mint.getKeySets();
 			const keys = await mint.getKeys();
 
@@ -32,8 +33,14 @@
 
 			mints.update((state) => [storeMint, ...state]);
 			toast('success', 'Mint has been added', 'Success');
+			isLoading = false
 		} catch {
-			toast('error', 'keys could not be loaded from:' + mint.mintUrl + '/keys', 'Could not add mint.');
+			isLoading = false
+			toast(
+				'error',
+				'keys could not be loaded from:' + mint.mintUrl + '/keys',
+				'Could not add mint.'
+			);
 			throw new Error('Could not add Mint.');
 		}
 	};
@@ -128,13 +135,19 @@
 				/>
 			</div>
 		{/if}
-		<button
-			class="btn btn-primary h-full"
-			on:click={() => {
-				addMint();
-			}}
-		>
-			Add Mint
-		</button>
+		{#if isLoading}
+			<LoadingCenter />
+		{:else}
+			<!-- else content here -->
+
+			<button
+				class="btn btn-primary h-full"
+				on:click={() => {
+					addMint();
+				}}
+			>
+				Add Mint
+			</button>
+		{/if}
 	</div>
 </div>
