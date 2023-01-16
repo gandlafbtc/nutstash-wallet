@@ -45,6 +45,12 @@ const getTokenSubset = (tokens: Array<Token>, tokensToRemove: Array<Token>) => {
     return tokens.filter((token) => !tokensToRemove.includes(token));
 }
 
+const getMintForToken = (token: Token, mints: Array<Mint>): Mint | undefined => {
+    let mint: Mint | undefined = undefined
+    mints.forEach((m)=>{if(m.keysets.includes(token.id)){mint = m}})
+    return mint
+}
+
 const getAmountForTokenSet = (tokens: Array<Token>): number => {
     return tokens.reduce((acc, t) => { return acc + t.amount }, 0)
 }
@@ -61,4 +67,4 @@ const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
     }, [])
 }
 
-export { getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray }
+export { getMintForToken, getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray }

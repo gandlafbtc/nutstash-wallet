@@ -21,8 +21,8 @@
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll">
-            {#each tokenSub as token}
-                 <TokenRow {token}></TokenRow>
+            {#each tokenSub as token,i}
+                 <TokenRow {token} {i}></TokenRow>
             {/each}
             <tr class="hover">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
