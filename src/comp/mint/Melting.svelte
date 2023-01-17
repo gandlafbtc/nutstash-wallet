@@ -14,16 +14,20 @@
 	export let mint: Mint;
 
 	let invoice = '';
+	let fees: number = 0;
 	let amount: number = 0;
 	let isPayable = false;
 	let isLoading = false;
 	let isPaySuccess = false;
 
-	const decodeInvoice = () => {
-		console.log('hello');
+	const decodeInvoice = async () => {
 		try {
 			amount = decode(invoice).sections[2].value / 1000;
 			if (amount) {
+				const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+				const { fee } = await cashuMint.checkFees({ pr: invoice });
+				fees = fee;
+				//todo check for balance
 				isPayable = true;
 			} else {
 				isPayable = false;
@@ -39,53 +43,77 @@
 	const payInvoice = async () => {
 		isLoading = true;
 		if (!isPayable) {
-			throw new Error('invoice is not payable');
+			isLoading = false;
+			toast('warning', 'Invoice is not payable', 'Invoice not paid');
+			return;
 		}
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+
 		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
-		const tokensForMint: Array<Token> = getTokensForMint(mint, $token)
+		const tokensForMint: Array<Token> = getTokensForMint(mint, $token);
 
-		const tokensToMelt: Array<Token> = getTokensToSend(amount,tokensForMint)
+		const tokensToSend: Array<Token> = getTokensToSend(amount + fees, tokensForMint);
+			console.log(fees)
+			console.log(amount)
+			console.log(amount+fees, tokensToSend)
+		
+		const { returnChange, send } = await cashuWallet.send(amount + fees, tokensToSend);
+
+			console.log(send)
+		// remove sent tokens from storage
+		token.update((state) => {
+			return state.filter((token) => !tokensToSend.includes(token));
+		});
+		if (returnChange) {
+			token.update((state) => [...returnChange, ...state]);
+		}
 
 		try {
-			const { isPaid, preimage, change } = await cashuWallet.payLnInvoice(invoice, tokensToMelt);
+			const { isPaid, preimage } = await cashuWallet.payLnInvoice(
+				invoice,
+				send
+			);
+			history.update((state) => [
+				{
+					type: HistoryItemType.MELT,
+					amount,
+					date: Date.now(),
+					data: {
+						preimage,
+						mint: mint?.mintURL,
+						keyset: getKeysetsOfTokens(tokensToSend),
+						invoice,
+						change:returnChange,
+					}
+				},
+				...state
+			]);
 			if (!isPaid) {
-				toast('error', 'Please try again later', "The Invoice couldn't be paid.");
-				throw new Error('Invoice could not be paid');
-			} else {
-				token.update((state) => {
-					return state.filter((token) => !tokensToMelt.includes(token));
-				});
-				token.update((state) => [...state, ...change]);
-
-				history.update((state) => [{
-				 type: HistoryItemType.MELT, amount ,date: Date.now(), data: {
-					preimage,
-					mint: mint?.mintURL,
-					keyset: getKeysetsOfTokens(tokensToMelt),
-					invoice,
-					change
-				 }
-			}, ...state]);
-
-				isPaySuccess = true;
-				isLoading=false
-				toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
+				isLoading = false
+				//re-add tokens that were sent if invoice is not paid
+				token.update((state) => [...send, ...state]);
+				toast('warning', 'Try again later', 'Invoice could not be paid!');
+				return;
 			}
-		} catch {
-			toast('error', 'Could not pay lighting invoice','Error:')
+			isPaySuccess = true;
 			isLoading = false;
-			throw new Error("Error when paying lightning Invoice");
+			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
+		} catch (error) {
+			//re-add tokens that were sent if error
+			isLoading = false
+			token.update((state) => [...send, ...state]);
+			console.error(error);
 		}
 	};
 	const resetState = () => {
 		if (browser) {
 			// @ts-expect-error
-            document.getElementById("melt-modal-"+mint.keysets[0]).checked = false;
-        }
+			document.getElementById('melt-modal-' + mint.keysets[0]).checked = false;
+		}
 		invoice = '';
 		amount = 0;
+		fees = 0;
 		isPayable = false;
 		isLoading = false;
 		isPaySuccess = false;
@@ -131,14 +159,16 @@
 				bind:value={invoice}
 				on:input={decodeInvoice}
 			/>
-			<div>
+			<div class="flex gap-2">
 				<p>Amount:</p>
-				<p>{amount}</p>
+				<p>{amount} sats</p>
+			</div>
+			<div class="flex gap-2">
+				<p>Fees:</p>
+				<p>{fees} sats</p>
 			</div>
 			<div class="modal-action">
-				<button class="btn btn-outline" on:click={resetState}
-					>cancel</button
-				>
+				<button class="btn btn-outline" on:click={resetState}>cancel</button>
 				{#if isPayable}
 					<button class="btn btn-warning" on:click={() => payInvoice()}>
 						<svg
