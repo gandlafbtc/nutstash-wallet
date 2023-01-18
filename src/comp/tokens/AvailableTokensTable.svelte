@@ -15,7 +15,14 @@
 		<thead>
 			<tr>
 				<th></th>
-				<th>Amount</th>
+				<th>
+                    <p class="hidden lg:flex">
+                        Amount
+                    </p>
+                    <p class="flex lg:hidden">
+                        Amt
+                    </p>
+                </th>
 				<th>Mint</th>
 				<th>Actions</th>
 			</tr>
