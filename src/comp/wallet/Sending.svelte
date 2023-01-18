@@ -138,12 +138,18 @@
 			</div>
 		{:else}
 			<div class=" flex flex-col gap-2">
-				<div class="flex gap-2 items-center">
+				<p class="font-bold text-xl">
+					Send Tokens
+				</p>
+				<p>
+					Create a sendable Cashu Token. 
+				</p>
+				<div class="grid grid-cols-5 items-center">
 					<label for="mint-send-dropdown">
 						<p class="font-bold">Mint:</p>
 					</label>
 					{#if mint}
-						<div class="dropdown" id="mint-send-dropdown">
+						<div class="dropdown col-span-4" id="mint-send-dropdown">
 
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -163,18 +169,24 @@
 						</div>
 					{/if}
 				</div>
-				<div class="flex gap-2">
-					<p class="font-bold">Available:</p>
-					<p>{getAmountForTokenSet(tokensForMint)}</p>
-				</div>
-				<label for="send-amount-input" />
-				<input
+				<div class="grid grid-cols-5 items-center">
+					<label for="send-amount-input">
+					<p class="font-bold">
+						Amount:
+					</p>
+					 </label>
+					<input
 					type="number"
 					name=""
 					id="send-amount-input"
-					class="input input-primary"
+					class="input input-primary col-span-4"
 					bind:value={amountToSend}
-				/>
+					/>
+				</div>
+				<div class="grid grid-cols-5">
+					<p class="font-bold">Available:</p>
+					<p class="col-span-4">{getAmountForTokenSet(tokensForMint)} sats</p>
+				</div>
 			</div>
 			<div class="modal-action bottom-0">
 				<label for="send-modal" class="btn">cancel</label>

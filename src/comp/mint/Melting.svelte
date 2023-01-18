@@ -6,7 +6,12 @@
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 	import type { Token } from '../../model/token';
-	import { getAmountForTokenSet, getKeysetsOfTokens, getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import {
+		getAmountForTokenSet,
+		getKeysetsOfTokens,
+		getTokensForMint,
+		getTokensToSend
+	} from '../util/walletUtils';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { browser } from '$app/environment';
@@ -28,11 +33,14 @@
 				const { fee } = await cashuMint.checkFees({ pr: invoice });
 				fees = fee;
 				//todo check for balance
-				if(getAmountForTokenSet(getTokensForMint(mint,$token))<amount+fees){
-					isPayable = false
-					toast('warning', "This Mint does not have enough funds to pay the invoice.",'Not enough funds')
-				}
-				else {
+				if (getAmountForTokenSet(getTokensForMint(mint, $token)) < amount + fees) {
+					isPayable = false;
+					toast(
+						'warning',
+						'This Mint does not have enough funds to pay the invoice.',
+						'Not enough funds'
+					);
+				} else {
 					isPayable = true;
 				}
 			} else {
@@ -41,6 +49,7 @@
 			}
 		} catch {
 			amount = 0;
+			fees = 0 
 			isPayable = false;
 			toast('warning', 'The invoice could not be decoded', 'Malformed Invoice');
 		}
@@ -60,13 +69,13 @@
 		const tokensForMint: Array<Token> = getTokensForMint(mint, $token);
 
 		const tokensToSend: Array<Token> = getTokensToSend(amount + fees, tokensForMint);
-			console.log(fees)
-			console.log(amount)
-			console.log(amount+fees, tokensToSend)
-		
+		console.log(fees);
+		console.log(amount);
+		console.log(amount + fees, tokensToSend);
+
 		const { returnChange, send } = await cashuWallet.send(amount + fees, tokensToSend);
 
-			console.log(send)
+		console.log(send);
 		// remove sent tokens from storage
 		token.update((state) => {
 			return state.filter((token) => !tokensToSend.includes(token));
@@ -76,10 +85,7 @@
 		}
 
 		try {
-			const { isPaid, preimage } = await cashuWallet.payLnInvoice(
-				invoice,
-				send
-			);
+			const { isPaid, preimage } = await cashuWallet.payLnInvoice(invoice, send);
 			history.update((state) => [
 				{
 					type: HistoryItemType.MELT,
@@ -90,13 +96,13 @@
 						mint: mint?.mintURL,
 						keyset: getKeysetsOfTokens(tokensToSend),
 						invoice,
-						change:returnChange,
+						change: returnChange
 					}
 				},
 				...state
 			]);
 			if (!isPaid) {
-				isLoading = false
+				isLoading = false;
 				//re-add tokens that were sent if invoice is not paid
 				token.update((state) => [...send, ...state]);
 				toast('warning', 'Try again later', 'Invoice could not be paid!');
@@ -107,7 +113,7 @@
 			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
 		} catch (error) {
 			//re-add tokens that were sent if error
-			isLoading = false
+			isLoading = false;
 			token.update((state) => [...send, ...state]);
 			console.error(error);
 		}
@@ -157,22 +163,30 @@
 				>
 			</div>
 		{:else}
-			<label for="melt-invoice-input" class="label-text label font-bold">Invoice:</label>
-			<input
-				id="melt-invoice-input"
-				type="text"
-				class="input input-primary"
-				bind:value={invoice}
-				on:input={decodeInvoice}
-			/>
-			<div class="flex gap-2">
-				<p>Amount:</p>
-				<p>{amount} sats</p>
+			<div class="flex flex-col gap-2">
+				<p class="text-xl font-bold">Pay Lightning Invoice</p>
+				<div class="flex gap-2">
+					<label for="melt-invoice-input" class="label-text label font-bold">Invoice:</label>
+					<input
+					id="melt-invoice-input"
+					type="text"
+					class="input input-primary w-full"
+					bind:value={invoice}
+					on:input={decodeInvoice}
+					/>
+				</div>
+				<div class="grid grid-cols-5 items-start">
+					<p>Amount:</p>
+					<p class="col-span-4">{amount} sats</p>
+					<p>Fees:</p>
+					<p class="col-span-4">{fees} sats</p>
+					<div class="divider col-span-2 my-0.5"></div>
+					<div class="col-span-3"></div>
+					<p class="font-bold">Total:</p>
+					<p class="col-span-4 font-bold">{fees+amount} sats</p>
+				</div>
 			</div>
-			<div class="flex gap-2">
-				<p>Fees:</p>
-				<p>{fees} sats</p>
-			</div>
+
 			<div class="modal-action">
 				<button class="btn btn-outline" on:click={resetState}>cancel</button>
 				{#if isPayable}

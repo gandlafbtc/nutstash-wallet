@@ -25,7 +25,6 @@
 			return;
 		}
 
-        
 		try {
             mint = findMintById($mints, mintId);
             if (!mint) {
@@ -117,7 +116,14 @@
 				<button class="btn btn-outline" on:click={resetState}>ok</button>
 			</div>
 		{:else}
-			<div class="flex flex-col">
+			<div class="flex flex-col gap-2">
+				<p class="text-xl font-bold">
+					Receive Tokens
+				</p>
+				<p>
+					Paste a Cashu Token. 
+				</p>
+				
 				<div class="flex gap-2 items-center">
 					<label for="receive-token-input">
 						<p class="font-bold">Token:</p>
@@ -130,19 +136,17 @@
 						on:input={validateToken}
 					/>
 				</div>
-				<div class="flex flex-col">
-					<div class="flex">
-						<p>From Mint:</p>
-						<p>
-							{mintId ? mintId : '-'}
-						</p>
-					</div>
-					<div class="flex">
-						<p>Amount:</p>
-						<p>
-							{amount === 0 ? '-' : amount}
-						</p>
-					</div>
+				<div class="grid grid-cols-5">
+					{#if mintId}
+					<p>From Mint:</p>
+					<p class="col-span-4">
+						{mintId ? mintId : ''}
+					</p>
+					<p>Amount:</p>
+					<p class="col-span-4">
+						{amount === 0 ? '' : amount+' sats'}
+					</p>
+					{/if}
 				</div>
 			</div>
 			<div class="modal-action bottom-0">
