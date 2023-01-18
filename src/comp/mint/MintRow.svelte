@@ -2,6 +2,7 @@
 	import { mints } from "../../stores/mints";
 	import type { Mint } from "../../model/mint";
     import { token } from "../../stores/tokens";
+	import { getAmountForTokenSet, getTokensForMint } from "../util/walletUtils";
 
     export let mintIndex: number
     export let mint: Mint
@@ -59,11 +60,7 @@
 
     
     <td
-        >{$token.reduce((currVal, t) => {
-            if (mint.keysets.includes(t.id)) {
-                return currVal + t.amount;
-            } else return currVal;
-        }, 0)}
+        >{getAmountForTokenSet(getTokensForMint(mint,$token))}
     </td>
     <td>
         <button class="btn btn-square btn-error" on:click={() => removeMint()}>

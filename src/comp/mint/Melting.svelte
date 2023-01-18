@@ -6,7 +6,7 @@
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 	import type { Token } from '../../model/token';
-	import { getKeysetsOfTokens, getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysetsOfTokens, getTokensForMint, getTokensToSend } from '../util/walletUtils';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { browser } from '$app/environment';
@@ -28,7 +28,13 @@
 				const { fee } = await cashuMint.checkFees({ pr: invoice });
 				fees = fee;
 				//todo check for balance
-				isPayable = true;
+				if(getAmountForTokenSet(getTokensForMint(mint,$token))<amount+fees){
+					isPayable = false
+					toast('warning', "This Mint does not have enough funds to pay the invoice.",'Not enough funds')
+				}
+				else {
+					isPayable = true;
+				}
 			} else {
 				isPayable = false;
 				throw new Error('Malformed Invoice');
