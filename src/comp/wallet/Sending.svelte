@@ -5,15 +5,26 @@
 	import { mints } from '../../stores/mints';
 	import { token } from '../../stores/tokens';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getKeysetsOfTokens, getTokensForMint, getTokensToSend, getTokenSubset } from '../util/walletUtils';
+	import {
+		getAmountForTokenSet,
+		getKeysetsOfTokens,
+		getTokensForMint,
+		getTokensToSend,
+		getTokenSubset
+	} from '../util/walletUtils';
 	import { browser } from '$app/environment';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
+	import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useNostr } from '../../stores/nostr';
+	import type { Event } from 'nostr-tools';
+	import { nip04, Kind, signEvent, getEventHash, verifySignature } from 'nostr-tools';
+
 	let mint: Mint = $mints[0];
 	$: tokensForMint = getTokensForMint(mint, $token);
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
+	let sendToNostrKey = '0b18b95e50246ed424db7e6d54630a09080162114b626cc94d24d7ba89dc76bf';
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
@@ -50,16 +61,22 @@
 
 			encodedToken = CashuWallet.getEncodedProofs(send);
 
-			history.update((state) => [{
-				 type: HistoryItemType.SEND,amount:amountToSend,date: Date.now(),data: {
-					encodedToken,
-					mint:mint.mintURL,
-					keyset: getKeysetsOfTokens([...tokensToSend,...returnChange]),
-					send,
-					returnChange
-				 }
-			}, ...state]);
-			toast("success", 'Copy the token and send it to someone', 'Sendable Token created.')
+			history.update((state) => [
+				{
+					type: HistoryItemType.SEND,
+					amount: amountToSend,
+					date: Date.now(),
+					data: {
+						encodedToken,
+						mint: mint.mintURL,
+						keyset: getKeysetsOfTokens([...tokensToSend, ...returnChange]),
+						send,
+						returnChange
+					}
+				},
+				...state
+			]);
+			toast('success', 'Copy the token and send it to someone', 'Sendable Token created.');
 			isLoading = false;
 		} catch {
 			resetState();
@@ -76,6 +93,21 @@
 			document.execCommand('copy');
 			toast('info', 'Token has been copied to clipboard.', 'Copied!');
 		}
+	};
+
+	const sendWithNostr = async () => {
+		const event: Event = {
+			kind: Kind.EncryptedDirectMessage,
+			tags: [['p', sendToNostrKey]],
+			content: await nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken),
+			created_at: Math.floor(Date.now() / 1000),
+			pubkey: $nostrPubKey
+		};
+		event.id = getEventHash(event);
+		const signature: string = signEvent(event, $nostrPrivKey);
+		event.sig = signature;
+		console.log(event)
+		$nostrPool.publish(event, $nostrRelays);
 	};
 
 	const resetState = () => {
@@ -100,12 +132,8 @@
 					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
 				</div> -->
 				<div>
-					<p class="text-lg font-bold">
-						Tokens are ready to be sent!
-					</p>
-					<p>
-						⚠️ Copy the new token and send it to to someone!
-					</p>
+					<p class="text-lg font-bold">Tokens are ready to be sent!</p>
+					<p>⚠️ Copy the new token and send it to to someone!</p>
 				</div>
 				<div class="flex gap-2 flex-col">
 					<input
@@ -135,26 +163,24 @@
 			</div>
 			<div class="modal-action bottom-0">
 				<button class="btn" on:click={resetState}>ok</button>
+				{#if $useNostr}
+					<button class="btn btn-info" on:click={sendWithNostr}>Send over Nostr</button>
+				{/if}
 			</div>
 		{:else}
 			<div class=" flex flex-col gap-2">
-				<p class="font-bold text-xl">
-					Send Tokens
-				</p>
-				<p>
-					Create a sendable Cashu Token. 
-				</p>
+				<p class="font-bold text-xl">Send Tokens</p>
+				<p>Create a sendable Cashu Token.</p>
 				<div class="grid grid-cols-5 items-center">
 					<label for="mint-send-dropdown">
 						<p class="font-bold">Mint:</p>
 					</label>
 					{#if mint}
 						<div class="dropdown col-span-4" id="mint-send-dropdown">
-
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label tabindex="0" class="btn m-1">{mint.mintURL}</label>
-							
+
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<ul
 								tabindex="0"
@@ -171,16 +197,14 @@
 				</div>
 				<div class="grid grid-cols-5 items-center">
 					<label for="send-amount-input">
-					<p class="font-bold">
-						Amount:
-					</p>
-					 </label>
+						<p class="font-bold">Amount:</p>
+					</label>
 					<input
-					type="number"
-					name=""
-					id="send-amount-input"
-					class="input input-primary col-span-4"
-					bind:value={amountToSend}
+						type="number"
+						name=""
+						id="send-amount-input"
+						class="input input-primary col-span-4"
+						bind:value={amountToSend}
 					/>
 				</div>
 				<div class="grid grid-cols-5">

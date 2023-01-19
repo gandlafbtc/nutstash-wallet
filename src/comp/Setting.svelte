@@ -3,6 +3,7 @@
 
 	import { theme } from '../stores/theme';
 	import BackupButton from './elements/BackupButton.svelte';
+	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import History from './history/History.svelte';
 
@@ -11,12 +12,12 @@
 	};
 </script>
 
-<div class="flex flex-col justify-center gap-3">
-	<div class="grid grid-cols-5 w-full items-center gap-2">
+<div class="flex flex-col justify-start gap-3">
+	<div class="grid grid-cols-5 w-full items-center gap-2 max-h-72 overflow-scroll">
 		<p class="text-xl font-bold col-span-5">Settings</p>
-        <div class="-span-1">
-            <label for="theme-dropdown">Theme:</label>
-        </div>
+		<div class="-span-1">
+			<label for="theme-dropdown">Theme:</label>
+		</div>
 		<div class="dropdown col-span-4" id="theme-dropdown">
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -34,18 +35,19 @@
 				{/each}
 			</ul>
 		</div>
-        <div class="col-span-1">
-            <label for="delete-history-button">Backup Tokens</label>
-        </div>
-            <div class="col-span-4">
+		<div class="col-span-1">
+			<label for="delete-history-button">Backup Tokens</label>
+		</div>
+		<div class="col-span-4">
 			<BackupButton />
 		</div>
-        <div class="col-span-1">
-            <label for="delete-history-button">Delete History</label>
-        </div>
-            <div class="col-span-4">
+		<div class="col-span-1">
+			<label for="delete-history-button">Delete History</label>
+		</div>
+		<div class="col-span-4">
 			<ResetHistoryButton />
 		</div>
+		<NostrSettings></NostrSettings>
 	</div>
 	<div class="flex flex-col gap-2">
 		<p class="text-xl font-bold">History</p>

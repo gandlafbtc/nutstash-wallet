@@ -36,6 +36,8 @@
 	"type": "module",
 	"dependencies": {
 		"daisyui": "^2.46.1",
-		"svelte-qrcode-image": "^1.0.0-rc.2"
+		"nostr-relaypool": "^0.3.7",
+		"svelte-qrcode-image": "^1.0.0-rc.2",
+		"ws": "^8.12.0"
 	}
 }

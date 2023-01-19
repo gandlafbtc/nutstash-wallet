@@ -35,6 +35,11 @@ const getTokensForMint = (mint: Mint, tokens: Array<Token>) => {
     return tokenSubset
 }
 
+const isValidToken = (obj: any) => {
+    // todo implement
+   return true
+}
+
 /**
  * removes a set of tokens from another set of tokens, and returns the remaining.
  * @param tokens 
@@ -67,4 +72,4 @@ const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
     }, [])
 }
 
-export { getMintForToken, getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray }
+export { getMintForToken, getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray, isValidToken }
