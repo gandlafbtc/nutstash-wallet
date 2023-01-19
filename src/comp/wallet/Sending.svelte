@@ -96,6 +96,7 @@
 	};
 
 	const sendWithNostr = async () => {
+		try {
 		const event: Event = {
 			kind: Kind.EncryptedDirectMessage,
 			tags: [['p', sendToNostrKey]],
@@ -108,6 +109,13 @@
 		event.sig = signature;
 		console.log(event)
 		$nostrPool.publish(event, $nostrRelays);
+		toast("info", "The Token is being sent over nostr","Sent!")
+		resetState()
+	}
+	catch(e) {
+		console.error(e)
+		toast("error", "The Token could not be sent over nostr", 'Error:')
+	}
 	};
 
 	const resetState = () => {

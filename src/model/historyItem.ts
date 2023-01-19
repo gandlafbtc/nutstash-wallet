@@ -8,6 +8,7 @@ interface HistoryItem<HistoryData> {
 enum HistoryItemType {
     SEND,
     RECEIVE,
+    RECEIVE_NOSTR,
     MINT,
     MELT,
   }

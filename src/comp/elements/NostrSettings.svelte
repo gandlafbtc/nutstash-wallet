@@ -34,7 +34,7 @@
 </div>
 {#if $useNostr}
 	<div class="col-span-1">
-		<label for="delete-history-button">Edit Keys</label>
+		<label for="delete-history-button">Edit Nostr Keys</label>
 	</div>
 
 	<div class="col-span-4">

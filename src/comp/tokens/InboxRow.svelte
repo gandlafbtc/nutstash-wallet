@@ -5,10 +5,12 @@
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getMintForToken } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysetsOfTokens, getMintForToken } from '../util/walletUtils';
 	import type { Token } from '../../model/token';
 	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
+	import { history } from "../../stores/history";
+	import { HistoryItemType } from '../../model/historyItem';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
@@ -16,7 +18,6 @@
 
 	let isLoading = false;
 	const acceptToken = async () => {
-		//todo receive token
 		isLoading = true;
 		try {
 			const mint = getMintForToken(nostrMessage.token[0], $mints);
@@ -35,15 +36,24 @@
 				nostrMessage.isAccepted = true;
 				return [nostrMessage, ...everythingElse];
 			});
-			toast('success', 'the Tokens have been successfully received', 'Success!')
-		} catch {
-			toast('error', 'The Tokens could not be added to your Wallet.', 'Error!')
 
+			history.update((state) => [{
+				 type: HistoryItemType.RECEIVE_NOSTR, amount: getAmountForTokenSet(nostrMessage.token) ,date: Date.now(), data: {
+					mint: mint?.mintURL??'',
+					keyset: getKeysetsOfTokens(newTokens),
+					receivedTokens:newTokens,
+					sender: nostrMessage.event.pubkey,
+					eventId: nostrMessage.event.id
+				 }
+			}, ...state]);
+			toast('success', 'the Tokens have been successfully received', 'Success!');
+		} catch {
+			toast('error', 'The Tokens could not be added to your Wallet.', 'Error!');
 		}
 		if (browser) {
-				// @ts-expect-error
-				document.getElementById('nostr-receive-' + i).checked = false;
-			}
+			// @ts-expect-error
+			document.getElementById('nostr-receive-' + i).checked = false;
+		}
 		isLoading = false;
 	};
 	const rejectToken = () => {

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { CashuWallet } from '@gandlaf21/cashu-js';
-	import type { MeltData } from 'src/model/data/MeltData';
+	import type { MeltData } from '../../model/data/MeltData';
+	import type { ReceiveNostrData } from '../../model/data/ReceiveNostrData';
 	import type { MintData } from '../../model/data/MintData';
 	import type { ReceiveData } from '../../model/data/ReceiveData';
 	import type { SendData } from '../../model/data/SendData';
@@ -17,6 +18,9 @@
 		token = CashuWallet.getEncodedProofs(sendData.send??[]);
 	} else if (historyItem.type === HistoryItemType.RECEIVE) {
 		const recieveData: ReceiveData = historyItem.data;
+		token = CashuWallet.getEncodedProofs(recieveData.receivedTokens??[]);
+	}else if (historyItem.type === HistoryItemType.RECEIVE_NOSTR) {
+		const recieveData: ReceiveNostrData = historyItem.data;
 		token = CashuWallet.getEncodedProofs(recieveData.receivedTokens??[]);
 	} else if (historyItem.type === HistoryItemType.MINT) {
 		const mintData: MintData = historyItem.data;
