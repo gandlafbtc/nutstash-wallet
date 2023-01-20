@@ -24,7 +24,7 @@
                     </p>
                 </th>
 				<th>Mint</th>
-				<th>Actions</th>
+				<th>Token</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll">

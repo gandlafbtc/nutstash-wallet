@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { CashuWallet } from '@gandlaf21/cashu-js';
-	import { RelayPool } from 'nostr-relaypool';
+	import * as rp from 'nostr-relaypool';
 
-	import { nip04, Kind,validateEvent } from 'nostr-tools';
+	import * as nostrTools from 'nostr-tools';
 	import type { NostrMessage } from 'src/model/nostrMessage';
 	import { nostrPool, useNostr, nostrRelays as relays, nostrPubKey, nostrPrivKey, nostrMessages } from '../../stores/nostr';
 	import { isValidToken } from '../util/walletUtils';
 
 	if ($useNostr) {
-		nostrPool.set(new RelayPool($relays));
+		nostrPool.set(new rp.RelayPool($relays));
 		$nostrPool?.subscribe(
-			[{ kinds: [Kind.EncryptedDirectMessage], limit: 10, '#p': [$nostrPubKey]}],
+			[{ kinds: [nostrTools.Kind.EncryptedDirectMessage], limit: 10, '#p': [$nostrPubKey]}],
 			$relays,
 			async (event, isAfterEose, relayURL) => {
                 console.log(event)
@@ -18,17 +18,18 @@
                     //if token is already stored, do nothing
                     return
                 }
-                if (!validateEvent(event)){
+                if (!nostrTools.validateEvent(event)){
                     //if an event is invalid, ignore it
                     return 
                 }
-                const decodedMessage  = await nip04.decrypt($nostrPrivKey,event.pubkey,event.content)
+                const decodedMessage  = await nostrTools.nip04.decrypt($nostrPrivKey,event.pubkey,event.content)
                 const decodedTokens = CashuWallet.getDecodedProofs(decodedMessage)
 
                 if (!isValidToken(decodedTokens)){
                     // ignore messages that are not tokens
                     return
                 }
+                
                 const nostrMessage: NostrMessage = {
                     event,
                     token: decodedTokens,

@@ -17,7 +17,7 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useNostr } from '../../stores/nostr';
 	import type { Event } from 'nostr-tools';
-	import { nip04, Kind, signEvent, getEventHash, verifySignature } from 'nostr-tools';
+	import * as nostrTools from 'nostr-tools';
 
 	let mint: Mint = $mints[0];
 	$: tokensForMint = getTokensForMint(mint, $token);
@@ -98,14 +98,14 @@
 	const sendWithNostr = async () => {
 		try {
 			const event: Event = {
-				kind: Kind.EncryptedDirectMessage,
+				kind: nostrTools.Kind.EncryptedDirectMessage,
 				tags: [['p', sendToNostrKey]],
-				content: await nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken),
+				content: await nostrTools.nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken),
 				created_at: Math.floor(Date.now() / 1000),
 				pubkey: $nostrPubKey
 			};
-			event.id = getEventHash(event);
-			const signature: string = signEvent(event, $nostrPrivKey);
+			event.id = nostrTools.getEventHash(event);
+			const signature: string = nostrTools.signEvent(event, $nostrPrivKey);
 			event.sig = signature;
 			console.log(event);
 			$nostrPool.publish(event, $nostrRelays);

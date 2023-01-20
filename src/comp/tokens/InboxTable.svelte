@@ -14,7 +14,7 @@
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
-				<th>Action</th>
+				<th></th>
 				<th>Amount</th>
 				<th>Date</th>
 				<th>From</th>
