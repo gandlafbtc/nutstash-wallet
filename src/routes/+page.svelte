@@ -5,16 +5,20 @@
 	import Toasts from '../comp/Toasts.svelte';
 	import { theme } from '../stores/theme';
 	import Logo from '../comp/elements/Logo.svelte';
+	import { message } from '../stores/message';
 	let activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
 		activeTab = tabName;
 	};
+
+	const deleteMessage = () => {
+		message.set('');
+	};
 </script>
 
 <div class="w-full grid lg:grid-cols-4 h-screen p-2 bg-primary" data-theme={$theme}>
 	<div class="hidden lg:flex" />
-
 	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col xl:mx-0 xl:w-full h-full">
 		<div class="dropdown">
 			<div class="bg-opacity-100">
@@ -98,12 +102,44 @@
 			{/if}
 			<Toasts />
 
-			<div class="flex justify-center items-end">
+			<div class="flex justify-end items-center flex-col">
 				<div class="w-32 items-center flex">
 					<Logo />
 				</div>
+				{#if $message}
+				<div />
+				<div class="col-span-2 m-1 rounded-sm bg-warning p-1 flex justify-between items-center">
+					<div class="flex gap-1">
+						<p class="text-warning-content">
+							{$message}<a href="https://nutstash.app/risks" class="link-hover link-accent"
+								> Learn more here</a
+							>
+						</p>
+					</div>
+					<button
+						class="w-4 h-4 rounded-full bg-warning-content flex items-center justify-center"
+						on:click={deleteMessage}
+					>
+						<p class="text-warning text-xs">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-3 h-3"
+							>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</p>
+					</button>
+				</div>
+				<div />
+				<div class="col-span-4"></div>
+			{/if}
 			</div>
 		</div>
 	</div>
 	<div class="hidden lg:flex" />
+
 </div>

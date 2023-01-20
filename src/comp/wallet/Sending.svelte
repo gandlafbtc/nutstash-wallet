@@ -24,7 +24,7 @@
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
-	let sendToNostrKey = '0b18b95e50246ed424db7e6d54630a09080162114b626cc94d24d7ba89dc76bf';
+	let sendToNostrKey = '';
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
@@ -97,25 +97,24 @@
 
 	const sendWithNostr = async () => {
 		try {
-		const event: Event = {
-			kind: Kind.EncryptedDirectMessage,
-			tags: [['p', sendToNostrKey]],
-			content: await nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken),
-			created_at: Math.floor(Date.now() / 1000),
-			pubkey: $nostrPubKey
-		};
-		event.id = getEventHash(event);
-		const signature: string = signEvent(event, $nostrPrivKey);
-		event.sig = signature;
-		console.log(event)
-		$nostrPool.publish(event, $nostrRelays);
-		toast("info", "The Token is being sent over nostr","Sent!")
-		resetState()
-	}
-	catch(e) {
-		console.error(e)
-		toast("error", "The Token could not be sent over nostr", 'Error:')
-	}
+			const event: Event = {
+				kind: Kind.EncryptedDirectMessage,
+				tags: [['p', sendToNostrKey]],
+				content: await nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken),
+				created_at: Math.floor(Date.now() / 1000),
+				pubkey: $nostrPubKey
+			};
+			event.id = getEventHash(event);
+			const signature: string = signEvent(event, $nostrPrivKey);
+			event.sig = signature;
+			console.log(event);
+			$nostrPool.publish(event, $nostrRelays);
+			toast('info', 'The Token is being sent over nostr', 'Sent!');
+			resetState();
+		} catch (e) {
+			console.error(e);
+			toast('error', 'The Token could not be sent over nostr', 'Error:');
+		}
 	};
 
 	const resetState = () => {
@@ -135,15 +134,15 @@
 		{#if isLoading}
 			<LoadingCenter />
 		{:else if encodedToken}
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+			<div class="grid grid-cols-1 gap-2">
 				<!-- <div>
 					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
 				</div> -->
 				<div>
-					<p class="text-lg font-bold">Tokens are ready to be sent!</p>
-					<p>⚠️ Copy the new token and send it to to someone!</p>
+					<p class="text-xl font-bold">Tokens are ready to be sent!</p>
+					<p>Copy the new token and send it to to someone!</p>
 				</div>
-				<div class="flex gap-2 flex-col">
+				<div class="flex gap-2">
 					<input
 						type="text"
 						class="w-full input input-primary"
@@ -168,11 +167,38 @@
 						</svg>
 					</button>
 				</div>
+				<div class="pt-2">
+					{#if $useNostr}
+					<p class="font-bold">
+						Or send it over Nostr:
+					</p>
+					<div class="flex items-center gap-2">
+						<p>Pubkey</p>
+						<input type="text" class="input input-primary" bind:value={sendToNostrKey}>
+					</div>
+					{/if}
+				</div>
 			</div>
 			<div class="modal-action bottom-0">
 				<button class="btn" on:click={resetState}>ok</button>
-				{#if $useNostr}
-					<button class="btn btn-info" on:click={sendWithNostr}>Send over Nostr</button>
+				{#if $useNostr && sendToNostrKey}
+					<button class="btn btn-info flex gap-1" on:click={sendWithNostr}>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6 rotate-12"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+							/>
+						</svg>
+						Send over Nostr</button
+					>
 				{/if}
 			</div>
 		{:else}

@@ -50,7 +50,7 @@ nostrMessages.subscribe((value) => {
   }
 });
 
-const initialValueStingNostrRelays: string = browser ? window.localStorage.getItem('nostr-relays') ?? '["wss://relay.nostropolis.xyz/websocket"]': '["wss://relay.nostropolis.xyz/websocket"]'
+const initialValueStingNostrRelays: string = browser ? window.localStorage.getItem('nostr-relays') ?? '["wss://nostr-pub.wellorder.net"]': '["wss://nostr-pub.wellorder.net"]'
 
 const initialValueNostrRelays : Array<string> = JSON.parse(initialValueStingNostrRelays)
 
