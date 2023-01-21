@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-js';
+	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-js';
 	import { mints } from '../../stores/mints';
 	import type { Token } from '../../model/token';
 	import { getMintForToken, getTokenSubset } from '../util/walletUtils';
@@ -25,8 +25,13 @@
 
 		try {
 			isLoading = true;
-			const newTokens: Array<Token> = await cashuWallet.recieve(
-				CashuWallet.getEncodedProofs([token])
+			console.log(token)
+			const encodedProofs = getEncodedProofs([token])
+			console.log(encodedProofs)
+			const decodedProofs = getDecodedProofs(encodedProofs)
+			console.log(decodedProofs)
+			const newTokens: Array<Token> = await cashuWallet.receive(
+				encodedProofs
 			);
 			//remove old token
 			tokenStore.update((state) => getTokenSubset(state, [token]));
@@ -80,7 +85,7 @@
 		{token.id}
 	</td>
 	<td class="max-w-0 overflow-clip">
-		{CashuWallet.getEncodedProofs([token])}
+		{getEncodedProofs([token])}
 	</td>
 </tr>
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-js';
+	import { CashuMint, CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-js';
 	import { mints } from '../../stores/mints';
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
@@ -9,7 +9,7 @@
 	import type { Token } from '../../model/token';
 	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
-	import { history } from "../../stores/history";
+	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 
 	export let nostrMessage: NostrMessage;
@@ -18,14 +18,24 @@
 
 	let isLoading = false;
 	const acceptToken = async () => {
-		isLoading = true;
 		try {
-			const mint = getMintForToken(nostrMessage.token[0], $mints);
+			const mint = getMintForToken(nostrMessage.token.proofs[0], $mints);
+			if (!mint) {
+				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
+				return
+			}
+			if (!mint.isAdded){
+				toast('warning', 'This token is from a mint you have not added yet.', 'Token could not be added');
+				return
+			}
+			
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
-			const newTokens: Array<Token> = await cashuWallet.recieve(
-				CashuWallet.getEncodedProofs(nostrMessage.token)
-			);
+			const encodedProofs = getEncodedProofs(nostrMessage.token.proofs, nostrMessage.token.mints);
+			console.log(encodedProofs);
+
+			isLoading = true;
+			const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
 
 			token.update((state) => [...newTokens, ...state]);
 
@@ -37,17 +47,24 @@
 				return [nostrMessage, ...everythingElse];
 			});
 
-			history.update((state) => [{
-				 type: HistoryItemType.RECEIVE_NOSTR, amount: getAmountForTokenSet(nostrMessage.token) ,date: Date.now(), data: {
-					mint: mint?.mintURL??'',
-					keyset: getKeysetsOfTokens(newTokens),
-					receivedTokens:newTokens,
-					sender: nostrMessage.event.pubkey,
-					eventId: nostrMessage.event.id
-				 }
-			}, ...state]);
+			history.update((state) => [
+				{
+					type: HistoryItemType.RECEIVE_NOSTR,
+					amount: getAmountForTokenSet(nostrMessage.token.proofs),
+					date: Date.now(),
+					data: {
+						mint: mint?.mintURL ?? '',
+						keyset: getKeysetsOfTokens(newTokens),
+						receivedTokens: newTokens,
+						sender: nostrMessage.event.pubkey,
+						eventId: nostrMessage.event.id
+					}
+				},
+				...state
+			]);
 			toast('success', 'the Tokens have been successfully received', 'Success!');
-		} catch {
+		} catch (e) {
+			console.error(e);
 			toast('error', 'The Tokens could not be added to your Wallet.', 'Error!');
 		}
 		if (browser) {
@@ -113,7 +130,7 @@
 			</label>
 		{/if}
 	</td>
-	<td>{getAmountForTokenSet(nostrMessage.token)}</td>
+	<td>{getAmountForTokenSet(nostrMessage?.token?.proofs)}</td>
 	<td>
 		<p class="hidden lg:flex">
 			{date.toLocaleString('en-us', {
@@ -141,11 +158,11 @@
 			<div class="grid grid-cols-5">
 				<p class="font-bold">Amount:</p>
 				<p class="col-span-4">
-					{getAmountForTokenSet(nostrMessage.token)}
+					{getAmountForTokenSet(nostrMessage?.token?.proofs)??''}
 				</p>
 				<p class="font-bold">Mint:</p>
 				<p class="col-span-4">
-					{nostrMessage.token[0].id}
+					{nostrMessage.token.mints[0].url}
 				</p>
 				<p class="font-bold">From:</p>
 				<p class="col-span-4 overflow-clip">

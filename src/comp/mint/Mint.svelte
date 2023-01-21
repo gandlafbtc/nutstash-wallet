@@ -7,6 +7,7 @@
 	import Melting from './Melting.svelte';
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
+	import MintRowAdd from './MintRowAdd.svelte';
 	let mintURL = 'https://legend.lnbits.com';
 	let mintAPIRoot = 'cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC';
 	let mintPort = '';
@@ -28,7 +29,8 @@
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
 				keys,
-				keysets: keysets.keysets
+				keysets: keysets.keysets,
+				isAdded: true
 			};
 
 			mints.update((state) => [storeMint, ...state]);
@@ -67,10 +69,14 @@
 						<td colspan="4"> no mints added so far. </td>
 					</tr>
 				{/if}
-				{#each $mints as mint, mintIndex}
+				{#each $mints.sort((a,b)=> {return (a === b)? 0 : a? 1 : -1})  as mint, mintIndex}
+					{#if mint.isAdded}
 					<Minting {mint} />
 					<Melting {mint} />
 					<MintRow {mint} {mintIndex} />
+					{:else}
+						 <MintRowAdd {mint} {mintIndex}></MintRowAdd>
+					{/if}
 				{/each}
 			</tbody>
 		</table>

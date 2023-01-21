@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-js';
+	import { CashuMint, CashuWallet, getDecodedProofs } from '@gandlaf21/cashu-js';
 	import { toast } from '../../stores/toasts';
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
@@ -34,7 +34,7 @@
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
-			const receivedTokens: Array<Token> = await cashuWallet.recieve(encodedToken);
+			const receivedTokens: Array<Token> = await cashuWallet.receive(encodedToken);
 
 			token.update((state) => [...state, ...receivedTokens]);
             
@@ -59,8 +59,8 @@
 
 	const validateToken = () => {
 		try {
-			const decodedTokens: Array<Token> = CashuWallet.getDecodedProofs(encodedToken);
-			decodedTokens.forEach((t) => {
+			const {proofs, mints} = getDecodedProofs(encodedToken);
+			proofs.forEach((t) => {
 				mintId = t.id;
 				amount += t.amount;
 			});

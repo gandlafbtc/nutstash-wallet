@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuWallet } from '@gandlaf21/cashu-js';
+	import { CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-js';
 	import type { MeltData } from '../../model/data/MeltData';
 	import type { ReceiveNostrData } from '../../model/data/ReceiveNostrData';
 	import type { MintData } from '../../model/data/MintData';
@@ -15,19 +15,19 @@
 
 	if (historyItem.type === HistoryItemType.SEND) {
 		const sendData: SendData = historyItem.data;
-		token = CashuWallet.getEncodedProofs(sendData.send??[]);
+		token = getEncodedProofs(sendData.send??[]);
 	} else if (historyItem.type === HistoryItemType.RECEIVE) {
 		const recieveData: ReceiveData = historyItem.data;
-		token = CashuWallet.getEncodedProofs(recieveData.receivedTokens??[]);
+		token = getEncodedProofs(recieveData.receivedTokens??[]);
 	}else if (historyItem.type === HistoryItemType.RECEIVE_NOSTR) {
 		const recieveData: ReceiveNostrData = historyItem.data;
-		token = CashuWallet.getEncodedProofs(recieveData.receivedTokens??[]);
+		token = getEncodedProofs(recieveData.receivedTokens??[]);
 	} else if (historyItem.type === HistoryItemType.MINT) {
 		const mintData: MintData = historyItem.data;
-		token = CashuWallet.getEncodedProofs(mintData.tokens??[]);
+		token = getEncodedProofs(mintData.tokens??[]);
 	} else {
 		const meltData: MeltData = historyItem.data;
-		token = CashuWallet.getEncodedProofs(meltData.change??[]);
+		token = getEncodedProofs(meltData.change??[]);
 	}
 </script>
 

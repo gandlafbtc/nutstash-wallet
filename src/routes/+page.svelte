@@ -6,6 +6,9 @@
 	import { theme } from '../stores/theme';
 	import Logo from '../comp/elements/Logo.svelte';
 	import { message } from '../stores/message';
+	import { nostrMessages } from '../stores/nostr';
+	import { mints } from '../stores/mints';
+	
 	let activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
@@ -39,6 +42,16 @@
 							/>
 						</svg>
 						<p class="hidden lg:flex">Wallet</p>
+						{#if $nostrMessages.filter((nM) => {
+							return !nM.isAccepted;
+						}).length > 0}
+						<span class="flex h-3 w-3">
+							<div
+								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
+							/>
+							<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
+						</span>
+						{/if}
 					</button>
 					<button
 						on:click={() => changeTab('mint')}
@@ -61,7 +74,18 @@
 							/>
 							<path d="M12 7.875a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" />
 						</svg>
-						<p class="hidden lg:flex">Mint</p></button
+						<p class="hidden lg:flex">Mint</p>
+						{#if $mints.filter((m) => {
+							return !m.isAdded;
+						}).length > 0}
+						<span class="flex h-3 w-3">
+							<div
+								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
+							/>
+							<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
+						</span>
+						{/if}
+						</button
 					>
 					<button
 						on:click={() => changeTab('setting')}
