@@ -3,6 +3,7 @@
 	import type { Mint } from "../../model/mint";
     import { token } from "../../stores/tokens";
 	import { getAmountForTokenSet, getTokensForMint } from "../util/walletUtils";
+	import TokenIcon from "../tokens/TokenIcon.svelte";
 
     export let mintIndex: number
     export let mint: Mint
@@ -60,7 +61,11 @@
 
     
     <td
-        >{getAmountForTokenSet(getTokensForMint(mint,$token))}
+        >
+        <div class="flex gap-2 items-center">
+            {getAmountForTokenSet(getTokensForMint(mint,$token))}
+            <TokenIcon></TokenIcon>
+        </div>
     </td>
     <td>
         <button class="btn btn-square btn-error" on:click={() => removeMint()}>

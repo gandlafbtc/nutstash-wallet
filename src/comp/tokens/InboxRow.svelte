@@ -145,7 +145,7 @@
 		</p>
 	</td>
 	<td class="max-w-0 overflow-clip">
-		{nostrMessage.event.pubkey}
+		{getEncodedProofs(nostrMessage.token.proofs)}
 	</td>
 </tr>
 

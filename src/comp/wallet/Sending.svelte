@@ -173,7 +173,7 @@
 						Or send it over Nostr:
 					</p>
 					<div class="flex items-center gap-2">
-						<p>Pubkey</p>
+						<p>Pubkey (hex)</p>
 						<input type="text" class="input input-primary" bind:value={sendToNostrKey}>
 					</div>
 					{/if}

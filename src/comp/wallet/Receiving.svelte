@@ -34,6 +34,7 @@
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
+			isLoading =true
 			const receivedTokens: Array<Token> = await cashuWallet.receive(encodedToken);
 
 			token.update((state) => [...state, ...receivedTokens]);
@@ -46,7 +47,7 @@
 					receivedTokens,
 				 }
 			}, ...state]);
-
+			isLoading=false
 			isComplete = true;
 		} catch {
 			toast('error', 'Tokens could not be received', 'an Error occured');
