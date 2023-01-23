@@ -59,8 +59,8 @@
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
 
-			encodedToken = getEncodedProofs(send,[{url:mint.mintURL, keysets:mint.keysets}]);
-			console.log(getDecodedProofs(encodedToken))
+			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, keysets: mint.keysets }]);
+			console.log(getDecodedProofs(encodedToken));
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
@@ -169,13 +169,11 @@
 				</div>
 				<div class="pt-2">
 					{#if $useNostr}
-					<p class="font-bold">
-						Or send it over Nostr:
-					</p>
-					<div class="flex items-center gap-2">
-						<p>Pubkey (hex)</p>
-						<input type="text" class="input input-primary" bind:value={sendToNostrKey}>
-					</div>
+						<p class="font-bold">Or send it over Nostr:</p>
+						<div class="flex items-center gap-2">
+							<p>Pubkey (hex)</p>
+							<input type="text" class="input input-primary" bind:value={sendToNostrKey} />
+						</div>
 					{/if}
 				</div>
 			</div>
@@ -210,17 +208,22 @@
 						<p class="font-bold">Mint:</p>
 					</label>
 					{#if mint}
-						<div class="dropdown col-span-4" id="mint-send-dropdown">
+						<div class="dropdown" id="mint-send-dropdown">
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label tabindex="0" class="btn m-1">{mint.mintURL}</label>
+							<label tabindex="0" class="btn m-1 truncate ...">
+								<p class="truncate ... max-w-xs">
+
+									{mint.mintURL}
+								</p>
+							</label>
 
 							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 							<ul
 								tabindex="0"
 								class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
 							>
-								{#each $mints as m}
+								{#each $mints.filter((m) => m.isAdded) as m}
 									<!-- svelte-ignore a11y-missing-attribute -->
 									<!-- svelte-ignore a11y-click-events-have-key-events -->
 									<li on:click={() => (mint = m)}><a>{m.mintURL}</a></li>
@@ -230,24 +233,22 @@
 					{/if}
 				</div>
 				<div class="grid grid-cols-5 items-center">
-					<label for="send-amount-input">
-						<p class="font-bold">Amount:</p>
-					</label>
+						<p class="font-bold col-span-2">Amount:</p>
 					<input
 						type="number"
 						name=""
 						id="send-amount-input"
-						class="input input-primary col-span-4"
+						class="input input-primary col-span-3"
 						bind:value={amountToSend}
 					/>
 				</div>
 				<div class="grid grid-cols-5">
-					<p class="font-bold">Available:</p>
-					<p class="col-span-4">{getAmountForTokenSet(tokensForMint)} sats</p>
+					<p class="font-bold col-span-2">Available:</p>
+					<p class="col-span-3">{getAmountForTokenSet(tokensForMint)} sats</p>
 				</div>
 			</div>
 			<div class="modal-action bottom-0">
-				<label for="send-modal" class="btn">cancel</label>
+				<label for="send-modal	" class="btn">cancel</label>
 				<button class="btn btn-success" on:click={send}>send</button>
 			</div>
 		{/if}

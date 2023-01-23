@@ -53,7 +53,7 @@
 					/>
 				</svg>
 			</div>
-			<div>
+			<div class="overflow-scroll scrollbar-hide">
 				{mint.mintURL}
 			</div>
 		</div>

@@ -8,10 +8,10 @@
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
 	import MintRowAdd from './MintRowAdd.svelte';
-	let mintURL = 'https://legend.lnbits.com';
-	let mintAPIRoot = 'cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC';
+	let mintURL = '';
+	let mintAPIRoot = '';
 	let mintPort = '';
-	let showAdvanced = true;
+	let showAdvanced = false;
 	let isLoading = false
 
 	const addMint = async () => {
@@ -51,13 +51,13 @@
 	};
 </script>
 
-<div class="overflow-scroll flex flex-col gap-3">
-	<div class="max-h-56 overflow-scroll">
-		<table class="table w-full overflow-scroll">
+<div class="flex flex-col gap-3">
+	<div class="max-h-56">
+		<table class="table table-auto w-full">
 			<!-- head -->
 			<thead>
 				<tr>
-					<th>Keysets</th>
+					<th>Mint</th>
 					<th>Actions</th>
 					<th>Tokens</th>
 					<th />
@@ -71,8 +71,8 @@
 				{/if}
 				{#each $mints.sort((a,b)=> {return (a === b)? 0 : a? 1 : -1})  as mint, mintIndex}
 					{#if mint.isAdded}
-					<Minting {mint} />
-					<Melting {mint} />
+					<Minting {mint} {mintIndex} />
+					<Melting {mint} {mintIndex}/>
 					<MintRow {mint} {mintIndex} />
 					{:else}
 						 <MintRowAdd {mint} {mintIndex}></MintRowAdd>

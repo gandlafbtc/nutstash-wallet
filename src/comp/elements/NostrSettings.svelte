@@ -44,7 +44,7 @@
 		<label for="delete-history-button">Nostr Private Key</label>
 	</div>
 
-	<div class="col-span-4 flex gap-2">
+	<div class="col-span-4 flex gap-2 w-full">
         {#if isEditNostr}
 		<input type="text" class="input input-primary" bind:value={$nostrPrivKey} />
         {:else}
@@ -73,7 +73,7 @@
 		<label for="delete-history-button">Nostr Public Key</label>
 	</div>
 
-	<div class="col-span-4 flex gap-2">
+	<div class="col-span-4 flex gap-2 w-full">
         {#if isEditNostr}
 		<input id='nostr-pubkey-input' type="text" class="input input-primary" bind:value={$nostrPubKey} />
         {:else}

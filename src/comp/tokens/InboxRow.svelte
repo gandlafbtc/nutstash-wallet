@@ -22,13 +22,17 @@
 			const mint = getMintForToken(nostrMessage.token.proofs[0], $mints);
 			if (!mint) {
 				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
-				return
+				return;
 			}
-			if (!mint.isAdded){
-				toast('warning', 'This token is from a mint you have not added yet.', 'Token could not be added');
-				return
+			if (!mint.isAdded) {
+				toast(
+					'warning',
+					'This token is from a mint you have not added yet.',
+					'Token could not be added'
+				);
+				return;
 			}
-			
+
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 			const encodedProofs = getEncodedProofs(nostrMessage.token.proofs, nostrMessage.token.mints);
@@ -86,9 +90,13 @@
 			document.getElementById('nostr-receive-' + i).checked = false;
 		}
 	};
+	const openModal = () => {
+			// @ts-expect-error
+			document.getElementById('nostr-receive-' + i).checked = true;
+	};
 </script>
 
-<tr>
+<tr on:click={openModal}>
 	<td>
 		{#if nostrMessage.isAccepted}
 			<svg
@@ -106,7 +114,7 @@
 				/>
 			</svg>
 		{:else}
-			<label class="flex h-4 w-4 cursor-pointer" for="nostr-receive-{i}">
+			<div class="flex h-4 w-4 cursor-pointer">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"
@@ -127,7 +135,7 @@
 						d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"
 					/>
 				</svg>
-			</label>
+			</div>
 		{/if}
 	</td>
 	<td>{getAmountForTokenSet(nostrMessage?.token?.proofs)}</td>
@@ -154,11 +162,13 @@
 	<div class="modal-box">
 		<div class="flex flex-col items-start">
 			<p class="font-bold text-xl">You received Tokens over nostr</p>
+			{#if !nostrMessage.isAccepted}
 			<p class="">Click Accept to add the Tokens to your Wallet</p>
+			{/if}
 			<div class="grid grid-cols-5">
 				<p class="font-bold">Amount:</p>
 				<p class="col-span-4">
-					{getAmountForTokenSet(nostrMessage?.token?.proofs)??''}
+					{getAmountForTokenSet(nostrMessage?.token?.proofs) ?? ''}
 				</p>
 				<p class="font-bold">Mint:</p>
 				<p class="col-span-4">
@@ -175,8 +185,11 @@
 				<LoadingCenter />
 			{:else}
 				<label for="nostr-receive-{i}" class="btn">close</label>
-				<button on:click={rejectToken} class="btn btn-warning">Reject</button>
-				<button on:click={acceptToken} class="btn btn-success">Accept</button>
+				{#if !nostrMessage.isAccepted}
+					 <!-- content here -->
+					 <button on:click={rejectToken} class="btn btn-warning">Reject</button>
+					 <button on:click={acceptToken} class="btn btn-success">Accept</button>
+					 {/if}
 			{/if}
 		</div>
 	</div>

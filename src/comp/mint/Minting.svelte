@@ -14,6 +14,7 @@
 
 
     export let mint:Mint
+	export let mintIndex: number
     let mintAmount = 10;
 	let qrCode: string | undefined;
 	let mintingHash: string | undefined;
@@ -72,7 +73,8 @@
 				isLoading = false
 
 			}
-		} catch {
+		} catch (e) {
+			console.error(e)
 			toast("error","Error trying to mint tokens. Has the invoice been paid?", "Could not mint Tokens.")
 			isLoading = false
 			throw new Error("Error minting tokens");
@@ -82,7 +84,7 @@
     const resetState = () => {
 		if (browser) {
 			// @ts-expect-error
-            document.getElementById("mint-modal-"+mint.keysets[0]).checked = false;
+            document.getElementById("mint-modal-"+mintIndex).checked = false;
         }
 		mintAmount = 10
 		qrCode = undefined;
@@ -92,7 +94,7 @@
 	};
 </script>
 
-<input type="checkbox" id="mint-modal-{mint.keysets[0]}" class="modal-toggle" />
+<input type="checkbox" id="mint-modal-{mintIndex}" class="modal-toggle" />
 <div class="modal">
 	<div class="modal-box flex flex-col gap-3 h-80">
 		{#if isLoading}

@@ -12,8 +12,8 @@
 	};
 </script>
 
-<div class="flex flex-col justify-start gap-3">
-	<div class="grid grid-cols-5 w-full items-center gap-2 max-h-72 overflow-scroll">
+<div class="flex flex-col justify-start gap-3 w-full">
+	<div class="grid grid-cols-5 w-full items-center gap-2 max-h-72 overflow-y-scroll">
 		<p class="text-xl font-bold col-span-5">Settings</p>
 		<div class="-span-1">
 			<label for="theme-dropdown">Theme:</label>

@@ -25,11 +25,7 @@
 
 		try {
 			isLoading = true;
-			console.log(token)
 			const encodedProofs = getEncodedProofs([token])
-			console.log(encodedProofs)
-			const decodedProofs = getDecodedProofs(encodedProofs)
-			console.log(decodedProofs)
 			const newTokens: Array<Token> = await cashuWallet.receive(
 				encodedProofs
 			);

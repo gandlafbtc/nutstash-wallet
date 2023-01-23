@@ -17,6 +17,7 @@
 	import { browser } from '$app/environment';
 
 	export let mint: Mint;
+	export let mintIndex: number
 
 	let invoice = '';
 	let fees: number = 0;
@@ -121,7 +122,7 @@
 	const resetState = () => {
 		if (browser) {
 			// @ts-expect-error
-			document.getElementById('melt-modal-' + mint.keysets[0]).checked = false;
+			document.getElementById('melt-modal-' + mintIndex).checked = false;
 		}
 		invoice = '';
 		amount = 0;
@@ -132,7 +133,7 @@
 	};
 </script>
 
-<input type="checkbox" id="melt-modal-{mint.keysets[0]}" class="modal-toggle" />
+<input type="checkbox" id="melt-modal-{mintIndex}" class="modal-toggle" />
 <div class="modal">
 	<div class="modal-box flex flex-col gap-3 h-80">
 		{#if isLoading}
@@ -158,7 +159,7 @@
 				</button>
 			</div>
 			<div class="modal-action">
-				<label for="melt-modal-{mint.keysets[0]}" class="btn btn-outline" on:mouseup={resetState}
+				<label for="melt-modal-{mintIndex}" class="btn btn-outline" on:mouseup={resetState}
 					>ok</label
 				>
 			</div>
