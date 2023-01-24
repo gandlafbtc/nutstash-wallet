@@ -18,19 +18,20 @@
 	import type { Mint } from 'src/model/mint';
 	import { onMount } from 'svelte';
 
-
 	const getPubKey = async (): Promise<string> => {
-				return $useExternalNostrKey
-					? await window.nostr.getPublicKey()
-					: await Promise.resolve($nostrPubKey);
-			};
+		return $useExternalNostrKey
+			? // @ts-expect-error
+			  await window.nostr.getPublicKey()
+			: await Promise.resolve($nostrPubKey);
+	};
 	onMount(async () => {
 		if ($useNostr) {
-			nostrPool.set(new rp.RelayPool($relays.filter(r=>r.isActive).map(r=>r.url)));
-			const nostrPubK: string = await getPubKey()
+			console.log($relays)
+			nostrPool.set(new rp.RelayPool($relays.filter((r) => r.isActive).map((r) => r.url)));
+			const nostrPubK: string = await getPubKey();
 			$nostrPool?.subscribe(
 				[{ kinds: [nostrTools.Kind.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK] }],
-				$relays.filter(r=>r.isActive).map(r=>r.url),
+				$relays.filter((r) => r.isActive).map((r) => r.url),
 				async (event, isAfterEose, relayURL) => {
 					console.log(event);
 					if ($nostrMessages.map((message) => message.event.id).includes(event.id)) {
@@ -42,11 +43,18 @@
 						return;
 					}
 					const decodedMessage = $useExternalNostrKey
-						? await window.nostr.nip04.decrypt(event.pubkey, event.content)
+						? // @ts-expect-error
+						  await window.nostr.nip04.decrypt(event.pubkey, event.content)
 						: await nostrTools.nip04.decrypt($nostrPrivKey, event.pubkey, event.content);
 					const token = getDecodedProofs(decodedMessage);
 
 					//todo if !token.proofs return
+
+					if (!token?.proofs) {
+						//if the event is not in a cashu token format, ignore it
+						return
+					}
+
 
 					//add mints that are unknown
 					token.mints.forEach(async (mint) => {

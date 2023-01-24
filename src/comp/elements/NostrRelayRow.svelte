@@ -4,61 +4,26 @@
 	import { toast } from '../../stores/toasts';
 
 	export let relay: NostrRelay;
-	export let i: number;
 
 
     const setRelayActive = () => {
-
         // todo do this in one update
         nostrRelays.update(state=>state.filter((r)=>r !== relay))
 
         relay.isActive = !relay.isActive
         nostrRelays.update(state=>[relay,...state])
+        toast('info',`relay has been ${relay.isActive?'activated':'deactivated'}`, 'Done!')
     }
     const removeRelay = () => {
         nostrRelays.update(state=>state.filter((r)=>r !== relay))
+        toast('info','relay has been removed', 'Done!')
     }
 </script>
 
 <div class="flex gap-2 items-center">
-	<div class="flex gap-2 items-center">
-		{#if relay.isActive}
-			<div class="w-4 h-4 flex">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-4 h-4 text-info animate-ping absolute inline-flex"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
-					/>
-				</svg>
-
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-4 h-4 text-info relative inline-flex rounded-full "
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
-					/>
-				</svg>
-			</div>
-		{/if}
-		<p>{relay.url}</p>
-	</div>
-	<div class="flex">
-		<button class="btn-square btn btn-warning" on:click={setRelayActive}>
+	
+	<div class="flex gap-2">
+		<button class="btn-square btn {relay.isActive?'btn-warning':''} " on:click={setRelayActive}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -92,5 +57,42 @@
 				/>
 			</svg>
 		</button>
+	</div>
+    <div class="flex gap-2 items-center">
+		<p>{relay.url}</p>
+
+		{#if relay.isActive}
+			<div class="w-4 h-4 flex">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-4 h-4 text-info animate-ping absolute inline-flex"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
+					/>
+				</svg>
+
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-4 h-4 text-info relative inline-flex rounded-full "
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
+					/>
+				</svg>
+			</div>
+		{/if}
 	</div>
 </div>

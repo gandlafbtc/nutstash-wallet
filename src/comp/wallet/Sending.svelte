@@ -15,7 +15,14 @@
 	import { browser } from '$app/environment';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
-	import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useExternalNostrKey, useNostr } from '../../stores/nostr';
+	import {
+		nostrPool,
+		nostrPrivKey,
+		nostrPubKey,
+		nostrRelays,
+		useExternalNostrKey,
+		useNostr
+	} from '../../stores/nostr';
 	import type { Event } from 'nostr-tools';
 	import * as nostrTools from 'nostr-tools';
 
@@ -96,19 +103,20 @@
 	};
 
 	const getPubKey = async (): Promise<string> => {
-				return $useExternalNostrKey
-					? await window.nostr.getPublicKey()
-					: await Promise.resolve($nostrPubKey);
-			};
+		return $useExternalNostrKey
+			? // @ts-expect-error
+			  await window.nostr.getPublicKey()
+			: await Promise.resolve($nostrPubKey);
+	};
 
 	const getEncryptedContent = async (): Promise<string> => {
-				return $useExternalNostrKey
-				? await window.nostr.nip04.encrypt(sendToNostrKey, encodedToken)
-					: await nostrTools.nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken)
-	}
+		return $useExternalNostrKey
+			? // @ts-expect-error
+			  await window.nostr.nip04.encrypt(sendToNostrKey, encodedToken)
+			: await nostrTools.nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken);
+	};
 	const sendWithNostr = async () => {
 		try {
-
 			const event: Event = {
 				kind: nostrTools.Kind.EncryptedDirectMessage,
 				tags: [['p', sendToNostrKey]],
@@ -117,15 +125,21 @@
 				pubkey: await getPubKey()
 			};
 			if ($useExternalNostrKey) {
-				const signedEvent = await window.nostr.signEvent(event)
-				$nostrPool.publish(signedEvent, $nostrRelays.map(r=>r.url));
-			}
-			else {
+				// @ts-expect-error
+				const signedEvent = await window.nostr.signEvent(event);
+				$nostrPool.publish(
+					signedEvent,
+					$nostrRelays.map((r) => r.url)
+				);
+			} else {
 				event.id = nostrTools.getEventHash(event);
 				const signature: string = nostrTools.signEvent(event, $nostrPrivKey);
 				event.sig = signature;
 				console.log(event);
-				$nostrPool.publish(event, $nostrRelays.map(r=>r.url));
+				$nostrPool.publish(
+					event,
+					$nostrRelays.map((r) => r.url)
+				);
 			}
 			toast('info', 'The Token is being sent over nostr', 'Sent!');
 			resetState();
@@ -231,7 +245,6 @@
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label tabindex="0" class="btn m-1 truncate ...">
 								<p class="truncate ... max-w-xs">
-
 									{mint.mintURL}
 								</p>
 							</label>
@@ -251,7 +264,7 @@
 					{/if}
 				</div>
 				<div class="grid grid-cols-5 items-center">
-						<p class="font-bold col-span-2">Amount:</p>
+					<p class="font-bold col-span-2">Amount:</p>
 					<input
 						type="number"
 						name=""

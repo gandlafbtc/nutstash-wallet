@@ -10,7 +10,7 @@
 </script>
 
 <!-- only create socket if everything needed is present -->
-{#if $useNostr  && $nostrRelays && ((!$useExternalNostrKey && $nostrPrivKey && $nostrPubKey)|| ($useExternalNostrKey &&  hasExternalSigner)) }
+{#if $useNostr  && $nostrRelays.length > 0 && ((!$useExternalNostrKey && $nostrPrivKey && $nostrPubKey)|| ($useExternalNostrKey &&  hasExternalSigner)) }
      <NostrSocket></NostrSocket>
 {/if}
 <slot />

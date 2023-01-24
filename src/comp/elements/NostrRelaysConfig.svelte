@@ -28,9 +28,9 @@
 		<h3 class="font-bold text-xl">Configure Nostr Relays</h3>
 
 		<div class="flex flex-col gap-2">
-			<div class="w-full max-h-44 overflow-y-scroll">
+			<div class="w-full max-h-44 overflow-y-scroll flex flex-col gap-2">
                 {#each $nostrRelays as relay, i}
-                     <NostrRelayRow {relay} {i}></NostrRelayRow>
+                     <NostrRelayRow {relay}></NostrRelayRow>
                 {/each}
             </div>
 			<div class="flex gap-2 items-end w-full">
