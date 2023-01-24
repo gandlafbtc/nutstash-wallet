@@ -3,6 +3,7 @@ import type { RelayPool } from 'nostr-relaypool';
 import type { NostrMessage } from '../model/nostrMessage';
 
 import { writable } from 'svelte/store';
+import type { NostrRelay } from '../model/relay';
 
 const initialValueSting: string = browser ? window.localStorage.getItem('use-nostr') ?? 'false': 'false'
 
@@ -13,6 +14,19 @@ const useNostr  = writable<boolean>(initialValue);
 useNostr.subscribe((value) => {
   if (browser) {
     window.localStorage.setItem('use-nostr', JSON.stringify(value));
+  }
+});
+
+
+const initialValueExternalKeySting: string = browser ? window.localStorage.getItem('use-external-nostr') ?? 'true': 'true'
+
+const initialValueExternalKey : boolean = JSON.parse(initialValueExternalKeySting)
+
+const useExternalNostrKey  = writable<boolean>(initialValueExternalKey);
+
+useExternalNostrKey.subscribe((value) => {
+  if (browser) {
+    window.localStorage.setItem('use-external-nostr', JSON.stringify(value));
   }
 });
 
@@ -37,7 +51,6 @@ nostrPubKey.subscribe((value) => {
   }
 });
 
-
 const initialValueStingNostrMessages: string = browser ? window.localStorage.getItem('nostr-messages') ?? '[]': '[]'
 
 const initialValueNostrMessage : Array<NostrMessage>=JSON.parse(initialValueStingNostrMessages)
@@ -50,11 +63,11 @@ nostrMessages.subscribe((value) => {
   }
 });
 
-const initialValueStingNostrRelays: string = browser ? window.localStorage.getItem('nostr-relays') ?? '["wss://nostr-pub.wellorder.net"]': '["wss://nostr-pub.wellorder.net"]'
+const initialValueStingNostrRelays: string = browser ? window.localStorage.getItem('nostr-relays') ?? '[{"url": "wss://nostr-pub.wellorder.net","isActive":"true"}]': '[{"url": "wss://nostr-pub.wellorder.net","isActive":"true"}]'
 
-const initialValueNostrRelays : Array<string> = JSON.parse(initialValueStingNostrRelays)
+const initialValueNostrRelays : Array<NostrRelay> = JSON.parse(initialValueStingNostrRelays)
 
-const nostrRelays  = writable< Array<string>>(initialValueNostrRelays);
+const nostrRelays  = writable< Array<NostrRelay>>(initialValueNostrRelays);
 
 nostrRelays.subscribe((value) => {
   if (browser) {
@@ -64,4 +77,4 @@ nostrRelays.subscribe((value) => {
 
 const nostrPool  = writable<RelayPool>()
 
-export {useNostr, nostrPrivKey, nostrMessages, nostrPubKey, nostrPool, nostrRelays};
+export {useNostr, nostrPrivKey, nostrMessages, nostrPubKey, nostrPool, nostrRelays, useExternalNostrKey};

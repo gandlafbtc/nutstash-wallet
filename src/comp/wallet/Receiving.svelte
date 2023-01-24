@@ -51,6 +51,7 @@
 			isComplete = true;
 			toast('success',`${amount} tokens received`,'Tokens received!')
 		} catch {
+			isLoading=false
 			toast('error', 'Tokens could not be received', 'an Error occured');
 		}
 	};

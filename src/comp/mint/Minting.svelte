@@ -51,6 +51,7 @@
 			if (wallet && mintingHash) {
 				isLoading = true
 				const tokens: Array<Token> = await wallet.requestTokens(mintAmount, mintingHash);
+				console.log(tokens)
 				token.update((state) => [...state, ...tokens]);
 
 				history.update((state) => [{

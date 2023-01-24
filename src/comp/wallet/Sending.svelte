@@ -15,7 +15,7 @@
 	import { browser } from '$app/environment';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
-	import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useNostr } from '../../stores/nostr';
+	import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useExternalNostrKey, useNostr } from '../../stores/nostr';
 	import type { Event } from 'nostr-tools';
 	import * as nostrTools from 'nostr-tools';
 
@@ -95,20 +95,38 @@
 		}
 	};
 
+	const getPubKey = async (): Promise<string> => {
+				return $useExternalNostrKey
+					? await window.nostr.getPublicKey()
+					: await Promise.resolve($nostrPubKey);
+			};
+
+	const getEncryptedContent = async (): Promise<string> => {
+				return $useExternalNostrKey
+				? await window.nostr.nip04.encrypt(sendToNostrKey, encodedToken)
+					: await nostrTools.nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken)
+	}
 	const sendWithNostr = async () => {
 		try {
+
 			const event: Event = {
 				kind: nostrTools.Kind.EncryptedDirectMessage,
 				tags: [['p', sendToNostrKey]],
-				content: await nostrTools.nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken),
+				content: await getEncryptedContent(),
 				created_at: Math.floor(Date.now() / 1000),
-				pubkey: $nostrPubKey
+				pubkey: await getPubKey()
 			};
-			event.id = nostrTools.getEventHash(event);
-			const signature: string = nostrTools.signEvent(event, $nostrPrivKey);
-			event.sig = signature;
-			console.log(event);
-			$nostrPool.publish(event, $nostrRelays);
+			if ($useExternalNostrKey) {
+				const signedEvent = await window.nostr.signEvent(event)
+				$nostrPool.publish(signedEvent, $nostrRelays.map(r=>r.url));
+			}
+			else {
+				event.id = nostrTools.getEventHash(event);
+				const signature: string = nostrTools.signEvent(event, $nostrPrivKey);
+				event.sig = signature;
+				console.log(event);
+				$nostrPool.publish(event, $nostrRelays.map(r=>r.url));
+			}
 			toast('info', 'The Token is being sent over nostr', 'Sent!');
 			resetState();
 		} catch (e) {
@@ -248,7 +266,7 @@
 				</div>
 			</div>
 			<div class="modal-action bottom-0">
-				<label for="send-modal	" class="btn">cancel</label>
+				<label for="send-modal" class="btn">cancel</label>
 				<button class="btn btn-success" on:click={send}>send</button>
 			</div>
 		{/if}
