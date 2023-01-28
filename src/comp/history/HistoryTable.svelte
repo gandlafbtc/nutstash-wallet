@@ -10,7 +10,7 @@
     }
 
 </script>
-<div class="overflow-x-scroll overflow-y-scroll max-h-60">
+<div class="overflow-x-scroll overflow-y-scroll">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>

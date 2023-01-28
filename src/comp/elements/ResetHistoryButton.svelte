@@ -13,7 +13,7 @@
 	};
 </script>
 
-<label for="reset-history-modal" class="btn">Reset History</label>
+<label for="reset-history-modal" class="btn btn-error">Reset History</label>
 
 <!-- Put this part before </body> tag -->
 <input type="checkbox" id="reset-history-modal" class="modal-toggle" />

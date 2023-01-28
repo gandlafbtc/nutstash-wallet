@@ -33,7 +33,7 @@
 			class="flex gap-2 tab tab-bordered {activeTab === 'inbox' ? 'tab-active' : ''}"
 			on:click={() => changeTab('inbox')}
 		>
-			inbox
+			Inbox
 			{#if $nostrMessages.filter((nM) => {
 				return !nM.isAccepted;
 			}).length > 0}

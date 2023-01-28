@@ -20,11 +20,11 @@
 	};
 </script>
 
-<div class="w-full grid lg:grid-cols-4 h-screen p-2 bg-primary" data-theme={$theme}>
+<div class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-2 bg-primary overflow-auto" data-theme={$theme}>
 	<div class="hidden lg:flex" />
-	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col xl:mx-0 xl:w-full h-full">
+	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
 		<div class="dropdown">
-			<div class="bg-opacity-100">
+			<div class="bg-opacity-100 h-full">
 				<div class="tabs w-full flex-grow-0">
 					<button
 						on:click={() => changeTab('wallet')}
@@ -110,7 +110,7 @@
 			</div>
 		</div>
 		<div
-			class="bg-base-100 grid w-full flex-grow gap-3 rounded-xl p-6 shadow-xl {activeTab ===
+			class="bg-base-100 grid w-full h-full overflow-auto flex-grow gap-3 rounded-xl p-6 shadow-xl {activeTab ===
 			'wallet'
 				? 'rounded-tl-none'
 				: ''} {activeTab === 'setting' ? 'rounded-tr-none' : ''}"
