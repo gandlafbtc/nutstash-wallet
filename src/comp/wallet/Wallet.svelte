@@ -4,10 +4,12 @@
 	import Sending from './Sending.svelte';
 	import Receiving from './Receiving.svelte';
 	import Tokens from '../tokens/Tokens.svelte';
-	import BackupButton from '../elements/BackupButton.svelte';
 	import Melting from './Melting.svelte';
+
+	let active = 'base'
 </script>
 
+{#if active === 'base'}
 <div class="flex flex-col w-full h-full items-center justify-center gap-5">
 	<div class="flex items-center justify-center flex-col gap-5 w-full">
 		<div class="flex flex-col justify-center items-center">
@@ -26,7 +28,7 @@
 		{:else}
 			<div class="flex flex-col gap-4">
 				<div class="flex gap-2">
-					<label for="receive-modal" class="btn btn-primary btn-outline flex gap-1 items-center">
+					<button class="btn btn-primary btn-outline flex gap-1 items-center" on:click={()=>{active='receive'}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -42,8 +44,8 @@
 							/>
 						</svg>
 						<p>receive</p>
-					</label>
-					<label for="send-modal" class="btn btn-primary flex gap-1 items-center">
+					</button>
+					<button class="btn btn-primary flex gap-1 items-center" on:click={()=>{active='send'}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -59,10 +61,10 @@
 							/>
 						</svg>
 						<p>send</p>
-					</label>
+					</button>
 				</div>
 				<div class="">
-					<label for="melt-modal" class="btn btn-warning w-full font-bold text-xl flex gap-1">
+					<button class="btn btn-warning w-full font-bold text-xl flex gap-1" on:click={()=>active="melt"}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -76,8 +78,8 @@
 								stroke-linejoin="round"
 								d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
 							/>
-						</svg>
-						PAY</label
+					</svg>
+						pay</button
 					>
 				</div>
 			</div>
@@ -85,6 +87,11 @@
 	</div>
 	<Tokens />
 </div>
-<Receiving />
-<Melting />
-<Sending />
+{:else if  active === 'receive'}
+<Receiving bind:active={active} />
+{:else if  active === 'send'}
+<Sending bind:active={active} />
+{:else if  active === 'melt'}
+<Melting bind:active={active}/>
+{/if}
+

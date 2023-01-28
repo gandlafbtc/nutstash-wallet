@@ -11,6 +11,8 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { getKeysetsOfTokens } from '../util/walletUtils';
 
+	export let active;
+
 	let mint: Mint | undefined;
 	let mintId: string = '';
 	let encodedToken: string = '';
@@ -26,32 +28,42 @@
 		}
 
 		try {
-            mint = findMintById($mints, mintId);
-            if (!mint) {
-                toast('warning', 'Can not recieve tokens from this mint', 'Not connected to this mint');
-                return;
-            }
+			mint = findMintById($mints, mintId);
+			if (!mint) {
+				toast(
+					'warning',
+					'Receive tokens from this mint by adding the mint',
+					'Not connected to this mint'
+				);
+				return;
+			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
-			isLoading =true
+			isLoading = true;
 			const receivedTokens: Array<Token> = await cashuWallet.receive(encodedToken);
 
 			token.update((state) => [...state, ...receivedTokens]);
-            
-            history.update((state) => [{
-				 type: HistoryItemType.RECEIVE,amount ,date: Date.now(), data: {
-					encodedToken,
-					mint: mint?.mintURL??'',
-					keyset: getKeysetsOfTokens(receivedTokens),
-					receivedTokens,
-				 }
-			}, ...state]);
-			isLoading=false
+
+			history.update((state) => [
+				{
+					type: HistoryItemType.RECEIVE,
+					amount,
+					date: Date.now(),
+					data: {
+						encodedToken,
+						mint: mint?.mintURL ?? '',
+						keyset: getKeysetsOfTokens(receivedTokens),
+						receivedTokens
+					}
+				},
+				...state
+			]);
+			isLoading = false;
 			isComplete = true;
-			toast('success',`${amount} tokens received`,'Tokens received!')
+			toast('success', `${amount} tokens received`, 'Tokens received!');
 		} catch {
-			isLoading=false
+			isLoading = false;
 			toast('error', 'Tokens could not be received', 'an Error occured');
 		}
 	};
@@ -62,7 +74,7 @@
 
 	const validateToken = () => {
 		try {
-			const {proofs, mints} = getDecodedProofs(encodedToken);
+			const { proofs, mints } = getDecodedProofs(encodedToken);
 			proofs.forEach((t) => {
 				mintId = t.id;
 				amount += t.amount;
@@ -76,86 +88,76 @@
 		}
 	};
 	const resetState = () => {
-		if (browser) {
-            // @ts-expect-error
-			document.getElementById('receive-modal').checked = false;
-		}
 		encodedToken = '';
 		isLoading = false;
 		isValid = false;
 		mintId = '';
 		amount = 0;
 		mint = undefined;
-        isComplete = false
+		isComplete = false;
+		active = 'base';
 	};
 </script>
 
-<input type="checkbox" id="receive-modal" class="modal-toggle" />
-<div class="modal">
-	<div class="modal-box flex flex-col gap-3 h-80 justify-between">
-		{#if isLoading}
-			<LoadingCenter />
-		{:else if isComplete}
-			<div class="flex w-full h-full flex-col items-center justify-center gap-5">
-				<p class="text-lg font-bold text-success">Tokens have been received.</p>
-				<button class="btn btn-success">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-6 h-6"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-				</button>
-			</div>
-			<div class="modal-action">
-				<button class="btn btn-outline" on:click={resetState}>ok</button>
-			</div>
-		{:else}
-			<div class="flex flex-col gap-2">
-				<p class="text-xl font-bold">
-					Receive Tokens
-				</p>
-				<p>
-					Paste a Cashu Token. 
-				</p>
-				
-				<div class="flex gap-2 items-center">
-					<label for="receive-token-input">
-						<p class="font-bold">Token:</p>
-					</label>
-					<input
-						type="text"
-						class="w-full input input-primary"
-						id="receive-token-input"
-						bind:value={encodedToken}
-						on:input={validateToken}
+<div class="flex flex-col gap-2">
+	{#if isLoading}
+		<LoadingCenter />
+	{:else if isComplete}
+		<div class="flex w-full h-full flex-col items-center justify-center gap-5">
+			<p class="text-lg font-bold text-success">Tokens have been received.</p>
+			<button class="btn btn-success">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 					/>
-				</div>
-				<div class="grid grid-cols-5">
-					{#if mintId}
-					<p>From Mint:</p>
+				</svg>
+			</button>
+		</div>
+		<div class="modal-action">
+			<button class="btn btn-outline" on:click={resetState}>ok</button>
+		</div>
+	{:else}
+		<div class="flex flex-col gap-2">
+			<p class="text-xl font-bold">Receive Tokens</p>
+			<p>Paste a Cashu Token.</p>
+
+			<div class="flex gap-2 items-center">
+				<label for="receive-token-input">
+					<p class="font-bold">Token:</p>
+				</label>
+				<input
+					type="text"
+					class="w-full input input-primary"
+					id="receive-token-input"
+					bind:value={encodedToken}
+					on:input={validateToken}
+				/>
+			</div>
+			<div class="grid grid-cols-5 h-16">
+				{#if mintId}
+					<p class="font-bold">Amount:</p>
+					<p class="col-span-4">
+						{amount === 0 ? '' : amount + ' sats'}
+					</p>
+					<p class="font-bold">From Mint:</p>
 					<p class="col-span-4">
 						{mintId ? mintId : ''}
 					</p>
-					<p>Amount:</p>
-					<p class="col-span-4">
-						{amount === 0 ? '' : amount+' sats'}
-					</p>
-					{/if}
-				</div>
+				{/if}
 			</div>
-			<div class="modal-action bottom-0">
-				<button class="btn" on:click={resetState}>cancel</button>
-				<button class="btn btn-success" on:click={receive}>receive</button>
-			</div>
-		{/if}
-	</div>
+		</div>
+		<div class="flex  gap-2">
+			<button class="btn" on:click={resetState}>cancel</button>
+			<button class="btn btn-success" on:click={receive}>receive</button>
+		</div>
+	{/if}
 </div>

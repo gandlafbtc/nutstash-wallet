@@ -26,12 +26,15 @@
 	import type { Event } from 'nostr-tools';
 	import * as nostrTools from 'nostr-tools';
 
+	export let active;
+
 	let mint: Mint = $mints[0];
 	$: tokensForMint = getTokensForMint(mint, $token);
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
 	let sendToNostrKey = '';
+	let hasBeenCopied = false;
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
@@ -98,6 +101,7 @@
 			// @ts-expect-error
 			input.select();
 			document.execCommand('copy');
+			hasBeenCopied = true;
 			toast('info', 'Token has been copied to clipboard.', 'Copied!');
 		}
 	};
@@ -150,138 +154,134 @@
 	};
 
 	const resetState = () => {
-		if (browser) {
-			// @ts-expect-error
-			document.getElementById('send-modal').checked = false;
-		}
 		amountToSend = 0;
 		encodedToken = '';
 		isLoading = false;
+		active = 'base';
+		hasBeenCopied = false;
 	};
 </script>
 
-<input type="checkbox" id="send-modal" class="modal-toggle" />
-<div class="modal">
-	<div class="modal-box flex flex-col gap-3 h-80 justify-between">
-		{#if isLoading}
-			<LoadingCenter />
-		{:else if encodedToken}
-			<div class="grid grid-cols-1 gap-2">
-				<!-- <div>
+{#if isLoading}
+	<LoadingCenter />
+{:else if encodedToken}
+	<div class="grid grid-cols-1 gap-2">
+		<!-- <div>
 					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
 				</div> -->
-				<div>
-					<p class="text-xl font-bold">Tokens are ready to be sent!</p>
-					<p>Copy the new token and send it to to someone!</p>
-				</div>
-				<div class="flex gap-2">
-					<input
-						type="text"
-						class="w-full input input-primary"
-						id="send-token-input"
-						readonly
-						value={encodedToken}
+		<div>
+			<p class="text-xl font-bold">Tokens are ready to be sent!</p>
+			<p>Copy the new token and send it to to someone!</p>
+		</div>
+		<div class="flex gap-2">
+			<input
+				type="text"
+				class="w-full input input-primary"
+				id="send-token-input"
+				readonly
+				value={encodedToken}
+			/>
+			<button class="btn btn-square" on:click={copyToken}>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
 					/>
-					<button class="btn btn-square" on:click={copyToken}>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-6 h-6"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
-							/>
-						</svg>
-					</button>
+				</svg>
+			</button>
+		</div>
+		<div class="pt-2">
+			{#if $useNostr}
+				<p class="font-bold">Or send it over Nostr:</p>
+				<div class="flex items-center gap-2">
+					<p>Pubkey (hex)</p>
+					<input type="text" class="input input-primary" bind:value={sendToNostrKey} />
 				</div>
-				<div class="pt-2">
-					{#if $useNostr}
-						<p class="font-bold">Or send it over Nostr:</p>
-						<div class="flex items-center gap-2">
-							<p>Pubkey (hex)</p>
-							<input type="text" class="input input-primary" bind:value={sendToNostrKey} />
-						</div>
-					{/if}
-				</div>
-			</div>
-			<div class="modal-action bottom-0">
-				<button class="btn" on:click={resetState}>ok</button>
-				{#if $useNostr && sendToNostrKey}
-					<button class="btn btn-info flex gap-1" on:click={sendWithNostr}>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-6 h-6 rotate-12"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-							/>
-						</svg>
-						Send over Nostr</button
-					>
-				{/if}
-			</div>
-		{:else}
-			<div class=" flex flex-col gap-2">
-				<p class="font-bold text-xl">Send Tokens</p>
-				<p>Create a sendable Cashu Token.</p>
-				<div class="grid grid-cols-5 items-center">
-					<label for="mint-send-dropdown">
-						<p class="font-bold">Mint:</p>
-					</label>
-					{#if mint}
-						<div class="dropdown" id="mint-send-dropdown">
-							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label tabindex="0" class="btn m-1 truncate ...">
-								<p class="truncate ... max-w-xs">
-									{mint.mintURL}
-								</p>
-							</label>
-
-							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-							<ul
-								tabindex="0"
-								class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
-							>
-								{#each $mints.filter((m) => m.isAdded) as m}
-									<!-- svelte-ignore a11y-missing-attribute -->
-									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<li on:click={() => (mint = m)}><a>{m.mintURL}</a></li>
-								{/each}
-							</ul>
-						</div>
-					{/if}
-				</div>
-				<div class="grid grid-cols-5 items-center">
-					<p class="font-bold col-span-2">Amount:</p>
-					<input
-						type="number"
-						name=""
-						id="send-amount-input"
-						class="input input-primary col-span-3"
-						bind:value={amountToSend}
+			{/if}
+		</div>
+	</div>
+	<div class="flex gap-2">
+		
+			<button class="btn {hasBeenCopied?'':"btn-disabled"}" on:click={resetState}>ok</button>
+		{#if $useNostr && sendToNostrKey}
+			<button class="btn btn-info flex gap-1" on:click={sendWithNostr}>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6 rotate-12"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
 					/>
-				</div>
-				<div class="grid grid-cols-5">
-					<p class="font-bold col-span-2">Available:</p>
-					<p class="col-span-3">{getAmountForTokenSet(tokensForMint)} sats</p>
-				</div>
-			</div>
-			<div class="modal-action bottom-0">
-				<label for="send-modal" class="btn">cancel</label>
-				<button class="btn btn-success" on:click={send}>send</button>
-			</div>
+				</svg>
+				Send over Nostr</button
+			>
 		{/if}
 	</div>
-</div>
+{:else}
+	<div class=" flex flex-col gap-2">
+		<p class="font-bold text-xl">Send Tokens</p>
+		<p>Create a sendable Cashu Token.</p>
+		<div class="grid grid-cols-5 items-center">
+			<div class="col-span-2">
+				<label for="mint-send-dropdown">
+					<p class="font-bold">Mint:</p>
+				</label>
+			</div>
+			{#if mint}
+				<div class="dropdown" id="mint-send-dropdown">
+					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+					<!-- svelte-ignore a11y-label-has-associated-control -->
+					<label tabindex="0" class="btn m-1 truncate ...">
+						<p class="truncate ... max-w-xs">
+							{mint.mintURL}
+						</p>
+					</label>
+
+					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+					<ul
+						tabindex="0"
+						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
+					>
+						{#each $mints.filter((m) => m.isAdded) as m}
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<li on:click={() => (mint = m)}><a>{m.mintURL}</a></li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
+		</div>
+		<div class="grid grid-cols-5 items-center">
+			<p class="font-bold col-span-2">Amount:</p>
+			<input
+				type="number"
+				name=""
+				id="send-amount-input"
+				class="input input-primary col-span-3"
+				bind:value={amountToSend}
+			/>
+		</div>
+		<div class="grid grid-cols-5">
+			<p class="font-bold col-span-2">Available:</p>
+			<p class="col-span-3">{getAmountForTokenSet(tokensForMint)} sats</p>
+		</div>
+	</div>
+	<div class="flex gap-2">
+		<button class="btn" on:click={()=>resetState()}>cancel</button>
+		<button class="btn btn-success" on:click={send}>send</button>
+	</div>
+{/if}
