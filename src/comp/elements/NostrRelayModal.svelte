@@ -18,7 +18,6 @@
     }
 </script>
 
-
 <input type="checkbox" id="nostr-relay-config" class="modal-toggle" />
 <div class="modal">
 	<div class="modal-box">

@@ -4,7 +4,7 @@
 	import { mints } from '../../stores/mints';
 	import { toast } from '../../stores/toasts';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import Melting from './Melting.svelte';
+	import Melting from '../wallet/Melting.svelte';
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
 	import MintRowAdd from './MintRowAdd.svelte';
@@ -72,7 +72,6 @@
 				{#each $mints.sort((a,b)=> {return (a === b)? 0 : a? 1 : -1})  as mint, mintIndex}
 					{#if mint.isAdded}
 					<Minting {mint} {mintIndex} />
-					<Melting {mint} {mintIndex}/>
 					<MintRow {mint} {mintIndex} />
 					{:else}
 						 <MintRowAdd {mint} {mintIndex}></MintRowAdd>
