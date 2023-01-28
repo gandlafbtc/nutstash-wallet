@@ -3,6 +3,7 @@
 
 	import { theme } from '../stores/theme';
 	import BackupButton from './elements/BackupButton.svelte';
+	import NostrRelayModal from './elements/NostrRelayModal.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import History from './history/History.svelte';
@@ -54,3 +55,4 @@
 		<History />
 	</div>
 </div>
+<NostrRelayModal></NostrRelayModal>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { nostrRelays } from '../../stores/nostr';
+	import { nostrRelays, useNostr } from '../../stores/nostr';
 	import type { NostrRelay } from '../../model/relay';
 	import { toast } from '../../stores/toasts';
 
@@ -12,10 +12,19 @@
 
         relay.isActive = !relay.isActive
         nostrRelays.update(state=>[relay,...state])
+
+		useNostr.update(state => !state)
+		setTimeout(() => {
+			useNostr.update(state => !state)
+		}, 200);
         toast('info',`relay has been ${relay.isActive?'activated':'deactivated'}`, 'Done!')
     }
     const removeRelay = () => {
         nostrRelays.update(state=>state.filter((r)=>r !== relay))
+		useNostr.update(state => !state)
+		setTimeout(() => {
+			useNostr.update(state => !state)
+		}, 200);
         toast('info','relay has been removed', 'Done!')
     }
 </script>
