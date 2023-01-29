@@ -1,1 +1,1 @@
-<img src="/nutstash.svg" alt="logo">
+<img src="/nutstash.svg" alt="logo" class="w-32">

@@ -8,7 +8,9 @@
 	import { message } from '../stores/message';
 	import { nostrMessages } from '../stores/nostr';
 	import { mints } from '../stores/mints';
-	
+	import Donate from '../comp/elements/Donate.svelte';
+	import Code from '../comp/elements/Code.svelte';
+
 	let activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
@@ -20,7 +22,10 @@
 	};
 </script>
 
-<div class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-2 bg-primary overflow-auto" data-theme={$theme}>
+<div
+	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-2 bg-primary overflow-auto"
+	data-theme={$theme}
+>
 	<div class="hidden lg:flex" />
 	<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
 		<div class="dropdown">
@@ -45,12 +50,12 @@
 						{#if $nostrMessages.filter((nM) => {
 							return !nM.isAccepted;
 						}).length > 0}
-						<span class="flex h-3 w-3">
-							<div
-								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
-							/>
-							<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
-						</span>
+							<span class="flex h-3 w-3">
+								<div
+									class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
+								/>
+								<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
+							</span>
 						{/if}
 					</button>
 					<button
@@ -78,15 +83,14 @@
 						{#if $mints.filter((m) => {
 							return !m.isAdded;
 						}).length > 0}
-						<span class="flex h-3 w-3">
-							<div
-								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
-							/>
-							<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
-						</span>
+							<span class="flex h-3 w-3">
+								<div
+									class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
+								/>
+								<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
+							</span>
 						{/if}
-						</button
-					>
+					</button>
 					<button
 						on:click={() => changeTab('setting')}
 						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {activeTab === 'setting'
@@ -127,43 +131,44 @@
 			<Toasts />
 
 			<div class="flex justify-end items-center flex-col">
-				<div class="w-32 items-center flex">
+				<div class="w-full items-end justify-between flex">
+					<Donate />
 					<Logo />
+					<Code />
 				</div>
 				{#if $message}
-				<div />
-				<div class="col-span-2 m-1 rounded-sm bg-warning p-1 flex justify-between items-center">
-					<div class="flex gap-1">
-						<p class="text-warning-content">
-							{$message}<a href="https://nutstash.app/risks" class="link-hover link-accent"
-								> Learn more here</a
-							>
-						</p>
+					<div />
+					<div class="col-span-2 m-1 rounded-sm bg-warning p-1 flex justify-between items-center">
+						<div class="flex gap-1">
+							<p class="text-warning-content">
+								{$message}<a href="https://nutstash.app/risks" class="link-hover link-accent">
+									Learn more here</a
+								>
+							</p>
+						</div>
+						<button
+							class="w-4 h-4 rounded-full bg-warning-content flex items-center justify-center"
+							on:click={deleteMessage}
+						>
+							<p class="text-warning text-xs">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-3 h-3"
+								>
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</p>
+						</button>
 					</div>
-					<button
-						class="w-4 h-4 rounded-full bg-warning-content flex items-center justify-center"
-						on:click={deleteMessage}
-					>
-						<p class="text-warning text-xs">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="w-3 h-3"
-							>
-								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-							</svg>
-						</p>
-					</button>
-				</div>
-				<div />
-				<div class="col-span-4"></div>
-			{/if}
+					<div />
+					<div class="col-span-4" />
+				{/if}
 			</div>
 		</div>
 	</div>
 	<div class="hidden lg:flex" />
-
 </div>
