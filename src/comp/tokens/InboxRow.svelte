@@ -11,12 +11,26 @@
 	import { toast } from '../../stores/toasts';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
+	import { contacts } from '../../stores/contacts';
+	import type { Contact } from '../../model/contact';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
 	const date = new Date(nostrMessage.event.created_at * 1000);
 
+	let showAdd = false;
+	let contactName = '';
+
 	let isLoading = false;
+
+	const addContact = () => {
+		const newContact: Contact = {
+			name: contactName,
+			pubkey: nostrMessage.event.pubkey
+		};
+		contacts.update((state) => [newContact, ...state]);
+		showAdd = false;
+	};
 	const acceptToken = async () => {
 		try {
 			const mint = getMintForToken(nostrMessage.token.proofs[0], $mints);
@@ -91,8 +105,8 @@
 		}
 	};
 	const openModal = () => {
-			// @ts-expect-error
-			document.getElementById('nostr-receive-' + i).checked = true;
+		// @ts-expect-error
+		document.getElementById('nostr-receive-' + i).checked = true;
 	};
 </script>
 
@@ -153,7 +167,10 @@
 		</p>
 	</td>
 	<td class="max-w-0 overflow-clip">
-		{getEncodedProofs(nostrMessage.token.proofs)}
+		<p>
+			{$contacts.filter((c) => c.pubkey === nostrMessage.event.pubkey)[0]?.name ??
+				nostrMessage.event.pubkey}
+		</p>
 	</td>
 </tr>
 <input type="checkbox" id="nostr-receive-{i}" class="modal-toggle" />
@@ -162,7 +179,7 @@
 		<div class="flex flex-col items-start">
 			<p class="font-bold text-xl">You received Tokens over nostr</p>
 			{#if !nostrMessage.isAccepted}
-			<p class="">Click Accept to add the Tokens to your Wallet</p>
+				<p class="">Click Accept to add the Tokens to your Wallet</p>
 			{/if}
 			<div class="grid grid-cols-5">
 				<p class="font-bold">Amount:</p>
@@ -174,8 +191,40 @@
 					{nostrMessage.token.mints[0].url}
 				</p>
 				<p class="font-bold">From:</p>
+				<div class="flex col-span-4 items-center gap-2 overflow-clip">
+					{#if !$contacts.map((c) => c.pubkey).includes(nostrMessage.event.pubkey)}
+						<button class="w-4 h-4" on:click={() => (showAdd = !showAdd)}>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="text-info w-4 h-4"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+								/>
+							</svg>
+						</button>
+					{/if}
+					{#if showAdd}
+						<input type="text" class="input-xs input input-primary" bind:value={contactName} />
+						<button class="btn-xs btn-success rounded-md text-xs" on:click={addContact}>add</button>
+					{:else}
+						<div class="badge badge-info gap-2">
+							<p>
+								{$contacts.filter((c) => c.pubkey === nostrMessage.event.pubkey)[0]?.name ??
+									nostrMessage.event.pubkey}
+							</p>
+						</div>
+					{/if}
+				</div>
+				<p class="font-bold">Token:</p>
 				<p class="col-span-4 overflow-clip">
-					{nostrMessage.event.pubkey}
+					{getEncodedProofs(nostrMessage.token.proofs, nostrMessage.token.mints)}
 				</p>
 			</div>
 		</div>
@@ -185,10 +234,9 @@
 			{:else}
 				<label for="nostr-receive-{i}" class="btn">close</label>
 				{#if !nostrMessage.isAccepted}
-					 <!-- content here -->
-					 <button on:click={rejectToken} class="btn btn-warning">Reject</button>
-					 <button on:click={acceptToken} class="btn btn-success">Accept</button>
-					 {/if}
+					<button on:click={rejectToken} class="btn btn-warning">Reject</button>
+					<button on:click={acceptToken} class="btn btn-success">Accept</button>
+				{/if}
 			{/if}
 		</div>
 	</div>

@@ -20,7 +20,7 @@
 					<p class="flex lg:hidden">Amt</p></th
 				>
 				<th>Date</th>
-				<th>Token</th>
+				<th>From</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll">

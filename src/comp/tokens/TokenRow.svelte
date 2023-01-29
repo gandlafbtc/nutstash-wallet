@@ -81,7 +81,7 @@
 		{token.id}
 	</td>
 	<td class="max-w-0 overflow-clip">
-		<div class="overflow-x-scroll">
+		<div class="overflow-x-clip">
 			{getEncodedProofs([token])}
 		</div>
 	</td>
