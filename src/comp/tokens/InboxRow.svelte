@@ -36,7 +36,6 @@
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 			const encodedProofs = getEncodedProofs(nostrMessage.token.proofs, nostrMessage.token.mints);
-			console.log(encodedProofs);
 
 			isLoading = true;
 			const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
@@ -57,6 +56,7 @@
 					amount: getAmountForTokenSet(nostrMessage.token.proofs),
 					date: Date.now(),
 					data: {
+						encodedToken: encodedProofs,
 						mint: mint?.mintURL ?? '',
 						keyset: getKeysetsOfTokens(newTokens),
 						receivedTokens: newTokens,
@@ -156,7 +156,6 @@
 		{getEncodedProofs(nostrMessage.token.proofs)}
 	</td>
 </tr>
-
 <input type="checkbox" id="nostr-receive-{i}" class="modal-toggle" />
 <div class="modal">
 	<div class="modal-box">

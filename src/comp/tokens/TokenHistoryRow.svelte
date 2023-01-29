@@ -18,10 +18,10 @@
 		token = getEncodedProofs(sendData.send??[]);
 	} else if (historyItem.type === HistoryItemType.RECEIVE) {
 		const recieveData: ReceiveData = historyItem.data;
-		token = getEncodedProofs(recieveData.receivedTokens??[]);
+		token = recieveData.encodedToken??''
 	}else if (historyItem.type === HistoryItemType.RECEIVE_NOSTR) {
 		const recieveData: ReceiveNostrData = historyItem.data;
-		token = getEncodedProofs(recieveData.receivedTokens??[]);
+		token = recieveData.encodedToken??''
 	} else if (historyItem.type === HistoryItemType.MINT) {
 		const mintData: MintData = historyItem.data;
 		token = getEncodedProofs(mintData.tokens??[]);
