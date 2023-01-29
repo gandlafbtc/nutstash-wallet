@@ -157,7 +157,7 @@
 		</div>
 		<div class="flex  gap-2">
 			<button class="btn" on:click={resetState}>cancel</button>
-			<button class="btn btn-success" on:click={receive}>receive</button>
+			<button class="btn {isValid?'btn-success':'btn-disabled'}" on:click={receive}>receive</button>
 		</div>
 	{/if}
 </div>

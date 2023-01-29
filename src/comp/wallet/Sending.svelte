@@ -169,11 +169,12 @@
 		<!-- <div>
 					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
 				</div> -->
-		<div>
-			<p class="text-xl font-bold">Tokens are ready to be sent!</p>
-			<p>Copy the new token and send it to to someone!</p>
-		</div>
-		<div class="flex gap-2">
+		<div class="flex flex-col gap-2">
+			<div>
+				<p class="text-xl font-bold">Tokens are ready to be sent!</p>
+				<p>Copy the new token and send it to to someone!</p>
+			</div>
+			<div class="flex gap-2">
 			<input
 				type="text"
 				class="w-full input input-primary"
@@ -198,21 +199,24 @@
 				</svg>
 			</button>
 		</div>
-		<div class="pt-2">
+
+		</div>
+		<div class="pt-2 flex gap-2 items-center">
 			{#if $useNostr}
-				<p class="font-bold">Or send it over Nostr:</p>
-				<div class="flex items-center gap-2">
-					<p>Pubkey (hex)</p>
+				<p class="font-bold">Or send it to a Nostr pubkey (hex):</p>
+				<div class="w-full flex items-center gap-2">
 					<input type="text" class="input input-primary" bind:value={sendToNostrKey} />
 				</div>
 			{/if}
 		</div>
 	</div>
 	<div class="flex gap-2">
-		
-			<button class="btn {hasBeenCopied?'':"btn-disabled"}" on:click={resetState}>ok</button>
-		{#if $useNostr && sendToNostrKey}
-			<button class="btn btn-info flex gap-1" on:click={sendWithNostr}>
+		<button class="btn {hasBeenCopied ? '' : 'btn-disabled'}" on:click={resetState}>ok</button>
+		{#if $useNostr}
+			<button
+				class="btn {sendToNostrKey ? 'btn-info' : 'btn-disabled'} flex gap-1"
+				on:click={sendWithNostr}
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -281,7 +285,7 @@
 		</div>
 	</div>
 	<div class="flex gap-2">
-		<button class="btn" on:click={()=>resetState()}>cancel</button>
+		<button class="btn" on:click={() => resetState()}>cancel</button>
 		<button class="btn btn-success" on:click={send}>send</button>
 	</div>
 {/if}
