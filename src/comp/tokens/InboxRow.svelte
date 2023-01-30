@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { CashuMint, CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-js';
+	import { CashuMint, CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';

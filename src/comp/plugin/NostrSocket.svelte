@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, getDecodedProofs } from '@gandlaf21/cashu-js';
+	import { CashuMint, getDecodedProofs } from '@gandlaf21/cashu-ts';
 	import * as rp from 'nostr-relaypool';
 
 	import * as nostrTools from 'nostr-tools';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from "@gandlaf21/cashu-js";
+	import { CashuMint, CashuWallet } from "@gandlaf21/cashu-ts";
 	import type { Mint } from "../../model/mint";
 	import LoadingCenter from "../LoadingCenter.svelte";
 	import { QRCodeImage } from 'svelte-qrcode-image';

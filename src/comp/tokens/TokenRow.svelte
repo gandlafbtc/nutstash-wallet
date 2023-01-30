@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-js';
+	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { Token } from '../../model/token';
 	import { getMintForToken, getTokenSubset } from '../util/walletUtils';

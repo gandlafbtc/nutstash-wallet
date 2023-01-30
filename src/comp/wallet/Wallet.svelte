@@ -7,7 +7,7 @@
 	import Melting from './Melting.svelte';
 	import { onMount } from 'svelte';
 	import { getTokensForMint } from '../util/walletUtils';
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-js';
+	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
 	import { toast } from '../../stores/toasts';
 
 	let active = 'base';

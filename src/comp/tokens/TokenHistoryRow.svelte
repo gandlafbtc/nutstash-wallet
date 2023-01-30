@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-js';
+	import { CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-ts';
 	import type { MeltData } from '../../model/data/MeltData';
 	import type { ReceiveNostrData } from '../../model/data/ReceiveNostrData';
 	import type { MintData } from '../../model/data/MintData';
