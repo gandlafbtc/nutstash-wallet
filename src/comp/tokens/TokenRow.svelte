@@ -6,7 +6,9 @@
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
 	import { token as tokenStore } from '../../stores/tokens';
+	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
+	import { error } from '@sveltejs/kit';
 
 	export let token: Token;
 
@@ -48,6 +50,46 @@
 		if (browser) {
 			// @ts-expect-error
 			document.getElementById('token-item-modal-' + i).checked = false;
+		}
+	};
+	const checkTokenSpent = async () => {
+		const mint = getMintForToken(token, $mints);
+		if (!mint) {
+			toast('warining', 'Add the mint first', 'Cannot check token!');
+			return;
+		}
+		isLoading = true
+		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+
+		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+		try {
+			const spentProofs = await cashuWallet.checkProofsSpent([token]);
+			let hasBeenReceived = false
+			pendingTokens.update((state) =>
+				state.filter((p) => {
+					if (!spentProofs.includes(p)) {
+						return true;
+					}
+					hasBeenReceived =true
+					toast(
+						'success',
+						'The token has been removed from pending tokens',
+						'This token has been redeemed'
+					);
+					return false;
+				})
+			);
+			if (!hasBeenReceived) {
+				toast(
+						'info',
+						'The token is still pending',
+						'This token has not been received yet'
+					);
+			}
+			isLoading = false
+		} catch (e) {
+			console.error(e)
+			toast("error", "Could not check pending token", "Error")
 		}
 	};
 </script>
