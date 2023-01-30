@@ -21,7 +21,7 @@ A web based Cashu Wallet that supports multiple mints
 * [ ] Inter-mint swapping
 * [ ] Send/receive over Nostr
 * [ ] PWA installable app
-* [ ] Merged Payment
+* [ ] Merged Payment (use multiple mints to pay Invoice)
 
 
 

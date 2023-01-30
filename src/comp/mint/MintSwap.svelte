@@ -116,18 +116,18 @@
 	};
 
 	const resetState = () => {
-	swapOutMint = undefined
-	swapInMint =undefined
-	swapAmount =undefined
-	fees = undefined
-	paymentHash =undefined
-	invoice =undefined
-	isPrepare =false
-	isPerform =false
-	isComplete =false
-	active = 'base'
-	}
-	</script>
+		swapOutMint = undefined;
+		swapInMint = undefined;
+		swapAmount = undefined;
+		fees = undefined;
+		paymentHash = undefined;
+		invoice = undefined;
+		isPrepare = false;
+		isPerform = false;
+		isComplete = false;
+		active = 'base';
+	};
+</script>
 
 {#if isComplete}
 	<!-- content here -->
@@ -159,6 +159,10 @@
 	<div class="flex flex-col gap-2">
 		<p class="text-xl font-bold">Inter-Mint Swap</p>
 		<p class="">Swap tokens from one mint for tokens from another mint.</p>
+		<p class="">
+			⚠️ For a brief moment, you will be trusting two mints at the same time. There is things that
+			can go wrong. Use at own risk.
+		</p>
 		<div class="grid grid-cols-5 items-center gap-4">
 			<div class="col-span-2">
 				<label for="mint-send-dropdown">
@@ -266,7 +270,7 @@
 					{/if}
 				</div>
 				{#if fees !== undefined}
-					<div class="col-span-5 divider m-1"></div>
+					<div class="col-span-5 divider m-1" />
 					<p class="col-span-2 font-bold">Total:</p>
 					<p class="col-span-3 font-bold">{swapAmount + fees}</p>
 				{/if}
