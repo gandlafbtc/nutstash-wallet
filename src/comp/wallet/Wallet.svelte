@@ -9,13 +9,17 @@
 	import { getTokensForMint } from '../util/walletUtils';
 	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
 	import { toast } from '../../stores/toasts';
+	import { pendingTokens } from '../../stores/pendingtokens';
 
 	let active = 'base';
 
 	onMount(() => {
-		let hasFoundInvalidToken = false;
+		let isFirst = true;
+		let isFirstPending = true;
 		$mints.forEach(async (mint) => {
+			try {
 			const mintTokens = getTokensForMint(mint, $token);
+			const mintPendingTokens = getTokensForMint(mint, $pendingTokens);
 			if (mintTokens?.length < 1) {
 				return;
 			}
@@ -26,16 +30,39 @@
 				state.filter((p) => {
 					if (!spentProofs.includes(p)) {
 						return true;
-					} else {
+					}
+					if (isFirst) {
+						isFirst = false;
 						toast(
-							'info',
+							'warning',
 							'The spent token has been removed from the wallet',
 							'Some token in your wallet was already spent.'
 						);
-						return false;
 					}
+					return false;
 				})
 			);
+			const spentPendingProofs = await cashuWallet.checkProofsSpent(mintPendingTokens);
+			pendingTokens.update((state) =>
+				state.filter((p) => {
+					if (!spentPendingProofs.includes(p)) {
+						return true;
+					}
+					if (isFirstPending) {
+						isFirstPending=false
+						toast(
+							'info',
+							'The tokens you have sent are no longer pending',
+							'Tokens you have sent have been received.'
+						);
+					}
+					return false;
+				})
+			);
+			}catch (e){
+				console.log(e)
+				toast("error","Mint: "+ mint.mintURL,'There was a problem when syncing with a mint.')
+			}
 		});
 	});
 </script>
@@ -47,7 +74,13 @@
 				<p class="text-8xl">
 					{$token.reduce((count, t) => {
 						return count + t.amount;
-					}, 0)}
+					}, 0) ?? 0}
+				</p>
+				<p class="text-md">
+					(pending
+					{$pendingTokens.reduce((count, t) => {
+						return count + t.amount;
+					}, 0) ?? 0})
 				</p>
 
 				<p class="text-4xl">satoshi</p>

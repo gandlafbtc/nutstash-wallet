@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-ts';
+	import type { Proof } from "@gandlaf21/cashu-ts";
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -25,6 +26,7 @@
 	} from '../../stores/nostr';
 	import type { Event } from 'nostr-tools';
 	import * as nostrTools from 'nostr-tools';
+	import { pendingTokens } from '../../stores/pendingtokens';
 
 	export let active;
 
@@ -65,6 +67,9 @@
 
 			//remove all tokens that have been sent to mint from storage
 			token.update((state) => getTokenSubset(state, tokensToSend));
+			//add the tokens that are being sent to pending
+			pendingTokens.update((state) =>  [...send, ...state]);
+
 
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
