@@ -24,25 +24,31 @@
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 
 		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
-
 		try {
-			isLoading = true;
-			const encodedProofs = getEncodedProofs([token]);
-			const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
-			//remove old token
-			tokenStore.update((state) => getTokenSubset(state, [token]));
-			//add new token
-			tokenStore.update((state) => [...newTokens, ...state]);
-			toast('success', 'Token has been recycled.', 'Success!');
-			isLoading = false;
-		} catch (e) {
-			isLoading = false;
-			console.error(e);
-			toast('error', 'could not recycle token', 'an Error occurred');
-			if (browser) {
-				// @ts-expect-error
-				document.getElementById('token-item-modal-' + i).checked = true;
+			await checkTokenSpent();
+			try {
+				isLoading = true;
+				const encodedProofs = getEncodedProofs([token]);
+				const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
+				//remove old token
+				tokenStore.update((state) => getTokenSubset(state, [token]));
+				//add new token
+				tokenStore.update((state) => [...newTokens, ...state]);
+				toast('success', 'Token has been recycled.', 'Success!');
+				isLoading = false;
+			} catch (e) {
+				isLoading = false;
+				console.error(e);
+				toast('error', 'could not recycle token', 'an Error occurred');
+				if (browser) {
+					// @ts-expect-error
+					document.getElementById('token-item-modal-' + i).checked = true;
+				}
 			}
+		} catch (e) {
+			isLoading=false
+			console.error(e);
+			toast('error', 'You might have lost your connection to the mint', 'an Error occurred');
 		}
 	};
 	const deleteToken = () => {
@@ -58,19 +64,22 @@
 			toast('warining', 'Add the mint first', 'Cannot check token!');
 			return;
 		}
-		isLoading = true
-		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+		isLoading = true;
 
-		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 		try {
+			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 			const spentProofs = await cashuWallet.checkProofsSpent([token]);
-			let hasBeenReceived = false
+			let hasBeenReceived = false;
+			if(!$pendingTokens.includes(token)){
+				return
+			}
 			pendingTokens.update((state) =>
 				state.filter((p) => {
 					if (!spentProofs.includes(p)) {
 						return true;
 					}
-					hasBeenReceived =true
+					hasBeenReceived = true;
 					toast(
 						'success',
 						'The token has been removed from pending tokens',
@@ -80,16 +89,13 @@
 				})
 			);
 			if (!hasBeenReceived) {
-				toast(
-						'info',
-						'The token is still pending',
-						'This token has not been received yet'
-					);
+				toast('info', 'The token is still pending', 'This token has not been received yet');
 			}
-			isLoading = false
+			isLoading = false;
 		} catch (e) {
-			console.error(e)
-			toast("error", "Could not check pending token", "Error")
+			console.error(e);
+			toast('error', 'Could not check pending token', 'Error');
+			throw new Error('could not check pending tokens');
 		}
 	};
 </script>
