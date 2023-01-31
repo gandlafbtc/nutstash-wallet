@@ -110,13 +110,17 @@
 						mintURL: mint.url,
 						isAdded: false
 					};
-					mintsStore.update((state) => [mintToStore, ...state]);
+					if (!$mintsStore.includes(mintToStore)) {
+						mintsStore.update((state) => [mintToStore, ...state]);
+					}
 				});
 
 				if (!isValidToken(token.proofs)) {
 					// ignore messages that are not tokens
 					return;
 				}
+
+				//todo check if token is spent already
 
 				const nostrMessage: NostrMessage = {
 					event,
