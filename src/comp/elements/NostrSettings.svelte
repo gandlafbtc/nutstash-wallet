@@ -74,11 +74,11 @@
 			<label for="delete-history-button">Nostr Private Key</label>
 		</div>
 
-		<div class="col-span-4 flex gap-2 w-full">
+		<div class="col-span-4 flex gap-2">
 			{#if isEditNostr}
-				<input type="text" class="input input-primary" bind:value={$nostrPrivKey} />
+				<input type="text" class="input input-primary w-24 lg:w-full" bind:value={$nostrPrivKey} />
 			{:else}
-				<input type="text" class="input input-primary" disabled bind:value={$nostrPrivKey} />
+				<input type="text" class="input input-primary w-24 lg:w-full" disabled bind:value={$nostrPrivKey} />
 			{/if}
 			<div class="tooltip" data-tip="Generate new Nostr Keypair">
 				<button class="btn btn-square" on:click={generateNostrPrivKey}
@@ -108,7 +108,7 @@
 				<input
 					id="nostr-pubkey-input"
 					type="text"
-					class="input input-primary"
+					class="input input-primary w-24 lg:w-full"
 					bind:value={$nostrPubKey}
 				/>
 			{:else}
@@ -116,7 +116,7 @@
 					id="nostr-pubkey-input"
 					readonly
 					type="text"
-					class="input input-primary"
+					class="input input-primary w-24 lg:w-full"
 					bind:value={$nostrPubKey}
 				/>
 			{/if}
