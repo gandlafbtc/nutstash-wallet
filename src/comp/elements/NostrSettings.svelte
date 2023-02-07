@@ -76,9 +76,9 @@
 
 		<div class="col-span-4 flex gap-2">
 			{#if isEditNostr}
-				<input type="text" class="input input-primary w-24 lg:w-full" bind:value={$nostrPrivKey} />
+				<input type="text" class="input input-primary w-24 lg:w-56" bind:value={$nostrPrivKey} />
 			{:else}
-				<input type="text" class="input input-primary w-24 lg:w-full" disabled bind:value={$nostrPrivKey} />
+				<input type="text" class="input input-primary w-24 lg:w-56" disabled bind:value={$nostrPrivKey} />
 			{/if}
 			<div class="tooltip" data-tip="Generate new Nostr Keypair">
 				<button class="btn btn-square" on:click={generateNostrPrivKey}
@@ -108,7 +108,7 @@
 				<input
 					id="nostr-pubkey-input"
 					type="text"
-					class="input input-primary w-24 lg:w-full"
+					class="input input-primary w-24 lg:w-56"
 					bind:value={$nostrPubKey}
 				/>
 			{:else}
@@ -116,7 +116,7 @@
 					id="nostr-pubkey-input"
 					readonly
 					type="text"
-					class="input input-primary w-24 lg:w-full"
+					class="input input-primary w-24 lg:w-56"
 					bind:value={$nostrPubKey}
 				/>
 			{/if}
