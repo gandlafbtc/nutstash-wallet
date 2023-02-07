@@ -16,10 +16,11 @@
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	export let active;
 
-	let invoice = '';
+	export let invoice = '';
 	let fees: number = 0;
 	let amount: number = 0;
 	let isPayable = false;
@@ -29,8 +30,15 @@
 	let mint = $mints[0];
 	let amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
 
+	onMount(()=> {
+		decodeInvoice()
+	})
+
 	const decodeInvoice = async () => {
 		try {
+			if (invoice.startsWith('lightning:')) {
+				invoice = invoice.split(':')[1]
+			}
 			amount = decode(invoice).sections[2].value / 1000;
 			if (amount) {
 				const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -55,7 +63,7 @@
 			amount = 0;
 			fees = 0;
 			isPayable = false;
-			toast('warning', 'The invoice could not be decoded', 'Malformed Invoice');
+			toast('info', 'Paste a Lightning invoice into the input field.', 'Lightning Invoice');
 		}
 	};
 
@@ -183,7 +191,7 @@
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<label tabindex="0" class="btn m-1 truncate ...">
-							<p class="truncate ... max-w-xs">
+							<p class="truncate ... w-40 lg:w-56">
 								{mint.mintURL}
 							</p>
 						</label>
@@ -212,15 +220,15 @@
 
 		</div>
 		
-		<div class="grid grid-cols-5 items-start pt-5">
+		<div class="grid grid-cols-4 items-start pt-5">
 			<p>Amount:</p>
-			<p class="col-span-4">{amount} sats</p>
+			<p class="col-span-3">{amount} sats</p>
 			<p>Fees:</p>
-			<p class="col-span-4">{fees} sats</p>
+			<p class="col-span-3">{fees} sats</p>
 			<div class="divider col-span-2 my-0.5" />
-			<div class="col-span-3" />
+			<div class="col-span-2" />
 			<p class="font-bold">Total:</p>
-			<p class="col-span-4 font-bold">{fees + amount} sats</p>
+			<p class="col-span-3 font-bold">{fees + amount} sats</p>
 		</div>
 	</div>
 
