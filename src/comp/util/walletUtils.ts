@@ -11,13 +11,48 @@ const getTokensToSend = (amount: number, tokens: Array<Token>) => {
     let tokenAmount = 0;
     const tokenSubset: Array<Token> = tokens.filter((token) => {
         if (tokenAmount < amount) {
-            tokenAmount += token.amount;
+        tokenAmount += token.amount;
             return true;
         }
     });
     return tokenSubset
 }
 
+const validateMintKeys = (keys: object): boolean =>{
+    let isValid = true
+    try {
+        const allKeys = Object.keys(keys)
+
+        if (!allKeys) {
+            return false
+        }
+
+        if (allKeys.length<1) {
+            return false
+        }
+
+        allKeys.forEach((k)=>{
+            
+            if (isNaN(k)) {
+                isValid = false
+            }
+            if (!isPow2(k)) {
+                isValid = false
+            }
+    })
+    return isValid
+    } catch (error) {
+        return false
+    }
+
+}    
+    
+ 
+const isPow2 = (number: number) => {
+        return Math.log2(number) % 1 === 0;
+}
+
+    
 /**
  * returns a subset of all tokens that belong to the specified mint
  * @param mint 
@@ -72,4 +107,4 @@ const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
     }, [])
 }
 
-export { getMintForToken, getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray, isValidToken }
+export { getMintForToken, getTokensToSend, getTokensForMint, getTokenSubset, getAmountForTokenSet, getKeysetsOfTokens, removeDuplicatesFromArray, isValidToken, validateMintKeys }
