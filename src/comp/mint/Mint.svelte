@@ -62,7 +62,7 @@
 					<tr>
 						<th>Mint</th>
 						<th>Actions</th>
-						<th>Tokens</th>
+						<th>Balance</th>
 						<th />
 					</tr>
 				</thead>
@@ -72,20 +72,16 @@
 							<td colspan="4"> no mints added so far. </td>
 						</tr>
 					{/if}
-					{#each $mints.sort((a, b) => {
-						return a === b ? 0 : a ? 1 : -1;
-					}) as mint, mintIndex}
+					{#each $mints as mint, mintIndex}
 						{#if mint.isAdded}
 							<Minting {mint} {mintIndex} />
 							<MintRow {mint} {mintIndex} />
-						{:else}
-							<MintRowAdd {mint} {mintIndex} />
 						{/if}
 					{/each}
 				</tbody>
-			</table>
+			</table>	
 		</div>
-		{#if $mints.length > 1}
+		{#if $mints.filter(m=> m.isAdded).length > 1}
 		<div class="flex w-full items-center justify-center">
 
 			<button class="btn btn-lg btn-info flex gap-2" on:click={()=>active='swap'}>
@@ -99,6 +95,24 @@
 		{/if}
 		<div class="pt-5">
 			<p class="text-xl font-bold">Add a new Mint:</p>
+		</div>
+		<div class="max-h-56">
+			<table class="table table-compact table-zebra table-auto w-full">
+				<!-- head -->
+				<thead>
+					<tr>
+						<th>Mint</th>
+						<th class="max-w-min"></th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each $mints as mint, mintIndex}
+						{#if !mint.isAdded}
+							<MintRowAdd {mint} {mintIndex} />
+						{/if}
+					{/each}
+				</tbody>
+			</table>	
 		</div>
 		<div class="grid grid-cols-5 gap-2">
 			<div class="col-span-5 grid grid-cols-5">

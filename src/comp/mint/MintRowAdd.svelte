@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { mints } from '../../stores/mints';
 	import type { Mint } from '../../model/mint';
-	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 
 	export let mintIndex: number;
 	export let mint: Mint;
@@ -20,7 +18,7 @@
 </script>
 
 <tr class="hover">
-	<td colspan="3" class="overflow-clip max-w-xs">
+	<td class="">
 		<div class="flex gap-2">
 			<div class="w-4 h-4 flex">
 				<svg
@@ -53,13 +51,13 @@
 					/>
 				</svg>
 			</div>
-			<div class="overflow-scroll scrollbar-hide">
+			<div class=" overflow-scroll scrollbar-hide w-40 sm:w-64 md:w-80 lg:w-96">
 				{mint.mintURL}
 			</div>
 		</div>
 	</td>
-	<td class="flex gap-2">
-		<button class="btn btn-square btn-error flex gap-1" on:click={() => removeMint()}>
+	<td class="flex gap-2 justify-end">
+		<button class="btn btn-square btn-xs btn-error flex gap-1" on:click={() => removeMint()}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -75,7 +73,7 @@
 				/>
 			</svg>
 		</button>
-		<button class="btn btn-success flex gap-1" on:click={addMint}>
+		<button class="btn btn-success btn-xs flex gap-1" on:click={addMint}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -86,7 +84,6 @@
 			>
 				<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 			</svg>
-			Add</button
-		>
+			Add</button>
 	</td>
 </tr>
