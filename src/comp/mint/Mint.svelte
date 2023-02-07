@@ -50,9 +50,8 @@
 				'Could not add mint.'
 			);
 			throw new Error('Could not add Mint.');
-		}
-		finally {
-			isLoading = false
+		} finally {
+			isLoading = false;
 		}
 	};
 	const toggleAdvanced = () => {
@@ -69,7 +68,10 @@
 					<tr>
 						<th>Mint</th>
 						<th>Actions</th>
-						<th>Balance</th>
+						<th>
+							<p class="hidden lg:flex">Balance</p>
+							<p class="flex lg:hidden">Amt</p>
+						</th>
 						<th />
 					</tr>
 				</thead>

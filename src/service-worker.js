@@ -51,7 +51,8 @@ self.addEventListener('fetch', (event) => {
     //     cache.put(event.request, response.clone());
     //   }
       return response;
-    } catch {
+    } catch (e) {
+      console.error(e)
     //   return cache.match(event.request);
     }
   }
