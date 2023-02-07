@@ -4,6 +4,7 @@
 	import { mints } from '../../stores/mints';
 	import { toast } from '../../stores/toasts';
 	import LoadingCenter from '../LoadingCenter.svelte';
+	import { validateMintKeys } from '../util/walletUtils';
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
 	import MintRowAdd from './MintRowAdd.svelte';
@@ -28,6 +29,11 @@
 			const keysets = await mint.getKeySets();
 			const keys = await mint.getKeys();
 
+			if (!validateMintKeys(keys)) {
+				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
+				return;
+			}
+
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
 				keys,
@@ -37,15 +43,16 @@
 
 			mints.update((state) => [storeMint, ...state]);
 			toast('success', 'Mint has been added', 'Success');
-			isLoading = false;
 		} catch {
-			isLoading = false;
 			toast(
 				'error',
 				'keys could not be loaded from:' + mint.mintUrl + '/keys',
 				'Could not add mint.'
 			);
 			throw new Error('Could not add Mint.');
+		}
+		finally {
+			isLoading = false
 		}
 	};
 	const toggleAdvanced = () => {
@@ -79,19 +86,28 @@
 						{/if}
 					{/each}
 				</tbody>
-			</table>	
+			</table>
 		</div>
-		{#if $mints.filter(m=> m.isAdded).length > 1}
-		<div class="flex w-full items-center justify-center">
-
-			<button class="btn btn-lg btn-info flex gap-2" on:click={()=>active='swap'}>
-				<p>Inter-mint Swap</p>
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-				  </svg>
-				  
-			</button>
-		</div>
+		{#if $mints.filter((m) => m.isAdded).length > 1}
+			<div class="flex w-full items-center justify-center">
+				<button class="btn btn-lg btn-info flex gap-2" on:click={() => (active = 'swap')}>
+					<p>Inter-mint Swap</p>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+						/>
+					</svg>
+				</button>
+			</div>
 		{/if}
 		<div class="pt-5">
 			<p class="text-xl font-bold">Add a new Mint:</p>
@@ -102,7 +118,7 @@
 				<thead>
 					<tr>
 						<th>Mint</th>
-						<th class="max-w-min"></th>
+						<th class="max-w-min" />
 					</tr>
 				</thead>
 				<tbody>
@@ -112,7 +128,7 @@
 						{/if}
 					{/each}
 				</tbody>
-			</table>	
+			</table>
 		</div>
 		<div class="grid grid-cols-5 gap-2">
 			<div class="col-span-5 grid grid-cols-5">
@@ -187,9 +203,6 @@
 			{/if}
 		</div>
 	</div>
-	{:else}
-		<MintSwap bind:active={active}>
-		</MintSwap>
-
+{:else}
+	<MintSwap bind:active />
 {/if}
-
