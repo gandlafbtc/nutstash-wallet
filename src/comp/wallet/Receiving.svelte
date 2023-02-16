@@ -76,6 +76,7 @@
 	};
 
 	const validateToken = () => {
+		amount = 0
 		try {
 			const { proofs, mints } = getDecodedProofs(encodedToken);
 			proofs.forEach((t) => {
@@ -87,7 +88,6 @@
 			mintId = '';
 			amount = 0;
 			toast('warning', 'could not decode Token', 'the Token is not valid');
-			throw new Error('Could not decode token');
 		}
 	};
 	const resetState = () => {
