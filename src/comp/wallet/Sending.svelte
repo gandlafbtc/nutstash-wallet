@@ -122,13 +122,16 @@
 		return $useExternalNostrKey
 			? // @ts-expect-error
 			  await window.nostr.nip04.encrypt(sendToNostrKey, encodedToken)
-			: await nostrTools.nip04.encrypt($nostrPrivKey, sendToNostrKey, encodedToken);
+			: await nostrTools.nip04.encrypt($nostrPrivKey, getConvertedPubKey(), encodedToken);
 	};
+	const getConvertedPubKey = () => {
+		return sendToNostrKey.startsWith('npub')?nostrTools.nip19.decode(sendToNostrKey).data:sendToNostrKey
+	}
 	const sendWithNostr = async () => {
 		try {
 			const event: Event = {
 				kind: nostrTools.Kind.EncryptedDirectMessage,
-				tags: [['p', sendToNostrKey]],
+				tags: [['p', getConvertedPubKey()]],
 				content: await getEncryptedContent(),
 				created_at: Math.floor(Date.now() / 1000),
 				pubkey: await getPubKey()
@@ -208,9 +211,9 @@
 		</div>
 		<div class="pt-2 flex gap-2 items-center">
 			{#if $useNostr}
-				<p class="font-bold">Or send it to a Nostr pubkey (hex):</p>
+				<p class="font-bold">Or send it to a Nostr pubkey:</p>
 				<div class="w-full flex items-center gap-2">
-					<input type="text" class="input input-primary" bind:value={sendToNostrKey} />
+					<input type="text" class="input input-primary" bind:value={sendToNostrKey} placeholder="npub / hex" />
 				</div>
 			{/if}
 		</div>
