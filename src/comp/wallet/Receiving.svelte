@@ -9,7 +9,7 @@
 	import type { Mint } from '../../model/mint';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
-	import { getKeysetsOfTokens } from '../util/walletUtils';
+	import { getKeysetsOfTokens, validateMintKeys } from '../util/walletUtils';
 
 	export let active;
 
@@ -20,6 +20,8 @@
 	let isLoading = false;
 	let amount = 0;
 	let isComplete = false;
+	let mintToAdd = ''
+	let isLoadingMint = false
 
 	const receive = async () => {
 		if (!isValid) {
@@ -35,6 +37,7 @@
 					'Receive tokens from this mint by adding the mint',
 					'Not connected to this mint'
 				);
+				mintToAdd = getDecodedProofs(encodedToken).mints.filter(m => m.keysets.includes(mintId))[0].url
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -96,6 +99,44 @@
 		mint = undefined;
 		isComplete = false;
 		active = 'base';
+		mintToAdd = ''
+	};
+	const trustMint= async () => {
+		const mint = new CashuMint(mintToAdd);
+		try {
+			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
+				toast('warning', 'this mint has already been added.', "Didn't add mint!");
+				return;
+			}
+			isLoadingMint = true;
+			const keysets = await mint.getKeySets();
+			const keys = await mint.getKeys();
+
+			if (!validateMintKeys(keys)) {
+				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
+				return;
+			}
+
+			const storeMint: Mint = {
+				mintURL: mint.mintUrl,
+				keys,
+				keysets: keysets.keysets,
+				isAdded: true
+			};
+
+			mints.update((state) => [storeMint, ...state]);
+			toast('success', 'Mint has been added', 'Success');
+			mintToAdd = ''
+		} catch {
+			toast(
+				'error',
+				'keys could not be loaded from:' + mint.mintUrl + '/keys',
+				'Could not add mint.'
+			);
+			throw new Error('Could not add Mint.');
+		} finally {
+			isLoadingMint = false;
+		}
 	};
 </script>
 
@@ -142,6 +183,22 @@
 					on:input={validateToken}
 				/>
 			</div>
+			{#if mintToAdd}
+				 <div>
+					{mintToAdd}
+				 </div>
+				 <div class="grid-cols-2">
+					{#if isLoadingMint}
+					<button class="btn btn-disabled btn-square loading">
+					</button>
+					{:else}
+					<button class="btn btn-success" on:click={trustMint}>
+						trust this Mint
+					</button>
+					{/if}
+
+				</div>
+			{/if}
 			<div class="grid grid-cols-5 h-16">
 				{#if mintId}
 					<p class="font-bold">Amount:</p>

@@ -61,7 +61,7 @@
 
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
-		<div class="max-h-56">
+		<div class="max-h-52 overflow-auto">
 			<table class="table table-auto w-full">
 				<!-- head -->
 				<thead>
@@ -114,6 +114,7 @@
 		<div class="pt-5">
 			<p class="text-xl font-bold">Add a new Mint:</p>
 		</div>
+		{#if $mints.filter(m => !m.isAdded).length>0}
 		<div class="max-h-56">
 			<table class="table table-compact table-zebra table-auto w-full">
 				<!-- head -->
@@ -132,6 +133,9 @@
 				</tbody>
 			</table>
 		</div>
+		{/if}
+
+
 		<div class="grid grid-cols-5 gap-2">
 			<div class="col-span-5 grid grid-cols-5">
 				<label for="mint-url-input"> Mint Host: </label>
