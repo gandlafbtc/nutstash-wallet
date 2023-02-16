@@ -12,7 +12,23 @@
 		}
 		nostrPrivKey.set(generatePrivateKey());
 		nostrPubKey.set(getPublicKey($nostrPrivKey));
+		restartNostr()
 	};
+
+	const restartNostr = ()=> {
+		if (!$useExternalNostrKey && !$nostrPubKey) {
+			return
+		}
+		toast('info', 'restarting nostr shortly...', 'nostr keys changed');
+		setTimeout(() => {
+			useNostr.update((state) => !state);
+			setTimeout(() => {
+			useNostr.update((state) => !state);
+			toast('success', 'nostr has restarted', 'Done!');
+		}, 500);
+		}, 2000);
+		
+	}
 
 	const copyToken = () => {
 		if (browser) {
@@ -34,13 +50,13 @@
 </div>
 
 {#if $useNostr}
-	<NostrRelaysConfig></NostrRelaysConfig>
+	<NostrRelaysConfig />
 	<div class="col-span-1">
 		<label for="delete-history-button">Use external Key (nos2x, etc...)</label>
 	</div>
 
 	<div class="col-span-4 flex gap-2">
-		<input type="checkbox" class="toggle toggle-success" bind:checked={$useExternalNostrKey} />
+		<input type="checkbox" class="toggle toggle-success" bind:checked={$useExternalNostrKey} on:change={restartNostr} />
 		{#if $useExternalNostrKey && !window?.nostr}
 			<div class="flex gap-1">
 				<svg
@@ -63,6 +79,25 @@
 	</div>
 
 	{#if !$useExternalNostrKey}
+		<div class="col-span-5 inline-flex items-center gap-2">
+			<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke-width="1.5"
+			stroke="currentColor"
+			class="w-6 h-6"
+		>
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+			/>
+		</svg>
+		<p>
+			Please don't paste your nostr keys here. Use your keys with an extension like nos2x or generate throwaway keys.
+		</p>
+		</div>
 		<div class="col-span-1">
 			<label for="delete-history-button">Edit Nostr Keys</label>
 		</div>
@@ -78,7 +113,12 @@
 			{#if isEditNostr}
 				<input type="text" class="input input-primary w-24 lg:w-56" bind:value={$nostrPrivKey} />
 			{:else}
-				<input type="text" class="input input-primary w-24 lg:w-56" disabled bind:value={$nostrPrivKey} />
+				<input
+					type="text"
+					class="input input-primary w-24 lg:w-56"
+					disabled
+					bind:value={$nostrPrivKey}
+				/>
 			{/if}
 			<div class="tooltip" data-tip="Generate new Nostr Keypair">
 				<button class="btn btn-square" on:click={generateNostrPrivKey}
