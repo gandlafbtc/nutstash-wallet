@@ -74,7 +74,7 @@
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
 
-			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, keysets: mint.keysets }]);
+			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, ids: mint.keysets }]);
 			console.log(getDecodedProofs(encodedToken));
 			history.update((state) => [
 				{
