@@ -106,7 +106,7 @@
 					}
 					const mintToStore: Mint = {
 						keys,
-						keysets: mint.keysets,
+						keysets: mint.ids,
 						mintURL: mint.url,
 						isAdded: false
 					};

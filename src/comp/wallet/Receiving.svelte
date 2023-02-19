@@ -37,7 +37,7 @@
 					'Receive tokens from this mint by adding the mint',
 					'Not connected to this mint'
 				);
-				mintToAdd = getDecodedProofs(encodedToken).mints.filter(m => m.keysets.includes(mintId))[0].url
+				mintToAdd = getDecodedProofs(encodedToken).mints.filter(m => m.ids.includes(mintId))[0].url
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
