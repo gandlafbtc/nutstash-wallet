@@ -197,9 +197,9 @@
 					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
 				</div> -->
 		<div class="flex flex-col gap-2">
-			<div>
-				<p class="text-xl font-bold">Tokens are ready to be sent!</p>
-				<p>Copy the new token and send it to to someone!</p>
+			<div class="text-center">
+				<p class="text-xl font-bold text-success">Tokens are ready to be sent!</p>
+				<p class="font-bold">Copy the new token and send it to to someone!</p>
 			</div>
 			<div class="flex gap-2">
 				<input
@@ -227,15 +227,15 @@
 				</button>
 			</div>
 		</div>
-		<div class="pt-2 flex gap-2 items-center">
+		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
 				<p class="font-bold">Or send it to a Nostr pubkey:</p>
 				<div class="w-full flex items-center gap-2">
 					<input
 						type="text"
-						class="input input-primary"
+						class="input input-primary w-full"
 						bind:value={sendToNostrKey}
-						placeholder="npub / hex"
+						placeholder="npub / hex / nip-05"
 					/>
 				</div>
 			{/if}
@@ -281,11 +281,11 @@
 				</label>
 			</div>
 			{#if mint}
-				<div class="dropdown" id="mint-send-dropdown">
+				<div class="dropdown dropdown-bottom" id="mint-send-dropdown">
 					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label tabindex="0" class="btn m-1 truncate ...">
-						<p class="truncate ... max-w-xs">
+					<label tabindex="0" class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip">
+						<p class=" truncate max-w-xs text-xs">
 							{mint.mintURL}
 						</p>
 					</label>
@@ -293,16 +293,20 @@
 					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 					<ul
 						tabindex="0"
-						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
+						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
 					>
 						{#each $mints.filter((m) => m.isAdded) as m}
 							<!-- svelte-ignore a11y-missing-attribute -->
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<li on:click={() => (mint = m)}><a>{m.mintURL}</a></li>
+							<li on:click={() => (mint = m)} class="rounded-xl {m.mintURL === mint.mintURL?'bg-primary':''}"><a>{m.mintURL}</a></li>
 						{/each}
 					</ul>
 				</div>
 			{/if}
+		</div>
+		<div class="grid grid-cols-5">
+			<p class="font-bold col-span-2">Available:</p>
+			<p class="col-span-3">{getAmountForTokenSet(tokensForMint)} sats</p>
 		</div>
 		<div class="grid grid-cols-5 items-center">
 			<p class="font-bold col-span-2">Amount:</p>
@@ -314,13 +318,10 @@
 				bind:value={amountToSend}
 			/>
 		</div>
-		<div class="grid grid-cols-5">
-			<p class="font-bold col-span-2">Available:</p>
-			<p class="col-span-3">{getAmountForTokenSet(tokensForMint)} sats</p>
+		
+		<div class="flex gap-2">
+			<button class="btn" on:click={() => resetState()}>cancel</button>
+			<button class="btn btn-success" on:click={send}>send</button>
 		</div>
-	</div>
-	<div class="flex gap-2">
-		<button class="btn" on:click={() => resetState()}>cancel</button>
-		<button class="btn btn-success" on:click={send}>send</button>
 	</div>
 {/if}
