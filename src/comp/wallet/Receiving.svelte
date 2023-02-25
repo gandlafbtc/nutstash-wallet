@@ -185,7 +185,7 @@
 					id="receive-token-input"
 					
 					bind:value={encodedToken}
-					on:paste={validateToken}
+					on:input={validateToken}
 				/>
 			</div>
 
@@ -201,7 +201,7 @@
 					{/if}
 				</div>
 			{/if}
-			<div class="grid grid-cols-5 h-16">
+			<div class="grid grid-cols-5 h-16 text-start">
 				{#if mintId}
 					<p class="font-bold">Amount:</p>
 					<p class="col-span-4">
