@@ -20,8 +20,9 @@
 	let isLoading = false;
 	let amount = 0;
 	let isComplete = false;
-	let mintToAdd = ''
-	let isLoadingMint = false
+	let mintToAdd = '';
+	let isLoadingMint = false;
+	let pasteMessage = 'from clipboard';
 
 	const receive = async () => {
 		if (!isValid) {
@@ -37,7 +38,8 @@
 					'Receive tokens from this mint by adding the mint',
 					'Not connected to this mint'
 				);
-				mintToAdd = getDecodedProofs(encodedToken).mints.filter(m => m.ids.includes(mintId))[0].url
+				mintToAdd = getDecodedProofs(encodedToken).mints.filter((m) => m.ids.includes(mintId))[0]
+					.url;
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -76,7 +78,7 @@
 	};
 
 	const validateToken = () => {
-		amount = 0
+		amount = 0;
 		try {
 			const { proofs, mints } = getDecodedProofs(encodedToken);
 			proofs.forEach((t) => {
@@ -99,9 +101,10 @@
 		mint = undefined;
 		isComplete = false;
 		active = 'base';
-		mintToAdd = ''
+		mintToAdd = '';
+		pasteMessage = 'from clipboard';
 	};
-	const trustMint= async () => {
+	const trustMint = async () => {
 		const mint = new CashuMint(mintToAdd);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
@@ -126,7 +129,7 @@
 
 			mints.update((state) => [storeMint, ...state]);
 			toast('success', 'Mint has been added', 'Success');
-			mintToAdd = ''
+			mintToAdd = '';
 		} catch {
 			toast(
 				'error',
@@ -167,7 +170,7 @@
 			<button class="btn btn-outline" on:click={resetState}>ok</button>
 		</div>
 	{:else}
-		<div class="flex flex-col gap-2">
+		<div class="flex flex-col gap-2 text-center">
 			<p class="text-xl font-bold">Receive Tokens</p>
 			<p>Paste a Cashu Token.</p>
 
@@ -175,31 +178,30 @@
 				<label for="receive-token-input">
 					<p class="font-bold">Token:</p>
 				</label>
+				
 				<input
 					type="text"
 					class="w-full input input-primary"
 					id="receive-token-input"
+					
 					bind:value={encodedToken}
 					on:input={validateToken}
 				/>
 			</div>
-			{#if mintToAdd}
-				 <div>
-					{mintToAdd}
-				 </div>
-				 <div class="grid-cols-2">
-					{#if isLoadingMint}
-					<button class="btn btn-disabled btn-square loading">
-					</button>
-					{:else}
-					<button class="btn btn-success" on:click={trustMint}>
-						trust this Mint
-					</button>
-					{/if}
 
+			{#if mintToAdd}
+				<div>
+					{mintToAdd}
+				</div>
+				<div class="grid-cols-2">
+					{#if isLoadingMint}
+						<button class="btn btn-disabled btn-square loading" />
+					{:else}
+						<button class="btn btn-success" on:click={trustMint}> trust this Mint </button>
+					{/if}
 				</div>
 			{/if}
-			<div class="grid grid-cols-5 h-16">
+			<div class="grid grid-cols-5 h-16 text-start">
 				{#if mintId}
 					<p class="font-bold">Amount:</p>
 					<p class="col-span-4">
@@ -214,7 +216,9 @@
 		</div>
 		<div class="flex  gap-2">
 			<button class="btn" on:click={resetState}>cancel</button>
-			<button class="btn {isValid?'btn-success':'btn-disabled'}" on:click={receive}>receive</button>
+			<button class="btn {isValid ? 'btn-success' : 'btn-disabled'}" on:click={receive}
+				>receive</button
+			>
 		</div>
 	{/if}
 </div>

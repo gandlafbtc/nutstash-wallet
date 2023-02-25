@@ -172,8 +172,8 @@
 			<div class="dropdown col-span-3" id="mint-swapOut-dropdown">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label tabindex="0" class="btn {fees !== undefined ? 'btn-disabled' : ''} m-1 truncate ...">
-					<p class="truncate ... max-w-xs">
+				<label tabindex="0" class="btn {fees !== undefined ? 'btn-disabled' : ''} max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em]">
+					<p class="truncate max-w-xs text-xs">
 						{swapOutMint?.mintURL ?? 'choose a mint'}
 					</p>
 				</label>
@@ -181,7 +181,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
 				>
 					{#each $mints.filter((m) => m.isAdded && m != swapInMint) as m}
 						<!-- svelte-ignore a11y-missing-attribute -->
@@ -217,8 +217,8 @@
 			<div class="dropdown" id="mint-swapIn-dropdown">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label tabindex="0" class="btn {fees !== undefined ? 'btn-disabled' : ''} m-1 truncate ...">
-					<p class="truncate ... max-w-xs">
+				<label tabindex="0" class="btn {fees !== undefined ? 'btn-disabled' : ''} max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em]">
+					<p class="truncate max-w-xs text-xs">
 						{swapInMint?.mintURL ?? 'choose a mint'}
 					</p>
 				</label>
@@ -226,7 +226,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
 				>
 					{#each $mints.filter((m) => m.isAdded && m != swapOutMint) as m}
 						<!-- svelte-ignore a11y-missing-attribute -->

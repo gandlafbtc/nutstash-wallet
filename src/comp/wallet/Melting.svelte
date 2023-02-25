@@ -190,8 +190,8 @@
 					<div class="dropdown" id="mint-send-dropdown">
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
-						<label tabindex="0" class="btn m-1 truncate ...">
-							<p class="truncate ... w-40 lg:w-56">
+						<label tabindex="0" class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip">
+							<p class=" truncate max-w-xs text-xs">
 								{mint.mintURL}
 							</p>
 						</label>
@@ -199,12 +199,12 @@
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<ul
 							tabindex="0"
-							class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
+						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
 						>
 							{#each $mints.filter((m) => m.isAdded) as m}
 								<!-- svelte-ignore a11y-missing-attribute -->
 								<!-- svelte-ignore a11y-click-events-have-key-events -->
-								<li on:click={() => (mint = m)}><a>{m.mintURL}</a></li>
+								<li on:click={() => (mint = m)}  class="rounded-xl {m.mintURL === mint.mintURL?'bg-primary':''}"><a>{m.mintURL}</a></li>
 							{/each}
 						</ul>
 					</div>

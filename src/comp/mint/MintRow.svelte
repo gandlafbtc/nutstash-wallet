@@ -21,6 +21,7 @@
             </p>
 	</td>
 	<td class="flex flex-col gap-2">
+		
 		<label for="mint-modal-{mintIndex}" class="btn btn-success w-16 flex gap-1">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -40,14 +41,16 @@
 		>
 	</td>
 
-	<td>
-		<div class="flex gap-2 items-center">
-			{getAmountForTokenSet(getTokensForMint(mint, $token))}
+	<td >
+		<div class="overflow-clip lg:max-w-xs max-w-[2em] flex flex-col lg:flex-row items-center">
+			<div class="flex gap-2 items-center overflow-scroll scrollbar-hide">
+				{getAmountForTokenSet(getTokensForMint(mint, $token))}
+			</div>
 			<TokenIcon />
 		</div>
 	</td>
 	<td>
-		<button class="btn btn-square btn-error" on:click={() => removeMint()}>
+		<button class="btn btn-square btn-sm btn-error" on:click={() => removeMint()}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"

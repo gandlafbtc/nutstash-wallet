@@ -5,7 +5,7 @@
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getKeysetsOfTokens, getMintForToken } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysetsOfTokens, getMintForToken, validateMintKeys } from '../util/walletUtils';
 	import type { Token } from '../../model/token';
 	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
@@ -13,6 +13,8 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { contacts } from '../../stores/contacts';
 	import type { Contact } from '../../model/contact';
+	import type { Mint } from '../../model/mint';
+	import { onMount } from 'svelte';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
@@ -20,8 +22,14 @@
 
 	let showAdd = false;
 	let contactName = '';
-
+	let hasMint = false;
 	let isLoading = false;
+	let isLoadingMint = false;
+
+
+	onMount(()=> {
+		hasMint = $mints.map(m=> m.mintURL).includes(nostrMessage.token.mints[0].url)
+	})
 
 	const addContact = () => {
 		const newContact: Contact = {
@@ -31,6 +39,45 @@
 		contacts.update((state) => [newContact, ...state]);
 		showAdd = false;
 	};
+
+	const addMint = async () => {
+		const mint = new CashuMint(nostrMessage.token.mints[0].url);
+		try {
+			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
+				toast('warning', 'this mint has already been added.', "Didn't add mint!");
+				return;
+			}
+			isLoadingMint = true;
+			const keysets = await mint.getKeySets();
+			const keys = await mint.getKeys();
+
+			if (!validateMintKeys(keys)) {
+				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
+				return;
+			}
+
+			const storeMint: Mint = {
+				mintURL: mint.mintUrl,
+				keys,
+				keysets: keysets.keysets,
+				isAdded: true
+			};
+
+			mints.update((state) => [storeMint, ...state]);
+			toast('success', 'Mint has been added', 'Success');
+			hasMint=true
+		} catch {
+			toast(
+				'error',
+				'keys could not be loaded from:' + mint.mintUrl + '/keys',
+				'Could not add mint.'
+			);
+			throw new Error('Could not add Mint.');
+		} finally {
+			isLoadingMint = false;
+		}
+	}
+
 	const acceptToken = async () => {
 		try {
 			const mint = getMintForToken(nostrMessage.token.proofs[0], $mints);
@@ -236,7 +283,13 @@
 				<label for="nostr-receive-{i}" class="btn">close</label>
 				{#if !nostrMessage.isAccepted}
 					<button on:click={rejectToken} class="btn btn-warning">Reject</button>
+					{#if hasMint}
 					<button on:click={acceptToken} class="btn btn-success">Accept</button>
+					{:else if  isLoadingMint}
+					<button class="btn btn-disabled btn-square loading"></button>
+					{:else}
+					<button on:click={addMint} class="btn btn-success">Trust Mint</button>
+					{/if}
 				{/if}
 			{/if}
 		</div>

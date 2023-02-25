@@ -18,6 +18,7 @@
 	import type { Mint } from 'src/model/mint';
 	import { onMount, onDestroy } from 'svelte';
 	import { toast } from '../../stores/toasts';
+	import { browser } from '$app/environment';
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
@@ -38,10 +39,22 @@
 			console.log('nostr is disabled');
 			return;
 		}
-		if ($relays.length < 1) {
+
+		const activeRelays: Array<string> = [];
+
+		if ($useExternalNostrKey && browser) {
+			const nip07relays = await window.nostr?.getRelays();
+			activeRelays.push(...Object.keys(nip07relays));
+		}
+		activeRelays.push(
+			...$relays.filter((r) => r.isActive && !activeRelays.includes(r.url)).map((r) => r.url)
+		);
+
+		if (activeRelays.length < 1) {
 			toast('warning', 'You have to add at least one relay to use Nostr.', 'No relay configured');
 			return;
 		}
+
 		if ($useExternalNostrKey && !window.nostr) {
 			toast(
 				'info',
@@ -62,8 +75,8 @@
 			toast('info', 'Use a signing extension or generate a key pair.', 'No nostr Keys found');
 			return;
 		}
-		const activeRelays = $relays.filter((r) => r.isActive).map((r) => r.url)
-		console.log("connecting to nostr relays...", activeRelays)
+
+		console.log('connecting to nostr relays...', activeRelays);
 		nostrPool.set(new rp.RelayPool(activeRelays));
 		const nostrPubK: string = await getPubKey();
 		$nostrPool?.subscribe(
@@ -83,37 +96,19 @@
 					? // @ts-expect-error
 					  await window.nostr.nip04.decrypt(event.pubkey, event.content)
 					: await nostrTools.nip04.decrypt($nostrPrivKey, event.pubkey, event.content);
-				const token = getDecodedProofs(decodedMessage);
 
-				//todo if !token.proofs return
+				let token;
+				try {
+					token = getDecodedProofs(decodedMessage);
+				} catch (e) {
+					console.error(e, 'could not decode nip-04 message as token. Ignoring this message');
+					return;
+				}
 
 				if (!token?.proofs) {
 					//if the event is not in a cashu token format, ignore it
 					return;
 				}
-
-				//add mints that are unknown
-				token?.mints?.forEach(async (mint) => {
-					if ($mintsStore.map((m) => m.mintURL).includes(mint.url)) {
-						//if mint is already added, ignore
-						return;
-					}
-					const cashuMint: CashuMint = new CashuMint(mint.url);
-					const keys = await cashuMint.getKeys();
-					if (!keys) {
-						//if we can't get the keys, ignore
-						return;
-					}
-					const mintToStore: Mint = {
-						keys,
-						keysets: mint.ids,
-						mintURL: mint.url,
-						isAdded: false
-					};
-					if (!$mintsStore.includes(mintToStore)) {
-						mintsStore.update((state) => [mintToStore, ...state]);
-					}
-				});
 
 				if (!isValidToken(token.proofs)) {
 					// ignore messages that are not tokens

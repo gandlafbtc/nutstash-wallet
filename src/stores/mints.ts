@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import type { Mint } from 'src/model/mint';
+import type { Mint } from '../../src/model/mint';
 
 import { writable } from 'svelte/store';
 
