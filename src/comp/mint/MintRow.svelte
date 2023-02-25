@@ -41,9 +41,11 @@
 		>
 	</td>
 
-	<td>
-		<div class="flex gap-2 items-center">
-			{getAmountForTokenSet(getTokensForMint(mint, $token))}
+	<td >
+		<div class="overflow-clip lg:max-w-xs max-w-[2em] flex flex-col lg:flex-row items-center">
+			<div class="flex gap-2 items-center overflow-scroll scrollbar-hide">
+				{getAmountForTokenSet(getTokensForMint(mint, $token))}
+			</div>
 			<TokenIcon />
 		</div>
 	</td>
