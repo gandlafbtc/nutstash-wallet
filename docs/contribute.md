@@ -18,6 +18,10 @@ to upgrade the version, make sure to change the version in the following places:
 - `package.json`
 - `src/stores/version.ts`
 
+install the package to update versions:
+
+- `npm i`
+
 and tag the new version on git:
 
 - `git tag {version}`
