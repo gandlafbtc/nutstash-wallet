@@ -55,3 +55,7 @@ You can preview the production build with `npm run preview`.
 ## Run with docker
 
 As an alternative to node/npm one can use [docker](docs/docker.md) to build and run the application.
+
+## Contributing
+
+Read [this guide](/docs/contribute.md) on how to contribute.

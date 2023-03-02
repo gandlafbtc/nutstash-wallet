@@ -10,3 +10,14 @@ Nutstash is an open source project. Your contributions are welcome and if you co
 1. run `npm run format`
 1. Open a pull request
 1. Fill out the pull request template
+
+## Versioning
+
+to upgrade the version, make sure to change the version in the following places:
+
+- `package.json`
+- `src/stores/version.ts`
+
+and tag the new version on git:
+
+- `git tag {version}`

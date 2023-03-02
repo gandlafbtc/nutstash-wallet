@@ -10,6 +10,7 @@
 	import { mints } from '../stores/mints';
 	import Donate from '../comp/elements/Donate.svelte';
 	import Code from '../comp/elements/Code.svelte';
+	import { version } from '../stores/version';
 
 	let activeTab = 'wallet';
 
@@ -133,8 +134,13 @@
 			<div class="flex justify-end items-center flex-col">
 				<div class="w-full items-end justify-between flex">
 					<Donate />
-					<Logo />
-					<Code />
+					<div class="flex items-baseline gap-1 justify-center">
+						<Logo />
+						<p class="text-base-300 text-xs">
+							{$version}
+						</p>
+					</div>
+						<Code />
 				</div>
 				{#if $message}
 					<div />
