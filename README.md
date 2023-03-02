@@ -59,3 +59,7 @@ As an alternative to node/npm one can use [docker](docs/docker.md) to build and 
 ## Contributing
 
 Read [this guide](/docs/contribute.md) on how to contribute.
+
+## Support the project
+
+https://gandlaf.com/donate
