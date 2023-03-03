@@ -3,6 +3,7 @@
 	import { useNostr } from '../stores/nostr';
 	import '../app.css';
 	import StorageManager from '../comp/plugin/StorageManager.svelte';
+	import Toasts from '../comp/Toasts.svelte';
 
 </script>
 
@@ -11,3 +12,5 @@
 {/if}
 	<StorageManager></StorageManager>
 <slot />
+
+<Toasts />

@@ -2,7 +2,6 @@
 	import Mint from '../comp/mint/Mint.svelte';
 	import Setting from '../comp/Setting.svelte';
 	import Wallet from '../comp/wallet/Wallet.svelte';
-	import Toasts from '../comp/Toasts.svelte';
 	import { theme } from '../stores/theme';
 	import Logo from '../comp/elements/Logo.svelte';
 	import { message } from '../stores/message';
@@ -129,8 +128,6 @@
 			{#if activeTab === 'setting'}
 				<Setting />
 			{/if}
-			<Toasts />
-
 			<div class="flex justify-end items-center flex-col">
 				<div class="w-full items-end justify-between flex">
 					<Donate />
