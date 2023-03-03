@@ -15,6 +15,8 @@
 	let showAdvanced = false;
 	let isLoading = false;
 
+	let activeMint = $mints[0]
+
 	let active = 'base';
 
 	const addMint = async () => {
@@ -83,8 +85,7 @@
 					{/if}
 					{#each $mints as mint, mintIndex}
 						{#if mint.isAdded}
-							<Minting {mint} {mintIndex} />
-							<MintRow {mint} {mintIndex} />
+							<MintRow {mint} {mintIndex} bind:activeMint bind:active />
 						{/if}
 					{/each}
 				</tbody>
@@ -209,6 +210,9 @@
 			{/if}
 		</div>
 	</div>
+	{:else if active === "minting"}
+	<Minting mint={activeMint} bind:active></Minting>
 {:else}
+		 <!-- else if content here -->
 	<MintSwap bind:active />
 {/if}
