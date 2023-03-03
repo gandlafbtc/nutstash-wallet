@@ -130,8 +130,8 @@
 	{:else if qrCode}
 		<div class="grid grid-cols-2  gap-2">
 			<a href="lightning:{qrCode}">
-			<div class="col-span-2 lg:col-span-1 flex items-center justify-center">
-				<QRCodeImage text={qrCode} scale={3} displayType="canvas" />
+				<div class="col-span-2 lg:col-span-1 w-full flex items-center justify-center ml-20 lg:ml-auto">
+					<QRCodeImage text={qrCode} scale={3} displayType="canvas" />
 			</div>
 		</a>
 			<div
@@ -172,7 +172,7 @@
 					</div>
 				</div>
 
-				<div>
+				<div class="h-8">
 					{#if isPolling}
 						<div class="btn btn-disabled btn-xs loading btn-square" />
 					{/if}
@@ -193,7 +193,7 @@
 		/>
 		<div class="flex gap-2">
 			<p class="font-bold">Mint:</p>
-			<p>
+			<p class="break-all">
 				{mint.mintURL}
 			</p>
 		</div>
