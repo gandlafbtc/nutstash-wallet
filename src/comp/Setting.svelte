@@ -44,6 +44,12 @@
 			<BackupButton />
 		</div>
 		<div class="col-span-1">
+			<label for="">Restore from Backup</label>
+		</div>
+		<div class="col-span-4">
+			<a href="/restore" class="btn btn-primary">restore</a>
+		</div>
+		<div class="col-span-1">
 			<label for="">History</label>
 		</div>
 		<div class="col-span-4">
