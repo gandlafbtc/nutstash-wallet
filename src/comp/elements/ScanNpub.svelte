@@ -29,7 +29,7 @@
     }})
 
 	onMount(() => {
-		scannedNpub = false
+		scannedNpub = ''
         qrScanner = new Html5QrcodeScanner(
             'npub-qr-reader',
             { fps: 10, qrbox: { width: 250, height: 250 } },
@@ -46,7 +46,7 @@
 	<div class="modal-box">
 <div class="flex flex-col items-center h-full w-full gap-2">
 	<div class="flex justify-between w-full items-center gap-1">
-		<button class="btn-square btn">
+		<label for="npub-scan-modal" class="btn-square btn">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -61,7 +61,7 @@
 					d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
 				/>
 			</svg>
-		</button>
+		</label>
 		<h2 class="font-bold text-xl">Scan a Lightning Invoice</h2>
 		<div class="btn-square invisible" />
 	</div>
