@@ -12,23 +12,22 @@
 		}
 		nostrPrivKey.set(generatePrivateKey());
 		nostrPubKey.set(getPublicKey($nostrPrivKey));
-		restartNostr()
+		restartNostr();
 	};
 
-	const restartNostr = ()=> {
+	const restartNostr = () => {
 		if (!$useExternalNostrKey && !$nostrPubKey) {
-			return
+			return;
 		}
 		toast('info', 'restarting nostr shortly...', 'nostr keys changed');
 		setTimeout(() => {
 			useNostr.update((state) => !state);
 			setTimeout(() => {
-			useNostr.update((state) => !state);
-			toast('success', 'nostr has restarted', 'Done!');
-		}, 500);
+				useNostr.update((state) => !state);
+				toast('success', 'nostr has restarted', 'Done!');
+			}, 500);
 		}, 2000);
-		
-	}
+	};
 
 	const copyToken = () => {
 		if (browser) {
@@ -56,7 +55,12 @@
 	</div>
 
 	<div class="col-span-4 flex gap-2">
-		<input type="checkbox" class="toggle toggle-success" bind:checked={$useExternalNostrKey} on:change={restartNostr} />
+		<input
+			type="checkbox"
+			class="toggle toggle-success"
+			bind:checked={$useExternalNostrKey}
+			on:change={restartNostr}
+		/>
 		{#if $useExternalNostrKey && !window?.nostr}
 			<div class="flex gap-1">
 				<svg
@@ -81,22 +85,23 @@
 	{#if !$useExternalNostrKey}
 		<div class="col-span-5 inline-flex items-center gap-2">
 			<svg
-			xmlns="http://www.w3.org/2000/svg"
-			fill="none"
-			viewBox="0 0 24 24"
-			stroke-width="1.5"
-			stroke="currentColor"
-			class="w-6 h-6"
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-			/>
-		</svg>
-		<p>
-			Please don't paste your nostr keys here. Use your keys with an extension like nos2x or generate throwaway keys.
-		</p>
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+				/>
+			</svg>
+			<p>
+				Please don't paste your nostr keys here. Use your keys with an extension like nos2x or
+				generate throwaway keys.
+			</p>
 		</div>
 		<div class="col-span-1">
 			<label for="delete-history-button">Edit Nostr Keys</label>

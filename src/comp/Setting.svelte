@@ -7,7 +7,7 @@
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 
-	let isShowDangerzone = false
+	let isShowDangerzone = false;
 
 	const setTheme = (t: string) => {
 		theme.set(t);
@@ -55,30 +55,34 @@
 		<div class="col-span-4">
 			<a href="/history" class="btn btn-outline">History</a>
 		</div>
-		<div  class="divider col-span-5">Nostr</div>
+		<div class="divider col-span-5">Nostr</div>
 
-		<NostrSettings></NostrSettings>
-		<div  class="divider col-span-5 flex">
+		<NostrSettings />
+		<div class="divider col-span-5 flex">
 			<div>
-				<button on:click={()=>isShowDangerzone=!isShowDangerzone}>
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 transition-transform {isShowDangerzone?'rotate-90':''}">
+				<button on:click={() => (isShowDangerzone = !isShowDangerzone)}>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-4 h-4 transition-transform {isShowDangerzone ? 'rotate-90' : ''}"
+					>
 						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-					  </svg>
-					  
+					</svg>
 				</button>
 			</div>
-			<p>
-				Dangerzone
-			</p>
+			<p>Dangerzone</p>
 		</div>
 		{#if isShowDangerzone}
-		<div class="col-span-1">
-			<label for="delete-history-button">Delete History</label>
-		</div>
-		<div class="col-span-4">
-			<ResetHistoryButton />
-		</div>
+			<div class="col-span-1">
+				<label for="delete-history-button">Delete History</label>
+			</div>
+			<div class="col-span-4">
+				<ResetHistoryButton />
+			</div>
 		{/if}
 	</div>
 </div>
-<NostrRelayModal></NostrRelayModal>
+<NostrRelayModal />

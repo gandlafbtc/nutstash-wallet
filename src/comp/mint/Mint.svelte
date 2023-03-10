@@ -15,7 +15,7 @@
 	let showAdvanced = false;
 	let isLoading = false;
 
-	let activeMint = $mints[0]
+	let activeMint = $mints[0];
 
 	let active = 'base';
 
@@ -115,27 +115,26 @@
 		<div class="pt-5">
 			<p class="text-xl font-bold">Add a new Mint:</p>
 		</div>
-		{#if $mints.filter(m => !m.isAdded).length>0}
-		<div class="max-h-56">
-			<table class="table table-compact table-zebra table-auto w-full">
-				<!-- head -->
-				<thead>
-					<tr>
-						<th>Mint</th>
-						<th class="max-w-min" />
-					</tr>
-				</thead>
-				<tbody>
-					{#each $mints as mint, mintIndex}
-						{#if !mint.isAdded}
-							<MintRowAdd {mint} {mintIndex} />
-						{/if}
-					{/each}
-				</tbody>
-			</table>
-		</div>
+		{#if $mints.filter((m) => !m.isAdded).length > 0}
+			<div class="max-h-56">
+				<table class="table table-compact table-zebra table-auto w-full">
+					<!-- head -->
+					<thead>
+						<tr>
+							<th>Mint</th>
+							<th class="max-w-min" />
+						</tr>
+					</thead>
+					<tbody>
+						{#each $mints as mint, mintIndex}
+							{#if !mint.isAdded}
+								<MintRowAdd {mint} {mintIndex} />
+							{/if}
+						{/each}
+					</tbody>
+				</table>
+			</div>
 		{/if}
-
 
 		<div class="grid grid-cols-5 gap-2">
 			<div class="col-span-5 grid grid-cols-5">
@@ -210,9 +209,9 @@
 			{/if}
 		</div>
 	</div>
-	{:else if active === "minting"}
-	<Minting mint={activeMint} bind:active></Minting>
+{:else if active === 'minting'}
+	<Minting mint={activeMint} bind:active />
 {:else}
-		 <!-- else if content here -->
+	<!-- else if content here -->
 	<MintSwap bind:active />
 {/if}

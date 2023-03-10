@@ -2,8 +2,7 @@
 	import type { Mint } from '../../model/mint';
 	import type { Token } from '../../model/token';
 
-	export let backupObject: {proofs: Array<Token>, mints: Array<Mint>};
-
+	export let backupObject: { proofs: Array<Token>; mints: Array<Mint> };
 </script>
 
 <div>
@@ -26,12 +25,11 @@
 						<p>
 							{proof.amount} sats
 						</p>
-							<p>
+						<p>
 							from {proof.id}
 						</p>
 					</div>
 				{/each}
-				
 			</div>
 		</div>
 	</div>

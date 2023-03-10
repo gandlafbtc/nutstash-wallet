@@ -47,7 +47,7 @@
 			backupObject = intermediateBackupObject;
 		}
 
-		console.log(backupObject)
+		console.log(backupObject);
 	};
 
 	const checkIsBackup = (obj: any) => {

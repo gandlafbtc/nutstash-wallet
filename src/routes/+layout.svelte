@@ -4,13 +4,12 @@
 	import '../app.css';
 	import StorageManager from '../comp/plugin/StorageManager.svelte';
 	import Toasts from '../comp/Toasts.svelte';
-
 </script>
 
-{#if $useNostr }
-     <NostrSocket></NostrSocket>
+{#if $useNostr}
+	<NostrSocket />
 {/if}
-	<StorageManager></StorageManager>
+<StorageManager />
 <slot />
 
 <Toasts />

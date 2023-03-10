@@ -1,6 +1,7 @@
-# Fixes: #
+# Fixes:
 
 ## Description
+
 {goes here}
 
 ## Changes
@@ -15,7 +16,4 @@
 - [x] Open PR
 - [ ] run `npm run test:unit`
 - [ ] run `npm run format`
-- [ ] 
-
-
-
+- [ ]

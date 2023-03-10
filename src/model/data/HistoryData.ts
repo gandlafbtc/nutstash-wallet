@@ -1,10 +1,9 @@
-
 interface HistoryData {
-    /**
-     * mint url
-     */
-    mint: string
-    keyset: Array<string>
+	/**
+	 * mint url
+	 */
+	mint: string;
+	keyset: Array<string>;
 }
 
-export type { HistoryData }
+export type { HistoryData };

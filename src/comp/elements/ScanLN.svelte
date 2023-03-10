@@ -5,36 +5,35 @@
 
 	export let active;
 	export let scannedlnInvoice;
-    
-    let qrScanner: Html5QrcodeScanner
 
-    function onScanSuccess(decodedText, decodedResult) {
+	let qrScanner: Html5QrcodeScanner;
+
+	function onScanSuccess(decodedText, decodedResult) {
 		// handle the scanned code as you like, for example:
 		scannedlnInvoice = decodedText;
-        if (browser) {
-           document.getElementById('html5-qrcode-button-camera-stop')?.click()
-        }
-        active = 'melt';
+		if (browser) {
+			document.getElementById('html5-qrcode-button-camera-stop')?.click();
+		}
+		active = 'melt';
 	}
 
-	function onScanFailure(error) {
-       
-	}
-    onDestroy(()=> {{
-        if (browser) {
-           document.getElementById('html5-qrcode-button-camera-stop')?.click()
-        }
-    }})
+	function onScanFailure(error) {}
+	onDestroy(() => {
+		{
+			if (browser) {
+				document.getElementById('html5-qrcode-button-camera-stop')?.click();
+			}
+		}
+	});
 
 	onMount(() => {
-        qrScanner = new Html5QrcodeScanner(
-            'ln-qr-reader',
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            /* verbose= */ false
-        );
+		qrScanner = new Html5QrcodeScanner(
+			'ln-qr-reader',
+			{ fps: 10, qrbox: { width: 250, height: 250 } },
+			/* verbose= */ false
+		);
 		qrScanner.render(onScanSuccess, onScanFailure);
 	});
-	
 </script>
 
 <div class="flex flex-col items-center h-full w-full gap-2">
@@ -59,11 +58,9 @@
 		<div class="btn-square invisible" />
 	</div>
 	<div class="w-full">
-		<div id="ln-qr-reader" class="w-full h-full" style="/qr-styles.css"/>
+		<div id="ln-qr-reader" class="w-full h-full" style="/qr-styles.css" />
 	</div>
 </div>
 
-
 <style>
-    
 </style>

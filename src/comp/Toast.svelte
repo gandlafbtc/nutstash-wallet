@@ -13,7 +13,7 @@
 	</div>
 </div>
 
-<div class="hidden alert-success"></div>
-<div class="hidden alert-info"></div>
-<div class="hidden alert-warning"></div>
-<div class="hidden alert-error"></div>
+<div class="hidden alert-success" />
+<div class="hidden alert-info" />
+<div class="hidden alert-warning" />
+<div class="hidden alert-error" />

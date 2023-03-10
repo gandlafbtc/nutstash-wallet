@@ -11,17 +11,17 @@
 	$: page = 5;
 	$: nostrMessagesSub = $nostrMessages.slice(0, page);
 
-	let isLoading = false
+	let isLoading = false;
 
 	const loadMore = () => {
 		page += 5;
 	};
 
-	const receiveAll =async  () => {
+	const receiveAll = async () => {
 		let totalReceived = 0;
 		let totalSpent = 0;
 		let hasError = 0;
-		isLoading = true
+		isLoading = true;
 		for (const nM of $nostrMessages.filter((n) => !n.isAccepted)) {
 			const mint: CashuMint = new CashuMint(nM.token.mints[0].url);
 			let keys;
@@ -69,7 +69,7 @@
 		if (hasError > 0) {
 			toast('warning', `${hasError} errors occurred when trying to redeem tokens`, 'Oops');
 		}
-		isLoading = false
+		isLoading = false;
 		nostrMessages.set(
 			$nostrMessages.map((m) => {
 				m.isAccepted = true;
@@ -85,28 +85,27 @@
 			<tr>
 				<th>
 					{#if isLoading}
-					<button class="btn btn-xs btn-square btn-disabled loading">
-					</button>
+						<button class="btn btn-xs btn-square btn-disabled loading" />
 					{:else}
-					<button class="btn btn-xs btn-square btn-info" on:click={receiveAll}>
-						<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-4 h-4"
-						>
-						<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m-6 3.75l3 3m0 0l3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75"
-						/>
-					</svg>
-				</button>
-				{/if}
-			</th>
-			<th>
+						<button class="btn btn-xs btn-square btn-info" on:click={receiveAll}>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-4 h-4"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m-6 3.75l3 3m0 0l3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75"
+								/>
+							</svg>
+						</button>
+					{/if}
+				</th>
+				<th>
 					<p class="hidden lg:flex">Amount</p>
 					<p class="flex lg:hidden">Amt</p></th
 				>

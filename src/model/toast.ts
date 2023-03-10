@@ -1,8 +1,7 @@
-
 interface Toast {
-    level: string,
-    message: string,
-    messageTitle: string
+	level: string;
+	message: string;
+	messageTitle: string;
 }
 
-export type {Toast}
+export type { Toast };

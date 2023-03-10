@@ -1,5 +1,3 @@
-
-
 <div class="col-span-1">
 	<label for="nostr-relay-config">Relays</label>
 </div>

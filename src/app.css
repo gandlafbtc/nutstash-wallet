@@ -2,55 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+	display: none;
 }
 
 /* For IE, Edge and Firefox */
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
 }
 
 #ln-qr-reader * button {
-    --tw-border-opacity: 1;
-border-color: hsl(var(--su) / var(--tw-border-opacity));
---tw-bg-opacity: 1;
-background-color: hsl(var(--su) / var(--tw-bg-opacity));
---tw-text-opacity: 1;
-color: hsl(var(--suc, var(--nc)) / var(--tw-text-opacity));
-display: inline-flex;
-flex-shrink: 0;
-cursor: pointer;
-user-select: none;
-flex-wrap: wrap;
-align-items: center;
-justify-content: center;
-border-color: transparent;
-border-color: hsl(var(--n) / var(--tw-border-opacity));
-text-align: center;
-transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-transition-duration: 200ms;
-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-border-radius: var(--rounded-btn, 0.5rem);
-height: 3rem/* 48px */;
-padding-left: 1rem/* 16px */;
-padding-right: 1rem/* 16px */;
-font-size: 0.875rem/* 14px */;
-line-height: 1.25rem/* 20px */;
-line-height: 1em;
-min-height: 3rem/* 48px */;
-font-weight: 600;
-text-transform: uppercase;
-text-transform: var(--btn-text-case, uppercase);
-text-decoration-line: none;
-text-decoration-line: none;
-border-width: var(--border-btn, 1px);
-animation: button-pop var(--animation-btn, 0.25s) ease-out;
---tw-border-opacity: 1;
---tw-bg-opacity: 1;
-background-color: hsl(var(--n) / var(--tw-bg-opacity));
---tw-text-opacity: 1;
-color: hsl(var(--nc) / var(--tw-text-opacity));
+	--tw-border-opacity: 1;
+	border-color: hsl(var(--su) / var(--tw-border-opacity));
+	--tw-bg-opacity: 1;
+	background-color: hsl(var(--su) / var(--tw-bg-opacity));
+	--tw-text-opacity: 1;
+	color: hsl(var(--suc, var(--nc)) / var(--tw-text-opacity));
+	display: inline-flex;
+	flex-shrink: 0;
+	cursor: pointer;
+	user-select: none;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	border-color: transparent;
+	border-color: hsl(var(--n) / var(--tw-border-opacity));
+	text-align: center;
+	transition-property: color, background-color, border-color, text-decoration-color, fill, stroke,
+		opacity, box-shadow, transform, filter, backdrop-filter;
+	transition-duration: 200ms;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	border-radius: var(--rounded-btn, 0.5rem);
+	height: 3rem /* 48px */;
+	padding-left: 1rem /* 16px */;
+	padding-right: 1rem /* 16px */;
+	font-size: 0.875rem /* 14px */;
+	line-height: 1.25rem /* 20px */;
+	line-height: 1em;
+	min-height: 3rem /* 48px */;
+	font-weight: 600;
+	text-transform: uppercase;
+	text-transform: var(--btn-text-case, uppercase);
+	text-decoration-line: none;
+	text-decoration-line: none;
+	border-width: var(--border-btn, 1px);
+	animation: button-pop var(--animation-btn, 0.25s) ease-out;
+	--tw-border-opacity: 1;
+	--tw-bg-opacity: 1;
+	background-color: hsl(var(--n) / var(--tw-bg-opacity));
+	--tw-text-opacity: 1;
+	color: hsl(var(--nc) / var(--tw-text-opacity));
 }

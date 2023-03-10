@@ -36,16 +36,16 @@
 		}
 	};
 
-	onMount (()=> {
-		if ($mintRequests.map(mR=> mR.mintUrl).includes(mint.mintURL)) {
-				const mintReq = $mintRequests.find(mR=> mR.mintUrl===mint.mintURL)
-				mintingHash = mintReq?.paymentHash
-				qrCode = mintReq?.invoice
-				const cashuMint = new CashuMint(mint.mintURL);
-				wallet = new CashuWallet(mint.keys, cashuMint);
-				mintTokens()
-			}
-	})
+	onMount(() => {
+		if ($mintRequests.map((mR) => mR.mintUrl).includes(mint.mintURL)) {
+			const mintReq = $mintRequests.find((mR) => mR.mintUrl === mint.mintURL);
+			mintingHash = mintReq?.paymentHash;
+			qrCode = mintReq?.invoice;
+			const cashuMint = new CashuMint(mint.mintURL);
+			wallet = new CashuWallet(mint.keys, cashuMint);
+			mintTokens();
+		}
+	});
 
 	const mintRequest = async () => {
 		try {
@@ -53,10 +53,13 @@
 			isLoading = true;
 			const cashuMint = new CashuMint(mint.mintURL);
 			wallet = new CashuWallet(mint.keys, cashuMint);
-				const { pr, hash } = await wallet.requestMint(mintAmount);
-				mintingHash = hash
-				qrCode = pr
-				mintRequests.update((state)=> [{invoice:qrCode,mintUrl:mint.mintURL,isCompleted:false, paymentHash:mintingHash},...state])
+			const { pr, hash } = await wallet.requestMint(mintAmount);
+			mintingHash = hash;
+			qrCode = pr;
+			mintRequests.update((state) => [
+				{ invoice: qrCode, mintUrl: mint.mintURL, isCompleted: false, paymentHash: mintingHash },
+				...state
+			]);
 			await mintTokens();
 		} catch (error) {
 			console.error(error);
@@ -102,17 +105,16 @@
 				if (wallet) {
 					setTimeout(mintTokens, 5000);
 				}
-			}
-			else {
-				abortMint()
+			} else {
+				abortMint();
 			}
 		}
 	};
 
-	const abortMint = () =>{
-		mintRequests.update((state)=> state.filter(mR => !(mR.mintUrl === mint.mintURL)))
-		resetState()
-	}
+	const abortMint = () => {
+		mintRequests.update((state) => state.filter((mR) => !(mR.mintUrl === mint.mintURL)));
+		resetState();
+	};
 
 	const resetState = () => {
 		mintAmount = 10;
@@ -130,10 +132,12 @@
 	{:else if qrCode}
 		<div class="grid grid-cols-2  gap-2">
 			<a href="lightning:{qrCode}">
-				<div class="col-span-2 lg:col-span-1 w-full flex items-center justify-center ml-20 lg:ml-auto">
+				<div
+					class="col-span-2 lg:col-span-1 w-full flex items-center justify-center ml-20 lg:ml-auto"
+				>
 					<QRCodeImage text={qrCode} scale={3} displayType="canvas" />
-			</div>
-		</a>
+				</div>
+			</a>
 			<div
 				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between"
 			>

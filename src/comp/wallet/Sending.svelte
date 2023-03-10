@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-ts';
-	import type { Proof } from '@gandlaf21/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -28,6 +27,7 @@
 	import * as nostrTools from 'nostr-tools';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import ScanNpub from '../elements/ScanNpub.svelte';
+	import { page } from '$app/stores';
 
 	export let active;
 
@@ -39,7 +39,7 @@
 	let sendToNostrKey = '';
 	let hasBeenCopied = false;
 	let nostrSendLoading = false;
-
+	let sendAsLink = false;
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
@@ -77,7 +77,6 @@
 			token.update((state) => [...state, ...returnChange]);
 
 			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, ids: mint.keysets }]);
-			console.log(getDecodedProofs(encodedToken));
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
@@ -188,6 +187,7 @@
 		isLoading = false;
 		active = 'base';
 		hasBeenCopied = false;
+		sendAsLink = false;
 	};
 </script>
 
@@ -209,7 +209,7 @@
 					class="w-full input input-primary"
 					id="send-token-input"
 					readonly
-					value={encodedToken}
+					value={sendAsLink ? $page.url.href + '#' + encodedToken : encodedToken}
 				/>
 				<button class="btn btn-square" on:click={copyToken}>
 					<svg
@@ -229,9 +229,13 @@
 				</button>
 			</div>
 		</div>
+		<label class="cursor-pointer label flex justify-start gap-3">
+			<span class="label-text">Send as link</span>
+			<input type="checkbox" class="toggle toggle-primary" bind:checked={sendAsLink} />
+		</label>
 		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
-				<p class="font-bold">Or send it to a Nostr pubkey:</p>
+				<p class="font-bold">Send via Nostr:</p>
 				<div class="w-full flex items-center gap-2">
 					<input
 						type="text"
@@ -240,12 +244,26 @@
 						placeholder="npub / hex / nip-05"
 					/>
 					<label for="npub-scan-modal" class="btn btn-square btn-info">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-							<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-						  </svg>
-						  
-						</label>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+							/>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+							/>
+						</svg>
+					</label>
 				</div>
 			{/if}
 		</div>
@@ -293,7 +311,10 @@
 				<div class="dropdown dropdown-bottom" id="mint-send-dropdown">
 					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label tabindex="0" class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip">
+					<label
+						tabindex="0"
+						class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip"
+					>
 						<p class=" truncate max-w-xs text-xs">
 							{mint.mintURL}
 						</p>
@@ -307,7 +328,12 @@
 						{#each $mints.filter((m) => m.isAdded) as m}
 							<!-- svelte-ignore a11y-missing-attribute -->
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<li on:click={() => (mint = m)} class="rounded-xl {m.mintURL === mint.mintURL?'bg-primary':''}"><a>{m.mintURL}</a></li>
+							<li
+								on:click={() => (mint = m)}
+								class="rounded-xl {m.mintURL === mint.mintURL ? 'bg-primary' : ''}"
+							>
+								<a>{m.mintURL}</a>
+							</li>
 						{/each}
 					</ul>
 				</div>
@@ -327,7 +353,7 @@
 				bind:value={amountToSend}
 			/>
 		</div>
-		
+
 		<div class="flex gap-2">
 			<button class="btn" on:click={() => resetState()}>cancel</button>
 			<button class="btn btn-success" on:click={send}>send</button>
@@ -335,5 +361,4 @@
 	</div>
 {/if}
 
-
-<ScanNpub bind:scannedNpub={sendToNostrKey} ></ScanNpub>
+<ScanNpub bind:scannedNpub={sendToNostrKey} />

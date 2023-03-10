@@ -1,1 +1,1 @@
-<img src="/nutstash.png" alt="logo" class="w-32">
+<img src="/nutstash.png" alt="logo" class="w-32" />

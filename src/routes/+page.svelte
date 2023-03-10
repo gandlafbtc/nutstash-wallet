@@ -137,18 +137,18 @@
 							{$version}
 						</p>
 					</div>
-						<Code />
+					<Code />
 				</div>
 				{#if $message}
 					<div />
 					<div class="col-span-2 m-1 rounded-sm bg-warning p-1 flex justify-between items-center">
 						<div class="flex gap-1">
 							<p class="text-warning-content">
-									{$message}
-								</p>
-								<a href="https://nutstash.app/risks" class="link-hover link-accent">
-									Learn more here
-								</a>
+								{$message}
+							</p>
+							<a href="https://nutstash.app/risks" class="link-hover link-accent">
+								Learn more here
+							</a>
 						</div>
 						<button
 							class="w-4 h-4 rounded-full bg-warning-content flex items-center justify-center"

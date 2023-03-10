@@ -5,7 +5,12 @@
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getKeysetsOfTokens, getMintForToken, validateMintKeys } from '../util/walletUtils';
+	import {
+		getAmountForTokenSet,
+		getKeysetsOfTokens,
+		getMintForToken,
+		validateMintKeys
+	} from '../util/walletUtils';
 	import type { Token } from '../../model/token';
 	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
@@ -26,10 +31,9 @@
 	let isLoading = false;
 	let isLoadingMint = false;
 
-
-	onMount(()=> {
-		hasMint = $mints.map(m=> m.mintURL).includes(nostrMessage.token.mints[0].url)
-	})
+	onMount(() => {
+		hasMint = $mints.map((m) => m.mintURL).includes(nostrMessage.token.mints[0].url);
+	});
 
 	const addContact = () => {
 		const newContact: Contact = {
@@ -65,7 +69,7 @@
 
 			mints.update((state) => [storeMint, ...state]);
 			toast('success', 'Mint has been added', 'Success');
-			hasMint=true
+			hasMint = true;
 		} catch {
 			toast(
 				'error',
@@ -76,7 +80,7 @@
 		} finally {
 			isLoadingMint = false;
 		}
-	}
+	};
 
 	const acceptToken = async () => {
 		try {
@@ -258,10 +262,12 @@
 						</button>
 					{/if}
 					{#if showAdd}
-					<input type="text" class="input-xs input input-primary" bind:value={contactName} />
-					<button class="btn-xs btn-success rounded-md text-xs" on:click={addContact}>add</button>
-					<button class="btn-xs btn-square rounded-md text-xs" on:click={()=>showAdd=false}>cancel</button>
-			{:else}
+						<input type="text" class="input-xs input input-primary" bind:value={contactName} />
+						<button class="btn-xs btn-success rounded-md text-xs" on:click={addContact}>add</button>
+						<button class="btn-xs btn-square rounded-md text-xs" on:click={() => (showAdd = false)}
+							>cancel</button
+						>
+					{:else}
 						<div class="badge badge-info gap-2">
 							<p>
 								{$contacts.filter((c) => c.pubkey === nostrMessage.event.pubkey)[0]?.name ??
@@ -284,11 +290,11 @@
 				{#if !nostrMessage.isAccepted}
 					<button on:click={rejectToken} class="btn btn-warning">Reject</button>
 					{#if hasMint}
-					<button on:click={acceptToken} class="btn btn-success">Accept</button>
-					{:else if  isLoadingMint}
-					<button class="btn btn-disabled btn-square loading"></button>
+						<button on:click={acceptToken} class="btn btn-success">Accept</button>
+					{:else if isLoadingMint}
+						<button class="btn btn-disabled btn-square loading" />
 					{:else}
-					<button on:click={addMint} class="btn btn-success">Trust Mint</button>
+						<button on:click={addMint} class="btn btn-success">Trust Mint</button>
 					{/if}
 				{/if}
 			{/if}

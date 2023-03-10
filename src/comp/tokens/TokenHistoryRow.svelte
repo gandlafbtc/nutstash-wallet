@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-ts';
+	import { getEncodedProofs } from '@gandlaf21/cashu-ts';
 	import type { MeltData } from '../../model/data/MeltData';
 	import type { ReceiveNostrData } from '../../model/data/ReceiveNostrData';
 	import type { MintData } from '../../model/data/MintData';
@@ -15,26 +15,24 @@
 
 	if (historyItem.type === HistoryItemType.SEND) {
 		const sendData: SendData = historyItem.data;
-		token = getEncodedProofs(sendData.send??[]);
+		token = getEncodedProofs(sendData.send ?? []);
 	} else if (historyItem.type === HistoryItemType.RECEIVE) {
 		const recieveData: ReceiveData = historyItem.data;
-		token = recieveData.encodedToken??''
-	}else if (historyItem.type === HistoryItemType.RECEIVE_NOSTR) {
+		token = recieveData.encodedToken ?? '';
+	} else if (historyItem.type === HistoryItemType.RECEIVE_NOSTR) {
 		const recieveData: ReceiveNostrData = historyItem.data;
-		token = recieveData.encodedToken??''
+		token = recieveData.encodedToken ?? '';
 	} else if (historyItem.type === HistoryItemType.MINT) {
 		const mintData: MintData = historyItem.data;
-		token = getEncodedProofs(mintData.tokens??[]);
+		token = getEncodedProofs(mintData.tokens ?? []);
 	} else {
 		const meltData: MeltData = historyItem.data;
-		token = getEncodedProofs(meltData.change??[]);
+		token = getEncodedProofs(meltData.change ?? []);
 	}
 </script>
 
 <tr>
-	<td 
-		><HistoryIcon type={historyItem.type} />
-	</td>
+	<td><HistoryIcon type={historyItem.type} /> </td>
 	<td>{historyItem.amount}</td>
 	<td>
 		<p class="hidden lg:flex">

@@ -1,10 +1,10 @@
-import type { Token } from "../token"
-import type { HistoryData } from "./HistoryData"
+import type { Token } from '../token';
+import type { HistoryData } from './HistoryData';
 
 interface MeltData extends HistoryData {
-        preimage: string,
-        invoice: string,
-        change: Array<Token>
+	preimage: string;
+	invoice: string;
+	change: Array<Token>;
 }
 
-export type { MeltData }
+export type { MeltData };
