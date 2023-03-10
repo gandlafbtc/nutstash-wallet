@@ -20,7 +20,7 @@
 
 	let mint: Mint | undefined;
 	let mintId: string = '';
-	let encodedToken: string = '';
+	export let encodedToken: string = '';
 	let isValid = false;
 	let isLoading = false;
 	let amount = 0;
@@ -79,7 +79,7 @@
 	};
 
 	const findMintById = (mints: Array<Mint>, id: string) => {
-		return mints.filter((m) => m.keysets.includes(id))[0];
+		return mints.filter((m) => m.isAdded && m.keysets.includes(id))[0];
 	};
 
 	const validateToken = () => {
@@ -112,8 +112,18 @@
 	const trustMint = async () => {
 		const mint = new CashuMint(mintToAdd);
 		try {
-			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
-				toast('warning', 'this mint has already been added.', "Didn't add mint!");
+			const mintIndex = $mints.findIndex((m) => m.mintURL === mint.mintUrl);
+			if (mintIndex > -1) {
+				if ($mints[mintIndex].isAdded) {
+					toast('warning', 'this mint has already been added.', "Didn't add mint!");
+					return;
+				}
+
+				const allMints = $mints;
+				const [ newMint ] = allMints.splice(mintIndex, 1);
+				newMint.isAdded = true;
+				mints.set([newMint, ...allMints]);
+				mintToAdd = '';
 				return;
 			}
 			isLoadingMint = true;
@@ -168,6 +178,10 @@
 			return Promise.resolve(nip19.npubEncode($nostrPubKey));
 		}
 	};
+
+	if (encodedToken) {
+		validateToken();
+	}
 </script>
 
 <div class="flex flex-col gap-2">

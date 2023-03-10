@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { token } from '../../stores/tokens';
 	import { mints } from '../../stores/mints';
 	import Sending from './Sending.svelte';
@@ -10,12 +11,28 @@
 	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { pendingTokens } from '../../stores/pendingtokens';
-	 import ScanLn from '../elements/ScanLN.svelte';
+	import ScanLn from '../elements/ScanLN.svelte';
+	import { goto } from '$app/navigation';
 
 	let active = 'base';
-	let scannedlnInvoice = ''
+	let scannedlnInvoice = '';
+	let encodedToken = '';
 
 	onMount(() => {
+		if($page.url.hash) {
+			active = 'receive'
+			const originalUrl = $page.url.toString();
+			const newUrl = originalUrl.split('#')[0];
+			goto(newUrl, { 
+				replaceState: true,
+				keepFocus: true,
+				noScroll: true,
+			}).then(() => {
+				history.replaceState(null, '', originalUrl);
+			});
+			encodedToken = $page.url.hash.replace(/^#/, '');
+		}
+
 		let isFirst = true;
 		let isFirstPending = true;
 		$mints.forEach(async (mint) => {
@@ -178,7 +195,7 @@
 		<Tokens />
 	</div>
 {:else if active === 'receive'}
-	<Receiving bind:active />
+	<Receiving bind:active encodedToken={encodedToken} />
 {:else if active === 'send'}
 	<Sending bind:active />
 	{:else if active === 'melt'}
