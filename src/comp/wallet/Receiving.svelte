@@ -115,9 +115,9 @@
 			const mintIndex = $mints.findIndex((m) => m.mintURL === mint.mintUrl);
 			if (mintIndex > -1) {
 				if ($mints[mintIndex].isAdded) {
-				toast('warning', 'this mint has already been added.', "Didn't add mint!");
-				return;
-			}
+					toast('warning', 'this mint has already been added.', "Didn't add mint!");
+					return;
+				}
 
 				const allMints = $mints;
 				const [ newMint ] = allMints.splice(mintIndex, 1);

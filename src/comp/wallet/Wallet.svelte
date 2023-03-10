@@ -11,7 +11,7 @@
 	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { pendingTokens } from '../../stores/pendingtokens';
-	 import ScanLn from '../elements/ScanLN.svelte';
+	import ScanLn from '../elements/ScanLN.svelte';
 	import { goto } from '$app/navigation';
 
 	let active = 'base';
