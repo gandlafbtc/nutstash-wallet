@@ -7,9 +7,9 @@ services:
       context: .
       dockerfile: Dockerfile
       platforms:
-        - "linux/amd64"
-        - "linux/arm64"
-    user: "1000:1000"
+        - 'linux/amd64'
+        - 'linux/arm64'
+    user: '1000:1000'
     restart: on-failure
     ports:
-      - "4173:4173"
+      - '4173:4173'

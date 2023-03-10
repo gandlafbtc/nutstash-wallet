@@ -1,8 +1,8 @@
 interface MintRequest {
-    mintUrl: string,
-    isCompleted: boolean,
-    invoice: string,
-    paymentHash: string
+	mintUrl: string;
+	isCompleted: boolean;
+	invoice: string;
+	paymentHash: string;
 }
 
-export type {MintRequest}
+export type { MintRequest };

@@ -1,6 +1,6 @@
 interface Contact {
-    pubkey: string,
-    name: string,
+	pubkey: string;
+	name: string;
 }
 
-export type {Contact}
+export type { Contact };

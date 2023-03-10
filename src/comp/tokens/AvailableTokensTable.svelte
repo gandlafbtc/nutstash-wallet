@@ -18,9 +18,9 @@
 			<tr>
 				<th>
 					<div class="flex justify-start items-center gap-1">
-                            <p class="hidden lg:flex">Pending</p>
-					<p class="flex lg:hidden">Pnd</p>
-                            <input type="checkbox" bind:checked={isPending} class="checkbox checkbox-primary" />
+						<p class="hidden lg:flex">Pending</p>
+						<p class="flex lg:hidden">Pnd</p>
+						<input type="checkbox" bind:checked={isPending} class="checkbox checkbox-primary" />
 					</div>
 				</th>
 

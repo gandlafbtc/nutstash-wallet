@@ -27,7 +27,7 @@
 			class="btn btn-success w-16 flex gap-1"
 			on:click={() => {
 				activeMint = mint;
-				active ='minting'
+				active = 'minting';
 			}}
 		>
 			<svg

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { Token } from '../../model/token';
 	import { getMintForToken, getTokenSubset } from '../util/walletUtils';
@@ -8,7 +8,6 @@
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
-	import { error } from '@sveltejs/kit';
 
 	export let token: Token;
 
@@ -46,7 +45,7 @@
 				}
 			}
 		} catch (e) {
-			isLoading=false
+			isLoading = false;
 			console.error(e);
 			toast('error', 'You might have lost your connection to the mint', 'an Error occurred');
 		}
@@ -71,8 +70,8 @@
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 			const spentProofs = await cashuWallet.checkProofsSpent([token]);
 			let hasBeenReceived = false;
-			if(!$pendingTokens.includes(token)){
-				return
+			if (!$pendingTokens.includes(token)) {
+				return;
 			}
 			pendingTokens.update((state) =>
 				state.filter((p) => {

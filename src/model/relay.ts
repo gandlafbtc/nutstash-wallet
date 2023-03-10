@@ -1,7 +1,6 @@
-
 interface NostrRelay {
-    url: string,
-    isActive: boolean
+	url: string;
+	isActive: boolean;
 }
 
-export type {NostrRelay}
+export type { NostrRelay };

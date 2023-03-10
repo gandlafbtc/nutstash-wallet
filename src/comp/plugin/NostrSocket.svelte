@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, getDecodedProofs } from '@gandlaf21/cashu-ts';
+	import { getDecodedProofs } from '@gandlaf21/cashu-ts';
 	import * as rp from 'nostr-relaypool';
 
 	import * as nostrTools from 'nostr-tools';
@@ -14,8 +14,6 @@
 		useExternalNostrKey
 	} from '../../stores/nostr';
 	import { isValidToken } from '../util/walletUtils';
-	import { mints as mintsStore } from '../../stores/mints';
-	import type { Mint } from 'src/model/mint';
 	import { onMount, onDestroy } from 'svelte';
 	import { toast } from '../../stores/toasts';
 	import { browser } from '$app/environment';

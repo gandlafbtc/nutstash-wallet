@@ -38,9 +38,7 @@
 				return !nM.isAccepted;
 			}).length > 0}
 				<span class="flex h-3 w-3">
-					<div
-						class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75"
-					/>
+					<div class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-info opacity-75" />
 					<div class="relative inline-flex rounded-full h-2 w-2 bg-info" />
 				</span>
 			{/if}

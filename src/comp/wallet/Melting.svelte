@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
-	import type { Mint } from '../../model/mint';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
@@ -15,7 +14,6 @@
 	} from '../util/walletUtils';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
-	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
 	export let active;
@@ -30,14 +28,14 @@
 	$: mint = $mints[0];
 	$: amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
 
-	onMount(()=> {
-		decodeInvoice()
-	})
+	onMount(() => {
+		decodeInvoice();
+	});
 
 	const decodeInvoice = async () => {
 		try {
 			if (invoice.startsWith('lightning:')) {
-				invoice = invoice.split(':')[1]
+				invoice = invoice.split(':')[1];
 			}
 			amount = decode(invoice).sections[2].value / 1000;
 			if (amount) {
@@ -190,7 +188,10 @@
 					<div class="dropdown" id="mint-send-dropdown">
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
-						<label tabindex="0" class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip">
+						<label
+							tabindex="0"
+							class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip"
+						>
 							<p class=" truncate max-w-xs text-xs">
 								{mint.mintURL}
 							</p>
@@ -199,12 +200,17 @@
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<ul
 							tabindex="0"
-						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+							class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
 						>
 							{#each $mints.filter((m) => m.isAdded) as m}
 								<!-- svelte-ignore a11y-missing-attribute -->
 								<!-- svelte-ignore a11y-click-events-have-key-events -->
-								<li on:click={() => (mint = m)}  class="rounded-xl {m.mintURL === mint.mintURL?'bg-primary':''}"><a>{m.mintURL}</a></li>
+								<li
+									on:click={() => (mint = m)}
+									class="rounded-xl {m.mintURL === mint.mintURL ? 'bg-primary' : ''}"
+								>
+									<a>{m.mintURL}</a>
+								</li>
 							{/each}
 						</ul>
 					</div>
@@ -216,10 +222,8 @@
 			</div>
 		{/if}
 
-		<div class="divider">
+		<div class="divider" />
 
-		</div>
-		
 		<div class="grid grid-cols-4 items-start pt-5">
 			<p>Amount:</p>
 			<p class="col-span-3">{amount} sats</p>
@@ -234,21 +238,21 @@
 
 	<div class="flex items-center gap-2">
 		<button class="btn btn-outline" on:click={resetState}>cancel</button>
-			<button class="btn {isPayable?'btn-warning':'btn-disabled'}" on:click={() => payInvoice()}>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-6 h-6"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-					/>
-				</svg>Pay</button
+		<button class="btn {isPayable ? 'btn-warning' : 'btn-disabled'}" on:click={() => payInvoice()}>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6"
 			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+				/>
+			</svg>Pay</button
+		>
 	</div>
 {/if}

@@ -7,27 +7,24 @@ A web based Cashu Wallet that supports multiple mints
 
 ## Roadmap
 
-* [x] Adding, removing Mints
-* [x] Mobile, web friendly
-* [x] Minting tokens through Lightning
-* [x] Melting tokens through Lightning
-* [x] Sending tokens
-* [x] receiving tokens
-* [x] history for melt/mint
-* [x] history for send/receive
-* [x] support multiple keysets
-* [x] support multiple mints
-* [x] backup tokens
-* [x] Inter-mint swapping
-* [x] Send/receive over Nostr
-* [x] reclaim pending tokens
-* [x] PWA installable app
-* [x] Scan to pay
-* [ ] scan to send
-* [ ] Merged Payment (use multiple mints to pay Invoice)
-
-
-
+- [x] Adding, removing Mints
+- [x] Mobile, web friendly
+- [x] Minting tokens through Lightning
+- [x] Melting tokens through Lightning
+- [x] Sending tokens
+- [x] receiving tokens
+- [x] history for melt/mint
+- [x] history for send/receive
+- [x] support multiple keysets
+- [x] support multiple mints
+- [x] backup tokens
+- [x] Inter-mint swapping
+- [x] Send/receive over Nostr
+- [x] reclaim pending tokens
+- [x] PWA installable app
+- [x] Scan to pay
+- [ ] scan to send
+- [ ] Merged Payment (use multiple mints to pay Invoice)
 
 ## Developing
 

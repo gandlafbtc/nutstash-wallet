@@ -3,7 +3,7 @@
 // and what to do when importing types
 declare namespace App {
 	interface QrCode {
-		value
+		value;
 	}
 	// interface Error {}
 	// interface Locals {}

@@ -1,11 +1,10 @@
-
 interface Token {
-    id: string,
-    amount: number,
-    secret: string,
-    C: string,
+	id: string;
+	amount: number;
+	secret: string;
+	C: string;
 
-    encodeProofToBase64():string
+	encodeProofToBase64(): string;
 }
 
-export type {Token}
+export type { Token };

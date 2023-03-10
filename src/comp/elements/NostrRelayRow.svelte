@@ -5,34 +5,32 @@
 
 	export let relay: NostrRelay;
 
+	const setRelayActive = () => {
+		// todo do this in one update
+		nostrRelays.update((state) => state.filter((r) => r !== relay));
 
-    const setRelayActive = () => {
-        // todo do this in one update
-        nostrRelays.update(state=>state.filter((r)=>r !== relay))
+		relay.isActive = !relay.isActive;
+		nostrRelays.update((state) => [relay, ...state]);
 
-        relay.isActive = !relay.isActive
-        nostrRelays.update(state=>[relay,...state])
-
-		useNostr.update(state => !state)
+		useNostr.update((state) => !state);
 		setTimeout(() => {
-			useNostr.update(state => !state)
+			useNostr.update((state) => !state);
 		}, 200);
-        toast('info',`relay has been ${relay.isActive?'activated':'deactivated'}`, 'Done!')
-    }
-    const removeRelay = () => {
-        nostrRelays.update(state=>state.filter((r)=>r !== relay))
-		useNostr.update(state => !state)
+		toast('info', `relay has been ${relay.isActive ? 'activated' : 'deactivated'}`, 'Done!');
+	};
+	const removeRelay = () => {
+		nostrRelays.update((state) => state.filter((r) => r !== relay));
+		useNostr.update((state) => !state);
 		setTimeout(() => {
-			useNostr.update(state => !state)
+			useNostr.update((state) => !state);
 		}, 200);
-        toast('info','relay has been removed', 'Done!')
-    }
+		toast('info', 'relay has been removed', 'Done!');
+	};
 </script>
 
 <div class="flex gap-2 items-center">
-	
 	<div class="flex gap-2">
-		<button class="btn-square btn {relay.isActive?'btn-warning':''} " on:click={setRelayActive}>
+		<button class="btn-square btn {relay.isActive ? 'btn-warning' : ''} " on:click={setRelayActive}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -67,7 +65,7 @@
 			</svg>
 		</button>
 	</div>
-    <div class="flex gap-2 items-center">
+	<div class="flex gap-2 items-center">
 		<p>{relay.url}</p>
 
 		{#if relay.isActive}
