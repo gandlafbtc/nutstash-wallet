@@ -27,8 +27,8 @@
 	let isLoading = false;
 	let isPaySuccess = false;
 
-	let mint = $mints[0];
-	let amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
+	$: mint = $mints[0];
+	$: amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
 
 	onMount(()=> {
 		decodeInvoice()
