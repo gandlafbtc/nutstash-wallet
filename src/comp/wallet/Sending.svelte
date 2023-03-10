@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-ts';
-	import type { Proof } from '@gandlaf21/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -28,6 +27,7 @@
 	import * as nostrTools from 'nostr-tools';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import ScanNpub from '../elements/ScanNpub.svelte';
+	import { page } from '$app/stores';
 
 	export let active;
 
@@ -39,7 +39,8 @@
 	let sendToNostrKey = '';
 	let hasBeenCopied = false;
 	let nostrSendLoading = false;
-
+	let sendAsLink = false
+	
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
 		const tokensToSend = getTokensToSend(amountToSend, tokensForMint);
@@ -76,7 +77,6 @@
 			token.update((state) => [...state, ...returnChange]);
 
 			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, ids: mint.keysets }]);
-			console.log(getDecodedProofs(encodedToken));
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
@@ -187,6 +187,7 @@
 		isLoading = false;
 		active = 'base';
 		hasBeenCopied = false;
+		sendAsLink = false;
 	};
 </script>
 
@@ -208,7 +209,7 @@
 					class="w-full input input-primary"
 					id="send-token-input"
 					readonly
-					value={encodedToken}
+					value={sendAsLink?$page.url.href+'#'+encodedToken:encodedToken}
 				/>
 				<button class="btn btn-square" on:click={copyToken}>
 					<svg
@@ -228,9 +229,13 @@
 				</button>
 			</div>
 		</div>
+		<label class="cursor-pointer label flex justify-start gap-3">
+			<span class="label-text">Send as link</span> 
+			<input type="checkbox" class="toggle toggle-primary" bind:checked={sendAsLink} />
+		  </label>
 		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
-				<p class="font-bold">Or send it to a Nostr pubkey:</p>
+				<p class="font-bold">Send via Nostr:</p>
 				<div class="w-full flex items-center gap-2">
 					<input
 						type="text"
