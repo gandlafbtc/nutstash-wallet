@@ -39,8 +39,8 @@
 	let sendToNostrKey = '';
 	let hasBeenCopied = false;
 	let nostrSendLoading = false;
-	let sendAsLink = false
-	
+	let sendAsLink = false;
+
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
 		const tokensToSend = getTokensToSend(amountToSend, tokensForMint);
@@ -209,7 +209,7 @@
 					class="w-full input input-primary"
 					id="send-token-input"
 					readonly
-					value={sendAsLink?$page.url.href+'#'+encodedToken:encodedToken}
+					value={sendAsLink ? $page.url.href + '#' + encodedToken : encodedToken}
 				/>
 				<button class="btn btn-square" on:click={copyToken}>
 					<svg
@@ -230,9 +230,9 @@
 			</div>
 		</div>
 		<label class="cursor-pointer label flex justify-start gap-3">
-			<span class="label-text">Send as link</span> 
+			<span class="label-text">Send as link</span>
 			<input type="checkbox" class="toggle toggle-primary" bind:checked={sendAsLink} />
-		  </label>
+		</label>
 		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
 				<p class="font-bold">Send via Nostr:</p>
