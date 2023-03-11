@@ -18,19 +18,17 @@
 	let scannedlnInvoice = '';
 	let encodedToken = '';
 
-	onMount(() => {
+	onMount(async () => {
 		if ($page.url.hash) {
 			active = 'receive';
 			const originalUrl = $page.url.toString();
 			const newUrl = originalUrl.split('#')[0];
-			goto(newUrl, {
+			encodedToken = $page.url.hash.replace(/^#/, '');
+			await goto(newUrl, {
 				replaceState: true,
 				keepFocus: true,
 				noScroll: true
-			}).then(() => {
-				history.replaceState(null, '', originalUrl);
 			});
-			encodedToken = $page.url.hash.replace(/^#/, '');
 		}
 
 		let isFirst = true;

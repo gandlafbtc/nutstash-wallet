@@ -72,9 +72,14 @@
 			isLoading = false;
 			isComplete = true;
 			toast('success', `${amount} tokens received`, 'Tokens received!');
-		} catch {
+		} catch (error) {
+			console.error(error);
 			isLoading = false;
-			toast('error', 'Tokens could not be received', 'an Error occured');
+			toast(
+				'error',
+				'Tokens are invalid or have already been redeemed',
+				'Tokens could not be received'
+			);
 		}
 	};
 
@@ -164,7 +169,6 @@
 		if ($useExternalNostrKey) {
 			if (browser) {
 				const pubK = await window.nostr?.getPublicKey();
-				console.log(pubK);
 				if (!pubK) {
 					return '';
 				}
