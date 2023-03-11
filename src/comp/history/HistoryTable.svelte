@@ -2,11 +2,11 @@
 	import { history } from '../../stores/history';
 	import HistoryRow from './HistoryRow.svelte';
 
-	$: page = 5;
+	$: page = 20;
 	$: historySub = $history.slice(0, page);
 
 	const loadMore = () => {
-		page += 5;
+		page += 20;
 	};
 </script>
 
@@ -24,9 +24,18 @@
 			{#each historySub as historyItem, i}
 				<HistoryRow {historyItem} {i} />
 			{/each}
-			<tr class="hover">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<td colspan="4" class="cursor-pointer w-full" on:click={loadMore}> load more </td>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<tr class="">
+				<td colspan="2" class="cursor-pointer w-full hover:bg-base-200" on:click={loadMore}>
+					load more
+				</td>
+				<td
+					colspan="2"
+					class="cursor-pointer w-full hover:bg-base-200"
+					on:click={() => (page = 999999)}
+				>
+					load all
+				</td>
 			</tr>
 		</tbody>
 	</table>

@@ -8,13 +8,13 @@
 	import { getAmountForTokenSet } from '../util/walletUtils';
 	import InboxRow from './InboxRow.svelte';
 
-	$: page = 5;
+	$: page = 20;
 	$: nostrMessagesSub = $nostrMessages.slice(0, page);
 
 	let isLoading = false;
 
 	const loadMore = () => {
-		page += 5;
+		page += 20;
 	};
 
 	const receiveAll = async () => {
@@ -117,9 +117,18 @@
 			{#each nostrMessagesSub as nostrMessage, i}
 				<InboxRow {nostrMessage} {i} />
 			{/each}
-			<tr class="hover">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<td colspan="4" class="cursor-pointer w-full" on:click={loadMore}> load more </td>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<tr class="">
+				<td colspan="2" class="cursor-pointer w-full hover:bg-base-200" on:click={loadMore}>
+					load more
+				</td>
+				<td
+					colspan="2"
+					class="cursor-pointer w-full hover:bg-base-200"
+					on:click={() => (page = 999999)}
+				>
+					load all
+				</td>
 			</tr>
 		</tbody>
 	</table>
