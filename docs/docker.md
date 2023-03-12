@@ -1,6 +1,14 @@
 # Docker
 
+One can use the provided docker container hosted on github or alternatively build and run the container from the repository source code. 
+
 Using docker you don't need to install, configure, and manage a node environment.
+
+## Run provided docker container
+
+```shell
+docker run --publish 4173:4173 ghcr.io/gandlafbtc/nutstash-wallet:latest
+```
 
 ## Building the app with docker
 
