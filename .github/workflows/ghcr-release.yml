@@ -1,0 +1,45 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'A version number'
+        required: true
+        type: string
+
+permissions:
+  actions: none
+  checks: none
+  contents: none
+  deployments: none
+  id-token: none
+  issues: none
+  discussions: none
+  packages: write
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+jobs:
+  docker-compose_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v2.5.0
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build images with release version ${{ inputs.version }}
+        run: cd main && docker buildx build --platform linux/amd64,linux/arm64 -t "ghcr.io/${{ github.actor }}/nutstash-wallet:${{ inputs.version }}" --push .
