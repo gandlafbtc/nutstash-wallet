@@ -1,6 +1,6 @@
 # Docker
 
-One can use the provided docker container hosted on github or alternatively build and run the container from the repository source code. 
+One can use the provided docker container hosted on github or alternatively build and run the container from the repository source code.
 
 Using docker you don't need to install, configure, and manage a node environment.
 

@@ -232,9 +232,9 @@
 			<input type="checkbox" class="toggle toggle-primary" bind:checked={sendAsLink} />
 		</label>
 		{#if sendAsLink}
-		<div class="flex flex-col items-center">
-			<QrCodeImage text={$page.url.href + '#' + encodedToken} scale={3} displayType="canvas" />
-		</div>
+			<div class="flex flex-col items-center">
+				<QrCodeImage text={$page.url.href + '#' + encodedToken} scale={3} displayType="canvas" />
+			</div>
 		{/if}
 		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
