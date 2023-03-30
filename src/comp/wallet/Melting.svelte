@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';

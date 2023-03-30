@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getDecodedProofs } from '@gandlaf21/cashu-ts';
+	import { getDecodedProofs } from '@cashu/cashu-ts';
 	import * as rp from 'nostr-relaypool';
 
 	import * as nostrTools from 'nostr-tools';

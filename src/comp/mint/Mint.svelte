@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint } from '@gandlaf21/cashu-ts';
+	import { CashuMint } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { toast } from '../../stores/toasts';

@@ -8,7 +8,7 @@
 	import Melting from './Melting.svelte';
 	import { onMount } from 'svelte';
 	import { getTokensForMint } from '../util/walletUtils';
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import ScanLn from '../elements/ScanLN.svelte';
