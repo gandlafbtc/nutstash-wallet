@@ -5,6 +5,18 @@ This app is in early development and most likely buggy. It does handle real sats
 
 A web based Cashu Wallet that supports multiple mints
 
+Implemented [NUTs](https://github.com/cashubtc/nuts/):
+
+- [x] NUT-00
+- [x] NUT-01
+- [x] NUT-02
+- [x] NUT-03
+- [x] NUT-04
+- [x] NUT-05
+- [x] NUT-06
+- [x] NUT-07
+- [x] NUT-08
+
 ## Roadmap
 
 - [x] Adding, removing Mints
