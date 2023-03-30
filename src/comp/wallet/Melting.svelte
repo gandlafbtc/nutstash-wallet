@@ -95,11 +95,12 @@
 		}
 
 		try {
-			const { isPaid, preimage } = await cashuWallet.payLnInvoice(invoice, send);
+			const { isPaid, preimage, change } = await cashuWallet.payLnInvoice(invoice, send);
+			token.update((state) => [...change, ...state]);
 			history.update((state) => [
 				{
 					type: HistoryItemType.MELT,
-					amount,
+					amount: amount + fees- getAmountForTokenSet(change),
 					date: Date.now(),
 					data: {
 						preimage,
