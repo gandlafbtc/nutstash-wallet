@@ -100,7 +100,7 @@
 			history.update((state) => [
 				{
 					type: HistoryItemType.MELT,
-					amount: amount + fees- getAmountForTokenSet(change),
+					amount: amount + fees - getAmountForTokenSet(change),
 					date: Date.now(),
 					data: {
 						preimage,
