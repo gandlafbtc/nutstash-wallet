@@ -120,7 +120,7 @@
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll">
 			{#each nostrMessagesSub as nostrMessage, i}
-				{#if nostrMessage.token}
+				{#if nostrMessage.token.token}
 					<InboxRow {nostrMessage} {i} />
 				{/if}
 			{/each}
