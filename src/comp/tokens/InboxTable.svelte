@@ -117,7 +117,9 @@
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll">
 			{#each nostrMessagesSub as nostrMessage, i}
-				<InboxRow {nostrMessage} {i} />
+				{#if nostrMessage.token}
+					<InboxRow {nostrMessage} {i} />
+				{/if}
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
