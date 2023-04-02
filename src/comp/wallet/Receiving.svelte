@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedProofs } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getDecodedToken } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
@@ -43,8 +43,7 @@
 					'Receive tokens from this mint by adding the mint',
 					'Not connected to this mint'
 				);
-				mintToAdd = getDecodedProofs(encodedToken).mints.filter((m) => m.ids.includes(mintId))[0]
-					.url;
+				mintToAdd = getDecodedToken(encodedToken).token[0].mint;
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -90,7 +89,9 @@
 	const validateToken = () => {
 		amount = 0;
 		try {
-			const { proofs, mints } = getDecodedProofs(encodedToken);
+			const { token } = getDecodedToken(encodedToken);
+			const proofs = token[0].proofs;
+			const mint = token[0].mint;
 			proofs.forEach((t) => {
 				mintId = t.id;
 				amount += t.amount;

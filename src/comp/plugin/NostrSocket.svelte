@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { getDecodedProofs } from '@cashu/cashu-ts';
+	import { getDecodedToken } from '@cashu/cashu-ts';
+
 	import * as rp from 'nostr-relaypool';
 
 	import * as nostrTools from 'nostr-tools';
@@ -97,18 +98,18 @@
 
 				let token;
 				try {
-					token = getDecodedProofs(decodedMessage);
+					token = getDecodedToken(decodedMessage);
 				} catch (e) {
 					console.error(e, 'could not decode nip-04 message as token. Ignoring this message');
 					return;
 				}
 
-				if (!token?.proofs) {
+				if (!token?.token) {
 					//if the event is not in a cashu token format, ignore it
 					return;
 				}
 
-				if (!isValidToken(token.proofs)) {
+				if (!isValidToken(token.token)) {
 					// ignore messages that are not tokens
 					return;
 				}

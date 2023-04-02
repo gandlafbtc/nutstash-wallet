@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getDecodedToken, getEncodedToken } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -76,7 +76,7 @@
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
 
-			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, ids: mint.keysets }]);
+			encodedToken = getEncodedToken(send, mint.mintURL);
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
