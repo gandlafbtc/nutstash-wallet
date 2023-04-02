@@ -100,7 +100,10 @@
 
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
-			const encodedProofs = getEncodedToken(nostrMessage.token.token[0].proofs, nostrMessage.token.token[0].mint);
+			const encodedProofs = getEncodedToken(
+				nostrMessage.token.token[0].proofs,
+				nostrMessage.token.token[0].mint
+			);
 
 			isLoading = true;
 			const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);

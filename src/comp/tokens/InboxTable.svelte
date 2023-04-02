@@ -33,7 +33,7 @@
 					const storeMint: Mint = {
 						mintURL: mint.mintUrl,
 						keys,
-						keysets: [...new Set(nM.token.token[0].proofs.map(p=> p.id))],
+						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))],
 						isAdded: false
 					};
 				}
@@ -43,7 +43,9 @@
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const receivedProofs = await wallet.receive(getEncodedToken(proofsToReceive,mint.mintUrl));
+					const receivedProofs = await wallet.receive(
+						getEncodedToken(proofsToReceive, mint.mintUrl)
+					);
 
 					token.update((state) => [...receivedProofs, ...state]);
 

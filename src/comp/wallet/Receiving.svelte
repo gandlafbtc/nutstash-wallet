@@ -43,7 +43,7 @@
 					'Receive tokens from this mint by adding the mint',
 					'Not connected to this mint'
 				);
-				mintToAdd = getDecodedToken(encodedToken).token[0].mint
+				mintToAdd = getDecodedToken(encodedToken).token[0].mint;
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -90,8 +90,8 @@
 		amount = 0;
 		try {
 			const { token } = getDecodedToken(encodedToken);
-			const proofs = token[0].proofs
-			const mint = token[0].mint
+			const proofs = token[0].proofs;
+			const mint = token[0].mint;
 			proofs.forEach((t) => {
 				mintId = t.id;
 				amount += t.amount;
