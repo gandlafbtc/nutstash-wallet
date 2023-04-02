@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { CashuMint, CashuWallet, getEncodedProofs } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
@@ -32,7 +32,7 @@
 	let isLoadingMint = false;
 
 	onMount(() => {
-		hasMint = $mints.map((m) => m.mintURL).includes(nostrMessage.token.mints[0].url);
+		hasMint = $mints.map((m) => m.mintURL).includes(nostrMessage.token.token[0].mint);
 	});
 
 	const addContact = () => {
@@ -45,7 +45,7 @@
 	};
 
 	const addMint = async () => {
-		const mint = new CashuMint(nostrMessage.token.mints[0].url);
+		const mint = new CashuMint(nostrMessage.token.token[0].mint);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
 				toast('warning', 'this mint has already been added.', "Didn't add mint!");
@@ -84,7 +84,7 @@
 
 	const acceptToken = async () => {
 		try {
-			const mint = getMintForToken(nostrMessage.token.proofs[0], $mints);
+			const mint = getMintForToken(nostrMessage.token.token[0].proofs[0], $mints);
 			if (!mint) {
 				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
 				return;
@@ -100,7 +100,7 @@
 
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
-			const encodedProofs = getEncodedProofs(nostrMessage.token.proofs, nostrMessage.token.mints);
+			const encodedProofs = getEncodedToken(nostrMessage.token.token[0].proofs, nostrMessage.token.token[0].mint);
 
 			isLoading = true;
 			const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
@@ -118,7 +118,7 @@
 			history.update((state) => [
 				{
 					type: HistoryItemType.RECEIVE_NOSTR,
-					amount: getAmountForTokenSet(nostrMessage.token.proofs),
+					amount: getAmountForTokenSet(nostrMessage.token.token[0].proofs),
 					date: Date.now(),
 					data: {
 						encodedToken: encodedProofs,
@@ -203,7 +203,7 @@
 			</div>
 		{/if}
 	</td>
-	<td>{getAmountForTokenSet(nostrMessage?.token?.proofs)}</td>
+	<td>{getAmountForTokenSet(nostrMessage?.token?.token[0].proofs)}</td>
 	<td>
 		<p class="hidden lg:flex">
 			{date.toLocaleString('en-us', {
@@ -235,11 +235,11 @@
 			<div class="grid grid-cols-5">
 				<p class="font-bold">Amount:</p>
 				<p class="col-span-4">
-					{getAmountForTokenSet(nostrMessage?.token?.proofs) ?? ''}
+					{getAmountForTokenSet(nostrMessage?.token?.token[0]?.proofs) ?? ''}
 				</p>
 				<p class="font-bold">Mint:</p>
 				<p class="col-span-4">
-					{nostrMessage.token.mints[0].url}
+					{nostrMessage.token.token[0].mint}
 				</p>
 				<p class="font-bold">From:</p>
 				<div class="flex col-span-4 items-center gap-2 overflow-clip">
@@ -278,7 +278,7 @@
 				</div>
 				<p class="font-bold">Token:</p>
 				<p class="col-span-4 overflow-clip">
-					{getEncodedProofs(nostrMessage.token.proofs, nostrMessage.token.mints)}
+					{getEncodedToken(nostrMessage.token.token[0].proofs, nostrMessage.token.token[0].mint)}
 				</p>
 			</div>
 		</div>

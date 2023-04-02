@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getEncodedProofs } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
@@ -23,7 +23,7 @@
 		let hasError = 0;
 		isLoading = true;
 		for (const nM of $nostrMessages.filter((n) => !n.isAccepted)) {
-			const mint: CashuMint = new CashuMint(nM.token.mints[0].url);
+			const mint: CashuMint = new CashuMint(nM.token.token[0].mint);
 			let keys;
 			try {
 				if ($mints.map((m) => m.mintURL).includes(mint.mintUrl)) {
@@ -33,17 +33,17 @@
 					const storeMint: Mint = {
 						mintURL: mint.mintUrl,
 						keys,
-						keysets: nM.token.mints[0].ids,
+						keysets: [...new Set(nM.token.token[0].proofs.map(p=> p.id))],
 						isAdded: false
 					};
 				}
 
 				const wallet = new CashuWallet(keys, mint);
-				const spentProofs = await wallet.checkProofsSpent(nM.token.proofs);
-				const proofsToReceive = nM.token.proofs.filter((p) => !spentProofs.includes(p));
+				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
+				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const receivedProofs = await wallet.receive(getEncodedProofs(proofsToReceive));
+					const receivedProofs = await wallet.receive(getEncodedToken(proofsToReceive,mint.mintUrl));
 
 					token.update((state) => [...receivedProofs, ...state]);
 
