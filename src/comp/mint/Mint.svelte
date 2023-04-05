@@ -68,7 +68,7 @@
 				<!-- head -->
 				<thead>
 					<tr>
-						<th>Mint</th>
+						<th class="w-full">Mint</th>
 						<th>Actions</th>
 						<th>
 							<p class="hidden lg:flex">Balance</p>
