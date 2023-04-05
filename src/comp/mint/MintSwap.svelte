@@ -88,7 +88,7 @@
 			if (returnChange) {
 				token.update((state) => [...returnChange, ...state]);
 			}
-			const { isPaid, preimage } = await cashuSwapOutWallet.payLnInvoice(invoice, send);
+			const { isPaid, preimage, change } = await cashuSwapOutWallet.payLnInvoice(invoice, send);
 
 			if (!isPaid) {
 				token.update((state) => [...send, ...state]);
@@ -100,6 +100,9 @@
 					'Error occured when performing swap'
 				);
 				return;
+			}
+			else {
+				token.update((state) => [...change, ...state]);
 			}
 
 			const newProofs = await cashuSwapInWallet.requestTokens(swapAmount, paymentHash);
