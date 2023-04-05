@@ -41,11 +41,7 @@
 				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
 					load more
 				</td>
-				<td
-					colspan="2"
-					class="cursor-pointer hover:bg-base-200"
-					on:click={() => (page = 999999)}
-				>
+				<td colspan="2" class="cursor-pointer hover:bg-base-200" on:click={() => (page = 999999)}>
 					load all
 				</td>
 			</tr>

@@ -114,15 +114,13 @@
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
-			?
-			  await window.nostr.getPublicKey()
+			? await window.nostr.getPublicKey()
 			: await Promise.resolve($nostrPubKey);
 	};
 
 	const getEncryptedContent = async (): Promise<string> => {
 		return $useExternalNostrKey
-			?
-			  await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
+			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
 			: await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
 	const getConvertedPubKey = async () => {

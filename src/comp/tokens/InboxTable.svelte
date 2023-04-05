@@ -23,8 +23,8 @@
 		let hasError = 0;
 		isLoading = true;
 		for (const nM of $nostrMessages.filter((n) => !n.isAccepted)) {
-			if (!nM.token.token){
-				return
+			if (!nM.token.token) {
+				return;
 			}
 			const mint: CashuMint = new CashuMint(nM.token.token[0].mint);
 			let keys;

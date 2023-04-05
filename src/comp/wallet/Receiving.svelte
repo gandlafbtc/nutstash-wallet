@@ -10,7 +10,6 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { getKeysetsOfTokens, validateMintKeys } from '../util/walletUtils';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
-	
 
 	export let active;
 
@@ -65,7 +64,7 @@
 			]);
 			isLoading = false;
 			toast('success', `${amount} tokens received`, 'Tokens received!');
-			resetState()
+			resetState();
 		} catch (error) {
 			console.error(error);
 			isLoading = false;
@@ -210,8 +209,8 @@
 				{/if}
 			</div>
 		</div>
-		
-		<NostrReceiveQr></NostrReceiveQr>
+
+		<NostrReceiveQr />
 
 		<div class="flex  gap-2">
 			<button class="btn" on:click={resetState}>cancel</button>
