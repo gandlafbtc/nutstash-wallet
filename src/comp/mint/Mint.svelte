@@ -43,7 +43,7 @@
 				isAdded: true
 			};
 
-			mints.update((state) => [storeMint, ...state]);
+			mints.update((state) => [...state,storeMint]);
 			toast('success', 'Mint has been added', 'Success');
 		} catch {
 			toast(
@@ -63,7 +63,7 @@
 
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
-		<div class="max-h-52 overflow-auto">
+		<div class="max-h-52 overflow-auto scrollbar-hide">
 			<table class="table table-auto w-full">
 				<!-- head -->
 				<thead>
