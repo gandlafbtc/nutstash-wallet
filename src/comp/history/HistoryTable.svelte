@@ -10,7 +10,7 @@
 	};
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll">
+<div class="overflow-x-scroll overflow-y-scroll scrollbar-hide">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
@@ -20,7 +20,7 @@
 				<th>Details</th>
 			</tr>
 		</thead>
-		<tbody class="max-h-1 overflow-y-scroll">
+		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
 			{#each historySub as historyItem, i}
 				<HistoryRow {historyItem} {i} />
 			{/each}

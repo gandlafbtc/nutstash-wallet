@@ -186,7 +186,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 				>
 					{#each $mints.filter((m) => m.isAdded && m != swapInMint) as m}
 						<!-- svelte-ignore a11y-missing-attribute -->
@@ -236,7 +236,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 				>
 					{#each $mints.filter((m) => m.isAdded && m != swapOutMint) as m}
 						<!-- svelte-ignore a11y-missing-attribute -->

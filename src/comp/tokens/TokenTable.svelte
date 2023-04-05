@@ -10,7 +10,7 @@
 	};
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll max-h-40">
+<div class="overflow-x-scroll overflow-y-scroll max-h-40 scrollbar-hide">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
@@ -23,7 +23,7 @@
 				<th class="w-full">Token</th>
 			</tr>
 		</thead>
-		<tbody class="max-h-1 overflow-y-scroll">
+		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
 			{#each historySub as historyItem}
 				<TokenHistoryRow {historyItem} />
 			{/each}

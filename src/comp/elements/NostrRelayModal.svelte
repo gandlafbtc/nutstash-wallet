@@ -23,7 +23,7 @@
 		<h3 class="font-bold text-xl">Configure Nostr Relays</h3>
 
 		<div class="flex flex-col gap-2">
-			<div class="w-full max-h-44 overflow-y-scroll flex flex-col gap-2">
+			<div class="w-full max-h-44 overflow-y-scroll flex flex-col gap-2 scrollbar-hide">
 				{#each $nostrRelays as relay, i}
 					<NostrRelayRow {relay} />
 				{/each}
