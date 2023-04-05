@@ -26,7 +26,7 @@
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
-				<td colspan="2" class="cursor-pointer w-full hover:bg-base-200" on:click={loadMore}>
+				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
 					load more
 				</td>
 				<td

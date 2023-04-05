@@ -30,6 +30,7 @@
 			</div>
 			<div class="flex gap-2 items-end w-full">
 				<div class="form-control">
+					<!-- svelte-ignore a11y-label-has-associated-control -->
 					<label class="label">
 						<span class="label-text">Add new Relay</span>
 					</label>

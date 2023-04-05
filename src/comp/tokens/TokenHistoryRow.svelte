@@ -15,7 +15,7 @@
 
 	if (historyItem.type === HistoryItemType.SEND) {
 		const sendData: SendData = historyItem.data;
-		token = getEncodedToken(sendData.send ?? []);
+		token = getEncodedToken(sendData.send ?? [], sendData.mint??'');
 	} else if (historyItem.type === HistoryItemType.RECEIVE) {
 		const recieveData: ReceiveData = historyItem.data;
 		token = recieveData.encodedToken ?? '';
@@ -24,10 +24,10 @@
 		token = recieveData.encodedToken ?? '';
 	} else if (historyItem.type === HistoryItemType.MINT) {
 		const mintData: MintData = historyItem.data;
-		token = getEncodedToken(mintData.tokens ?? []);
+		token = getEncodedToken(mintData.tokens ?? [],mintData.mint??'');
 	} else {
 		const meltData: MeltData = historyItem.data;
-		token = getEncodedToken(meltData.change ?? []);
+		token = getEncodedToken(meltData.change ?? [], meltData.mint??'');
 	}
 </script>
 

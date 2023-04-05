@@ -3,12 +3,14 @@
 	import Step2 from '../../comp/restore/Step2.svelte';
 	import Step3 from '../../comp/restore/Step3.svelte';
 	import Step4 from '../../comp/restore/Step4.svelte';
+	import type { Mint } from '../../model/mint';
+	import type { Token } from '../../model/token';
 	import { mints } from '../../stores/mints';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 
 	let step = 1;
-	let backupObject = {};
+	let backupObject: { proofs: Array<Token>; mints: Array<Mint> };
 
 	const nextStep = () => {
 		if (step > 3) {
