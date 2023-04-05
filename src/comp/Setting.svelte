@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { checkAutomatically, checkNonPending, checkPending } from '../stores/settings';
 	import { THEMES } from '../stores/static/themes';
 
 	import { theme } from '../stores/theme';
@@ -27,7 +28,7 @@
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<ul
 				tabindex="0"
-				class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll"
+				class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll scrollbar-hide"
 			>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				{#each THEMES as theme}
@@ -55,6 +56,71 @@
 		<div class="col-span-4">
 			<a href="/history" class="btn btn-outline">History</a>
 		</div>
+		<div class="divider col-span-5">Cashu</div>
+
+		<div class="col-span-2">
+			<label for="">Check pending tokens</label>
+		</div>
+		<div class="col-span-3 flex gap-2">
+			<input type="checkbox" class="toggle toggle-warning" bind:checked={$checkPending} />
+			<div>
+				<div
+					class="tooltip"
+					data-tip="Activating automatic token checking will send part of your all your tokens to the mint for verification if they have been spent already. This gives the mint additional information about a users balance, especially if the option is enabled for non-pending tokens. ⚠️ use at own risk"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+						/>
+					</svg>
+				</div>
+			</div>
+		</div>
+		<div class="col-span-2">
+			<label for="">Check non-pending tokens</label>
+		</div>
+		<div class="col-span-3">
+			<input type="checkbox" class="toggle toggle-error" bind:checked={$checkNonPending} />
+		</div>
+		{#if $checkPending || $checkNonPending}
+			<div class="col-span-2">
+				<label for="">Check tokens automatically</label>
+			</div>
+			<div class="col-span-3 flex gap-2">
+				<input type="checkbox" class="toggle toggle-info" bind:checked={$checkAutomatically} />
+				<div>
+					<div
+						class="tooltip"
+						data-tip="You can activate this option to check for invalid tokens in your wallet automatically. It is only advised to use this option if privacy is not a priority."
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+							/>
+						</svg>
+					</div>
+				</div>
+			</div>
+		{/if}
+
 		<div class="divider col-span-5">Nostr</div>
 
 		<NostrSettings />
