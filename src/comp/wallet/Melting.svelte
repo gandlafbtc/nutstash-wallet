@@ -235,7 +235,7 @@
 								<li
 									on:click={() => {
 										mint = m;
-										decodeInvoice()
+										decodeInvoice();
 									}}
 									class="rounded-xl {m.mintURL === mint.mintURL ? 'bg-primary' : ''}"
 								>
