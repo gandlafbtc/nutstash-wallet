@@ -214,7 +214,7 @@
 	<div class="modal-box">
 		<h3 class="text-lg font-bold">Remove Mint</h3>
 		<p class="overflow-clip text-ellipsis">
-				{mint.mintURL}
+			{mint.mintURL}
 		</p>
 		<p class="py-4">
 			Are you sure you want to remove this mint? You will keep the tokens associated with the mint,

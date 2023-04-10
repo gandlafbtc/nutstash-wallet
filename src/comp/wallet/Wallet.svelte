@@ -22,11 +22,11 @@
 	let isChecking = false;
 
 	onMount(async () => {
-		const searchParams = $page.url.searchParams
+		const searchParams = $page.url.searchParams;
 		if (searchParams) {
-			const mintUrl = searchParams.get('mint')
+			const mintUrl = searchParams.get('mint');
 			if (mintUrl) {
-				$activeTab = 'mint'
+				$activeTab = 'mint';
 			}
 		}
 		if ($page.url.hash) {

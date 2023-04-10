@@ -188,30 +188,28 @@
 			</div>
 		</div>
 	{:else}
-	<div class="flex flex-col gap-2">
+		<div class="flex flex-col gap-2">
+			<h3 class="font-bold text-lg">Request minting of new tokens:</h3>
+			<div class="flex gap-2 items-center">
+				<input
+					type="number"
+					bind:value={mintAmount}
+					placeholder="Type here"
+					class="input w-full input-primary col-span-4"
+				/>
+				<p>satoshi</p>
+			</div>
 
-		<h3 class="font-bold text-lg">Request minting of new tokens:</h3>
-		<div class="flex gap-2 items-center">
-			
-			<input
-			type="number"
-			bind:value={mintAmount}
-			placeholder="Type here"
-			class="input w-full input-primary col-span-4"
-			/>
-			<p>satoshi</p>
+			<div class="flex gap-2">
+				<p class="font-bold">Mint:</p>
+				<p class="break-all">
+					{mint.mintURL}
+				</p>
+			</div>
+			<div class="modal-action">
+				<button class="btn btn-outline" on:click={resetState}>cancel</button>
+				<button class="btn btn-primary" on:click={() => mintRequest()}>request Mint</button>
+			</div>
 		</div>
-		
-		<div class="flex gap-2">
-			<p class="font-bold">Mint:</p>
-			<p class="break-all">
-				{mint.mintURL}
-			</p>
-		</div>
-		<div class="modal-action">
-			<button class="btn btn-outline" on:click={resetState}>cancel</button>
-			<button class="btn btn-primary" on:click={() => mintRequest()}>request Mint</button>
-		</div>
-	</div>
-		{/if}
-	</div>
+	{/if}
+</div>

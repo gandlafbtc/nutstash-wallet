@@ -216,22 +216,22 @@
 			{#if isLoading}
 				<LoadingCenter />
 			{:else}
-					<button
-						class="btn btn-primary h-full z-20 flex gap-2 items-center"
-						on:click={() => {
-							addMint();
-						}}
-					>
-						Add Mint
-						{#if isAddMintPing}
+				<button
+					class="btn btn-primary h-full z-20 flex gap-2 items-center"
+					on:click={() => {
+						addMint();
+					}}
+				>
+					Add Mint
+					{#if isAddMintPing}
 						<span class="flex h-3 w-3">
 							<div
 								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-secondary opacity-75"
 							/>
 							<div class="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
 						</span>
-						{/if}
-					</button>
+					{/if}
+				</button>
 			{/if}
 		</div>
 	</div>
