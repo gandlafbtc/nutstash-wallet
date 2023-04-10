@@ -31,7 +31,9 @@
 				mintURL = mintUrlParam;
 				$page.url.searchParams.delete('mint');
 				history.replaceState({}, '', $page.url);
-				isAddMintPing = true;
+				if (mintURL) {
+					isAddMintPing = true;
+				}
 			}
 		}
 	});
