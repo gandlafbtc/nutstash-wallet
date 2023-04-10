@@ -10,11 +10,12 @@
 	import Donate from '../comp/elements/Donate.svelte';
 	import Code from '../comp/elements/Code.svelte';
 	import { version } from '../stores/version';
+	import { activeTab } from '../stores/activeTab';
 
-	let activeTab = 'wallet';
+	$activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
-		activeTab = tabName;
+		$activeTab = tabName;
 	};
 
 	const deleteMessage = () => {
@@ -33,7 +34,7 @@
 				<div class="tabs w-full flex-grow-0">
 					<button
 						on:click={() => changeTab('wallet')}
-						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {activeTab === 'wallet'
+						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'wallet'
 							? 'tab-active'
 							: ''}"
 						><svg
@@ -60,7 +61,7 @@
 					</button>
 					<button
 						on:click={() => changeTab('mint')}
-						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {activeTab === 'mint'
+						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'mint'
 							? 'tab-active'
 							: ''}"
 						><svg
@@ -93,7 +94,7 @@
 					</button>
 					<button
 						on:click={() => changeTab('setting')}
-						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {activeTab === 'setting'
+						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'setting'
 							? 'tab-active'
 							: ''}"
 						><svg
@@ -114,18 +115,18 @@
 			</div>
 		</div>
 		<div
-			class="bg-base-100 grid w-full h-full overflow-auto flex-grow gap-3 rounded-xl p-6 shadow-xl {activeTab ===
+			class="bg-base-100 grid w-full h-full overflow-auto flex-grow gap-3 rounded-xl p-6 shadow-xl {$activeTab ===
 			'wallet'
 				? 'rounded-tl-none'
-				: ''} {activeTab === 'setting' ? 'rounded-tr-none' : ''}"
+				: ''} {$activeTab === 'setting' ? 'rounded-tr-none' : ''}"
 		>
-			{#if activeTab === 'wallet'}
+			{#if $activeTab === 'wallet'}
 				<Wallet />
 			{/if}
-			{#if activeTab === 'mint'}
+			{#if $activeTab === 'mint'}
 				<Mint />
 			{/if}
-			{#if activeTab === 'setting'}
+			{#if $activeTab === 'setting'}
 				<Setting />
 			{/if}
 			<div class="flex justify-end items-center flex-col">

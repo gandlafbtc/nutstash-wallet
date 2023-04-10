@@ -14,6 +14,7 @@
 	import ScanLn from '../elements/ScanLN.svelte';
 	import { goto } from '$app/navigation';
 	import { checkAutomatically, checkNonPending, checkPending } from '../../stores/settings';
+	import { activeTab } from '../../stores/activeTab';
 
 	let active = 'base';
 	let scannedlnInvoice = '';
@@ -21,6 +22,13 @@
 	let isChecking = false;
 
 	onMount(async () => {
+		const searchParams = $page.url.searchParams
+		if (searchParams) {
+			const mintUrl = searchParams.get('mint')
+			if (mintUrl) {
+				$activeTab = 'mint'
+			}
+		}
 		if ($page.url.hash) {
 			active = 'receive';
 			const originalUrl = $page.url.toString();
