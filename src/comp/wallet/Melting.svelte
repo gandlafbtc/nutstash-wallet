@@ -233,7 +233,10 @@
 								<!-- svelte-ignore a11y-missing-attribute -->
 								<!-- svelte-ignore a11y-click-events-have-key-events -->
 								<li
-									on:click={() => (mint = m)}
+									on:click={() => {
+										mint = m;
+										decodeInvoice()
+									}}
 									class="rounded-xl {m.mintURL === mint.mintURL ? 'bg-primary' : ''}"
 								>
 									<a>{m.mintURL}</a>
