@@ -17,6 +17,10 @@
 	let isReloadingKeys = false;
 
 	const removeMint = () => {
+		if (browser) {
+			// @ts-expect-error
+			document.getElementById('remove-mint-modal-' + mintIndex).checked = false;
+		}
 		const allMints = $mints;
 		allMints.splice(mintIndex, 1);
 		mints.set(allMints);
@@ -53,14 +57,14 @@
 	};
 
 	const copyShareLink = () => {
-		const text = encodeURI($page.url.host+'/?mint=' + mint.mintURL);
+		const text = encodeURI($page.url.host + '/?mint=' + mint.mintURL);
 		if (browser) {
 			if (window.clipboardData && window.clipboardData.setData) {
 				return window.clipboardData.setData('Text', text);
 			} else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
 				var textarea = document.createElement('textarea');
 				textarea.textContent = text;
-				textarea.style.position = 'fixed'; 
+				textarea.style.position = 'fixed';
 				document.body.appendChild(textarea);
 				textarea.select();
 				try {
@@ -70,7 +74,14 @@
 					return prompt('Copy to clipboard: Ctrl+C, Enter', text);
 				} finally {
 					document.body.removeChild(textarea);
-					toast('info', `Sharable link for ...${mint.mintURL.substring(mint.mintURL.length-10, mint.mintURL.length)} has been copied to clipboard`,'Copied!')
+					toast(
+						'info',
+						`Sharable link for ...${mint.mintURL.substring(
+							mint.mintURL.length - 10,
+							mint.mintURL.length
+						)} has been copied to clipboard`,
+						'Copied!'
+					);
 				}
 			}
 		}
@@ -170,7 +181,15 @@
 		</div>
 	</td>
 	<td>
-		<button class="btn btn-square btn-sm btn-error" on:click={() => removeMint()}>
+		<button
+			class="btn btn-square btn-sm btn-error"
+			on:click={() => {
+				if (browser) {
+					// @ts-expect-error
+					document.getElementById('remove-mint-modal-' + mintIndex).checked = true;
+				}
+			}}
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -188,3 +207,22 @@
 		</button>
 	</td>
 </tr>
+
+<!-- Put this part before </body> tag -->
+<input type="checkbox" id="remove-mint-modal-{mintIndex}" class="modal-toggle" />
+<div class="modal">
+	<div class="modal-box">
+		<h3 class="text-lg font-bold">Remove Mint</h3>
+		<p class="overflow-clip text-ellipsis">
+				{mint.mintURL}
+		</p>
+		<p class="py-4">
+			Are you sure you want to remove this mint? You will keep the tokens associated with the mint,
+			but you will not be able to redeem them until you re-add the mint.
+		</p>
+		<div class="modal-action">
+			<label for="remove-mint-modal-{mintIndex}" class="btn btn-outline">cancel</label>
+			<button on:click={removeMint} class="btn btn-error">Delete</button>
+		</div>
+	</div>
+</div>
