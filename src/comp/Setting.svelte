@@ -64,9 +64,10 @@
 		<div class="col-span-3 flex gap-2">
 			<input type="checkbox" class="toggle toggle-warning" bind:checked={$checkPending} />
 			<div>
-				<div
-					class="tooltip"
-					data-tip="Activating automatic token checking will send part of your all your tokens to the mint for verification if they have been spent already. This gives the mint additional information about a users balance, especially if the option is enabled for non-pending tokens. ⚠️ use at own risk"
+				<a
+					href="https://nutstash.app/faq/#pending-tokens"
+						class="lg:tooltip link-primary"
+					data-tip="Will send the secret of all your unspent tokens to the mint. The mint will verify if any of them have already been spent"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -82,24 +83,47 @@
 							d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
 						/>
 					</svg>
-				</div>
+				</a>
 			</div>
 		</div>
 		<div class="col-span-2">
 			<label for="">Check non-pending tokens</label>
 		</div>
-		<div class="col-span-3">
+		<div class="col-span-3 flex gap-2">
 			<input type="checkbox" class="toggle toggle-error" bind:checked={$checkNonPending} />
+			<div>
+				<a
+					href="https://nutstash.app/faq/#pending-tokens"
+						class="lg:tooltip link-primary"
+					data-tip="Will send the secret of all your unspent tokens to the mint. The mint will verify if any of them have already been spent. It is only advised to use this option if privacy is not a priority and you have a strong trust relationship with the mints you're connected to."
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+						/>
+					</svg>
+				</a>
+			</div>
 		</div>
 		{#if $checkPending || $checkNonPending}
 			<div class="col-span-2">
 				<label for="">Check tokens automatically</label>
 			</div>
 			<div class="col-span-3 flex gap-2">
-				<input type="checkbox" class="toggle toggle-info" bind:checked={$checkAutomatically} />
+				<input type="checkbox" class="toggle toggle-error" bind:checked={$checkAutomatically} />
 				<div>
-					<div
-						class="tooltip"
+					<a
+					href="https://nutstash.app/faq/#pending-tokens"
+						class="lg:tooltip link-primary"
 						data-tip="You can activate this option to check for invalid tokens in your wallet automatically. It is only advised to use this option if privacy is not a priority."
 					>
 						<svg
@@ -116,7 +140,7 @@
 								d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
 							/>
 						</svg>
-					</div>
+					</a>
 				</div>
 			</div>
 		{/if}
