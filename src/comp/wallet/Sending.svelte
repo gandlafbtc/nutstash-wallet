@@ -114,15 +114,13 @@
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
-			? // @ts-expect-error
-			  await window.nostr.getPublicKey()
+			? await window.nostr.getPublicKey()
 			: await Promise.resolve($nostrPubKey);
 	};
 
 	const getEncryptedContent = async (): Promise<string> => {
 		return $useExternalNostrKey
-			? // @ts-expect-error
-			  await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
+			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
 			: await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
 	const getConvertedPubKey = async () => {
@@ -155,7 +153,6 @@
 				pubkey: await getPubKey()
 			};
 			if ($useExternalNostrKey) {
-				// @ts-expect-error
 				const signedEvent = await window.nostr.signEvent(event);
 				$nostrPool.publish(
 					signedEvent,
@@ -323,7 +320,7 @@
 					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 					<ul
 						tabindex="0"
-						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 					>
 						{#each $mints.filter((m) => m.isAdded) as m}
 							<!-- svelte-ignore a11y-missing-attribute -->

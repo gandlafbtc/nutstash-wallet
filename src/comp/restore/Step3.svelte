@@ -8,7 +8,7 @@
 <div>
 	<h2>You are about to import the following into your wallet:</h2>
 	<div class="w-full h-full flex flex-col gap-2">
-		<div class="card w-96 bg-base-100 shadow-xl max-h-96 overflow-scroll">
+		<div class="card w-96 bg-base-100 shadow-xl max-h-96 overflow-scroll scrollbar-hide">
 			<div class="card-body">
 				{#each backupObject.mints as mint}
 					<div class="flex gap-3 rounded-full bg-accent px-2">

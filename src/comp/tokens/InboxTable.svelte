@@ -23,8 +23,8 @@
 		let hasError = 0;
 		isLoading = true;
 		for (const nM of $nostrMessages.filter((n) => !n.isAccepted)) {
-			if (!nM.token.token){
-				return
+			if (!nM.token.token) {
+				return;
 			}
 			const mint: CashuMint = new CashuMint(nM.token.token[0].mint);
 			let keys;
@@ -84,7 +84,7 @@
 	};
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll  max-h-40">
+<div class="overflow-x-scroll overflow-y-scroll  max-h-40 scrollbar-hide">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
@@ -115,10 +115,10 @@
 					<p class="flex lg:hidden">Amt</p></th
 				>
 				<th>Date</th>
-				<th>From</th>
+				<th class="w-full">From</th>
 			</tr>
 		</thead>
-		<tbody class="max-h-1 overflow-y-scroll">
+		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
 			{#each nostrMessagesSub as nostrMessage, i}
 				{#if nostrMessage.token.token}
 					<InboxRow {nostrMessage} {i} />
@@ -126,7 +126,7 @@
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
-				<td colspan="2" class="cursor-pointer w-full hover:bg-base-200" on:click={loadMore}>
+				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
 					load more
 				</td>
 				<td

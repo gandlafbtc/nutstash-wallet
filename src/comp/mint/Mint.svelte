@@ -9,17 +9,37 @@
 	import MintRow from './MintRow.svelte';
 	import MintRowAdd from './MintRowAdd.svelte';
 	import MintSwap from './MintSwap.svelte';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	let mintURL = '';
 	let mintAPIRoot = '';
 	let mintPort = '';
 	let showAdvanced = false;
 	let isLoading = false;
+	let isAddMintPing = false;
 
 	let activeMint = $mints[0];
 
 	let active = 'base';
 
+	onMount(() => {
+		const searchParams = $page.url.searchParams;
+
+		if (searchParams) {
+			const mintUrlParam = searchParams.get('mint');
+			if (mintUrlParam) {
+				mintURL = mintUrlParam;
+				$page.url.searchParams.delete('mint');
+				history.replaceState({}, '', $page.url);
+				if (mintURL) {
+					isAddMintPing = true;
+				}
+			}
+		}
+	});
+
 	const addMint = async () => {
+		isAddMintPing = false;
 		console.log(mintURL, mintPort, mintAPIRoot);
 		const mint = new CashuMint(mintURL, mintAPIRoot, mintPort);
 		try {
@@ -43,7 +63,7 @@
 				isAdded: true
 			};
 
-			mints.update((state) => [storeMint, ...state]);
+			mints.update((state) => [...state, storeMint]);
 			toast('success', 'Mint has been added', 'Success');
 		} catch {
 			toast(
@@ -63,12 +83,12 @@
 
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
-		<div class="max-h-52 overflow-auto">
+		<div class="max-h-52 overflow-auto scrollbar-hide">
 			<table class="table table-auto w-full">
 				<!-- head -->
 				<thead>
 					<tr>
-						<th>Mint</th>
+						<th class="w-full">Mint</th>
 						<th>Actions</th>
 						<th>
 							<p class="hidden lg:flex">Balance</p>
@@ -137,7 +157,7 @@
 		{/if}
 
 		<div class="grid grid-cols-5 gap-2">
-			<div class="col-span-5 grid grid-cols-5">
+			<div class="col-span-5 grid grid-cols-5 items-center">
 				<label for="mint-url-input"> Mint Host: </label>
 				<input
 					id="mint-url-input"
@@ -196,15 +216,21 @@
 			{#if isLoading}
 				<LoadingCenter />
 			{:else}
-				<!-- else content here -->
-
 				<button
-					class="btn btn-primary h-full"
+					class="btn btn-primary h-full z-20 flex gap-2 items-center"
 					on:click={() => {
 						addMint();
 					}}
 				>
 					Add Mint
+					{#if isAddMintPing}
+						<span class="flex h-3 w-3">
+							<div
+								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-secondary opacity-75"
+							/>
+							<div class="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+						</span>
+					{/if}
 				</button>
 			{/if}
 		</div>
@@ -212,6 +238,5 @@
 {:else if active === 'minting'}
 	<Minting mint={activeMint} bind:active />
 {:else}
-	<!-- else if content here -->
 	<MintSwap bind:active />
 {/if}

@@ -88,7 +88,7 @@
 			if (returnChange) {
 				token.update((state) => [...returnChange, ...state]);
 			}
-			const { isPaid, preimage } = await cashuSwapOutWallet.payLnInvoice(invoice, send);
+			const { isPaid, preimage, change } = await cashuSwapOutWallet.payLnInvoice(invoice, send);
 
 			if (!isPaid) {
 				token.update((state) => [...send, ...state]);
@@ -100,6 +100,8 @@
 					'Error occured when performing swap'
 				);
 				return;
+			} else {
+				token.update((state) => [...change, ...state]);
 			}
 
 			const newProofs = await cashuSwapInWallet.requestTokens(swapAmount, paymentHash);
@@ -186,7 +188,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 				>
 					{#each $mints.filter((m) => m.isAdded && m != swapInMint) as m}
 						<!-- svelte-ignore a11y-missing-attribute -->
@@ -236,7 +238,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 				>
 					{#each $mints.filter((m) => m.isAdded && m != swapOutMint) as m}
 						<!-- svelte-ignore a11y-missing-attribute -->
