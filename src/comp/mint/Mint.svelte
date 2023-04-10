@@ -43,7 +43,7 @@
 				isAdded: true
 			};
 
-			mints.update((state) => [...state,storeMint]);
+			mints.update((state) => [...state, storeMint]);
 			toast('success', 'Mint has been added', 'Success');
 		} catch {
 			toast(

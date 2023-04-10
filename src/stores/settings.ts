@@ -2,9 +2,15 @@ import { browser } from '$app/environment';
 
 import { writable } from 'svelte/store';
 
-const initialValue = browser ?  window.localStorage.getItem('setting-check-non-pending') ?? 'false':'false';
-const initialValue2 =browser ?  window.localStorage.getItem('setting-check-pending') ?? 'false':'false';
-const initialValue3 =browser ?  window.localStorage.getItem('setting-check-token-auto') ?? 'false':'false';
+const initialValue = browser
+	? window.localStorage.getItem('setting-check-non-pending') ?? 'false'
+	: 'false';
+const initialValue2 = browser
+	? window.localStorage.getItem('setting-check-pending') ?? 'false'
+	: 'false';
+const initialValue3 = browser
+	? window.localStorage.getItem('setting-check-token-auto') ?? 'false'
+	: 'false';
 
 const checkNonPending = writable<boolean>(JSON.parse(initialValue));
 const checkPending = writable<boolean>(JSON.parse(initialValue2));

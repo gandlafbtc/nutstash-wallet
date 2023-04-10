@@ -100,8 +100,7 @@
 					'Error occured when performing swap'
 				);
 				return;
-			}
-			else {
+			} else {
 				token.update((state) => [...change, ...state]);
 			}
 

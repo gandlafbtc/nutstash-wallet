@@ -18,13 +18,13 @@
 
 	const makeDefaultMint = () => {
 		if (mintIndex === 0) {
-			return
+			return;
 		}
 		const allMints = $mints;
 		allMints.splice(mintIndex, 1);
-		mints.set([mint, ...allMints]);	
-		toast('info', mint.mintURL +' is now the default mint','Default mint updated')
-	}
+		mints.set([mint, ...allMints]);
+		toast('info', mint.mintURL + ' is now the default mint', 'Default mint updated');
+	};
 </script>
 
 <tr class="hover">
@@ -32,24 +32,24 @@
 		<div class="flex gap-1 items-center">
 			<button class="cursor-pointer" on:click={makeDefaultMint}>
 				<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
-				class="w-4 h-4 {mintIndex===0? 'text-info':'text-gray-300'}"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-4 h-4 {mintIndex === 0 ? 'text-info' : 'text-gray-300'}"
 				>
-				<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"
-				/>
-			</svg>
-		</button>
-		<p class="overflow-scroll scrollbar-hide">
-			{mint.mintURL}
-		</p>
-	</div>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"
+					/>
+				</svg>
+			</button>
+			<p class="overflow-scroll scrollbar-hide">
+				{mint.mintURL}
+			</p>
+		</div>
 	</td>
 	<td class="flex flex-col gap-2">
 		<button

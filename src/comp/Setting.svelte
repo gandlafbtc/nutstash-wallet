@@ -66,7 +66,7 @@
 			<div>
 				<a
 					href="https://nutstash.app/faq/#pending-tokens"
-						class="lg:tooltip link-primary"
+					class="lg:tooltip link-primary"
 					data-tip="Will send the secret of all your unspent tokens to the mint. The mint will verify if any of them have already been spent"
 				>
 					<svg
@@ -94,7 +94,7 @@
 			<div>
 				<a
 					href="https://nutstash.app/faq/#pending-tokens"
-						class="lg:tooltip link-primary"
+					class="lg:tooltip link-primary"
 					data-tip="Will send the secret of all your unspent tokens to the mint. The mint will verify if any of them have already been spent. It is only advised to use this option if privacy is not a priority and you have a strong trust relationship with the mints you're connected to."
 				>
 					<svg
@@ -122,7 +122,7 @@
 				<input type="checkbox" class="toggle toggle-error" bind:checked={$checkAutomatically} />
 				<div>
 					<a
-					href="https://nutstash.app/faq/#pending-tokens"
+						href="https://nutstash.app/faq/#pending-tokens"
 						class="lg:tooltip link-primary"
 						data-tip="You can activate this option to check for invalid tokens in your wallet automatically. It is only advised to use this option if privacy is not a priority."
 					>

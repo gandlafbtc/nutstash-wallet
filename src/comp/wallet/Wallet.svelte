@@ -90,7 +90,13 @@
 					);
 				}
 				if (!$checkAutomatically && isFirst && isFirstPending) {
-					toast('info', ` ${$checkNonPending?'checked non-pending,':''} ${$checkPending?'checked pending':''} tokens`    , 'checked Tokens')
+					toast(
+						'info',
+						` ${$checkNonPending ? 'checked non-pending,' : ''} ${
+							$checkPending ? 'checked pending' : ''
+						} tokens`,
+						'checked Tokens'
+					);
 				}
 			} catch (e) {
 				console.log(e);
@@ -115,7 +121,7 @@
 					}, 0) ?? 0}
 				</p>
 				<div class="flex gap-2">
-					{#if !$checkAutomatically && ($checkNonPending||$checkPending)}
+					{#if !$checkAutomatically && ($checkNonPending || $checkPending)}
 						<button class="btn btn-sm btn-warning btn-circle" on:click={checkTokens}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +129,7 @@
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								class="w-6 h-6 {isChecking?'animate-spin':''}"
+								class="w-6 h-6 {isChecking ? 'animate-spin' : ''}"
 							>
 								<path
 									stroke-linecap="round"
