@@ -15,7 +15,7 @@
 
 	if (historyItem.type === HistoryItemType.SEND) {
 		const sendData: SendData = historyItem.data;
-		token = getEncodedToken(sendData.send ?? [], sendData.mint ?? '');
+		token = getEncodedToken({token: [{proofs: sendData.send ?? [],mint: sendData.mint ?? ''}]});
 	} else if (historyItem.type === HistoryItemType.RECEIVE) {
 		const recieveData: ReceiveData = historyItem.data;
 		token = recieveData.encodedToken ?? '';
@@ -24,10 +24,10 @@
 		token = recieveData.encodedToken ?? '';
 	} else if (historyItem.type === HistoryItemType.MINT) {
 		const mintData: MintData = historyItem.data;
-		token = getEncodedToken(mintData.tokens ?? [], mintData.mint ?? '');
+		token = getEncodedToken({token: [{proofs: mintData.tokens ?? [],mint: mintData.mint ?? ''}]});
 	} else {
 		const meltData: MeltData = historyItem.data;
-		token = getEncodedToken(meltData.change ?? [], meltData.mint ?? '');
+		token = getEncodedToken({token: [{proofs: meltData.change ?? [],mint: meltData.mint ?? ''}]});
 	}
 </script>
 
