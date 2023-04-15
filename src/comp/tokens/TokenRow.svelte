@@ -17,7 +17,7 @@
 	const recycleToken = async () => {
 		const mint = getMintForToken(token, $mints);
 		if (!mint) {
-			toast('warining', 'Add the mint first', 'Cannot recycle token!');
+			toast('warning', 'Add the mint first', 'Cannot recycle token!');
 			return;
 		}
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -27,12 +27,15 @@
 			await checkTokenSpent();
 			try {
 				isLoading = true;
-				const encodedProofs = getEncodedToken([token]);
-				const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
+				const encodedProofs = getEncodedToken({token: [{proofs: [token], mint:getMintForToken(token,$mints)?.mintURL}]})
+				const {proofs,tokensWithErrors} = await cashuWallet.receive(encodedProofs);
+				if (tokensWithErrors) {
+					throw new Error("could not redeem token");
+				}
 				//remove old token
 				tokenStore.update((state) => getTokenSubset(state, [token]));
 				//add new token
-				tokenStore.update((state) => [...newTokens, ...state]);
+				tokenStore.update((state) => [...proofs, ...state]);
 				toast('success', 'Token has been recycled.', 'Success!');
 				isLoading = false;
 			} catch (e) {
@@ -146,7 +149,7 @@
 	</td>
 	<td class="max-w-0 overflow-clip">
 		<div class="overflow-x-clip">
-			{getEncodedToken([token])}
+			{getEncodedToken({token: [{proofs: [token], mint:getMintForToken(token,$mints)?.mintURL}]})}
 		</div>
 	</td>
 </tr>

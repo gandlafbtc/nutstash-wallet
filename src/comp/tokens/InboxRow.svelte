@@ -101,14 +101,15 @@
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 			const encodedProofs = getEncodedToken(
-				nostrMessage.token.token[0].proofs,
-				nostrMessage.token.token[0].mint
+				nostrMessage.token
 			);
 
 			isLoading = true;
-			const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
+			//todo tokens with errors are not handled
+			const {proofs, tokensWithErrors}  = await cashuWallet.receive(encodedProofs);
 
-			token.update((state) => [...newTokens, ...state]);
+			
+			token.update((state) => [...proofs, ...state]);
 
 			nostrMessages.update((state) => {
 				const everythingElse = state.filter((nM) => {
@@ -126,14 +127,17 @@
 					data: {
 						encodedToken: encodedProofs,
 						mint: mint?.mintURL ?? '',
-						keyset: getKeysetsOfTokens(newTokens),
-						receivedTokens: newTokens,
+						keyset: getKeysetsOfTokens(proofs),
+						receivedTokens: proofs,
 						sender: nostrMessage.event.pubkey,
 						eventId: nostrMessage.event.id
 					}
 				},
 				...state
 			]);
+			if (tokensWithErrors) {
+				throw new Error("Not all tokens could be redeemed");
+			}
 			toast('success', 'the Tokens have been successfully received', 'Success!');
 		} catch (e) {
 			console.error(e);
@@ -281,7 +285,7 @@
 				</div>
 				<p class="font-bold">Token:</p>
 				<p class="col-span-4 overflow-clip">
-					{getEncodedToken(nostrMessage.token.token[0].proofs, nostrMessage.token.token[0].mint)}
+					{getEncodedToken(nostrMessage.token)}
 				</p>
 			</div>
 		</div>
