@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-node": "^1.2.3",
 		"daisyui": "^2.46.1",
 		"nostr-relaypool": "^0.3.7",
 		"svelte-qrcode-image": "^1.0.0-rc.2",
