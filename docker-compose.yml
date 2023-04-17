@@ -12,4 +12,4 @@ services:
     user: '1000:node'
     restart: on-failure
     ports:
-      - '4173:3000'
+      - '3000:3000'
