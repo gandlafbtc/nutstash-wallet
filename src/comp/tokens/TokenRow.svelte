@@ -8,9 +8,13 @@
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
+	import type { Mint } from '../../model/mint';
+
+	export let mint: Mint | undefined
+	export let isSelected =false
 
 	export let token: Token;
-
+	
 	export let i: number;
 
 	let isLoading = false;
@@ -106,7 +110,11 @@
 
 <tr>
 	<td>
-		<div class="flex gap-1">
+		<div class="flex gap-1 items-center">
+			{#if mint}
+			<input type="checkbox" bind:checked={isSelected} class="checkbox checkbox-primary" />
+			{/if}
+
 			<TokenIcon />
 			{#if $tokenStore.includes(token)}
 				<button on:click={recycleToken}>
