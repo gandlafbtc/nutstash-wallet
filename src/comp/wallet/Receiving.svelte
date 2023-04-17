@@ -44,14 +44,14 @@
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
 			isLoading = true;
-			const {proofs,tokensWithErrors} = await cashuWallet.receive(encodedToken);
+			const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedToken);
 
 			token.update((state) => [...state, ...proofs]);
 
 			if (tokensWithErrors) {
-				throw new Error("Not all tokens could be redeemed");
+				throw new Error('Not all tokens could be redeemed');
 			}
-			
+
 			history.update((state) => [
 				{
 					type: HistoryItemType.RECEIVE,
@@ -61,7 +61,7 @@
 						encodedToken,
 						mint: mint?.mintURL ?? '',
 						keyset: getKeysetsOfTokens(proofs),
-						receivedTokens:proofs
+						receivedTokens: proofs
 					}
 				},
 				...state

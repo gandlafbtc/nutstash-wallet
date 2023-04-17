@@ -100,15 +100,12 @@
 
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
-			const encodedProofs = getEncodedToken(
-				nostrMessage.token
-			);
+			const encodedProofs = getEncodedToken(nostrMessage.token);
 
 			isLoading = true;
 			//todo tokens with errors are not handled
-			const {proofs, tokensWithErrors}  = await cashuWallet.receive(encodedProofs);
+			const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedProofs);
 
-			
 			token.update((state) => [...proofs, ...state]);
 
 			nostrMessages.update((state) => {
@@ -136,7 +133,7 @@
 				...state
 			]);
 			if (tokensWithErrors) {
-				throw new Error("Not all tokens could be redeemed");
+				throw new Error('Not all tokens could be redeemed');
 			}
 			toast('success', 'the Tokens have been successfully received', 'Success!');
 		} catch (e) {

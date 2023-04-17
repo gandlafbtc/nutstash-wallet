@@ -27,10 +27,12 @@
 			await checkTokenSpent();
 			try {
 				isLoading = true;
-				const encodedProofs = getEncodedToken({token: [{proofs: [token], mint:getMintForToken(token,$mints)?.mintURL}]})
-				const {proofs,tokensWithErrors} = await cashuWallet.receive(encodedProofs);
+				const encodedProofs = getEncodedToken({
+					token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
+				});
+				const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedProofs);
 				if (tokensWithErrors) {
-					throw new Error("could not redeem token");
+					throw new Error('could not redeem token');
 				}
 				//remove old token
 				tokenStore.update((state) => getTokenSubset(state, [token]));
@@ -149,7 +151,9 @@
 	</td>
 	<td class="max-w-0 overflow-clip">
 		<div class="overflow-x-clip">
-			{getEncodedToken({token: [{proofs: [token], mint:getMintForToken(token,$mints)?.mintURL}]})}
+			{getEncodedToken({
+				token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
+			})}
 		</div>
 	</td>
 </tr>

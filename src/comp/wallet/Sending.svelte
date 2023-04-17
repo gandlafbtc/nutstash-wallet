@@ -76,7 +76,7 @@
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
 
-			encodedToken = getEncodedToken({token: [{proofs: send ,mint: mint.mintURL}]});
+			encodedToken = getEncodedToken({ token: [{ proofs: send, mint: mint.mintURL }] });
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,

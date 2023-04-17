@@ -47,14 +47,12 @@
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const {proofs,tokensWithErrors} = await wallet.receive(
-						getEncodedToken(nM.token)
-					);
+					const { proofs, tokensWithErrors } = await wallet.receive(getEncodedToken(nM.token));
 
 					token.update((state) => [...proofs, ...state]);
 					totalReceived += getAmountForTokenSet(proofs);
 					if (tokensWithErrors) {
-						throw new Error("Could not redeem all tokens");
+						throw new Error('Could not redeem all tokens');
 					}
 				}
 				totalSpent += getAmountForTokenSet(spentProofs);
