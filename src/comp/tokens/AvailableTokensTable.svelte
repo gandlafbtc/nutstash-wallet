@@ -5,23 +5,24 @@
 	import TokenRow from './TokenRow.svelte';
 	import type { Token } from '../../model/token';
 
-	export let mint: Mint | undefined = undefined
-	export let selectedTokens: Token[] = []
-	
-	$: selectedTokensBool = []
-	
-	$: isPending = mint?false:true;
-	
+	export let mint: Mint | undefined = undefined;
+	export let selectedTokens: Token[] = [];
+
+	$: selectedTokensBool = [];
+
+	$: isPending = mint ? false : true;
+
 	$: page = 20;
 	$: tokenSelection = isPending ? $pendingTokens : $token;
-	$: tokenFromMint = mint?tokenSelection.filter((t:Token)=> mint?.keysets.includes(t.id)):tokenSelection
-	$: tokenSub = tokenFromMint.slice(0, page)
-	$: selectedTokens = tokenSub.filter((t,i) => selectedTokensBool[i])
+	$: tokenFromMint = mint
+		? tokenSelection.filter((t: Token) => mint?.keysets.includes(t.id))
+		: tokenSelection;
+	$: tokenSub = tokenFromMint.slice(0, page);
+	$: selectedTokens = tokenSub.filter((t, i) => selectedTokensBool[i]);
 
 	const loadMore = () => {
 		page += 20;
 	};
-	
 </script>
 
 <div class="overflow-x-scroll overflow-y-scroll  max-h-40 scrollbar-hide">
@@ -31,9 +32,13 @@
 				<th>
 					<div class="flex justify-start items-center gap-1">
 						{#if !mint}
-						<p class="hidden lg:flex">Pending</p>
-						<p class="flex lg:hidden">Pnd</p>
-						<input type="checkbox" bind:checked={isPending} class="{mint?'disabled hidden':''} checkbox checkbox-primary " />
+							<p class="hidden lg:flex">Pending</p>
+							<p class="flex lg:hidden">Pnd</p>
+							<input
+								type="checkbox"
+								bind:checked={isPending}
+								class="{mint ? 'disabled hidden' : ''} checkbox checkbox-primary "
+							/>
 						{/if}
 					</div>
 				</th>

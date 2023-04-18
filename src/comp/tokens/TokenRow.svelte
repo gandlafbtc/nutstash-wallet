@@ -10,11 +10,11 @@
 	import { browser } from '$app/environment';
 	import type { Mint } from '../../model/mint';
 
-	export let mint: Mint | undefined
-	export let isSelected =false
+	export let mint: Mint | undefined;
+	export let isSelected = false;
 
 	export let token: Token;
-	
+
 	export let i: number;
 
 	let isLoading = false;
@@ -112,7 +112,7 @@
 	<td>
 		<div class="flex gap-1 items-center">
 			{#if mint}
-			<input type="checkbox" bind:checked={isSelected} class="checkbox checkbox-primary" />
+				<input type="checkbox" bind:checked={isSelected} class="checkbox checkbox-primary" />
 			{/if}
 
 			<TokenIcon />

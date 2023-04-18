@@ -28,10 +28,10 @@
 
 	$: mint = $mints[0];
 	$: amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
-	
-	$: selectedTokens = []
-	$: isCoinSelection = false
-	
+
+	$: selectedTokens = [];
+	$: isCoinSelection = false;
+
 	onMount(() => {
 		decodeInvoice();
 	});
@@ -80,26 +80,18 @@
 
 		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
+		let tokensToSend: Array<Token> = [];
 
-
-		let tokensToSend: Array<Token>= [] 
-			
-			if (isCoinSelection) {
-				tokensToSend = selectedTokens
-			}
-			else
-			{
-				getTokensToSend(amount + fees, getTokensForMint(mint, $token));
-			}
-			if (
-				amount + fees >
-			getAmountForTokenSet(tokensToSend)
-		) {
+		if (isCoinSelection) {
+			tokensToSend = selectedTokens;
+		} else {
+			getTokensToSend(amount + fees, getTokensForMint(mint, $token));
+		}
+		if (amount + fees > getAmountForTokenSet(tokensToSend)) {
 			toast('warning', 'not enough funds', 'Could not Send');
 			isLoading = false;
 			return;
 		}
-
 
 		const { returnChange, send } = await cashuWallet.send(amount + fees, tokensToSend);
 
@@ -284,11 +276,17 @@
 		</div>
 	</div>
 
-	<CoinSelection amount={amount+fees} {mint} bind:selectedTokens bind:isCoinSelection></CoinSelection>
+	<CoinSelection amount={amount + fees} {mint} bind:selectedTokens bind:isCoinSelection />
 
 	<div class="flex items-center gap-2">
 		<button class="btn btn-outline" on:click={resetState}>cancel</button>
-		<button class="btn {isPayable&&!(isCoinSelection&&getAmountForTokenSet(selectedTokens)<amount+fees ) ? 'btn-warning' : 'btn-disabled'}" on:click={() => payInvoice()}>
+		<button
+			class="btn {isPayable &&
+			!(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount + fees)
+				? 'btn-warning'
+				: 'btn-disabled'}"
+			on:click={() => payInvoice()}
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"

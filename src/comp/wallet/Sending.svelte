@@ -60,10 +60,7 @@
 			toast('warning', 'amount must be larger than 0', 'Could not send');
 			return;
 		}
-		if (
-			amountToSend >
-			getAmountForTokenSet(tokensToSend)
-		) {
+		if (amountToSend > getAmountForTokenSet(tokensToSend)) {
 			toast('warning', 'not enough funds', 'Could not Send');
 			isLoading = false;
 			return;
@@ -366,7 +363,12 @@
 		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={() => resetState()}>cancel</button>
-			<button class="btn {isCoinSelection&&getAmountForTokenSet(selectedTokens)<amountToSend?'btn-disabled':'btn-success'}" on:click={send}>send</button>
+			<button
+				class="btn {isCoinSelection && getAmountForTokenSet(selectedTokens) < amountToSend
+					? 'btn-disabled'
+					: 'btn-success'}"
+				on:click={send}>send</button
+			>
 		</div>
 	</div>
 {/if}
