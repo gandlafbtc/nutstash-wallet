@@ -9,7 +9,7 @@ services:
       platforms:
         - 'linux/amd64'
         - 'linux/arm64'
-    user: '1000:1000'
+    user: '1000:node'
     restart: on-failure
     ports:
-      - '4173:4173'
+      - '3000:3000'

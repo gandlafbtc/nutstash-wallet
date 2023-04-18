@@ -15,6 +15,7 @@
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { onMount } from 'svelte';
+	import CoinSelection from '../elements/CoinSelection.svelte';
 
 	export let active;
 
@@ -27,6 +28,9 @@
 
 	$: mint = $mints[0];
 	$: amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
+
+	$: selectedTokens = [];
+	$: isCoinSelection = false;
 
 	onMount(() => {
 		decodeInvoice();
@@ -76,12 +80,18 @@
 
 		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
-		const tokensForMint: Array<Token> = getTokensForMint(mint, $token);
+		let tokensToSend: Array<Token> = [];
 
-		const tokensToSend: Array<Token> = getTokensToSend(amount + fees, tokensForMint);
-		console.log(fees);
-		console.log(amount);
-		console.log(amount + fees, tokensToSend);
+		if (isCoinSelection) {
+			tokensToSend = selectedTokens;
+		} else {
+			getTokensToSend(amount + fees, getTokensForMint(mint, $token));
+		}
+		if (amount + fees > getAmountForTokenSet(tokensToSend)) {
+			toast('warning', 'not enough funds', 'Could not Send');
+			isLoading = false;
+			return;
+		}
 
 		const { returnChange, send } = await cashuWallet.send(amount + fees, tokensToSend);
 
@@ -266,9 +276,17 @@
 		</div>
 	</div>
 
+	<CoinSelection amount={amount + fees} {mint} bind:selectedTokens bind:isCoinSelection />
+
 	<div class="flex items-center gap-2">
 		<button class="btn btn-outline" on:click={resetState}>cancel</button>
-		<button class="btn {isPayable ? 'btn-warning' : 'btn-disabled'}" on:click={() => payInvoice()}>
+		<button
+			class="btn {isPayable &&
+			!(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount + fees)
+				? 'btn-warning'
+				: 'btn-disabled'}"
+			on:click={() => payInvoice()}
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"

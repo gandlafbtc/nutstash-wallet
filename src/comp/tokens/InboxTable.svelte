@@ -42,19 +42,19 @@
 				}
 
 				const wallet = new CashuWallet(keys, mint);
+				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const receivedProofs = await wallet.receive(
-						getEncodedToken(proofsToReceive, mint.mintUrl)
-					);
+					const { proofs, tokensWithErrors } = await wallet.receive(getEncodedToken(nM.token));
 
-					token.update((state) => [...receivedProofs, ...state]);
-
-					totalReceived += getAmountForTokenSet(receivedProofs);
+					token.update((state) => [...proofs, ...state]);
+					totalReceived += getAmountForTokenSet(proofs);
+					if (tokensWithErrors) {
+						throw new Error('Could not redeem all tokens');
+					}
 				}
-
 				totalSpent += getAmountForTokenSet(spentProofs);
 			} catch (error) {
 				console.log(error);

@@ -1,11 +1,24 @@
-<script>
+<script lang="ts">
 	import { token } from '../../stores/tokens';
+	import type { Mint } from '../../model/mint';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import TokenRow from './TokenRow.svelte';
+	import type { Token } from '../../model/token';
 
-	$: isPending = true;
+	export let mint: Mint | undefined = undefined;
+	export let selectedTokens: Token[] = [];
+
+	$: selectedTokensBool = [];
+
+	$: isPending = mint ? false : true;
+
 	$: page = 20;
-	$: tokenSub = isPending ? $pendingTokens.slice(0, page) : $token.slice(0, page);
+	$: tokenSelection = isPending ? $pendingTokens : $token;
+	$: tokenFromMint = mint
+		? tokenSelection.filter((t: Token) => mint?.keysets.includes(t.id))
+		: tokenSelection;
+	$: tokenSub = tokenFromMint.slice(0, page);
+	$: selectedTokens = tokenSub.filter((t, i) => selectedTokensBool[i]);
 
 	const loadMore = () => {
 		page += 20;
@@ -18,9 +31,15 @@
 			<tr>
 				<th>
 					<div class="flex justify-start items-center gap-1">
-						<p class="hidden lg:flex">Pending</p>
-						<p class="flex lg:hidden">Pnd</p>
-						<input type="checkbox" bind:checked={isPending} class="checkbox checkbox-primary" />
+						{#if !mint}
+							<p class="hidden lg:flex">Pending</p>
+							<p class="flex lg:hidden">Pnd</p>
+							<input
+								type="checkbox"
+								bind:checked={isPending}
+								class="{mint ? 'disabled hidden' : ''} checkbox checkbox-primary "
+							/>
+						{/if}
 					</div>
 				</th>
 
@@ -34,7 +53,7 @@
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
 			{#each tokenSub as token, i}
-				<TokenRow {token} {i} />
+				<TokenRow {token} {i} {mint} bind:isSelected={selectedTokensBool[i]} />
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">

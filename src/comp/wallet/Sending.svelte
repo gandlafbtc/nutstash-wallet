@@ -28,11 +28,16 @@
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import { page } from '$app/stores';
+	import CoinSelection from '../elements/CoinSelection.svelte';
+	import type { Token } from '../../model/token';
 
 	export let active;
 
 	let mint: Mint = $mints[0];
 	$: tokensForMint = getTokensForMint(mint, $token);
+	$: selectedTokens = [];
+	$: isCoinSelection = false;
+
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
@@ -43,21 +48,22 @@
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
-		const tokensToSend = getTokensToSend(amountToSend, tokensForMint);
+
+		let tokensToSend: Token[] = [];
+		if (isCoinSelection) {
+			tokensToSend = selectedTokens;
+		} else {
+			tokensToSend = getTokensToSend(amountToSend, tokensForMint);
+		}
+
 		if (amountToSend <= 0) {
 			toast('warning', 'amount must be larger than 0', 'Could not send');
 			return;
 		}
-		if (
-			amountToSend >
-			tokensForMint.reduce((acc, t) => {
-				return acc + t.amount;
-			}, 0)
-		) {
-			toast('warning', 'not enough funds in this mint', 'Could not Send');
-			amountToSend = 0;
+		if (amountToSend > getAmountForTokenSet(tokensToSend)) {
+			toast('warning', 'not enough funds', 'Could not Send');
 			isLoading = false;
-			throw new Error('Not enough funds for this Mint.');
+			return;
 		}
 
 		try {
@@ -76,7 +82,7 @@
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
 
-			encodedToken = getEncodedToken(send, mint.mintURL);
+			encodedToken = getEncodedToken({ token: [{ proofs: send, mint: mint.mintURL }] });
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
@@ -350,10 +356,19 @@
 				bind:value={amountToSend}
 			/>
 		</div>
-
+		<div class="grid grid-cols-5">
+			<div class="col-span-5">
+				<CoinSelection amount={amountToSend} {mint} bind:selectedTokens bind:isCoinSelection />
+			</div>
+		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={() => resetState()}>cancel</button>
-			<button class="btn btn-success" on:click={send}>send</button>
+			<button
+				class="btn {isCoinSelection && getAmountForTokenSet(selectedTokens) < amountToSend
+					? 'btn-disabled'
+					: 'btn-success'}"
+				on:click={send}>send</button
+			>
 		</div>
 	</div>
 {/if}
