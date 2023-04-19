@@ -84,9 +84,9 @@
 		if (isCoinSelection) {
 			tokensToSend = selectedTokens;
 		} else {
-			getTokensToSend(amount + fees, getTokensForMint(mint, $token));
+			tokensToSend = getTokensToSend(amount + fees, getTokensForMint(mint, $token));
 		}
-		if (amount + fees > getAmountForTokenSet(tokensToSend)) {
+		if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
 			toast('warning', 'not enough funds', 'Could not Send');
 			isLoading = false;
 			return;
