@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { HistoryData } from 'src/model/data/HistoryData';
-	import type { HistoryItem } from 'src/model/historyItem';
+	import type { HistoryData } from '../../model/data/HistoryData';
+	import type { HistoryItem } from '../../model/historyItem';
 	import HistoryIcon from './HistoryIcon.svelte';
 
 	export let historyItem: HistoryItem<HistoryData>;
