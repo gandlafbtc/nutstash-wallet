@@ -11,7 +11,6 @@
 		getMintForToken,
 		validateMintKeys
 	} from '../util/walletUtils';
-	import type { Token } from '../../model/token';
 	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
 	import { history } from '../../stores/history';

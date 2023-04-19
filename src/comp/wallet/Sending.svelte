@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedToken, getEncodedToken } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, Proof, getDecodedToken, getEncodedToken } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -29,7 +29,6 @@
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import { page } from '$app/stores';
 	import CoinSelection from '../elements/CoinSelection.svelte';
-	import type { Token } from '../../model/token';
 
 	export let active;
 
@@ -49,7 +48,7 @@
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
 
-		let tokensToSend: Token[] = [];
+		let tokensToSend: Proof[] = [];
 		if (isCoinSelection) {
 			tokensToSend = selectedTokens;
 		} else {
@@ -127,6 +126,7 @@
 	const getEncryptedContent = async (): Promise<string> => {
 		return $useExternalNostrKey
 			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
+			//@ts-ignore
 			: await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
 	const getConvertedPubKey = async () => {
@@ -153,6 +153,7 @@
 			nostrSendLoading = true;
 			const event: Event = {
 				kind: nostrTools.Kind.EncryptedDirectMessage,
+				//@ts-ignore
 				tags: [['p', await getConvertedPubKey()]],
 				content: await getEncryptedContent(),
 				created_at: Math.floor(Date.now() / 1000),

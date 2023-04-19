@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
-	import type { Token } from '../../model/token';
+	import type { Proof } from '@cashu/cashu-ts';
 	import { getMintForToken, getTokenSubset } from '../util/walletUtils';
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
@@ -13,7 +13,7 @@
 	export let mint: Mint | undefined;
 	export let isSelected = false;
 
-	export let token: Token;
+	export let token: Proof;
 
 	export let i: number;
 

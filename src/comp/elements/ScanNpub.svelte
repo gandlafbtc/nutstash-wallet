@@ -7,7 +7,7 @@
 
 	let qrScanner: Html5QrcodeScanner;
 
-	function onScanSuccess(decodedText, decodedResult) {
+	function onScanSuccess(decodedText: string, decodedResult:any) {
 		// handle the scanned code as you like, for example:
 		scannedNpub = decodedText;
 		if (browser) {
@@ -17,7 +17,7 @@
 			element?.click();
 		}
 	}
-	function onScanFailure(error) {}
+	function onScanFailure(error: any) {}
 
 	onDestroy(() => {
 		{

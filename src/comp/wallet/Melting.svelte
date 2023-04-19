@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, Proof } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 	import { mints } from '../../stores/mints';
-	import type { Token } from '../../model/token';
 	import {
 		getAmountForTokenSet,
 		getKeysetsOfTokens,
@@ -80,7 +79,7 @@
 
 		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
 
-		let tokensToSend: Array<Token> = [];
+		let tokensToSend: Array<Proof> = [];
 
 		if (isCoinSelection) {
 			tokensToSend = selectedTokens;
