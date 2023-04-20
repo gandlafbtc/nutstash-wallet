@@ -33,23 +33,35 @@
     }
 
     const restoreMints =async () => {
-        const data  = await fetch("/api/backup/mints")
-        const mintsFromServer = await data.json()
-        if (!mintsFromServer) {
-            toast('warning', 'no mints found on server','Mints not restored')
-            return
-        }
-        mints.set(mintsFromServer)
+		try {
+			const data  = await fetch("/api/backup/mints")
+			const mintsFromServer = await data.json()
+			if (!mintsFromServer) {
+				toast('warning', 'no mints found on server','Mints not restored')
+				return
+			}
+			mints.set(mintsFromServer)
+		} catch (error) {
+			console.error(error)
+			toast('error', 'error while mints restoring from server','Server error')
+		}
     }
 
     const restoreTokens =async () => {
-        const data  = await fetch("/api/backup/tokens")
-        const tokensFromServer = await data.json()
-        if (!tokensFromServer) {
-            toast('warning', 'no tokens found on server','Tokens not restored')
-            return
-        }
-        token.set(tokensFromServer)
+		try {
+			const data  = await fetch("/api/backup/tokens")
+			const tokensFromServer = await data.json()
+			if (!tokensFromServer) {
+				toast('warning', 'no tokens found on server','Tokens not restored')
+				return
+			}
+			token.set(tokensFromServer)
+			
+		} catch (error) {
+			console.error(error)
+			toast('error', 'error while tokens restoring from server','Server error')
+
+		}
     }
 
 </script>
