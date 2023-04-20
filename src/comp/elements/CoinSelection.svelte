@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Mint } from '../../model/mint';
+	import type { Token } from '../../model/token';
 	import AvailableTokensTable from '../tokens/AvailableTokensTable.svelte';
 	import { getAmountForTokenSet } from '../util/walletUtils';
-	import type { Proof } from "@cashu/cashu-ts";
 
 	export let mint: Mint;
 	export let amount: number = 0;
-	export let selectedTokens: Proof[] = [];
+	export let selectedTokens: Token[] = [];
 
 	export let isCoinSelection = false;
 </script>

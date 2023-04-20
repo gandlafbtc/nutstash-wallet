@@ -3,6 +3,7 @@
 	import { toast } from '../../stores/toasts';
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
+	import type { Token } from '../../model/token';
 	import { token } from '../../stores/tokens';
 	import type { Mint } from '../../model/mint';
 	import { history } from '../../stores/history';

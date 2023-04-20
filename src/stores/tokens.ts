@@ -1,13 +1,13 @@
 import { browser } from '$app/environment';
-import type { Proof } from '@cashu/cashu-ts';
+import type { Token } from 'src/model/token';
 
 import { writable } from 'svelte/store';
 
 const initialValueSting: string = browser ? window.localStorage.getItem('tokens') ?? '[]' : '[]';
 
-const initialValue: Array<Proof> = JSON.parse(initialValueSting);
+const initialValue: Array<Token> = JSON.parse(initialValueSting);
 
-const token = writable<Array<Proof>>(initialValue);
+const token = writable<Array<Token>>(initialValue);
 
 token.subscribe((value) => {
 	if (browser) {

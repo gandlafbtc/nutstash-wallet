@@ -3,9 +3,10 @@
 	import type { Mint } from '../../model/mint';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import TokenRow from './TokenRow.svelte';
-	import type { Proof } from '@cashu/cashu-ts';
+	import type { Token } from '../../model/token';
+
 	export let mint: Mint | undefined = undefined;
-	export let selectedTokens: Proof[] = [];
+	export let selectedTokens: Token[] = [];
 
 	$: selectedTokensBool = [];
 
@@ -14,7 +15,7 @@
 	$: page = 20;
 	$: tokenSelection = isPending ? $pendingTokens : $token;
 	$: tokenFromMint = mint
-		? tokenSelection.filter((t: Proof) => mint?.keysets.includes(t.id))
+		? tokenSelection.filter((t: Token) => mint?.keysets.includes(t.id))
 		: tokenSelection;
 	$: tokenSub = tokenFromMint.slice(0, page);
 	$: selectedTokens = tokenSub.filter((t, i) => selectedTokensBool[i]);

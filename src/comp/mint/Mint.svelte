@@ -12,6 +12,9 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	let mintURL = '';
+	let mintAPIRoot = '';
+	let mintPort = '';
+	let showAdvanced = false;
 	let isLoading = false;
 	let isAddMintPing = false;
 
@@ -37,7 +40,8 @@
 
 	const addMint = async () => {
 		isAddMintPing = false;
-		const mint = new CashuMint(mintURL);
+		console.log(mintURL, mintPort, mintAPIRoot);
+		const mint = new CashuMint(mintURL, mintAPIRoot, mintPort);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
 				toast('warning', 'this mint has already been added.', "Didn't add mint!");
@@ -71,6 +75,9 @@
 		} finally {
 			isLoading = false;
 		}
+	};
+	const toggleAdvanced = () => {
+		showAdvanced = !showAdvanced;
 	};
 </script>
 
@@ -159,6 +166,53 @@
 					class="input w-full input-primary col-span-4"
 				/>
 			</div>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<div class="divider col-span-5 cursor-pointer" on:click={toggleAdvanced}>
+				{#if showAdvanced}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+					</svg>
+				{:else}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+					</svg>
+				{/if}
+				Advanced
+			</div>
+			{#if showAdvanced}
+				<div class="col-span-5 grid grid-cols-5 items-center">
+					<label for="mint-port-input"> Mint Port: </label>
+					<input
+						id="mint-port-input"
+						type="number"
+						bind:value={mintPort}
+						class="input w-full input-primary col-span-4"
+					/>
+				</div>
+				<div class="col-span-5 grid grid-cols-5">
+					<label for="mint-api-input w-32"> Mint API root: </label>
+					<input
+						id="mint-api-input"
+						type="text"
+						bind:value={mintAPIRoot}
+						class="input w-full input-primary col-span-4"
+					/>
+				</div>
+			{/if}
 			{#if isLoading}
 				<LoadingCenter />
 			{:else}
