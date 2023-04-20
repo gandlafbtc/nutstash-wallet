@@ -7,12 +7,12 @@
 	import { browser } from '$app/environment';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
-	import type { Token } from '../../model/token';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { getKeysetsOfTokens } from '../util/walletUtils';
 	import { mintRequests } from '../../stores/mintReqs';
 	import { onMount } from 'svelte';
+	import type { Proof } from "@cashu/cashu-ts";
 
 	export let mint: Mint;
 	export let active;
@@ -57,7 +57,7 @@
 			mintingHash = hash;
 			qrCode = pr;
 			mintRequests.update((state) => [
-				{ invoice: qrCode, mintUrl: mint.mintURL, isCompleted: false, paymentHash: mintingHash },
+				{ invoice: qrCode??'', mintUrl: mint.mintURL, isCompleted: false, paymentHash: mintingHash??'' },
 				...state
 			]);
 			await mintTokens();
@@ -72,7 +72,7 @@
 		try {
 			if (wallet && mintingHash) {
 				isPolling = true;
-				const tokens: Array<Token> = await wallet.requestTokens(mintAmount, mintingHash);
+				const tokens: Array<Proof> = await wallet.requestTokens(mintAmount, mintingHash);
 				console.log(tokens);
 				token.update((state) => [...state, ...tokens]);
 
