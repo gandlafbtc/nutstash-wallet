@@ -5,14 +5,19 @@ import fs from "fs/promises";
 const tokensFileName = "/etc/nutstash/tokens.json"
 
 export async function GET() {
-	const file  = await fs.readFile(tokensFileName)
-	const tokens = file.toString()
+	try {
+		const file = await fs.readFile(tokensFileName)
+		const tokens = file.toString()
 
-	return new Response(tokens, {
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	});
+		return new Response(tokens, {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+	} catch (error) {
+		console.error(error)
+		return new Response(null, { status: 500 })
+	}
 }
 
 

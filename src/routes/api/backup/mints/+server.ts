@@ -5,6 +5,7 @@ import type { Mint } from '../../../../model/mint.js';
 const mintsFileName = "/etc/nutstash/mints.json"
 
 export async function GET() {
+	try {
 	const file  = await fs.readFile(mintsFileName)
 	const mints = file.toString()
 
@@ -13,6 +14,11 @@ export async function GET() {
 			'Content-Type': 'application/json'
 		}
 	});
+	} catch (error) {
+		console.error(error)
+		return new Response(null,{status: 500})
+	}
+	
 }
 
 export async function POST({ request }) {
