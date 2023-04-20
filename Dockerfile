@@ -2,6 +2,7 @@ FROM node:alpine as build
 WORKDIR /nutstash
 COPY . .
 COPY ./http/app.html ./src/app.html
+COPY ./http/.env ./.env
 COPY ./http/svelte.config.js ./svelte.config.js
 COPY ./http/asmcrypto.all.es5.min.js ./static/asmcrypto.all.es5.min.js
 COPY ./http/webcrypto-liner.shim.min.js ./static/webcrypto-liner.shim.min.js
