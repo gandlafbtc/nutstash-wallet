@@ -8,7 +8,7 @@
 
 	let qrScanner: Html5QrcodeScanner;
 
-	function onScanSuccess(decodedText:string, decodedResult: any) {
+	function onScanSuccess(decodedText, decodedResult) {
 		// handle the scanned code as you like, for example:
 		scannedlnInvoice = decodedText;
 		if (browser) {
@@ -17,7 +17,7 @@
 		active = 'melt';
 	}
 
-	function onScanFailure(error: any) {}
+	function onScanFailure(error) {}
 	onDestroy(() => {
 		{
 			if (browser) {

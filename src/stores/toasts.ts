@@ -1,4 +1,4 @@
-import type { Toast } from '../model/toast';
+import type { Toast } from 'src/model/toast';
 import { writable } from 'svelte/store';
 
 export const notifications = writable<Toast[]>([]);

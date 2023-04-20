@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import type { Contact } from '../model/contact';
+import type { Contact } from 'src/model/contact';
 
 import { writable } from 'svelte/store';
 
