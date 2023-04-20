@@ -1,5 +1,6 @@
-import type { Mint } from 'src/model/mint';
-import type { Token } from 'src/model/token';
+import type { Mint } from '../../../src/model/mint';
+import type { Proof } from '@cashu/cashu-ts';
+
 
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -7,9 +8,9 @@ import type { Token } from 'src/model/token';
  * @param tokens
  * @returns
  */
-const getTokensToSend = (amount: number, tokens: Array<Token>) => {
+const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	let tokenAmount = 0;
-	const tokenSubset: Array<Token> = tokens.filter((token) => {
+	const tokenSubset = tokens.filter((token) => {
 		if (tokenAmount < amount) {
 			tokenAmount += token.amount;
 			return true;
@@ -30,8 +31,8 @@ const validateMintKeys = (keys: object): boolean => {
 		if (allKeys.length < 1) {
 			return false;
 		}
-
 		allKeys.forEach((k) => {
+			//try parse int?
 			if (isNaN(k)) {
 				isValid = false;
 			}
@@ -55,7 +56,7 @@ const isPow2 = (number: number) => {
  * @param tokens
  * @returns
  */
-const getTokensForMint = (mint: Mint, tokens: Array<Token>) => {
+const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
 	const tokenSubset = tokens.filter((token) => {
 		if (mint?.keysets.includes(token.id)) {
 			return true;
@@ -77,11 +78,11 @@ const isValidToken = (obj: any) => {
  * @param tokensToRemove
  * @returns
  */
-const getTokenSubset = (tokens: Array<Token>, tokensToRemove: Array<Token>) => {
+const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof>) => {
 	return tokens.filter((token) => !tokensToRemove.includes(token));
 };
 
-const getMintForToken = (token: Token, mints: Array<Mint>): Mint | undefined => {
+const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
 	let mint: Mint | undefined = undefined;
 	mints.forEach((m) => {
 		if (m.keysets.includes(token.id)) {
@@ -91,13 +92,13 @@ const getMintForToken = (token: Token, mints: Array<Mint>): Mint | undefined => 
 	return mint;
 };
 
-const getAmountForTokenSet = (tokens: Array<Token>): number => {
+const getAmountForTokenSet = (tokens: Array<Proof>): number => {
 	return tokens.reduce((acc, t) => {
 		return acc + t.amount;
 	}, 0);
 };
 
-const getKeysetsOfTokens = (tokens: Array<Token>) => {
+const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	return removeDuplicatesFromArray(
 		tokens.map((t) => {
 			return t.id;
