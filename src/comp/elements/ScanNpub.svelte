@@ -7,7 +7,7 @@
 
 	let qrScanner: Html5QrcodeScanner;
 
-	function onScanSuccess(decodedText: string, decodedResult:any) {
+	function onScanSuccess(decodedText: string, decodedResult: any) {
 		// handle the scanned code as you like, for example:
 		scannedNpub = decodedText;
 		if (browser) {

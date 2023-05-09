@@ -7,63 +7,60 @@
 	let isMintsChecked = false;
 	let isTokensChecked = false;
 
-    let isLoading = false
+	let isLoading = false;
 	const handleToggleSync = () => {
 		if (!$selfhostedSyncTokens) {
 			toast('info', 'Reload app to activate', 'Sync tokens to server');
 		}
 	};
-    const restoreFromServer= async () =>{
-        isLoading = true
-        try {
-            if (isMintsChecked) {
-                await restoreMints()
-            }
-            if (isTokensChecked) {
-                await restoreTokens()
-            }
-            toast('success', 'Successfully restored from server','Done!')
-        } catch (error) {
-            console.log(error)
-            toast('error', 'Error while restoring from server','Could not restore')
-        } finally {
-            isLoading = false
-        }
-        modalOpen = false
-    }
-
-    const restoreMints =async () => {
+	const restoreFromServer = async () => {
+		isLoading = true;
 		try {
-			const data  = await fetch("/api/backup/mints")
-			const mintsFromServer = await data.json()
+			if (isMintsChecked) {
+				await restoreMints();
+			}
+			if (isTokensChecked) {
+				await restoreTokens();
+			}
+			toast('success', 'Successfully restored from server', 'Done!');
+		} catch (error) {
+			console.log(error);
+			toast('error', 'Error while restoring from server', 'Could not restore');
+		} finally {
+			isLoading = false;
+		}
+		modalOpen = false;
+	};
+
+	const restoreMints = async () => {
+		try {
+			const data = await fetch('/api/backup/mints');
+			const mintsFromServer = await data.json();
 			if (!mintsFromServer) {
-				toast('warning', 'no mints found on server','Mints not restored')
-				return
+				toast('warning', 'no mints found on server', 'Mints not restored');
+				return;
 			}
-			mints.set(mintsFromServer)
+			mints.set(mintsFromServer);
 		} catch (error) {
-			console.error(error)
-			toast('error', 'error while mints restoring from server','Server error')
+			console.error(error);
+			toast('error', 'error while mints restoring from server', 'Server error');
 		}
-    }
+	};
 
-    const restoreTokens =async () => {
+	const restoreTokens = async () => {
 		try {
-			const data  = await fetch("/api/backup/tokens")
-			const tokensFromServer = await data.json()
+			const data = await fetch('/api/backup/tokens');
+			const tokensFromServer = await data.json();
 			if (!tokensFromServer) {
-				toast('warning', 'no tokens found on server','Tokens not restored')
-				return
+				toast('warning', 'no tokens found on server', 'Tokens not restored');
+				return;
 			}
-			token.set(tokensFromServer)
-			
+			token.set(tokensFromServer);
 		} catch (error) {
-			console.error(error)
-			toast('error', 'error while tokens restoring from server','Server error')
-
+			console.error(error);
+			toast('error', 'error while tokens restoring from server', 'Server error');
 		}
-    }
-
+	};
 </script>
 
 <div class="divider col-span-5 font-bold">Selfhosted</div>
@@ -78,7 +75,7 @@
 		on:click={handleToggleSync}
 	/>
 </div>
-<div class="divider col-span-5"></div>
+<div class="divider col-span-5" />
 
 <div class="col-span-2">
 	<label for="">Restore from server</label>
@@ -93,11 +90,19 @@
 			<input type="checkbox" bind:checked={isTokensChecked} class="checkbox checkbox-primary" />
 			<span class="label-text">Tokens</span>
 		</label>
-		<label for="restore-from-server-modal" class="btn {isTokensChecked||isMintsChecked?'':'btn-disabled'}">Restore</label>
+		<label
+			for="restore-from-server-modal"
+			class="btn {isTokensChecked || isMintsChecked ? '' : 'btn-disabled'}">Restore</label
+		>
 	</div>
 </div>
 
-<input type="checkbox" id="restore-from-server-modal" class="modal-toggle" bind:checked={modalOpen}/>
+<input
+	type="checkbox"
+	id="restore-from-server-modal"
+	class="modal-toggle"
+	bind:checked={modalOpen}
+/>
 <div class="modal">
 	<div class="modal-box">
 		<h3 class="font-bold text-lg">Restore from server</h3>
@@ -112,9 +117,7 @@
 		</ul>
 		<div class="modal-action">
 			<label for="restore-from-server-modal" class="btn btn-outline">close</label>
-            <button class="btn" on:click={restoreFromServer}>
-                restore
-            </button>
+			<button class="btn" on:click={restoreFromServer}> restore </button>
 		</div>
 	</div>
 </div>

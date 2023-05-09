@@ -136,10 +136,8 @@
 					<div class="flex items-baseline gap-1 justify-center">
 						<div class="flex gap-2 items-center">
 							<div class="w-6 h6">
-							{#if $isSyncMints || $isSyncTokens}
-								<div class="btn btn-success btn-disabled loading btn-square btn-xs">
-
-								</div>								
+								{#if $isSyncMints || $isSyncTokens}
+									<div class="btn btn-success btn-disabled loading btn-square btn-xs" />
 								{/if}
 							</div>
 							<Logo />

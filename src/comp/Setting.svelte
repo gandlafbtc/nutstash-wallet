@@ -59,7 +59,7 @@
 			<a href="/history" class="btn btn-outline">History</a>
 		</div>
 		{#if PUBLIC_SELFHOSTED}
-		<SelfhostedSetting></SelfhostedSetting>
+			<SelfhostedSetting />
 		{/if}
 
 		<div class="divider col-span-5">Cashu</div>

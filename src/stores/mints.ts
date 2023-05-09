@@ -89,23 +89,21 @@ const mints = writable<Array<Mint>>(initialValue);
 
 mints.subscribe(async (value) => {
 	if (browser) {
-		const stringValue =  JSON.stringify(value)
-		window.localStorage.setItem('mints',stringValue );
+		const stringValue = JSON.stringify(value);
+		window.localStorage.setItem('mints', stringValue);
 		if (PUBLIC_SELFHOSTED && get(selfhostedSyncTokens)) {
-			isSyncMints.set(true)
-			await fetch("/api/backup/mints", {
-				method: "post",
+			isSyncMints.set(true);
+			await fetch('/api/backup/mints', {
+				method: 'post',
 				headers: {
-					'Accept': 'application/json',
+					Accept: 'application/json',
 					'Content-Type': 'application/json'
 				},
 				body: stringValue
-			})
-			isSyncMints.set(false)
-
+			});
+			isSyncMints.set(false);
 		}
 	}
 });
-
 
 export { mints };

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, Proof } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, type Proof } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
@@ -15,6 +15,7 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { onMount } from 'svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let active;
 
@@ -77,7 +78,7 @@
 		}
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 
-		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+		const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 
 		let tokensToSend: Array<Proof> = [];
 
@@ -92,8 +93,10 @@
 			return;
 		}
 
-		const { returnChange, send } = await cashuWallet.send(amount + fees, tokensToSend);
-
+		const { returnChange, send, newKeys } = await cashuWallet.send(amount + fees, tokensToSend);
+		if (newKeys) {
+			updateMintKeys(mint, newKeys);
+		}
 		console.log(send);
 		// remove sent tokens from storage
 		token.update((state) => {

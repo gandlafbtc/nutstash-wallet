@@ -7,7 +7,7 @@
 	import { toast } from '../../stores/toasts';
 	import { CashuMint } from '@cashu/cashu-ts';
 	import { browser } from '$app/environment';
-	
+
 	export let mintIndex: number;
 	export let mint: Mint;
 	export let activeMint;
@@ -56,7 +56,7 @@
 	};
 
 	const copyShareLink = () => {
-		const text = encodeURI('https://wallet.nutstash.app'+ '/?mint=' + mint.mintURL);
+		const text = encodeURI('https://wallet.nutstash.app' + '/?mint=' + mint.mintURL);
 		if (browser) {
 			if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
 				var textarea = document.createElement('textarea');

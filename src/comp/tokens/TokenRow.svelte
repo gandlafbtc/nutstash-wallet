@@ -9,6 +9,7 @@
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
 	import type { Mint } from '../../model/mint';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let mint: Mint | undefined;
 	export let isSelected = false;
@@ -26,7 +27,7 @@
 		}
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 
-		const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+		const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 		try {
 			await checkTokenSpent();
 			try {
@@ -34,7 +35,15 @@
 				const encodedProofs = getEncodedToken({
 					token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
 				});
-				const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedProofs);
+				const {
+					token: tokens,
+					tokensWithErrors,
+					newKeys
+				} = await cashuWallet.receive(encodedProofs);
+				const proofs = tokens.token.map((t) => t.proofs).flat();
+				if (newKeys) {
+					updateMintKeys(mint, newKeys);
+				}
 				if (tokensWithErrors) {
 					throw new Error('could not redeem token');
 				}
@@ -76,7 +85,7 @@
 
 		try {
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 			const spentProofs = await cashuWallet.checkProofsSpent([token]);
 			let hasBeenReceived = false;
 			if (!$pendingTokens.includes(token)) {

@@ -9,6 +9,7 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { getKeysetsOfTokens, validateMintKeys } from '../util/walletUtils';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let active;
 
@@ -40,11 +41,15 @@
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 
 			isLoading = true;
-			const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedToken);
+			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedToken);
 
+			if (newKeys) {
+				updateMintKeys(mint, newKeys);
+			}
+			const proofs = tokens.token.map((t) => t.proofs).flat();
 			token.update((state) => [...state, ...proofs]);
 
 			if (tokensWithErrors) {

@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, Proof, getDecodedToken, getEncodedToken } from '@cashu/cashu-ts';
+	import {
+		CashuMint,
+		CashuWallet,
+		getDecodedToken,
+		getEncodedToken,
+		type Proof
+	} from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -29,6 +35,7 @@
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import { page } from '$app/stores';
 	import CoinSelection from '../elements/CoinSelection.svelte';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let active;
 
@@ -69,9 +76,13 @@
 			isLoading = true;
 
 			const cashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet = new CashuWallet(mint.keys, cashuMint);
+			const cashuWallet = new CashuWallet(cashuMint, mint.keys);
 
-			const { returnChange, send } = await cashuWallet.send(amountToSend, tokensToSend);
+			const { returnChange, send, newKeys } = await cashuWallet.send(amountToSend, tokensToSend);
+
+			if (newKeys) {
+				updateMintKeys(mint, newKeys);
+			}
 
 			//remove all tokens that have been sent to mint from storage
 			token.update((state) => getTokenSubset(state, tokensToSend));
@@ -126,8 +137,8 @@
 	const getEncryptedContent = async (): Promise<string> => {
 		return $useExternalNostrKey
 			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
-			//@ts-ignore
-			: await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
+			: //@ts-ignore
+			  await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
 	const getConvertedPubKey = async () => {
 		await resolveNip05();

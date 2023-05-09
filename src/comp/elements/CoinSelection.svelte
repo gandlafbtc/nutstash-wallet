@@ -2,7 +2,7 @@
 	import type { Mint } from '../../model/mint';
 	import AvailableTokensTable from '../tokens/AvailableTokensTable.svelte';
 	import { getAmountForTokenSet } from '../util/walletUtils';
-	import type { Proof } from "@cashu/cashu-ts";
+	import type { Proof } from '@cashu/cashu-ts';
 
 	export let mint: Mint;
 	export let amount: number = 0;

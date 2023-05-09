@@ -12,25 +12,22 @@ const initialValue: Array<Proof> = JSON.parse(initialValueSting);
 const token = writable<Array<Proof>>(initialValue);
 
 token.subscribe(async (value) => {
-
 	if (browser) {
-		const stringValue =  JSON.stringify(value)
-		window.localStorage.setItem('tokens',stringValue);
+		const stringValue = JSON.stringify(value);
+		window.localStorage.setItem('tokens', stringValue);
 		if (PUBLIC_SELFHOSTED && get(selfhostedSyncTokens)) {
-			isSyncTokens.set(true)
-			await fetch("/api/backup/tokens", {
-				method: "post",
+			isSyncTokens.set(true);
+			await fetch('/api/backup/tokens', {
+				method: 'post',
 				headers: {
-					'Accept': 'application/json',
+					Accept: 'application/json',
 					'Content-Type': 'application/json'
 				},
 				body: stringValue
-			})
-			isSyncTokens.set(false)
+			});
+			isSyncTokens.set(false);
 		}
 	}
 });
-
-
 
 export { token };

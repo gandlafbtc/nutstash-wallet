@@ -98,7 +98,7 @@
 			}
 
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 			const encodedProofs = getEncodedToken(nostrMessage.token);
 
 			isLoading = true;

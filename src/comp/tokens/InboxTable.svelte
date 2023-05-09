@@ -7,6 +7,7 @@
 	import { token } from '../../stores/tokens';
 	import { getAmountForTokenSet } from '../util/walletUtils';
 	import InboxRow from './InboxRow.svelte';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	$: page = 20;
 	$: nostrMessagesSub = $nostrMessages.slice(0, page);
@@ -41,14 +42,22 @@
 					};
 				}
 
-				const wallet = new CashuWallet(keys, mint);
+				const wallet = new CashuWallet(mint, keys);
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const { proofs, tokensWithErrors } = await wallet.receive(getEncodedToken(nM.token));
-
+					const {
+						token: tokens,
+						tokensWithErrors,
+						newKeys
+					} = await wallet.receive(getEncodedToken(nM.token));
+					const storedMint = $mints.find((m) => mint.mintUrl === m.mintURL);
+					if (newKeys && storedMint) {
+						updateMintKeys(storedMint, newKeys);
+					}
+					const proofs = tokens.token.map((t) => t.proofs).flat();
 					token.update((state) => [...proofs, ...state]);
 					totalReceived += getAmountForTokenSet(proofs);
 					if (tokensWithErrors) {

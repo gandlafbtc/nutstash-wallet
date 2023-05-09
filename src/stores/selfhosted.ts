@@ -7,7 +7,6 @@ const initialValue = browser
 	? window.localStorage.getItem('selfhosted-sync-tokens') ?? 'false'
 	: 'false';
 
-
 const isSyncTokens = writable<boolean>(false);
 const isSyncMints = writable<boolean>(false);
 
@@ -18,9 +17,5 @@ selfhostedSyncTokens.subscribe(async (value) => {
 		window.localStorage.setItem('selfhosted-sync-tokens', JSON.stringify(value));
 	}
 });
-
-
-
-
 
 export { selfhostedSyncTokens, isSyncMints, isSyncTokens };

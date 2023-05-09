@@ -1,7 +1,6 @@
 import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
 
-
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
  * @param amount
