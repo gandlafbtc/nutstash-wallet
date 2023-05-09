@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import fs from "fs/promises";
 import type { Mint } from '../../../../model/mint.js';
 
-const mintsFileName = "./data/mints.json"
+const mintsFileName = "/app/data/mints.json"
 
 export async function GET() {
 	try {

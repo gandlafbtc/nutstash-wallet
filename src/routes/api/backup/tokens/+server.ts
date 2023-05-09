@@ -2,7 +2,7 @@ import type { Proof } from '@cashu/cashu-ts';
 import { json } from '@sveltejs/kit';
 import fs from "fs/promises";
 
-const tokensFileName = "./data/tokens.json"
+const tokensFileName = "/app/data/tokens.json"
 
 export async function GET() {
 	try {
