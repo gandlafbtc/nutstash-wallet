@@ -7,7 +7,7 @@ Using docker you don't need to install, configure, and manage a node environment
 ## Run provided docker container
 
 ```shell
-docker run --publish 4173:3000 ghcr.io/gandlafbtc/nutstash-wallet:0.1.10
+docker run --publish 4173:3000 ghcr.io/gandlafbtc/nutstash-wallet:0.1.11
 ```
 
 ## Building the app with docker
