@@ -9,7 +9,12 @@ services:
       platforms:
         - 'linux/amd64'
         - 'linux/arm64'
-    user: '1000:node'
+    user: '1000:1000'
     restart: on-failure
     ports:
       - '3000:3000'
+    volumes:
+      - /tmp/nutstash/nutstash-data:/app/data
+
+volumes:
+  nutstash-data: 

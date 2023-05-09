@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_SELFHOSTED } from '$env/static/public';
 	import { checkAutomatically, checkNonPending, checkPending } from '../stores/settings';
 	import { THEMES } from '../stores/static/themes';
 
@@ -7,6 +8,7 @@
 	import NostrRelayModal from './elements/NostrRelayModal.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
+	import SelfhostedSetting from './elements/SelfhostedSetting.svelte';
 
 	let isShowDangerzone = false;
 
@@ -56,6 +58,10 @@
 		<div class="col-span-4">
 			<a href="/history" class="btn btn-outline">History</a>
 		</div>
+		{#if PUBLIC_SELFHOSTED}
+		<SelfhostedSetting></SelfhostedSetting>
+		{/if}
+
 		<div class="divider col-span-5">Cashu</div>
 
 		<div class="col-span-2">
