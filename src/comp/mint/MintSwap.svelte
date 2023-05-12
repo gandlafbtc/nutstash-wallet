@@ -6,6 +6,7 @@
 	import { toast } from '../../stores/toasts';
 	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let active;
 	let swapOutMint: Mint;
@@ -37,13 +38,13 @@
 		try {
 			isPrepare = true;
 			const cashuSwapInMint = new CashuMint(swapInMint.mintURL);
-			const cashuSwapInWallet = new CashuWallet(swapInMint.keys, cashuSwapInMint);
+			const cashuSwapInWallet = new CashuWallet(cashuSwapInMint, swapInMint.keys);
 
 			const { pr, hash } = await cashuSwapInWallet.requestMint(swapAmount);
 			paymentHash = hash;
 			invoice = pr;
 			const cashuSwapOutMint = new CashuMint(swapOutMint.mintURL);
-			const cashuSwapOutWallet = new CashuWallet(swapOutMint.keys, cashuSwapOutMint);
+			const cashuSwapOutWallet = new CashuWallet(cashuSwapOutMint, swapInMint.keys);
 
 			const loadedFees = await cashuSwapOutWallet.getFee(pr);
 			if (loadedFees + swapAmount > availableTokens) {
@@ -68,18 +69,24 @@
 		try {
 			isPerform = true;
 			const cashuSwapInMint = new CashuMint(swapInMint.mintURL);
-			const cashuSwapInWallet = new CashuWallet(swapInMint.keys, cashuSwapInMint);
+			const cashuSwapInWallet = new CashuWallet(cashuSwapInMint, swapInMint.keys);
 
 			const cashuSwapOutMint = new CashuMint(swapOutMint.mintURL);
-			const cashuSwapOutWallet = new CashuWallet(swapOutMint.keys, cashuSwapOutMint);
+			const cashuSwapOutWallet = new CashuWallet(cashuSwapOutMint, swapOutMint.keys);
 
 			const proofsToSend = getTokensToSend(
 				swapAmount + fees,
 				getTokensForMint(swapOutMint, $token)
 			);
 
-			const { returnChange, send } = await cashuSwapOutWallet.send(swapAmount + fees, proofsToSend);
-
+			const {
+				returnChange,
+				send,
+				newKeys: newOutKeys
+			} = await cashuSwapOutWallet.send(swapAmount + fees, proofsToSend);
+			if (newOutKeys) {
+				updateMintKeys(swapOutMint, newOutKeys);
+			}
 			console.log(send);
 			// remove sent tokens from storage
 			token.update((state) => {
@@ -88,8 +95,15 @@
 			if (returnChange) {
 				token.update((state) => [...returnChange, ...state]);
 			}
-			const { isPaid, preimage, change } = await cashuSwapOutWallet.payLnInvoice(invoice, send);
-
+			const {
+				isPaid,
+				preimage,
+				change,
+				newKeys: newInKeys
+			} = await cashuSwapOutWallet.payLnInvoice(invoice, send);
+			if (newInKeys) {
+				updateMintKeys(swapOutMint, newInKeys);
+			}
 			if (!isPaid) {
 				token.update((state) => [...send, ...state]);
 				isPerform = false;
@@ -104,7 +118,13 @@
 				token.update((state) => [...change, ...state]);
 			}
 
-			const newProofs = await cashuSwapInWallet.requestTokens(swapAmount, paymentHash);
+			const { proofs: newProofs, newKeys } = await cashuSwapInWallet.requestTokens(
+				swapAmount,
+				paymentHash
+			);
+			if (newKeys) {
+				updateMintKeys(swapOutMint, newKeys);
+			}
 			token.update((state) => [...newProofs, ...state]);
 			toast('success', 'The swap has successfully been completed', 'Swap complete');
 			isPerform = false;
