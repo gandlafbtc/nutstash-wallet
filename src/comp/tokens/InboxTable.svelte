@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
@@ -23,7 +23,10 @@
 		let hasError = 0;
 		isLoading = true;
 		for (const nM of $nostrMessages.filter((n) => !n.isAccepted)) {
-			const mint: CashuMint = new CashuMint(nM.token.mints[0].url);
+			if (!nM.token.token) {
+				return;
+			}
+			const mint: CashuMint = new CashuMint(nM.token.token[0].mint);
 			let keys;
 			try {
 				if ($mints.map((m) => m.mintURL).includes(mint.mintUrl)) {
@@ -33,23 +36,25 @@
 					const storeMint: Mint = {
 						mintURL: mint.mintUrl,
 						keys,
-						keysets: nM.token.mints[0].ids,
+						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))],
 						isAdded: false
 					};
 				}
 
 				const wallet = new CashuWallet(keys, mint);
-				const spentProofs = await wallet.checkProofsSpent(nM.token.proofs);
-				const proofsToReceive = nM.token.proofs.filter((p) => !spentProofs.includes(p));
+				//todo: does not handle multiple tokens correctly
+				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
+				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const receivedProofs = await wallet.receive(getEncodedProofs(proofsToReceive));
+					const { proofs, tokensWithErrors } = await wallet.receive(getEncodedToken(nM.token));
 
-					token.update((state) => [...receivedProofs, ...state]);
-
-					totalReceived += getAmountForTokenSet(receivedProofs);
+					token.update((state) => [...proofs, ...state]);
+					totalReceived += getAmountForTokenSet(proofs);
+					if (tokensWithErrors) {
+						throw new Error('Could not redeem all tokens');
+					}
 				}
-
 				totalSpent += getAmountForTokenSet(spentProofs);
 			} catch (error) {
 				console.log(error);
@@ -79,7 +84,7 @@
 	};
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll  max-h-40">
+<div class="overflow-x-scroll overflow-y-scroll  max-h-40 scrollbar-hide">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
@@ -110,16 +115,18 @@
 					<p class="flex lg:hidden">Amt</p></th
 				>
 				<th>Date</th>
-				<th>From</th>
+				<th class="w-full">From</th>
 			</tr>
 		</thead>
-		<tbody class="max-h-1 overflow-y-scroll">
+		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
 			{#each nostrMessagesSub as nostrMessage, i}
-				<InboxRow {nostrMessage} {i} />
+				{#if nostrMessage.token.token}
+					<InboxRow {nostrMessage} {i} />
+				{/if}
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
-				<td colspan="2" class="cursor-pointer w-full hover:bg-base-200" on:click={loadMore}>
+				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
 					load more
 				</td>
 				<td

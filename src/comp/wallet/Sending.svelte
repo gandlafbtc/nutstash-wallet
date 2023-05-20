@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedProofs, getEncodedProofs } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet, Proof, getDecodedToken, getEncodedToken } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
@@ -29,11 +29,15 @@
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import { page } from '$app/stores';
 	import QrCodeImage from 'svelte-qrcode-image/QRCodeImage.svelte';
+	import CoinSelection from '../elements/CoinSelection.svelte';
 
 	export let active;
 
 	let mint: Mint = $mints[0];
 	$: tokensForMint = getTokensForMint(mint, $token);
+	$: selectedTokens = [];
+	$: isCoinSelection = false;
+
 	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
@@ -44,21 +48,22 @@
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
-		const tokensToSend = getTokensToSend(amountToSend, tokensForMint);
+
+		let tokensToSend: Proof[] = [];
+		if (isCoinSelection) {
+			tokensToSend = selectedTokens;
+		} else {
+			tokensToSend = getTokensToSend(amountToSend, tokensForMint);
+		}
+
 		if (amountToSend <= 0) {
 			toast('warning', 'amount must be larger than 0', 'Could not send');
 			return;
 		}
-		if (
-			amountToSend >
-			tokensForMint.reduce((acc, t) => {
-				return acc + t.amount;
-			}, 0)
-		) {
-			toast('warning', 'not enough funds in this mint', 'Could not Send');
-			amountToSend = 0;
+		if (amountToSend > getAmountForTokenSet(tokensToSend)) {
+			toast('warning', 'not enough funds', 'Could not Send');
 			isLoading = false;
-			throw new Error('Not enough funds for this Mint.');
+			return;
 		}
 
 		try {
@@ -77,7 +82,7 @@
 			//add newly minted tokens that have been returned as change
 			token.update((state) => [...state, ...returnChange]);
 
-			encodedToken = getEncodedProofs(send, [{ url: mint.mintURL, ids: mint.keysets }]);
+			encodedToken = getEncodedToken({ token: [{ proofs: send, mint: mint.mintURL }] });
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
@@ -115,15 +120,14 @@
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
-			? // @ts-expect-error
-			  await window.nostr.getPublicKey()
+			? await window.nostr.getPublicKey()
 			: await Promise.resolve($nostrPubKey);
 	};
 
 	const getEncryptedContent = async (): Promise<string> => {
 		return $useExternalNostrKey
-			? // @ts-expect-error
-			  await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
+			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
+			//@ts-ignore
 			: await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
 	const getConvertedPubKey = async () => {
@@ -150,13 +154,13 @@
 			nostrSendLoading = true;
 			const event: Event = {
 				kind: nostrTools.Kind.EncryptedDirectMessage,
+				//@ts-ignore
 				tags: [['p', await getConvertedPubKey()]],
 				content: await getEncryptedContent(),
 				created_at: Math.floor(Date.now() / 1000),
 				pubkey: await getPubKey()
 			};
 			if ($useExternalNostrKey) {
-				// @ts-expect-error
 				const signedEvent = await window.nostr.signEvent(event);
 				$nostrPool.publish(
 					signedEvent,
@@ -326,7 +330,7 @@
 					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 					<ul
 						tabindex="0"
-						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row"
+						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 					>
 						{#each $mints.filter((m) => m.isAdded) as m}
 							<!-- svelte-ignore a11y-missing-attribute -->
@@ -356,10 +360,19 @@
 				bind:value={amountToSend}
 			/>
 		</div>
-
+		<div class="grid grid-cols-5">
+			<div class="col-span-5">
+				<CoinSelection amount={amountToSend} {mint} bind:selectedTokens bind:isCoinSelection />
+			</div>
+		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={() => resetState()}>cancel</button>
-			<button class="btn btn-success" on:click={send}>send</button>
+			<button
+				class="btn {isCoinSelection && getAmountForTokenSet(selectedTokens) < amountToSend
+					? 'btn-disabled'
+					: 'btn-success'}"
+				on:click={send}>send</button
+			>
 		</div>
 	</div>
 {/if}

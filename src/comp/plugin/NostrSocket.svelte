@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { getDecodedProofs } from '@gandlaf21/cashu-ts';
+	import { getDecodedToken } from '@cashu/cashu-ts';
+
 	import * as rp from 'nostr-relaypool';
 
 	import * as nostrTools from 'nostr-tools';
@@ -20,7 +21,7 @@
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
-			? // @ts-expect-error
+			? 
 			  await window.nostr.getPublicKey()
 			: await Promise.resolve($nostrPubKey);
 	};
@@ -91,24 +92,24 @@
 					return;
 				}
 				const decodedMessage = $useExternalNostrKey
-					? // @ts-expect-error
+					? 
 					  await window.nostr.nip04.decrypt(event.pubkey, event.content)
 					: await nostrTools.nip04.decrypt($nostrPrivKey, event.pubkey, event.content);
 
 				let token;
 				try {
-					token = getDecodedProofs(decodedMessage);
+					token = getDecodedToken(decodedMessage);
 				} catch (e) {
 					console.error(e, 'could not decode nip-04 message as token. Ignoring this message');
 					return;
 				}
 
-				if (!token?.proofs) {
+				if (!token?.token) {
 					//if the event is not in a cashu token format, ignore it
 					return;
 				}
 
-				if (!isValidToken(token.proofs)) {
+				if (!isValidToken(token.token)) {
 					// ignore messages that are not tokens
 					return;
 				}

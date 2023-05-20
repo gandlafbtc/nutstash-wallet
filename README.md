@@ -5,6 +5,18 @@ This app is in early development and most likely buggy. It does handle real sats
 
 A web based Cashu Wallet that supports multiple mints
 
+Implemented [NUTs](https://github.com/cashubtc/nuts/):
+
+- [x] NUT-00
+- [x] NUT-01
+- [x] NUT-02
+- [x] NUT-03
+- [x] NUT-04
+- [x] NUT-05
+- [x] NUT-06
+- [x] NUT-07
+- [x] NUT-08
+
 ## Roadmap
 
 - [x] Adding, removing Mints
@@ -53,6 +65,14 @@ You can preview the production build with `npm run preview`.
 
 As an alternative to node/npm one can use [docker](docs/docker.md) to build and run the application.
 
+### Selfhosted backup
+
+If you want to run your private instance of nutstash where tokens are synced with the server, you can use the docker compose file. Note that you will have to configure a folder (volume) on your host system, where nutstashs docker user has read/write permissions.
+
+1. change `/tmp/nutstash/nutstash-data` in `docker-compose.yml` to your preferred location.
+1. change the owner of the directory to `1000` ===> `sudo chown -R 1000:1000 [directory-path]`
+1. start nutstash with: `docker-compose up --build -d`
+1. activate the options to sync to server in nutstash settings 
 ## Contributing
 
 Read [this guide](/docs/contribute.md) on how to contribute.

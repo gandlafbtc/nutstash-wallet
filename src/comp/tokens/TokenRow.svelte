@@ -1,15 +1,19 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getEncodedProofs } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
-	import type { Token } from '../../model/token';
+	import type { Proof } from '@cashu/cashu-ts';
 	import { getMintForToken, getTokenSubset } from '../util/walletUtils';
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
+	import type { Mint } from '../../model/mint';
 
-	export let token: Token;
+	export let mint: Mint | undefined;
+	export let isSelected = false;
+
+	export let token: Proof;
 
 	export let i: number;
 
@@ -17,7 +21,7 @@
 	const recycleToken = async () => {
 		const mint = getMintForToken(token, $mints);
 		if (!mint) {
-			toast('warining', 'Add the mint first', 'Cannot recycle token!');
+			toast('warning', 'Add the mint first', 'Cannot recycle token!');
 			return;
 		}
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
@@ -27,12 +31,17 @@
 			await checkTokenSpent();
 			try {
 				isLoading = true;
-				const encodedProofs = getEncodedProofs([token]);
-				const newTokens: Array<Token> = await cashuWallet.receive(encodedProofs);
+				const encodedProofs = getEncodedToken({
+					token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
+				});
+				const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedProofs);
+				if (tokensWithErrors) {
+					throw new Error('could not redeem token');
+				}
 				//remove old token
 				tokenStore.update((state) => getTokenSubset(state, [token]));
 				//add new token
-				tokenStore.update((state) => [...newTokens, ...state]);
+				tokenStore.update((state) => [...proofs, ...state]);
 				toast('success', 'Token has been recycled.', 'Success!');
 				isLoading = false;
 			} catch (e) {
@@ -101,7 +110,11 @@
 
 <tr>
 	<td>
-		<div class="flex gap-1">
+		<div class="flex gap-1 items-center">
+			{#if mint}
+				<input type="checkbox" bind:checked={isSelected} class="checkbox checkbox-primary" />
+			{/if}
+
 			<TokenIcon />
 			{#if $tokenStore.includes(token)}
 				<button on:click={recycleToken}>
@@ -146,7 +159,9 @@
 	</td>
 	<td class="max-w-0 overflow-clip">
 		<div class="overflow-x-clip">
-			{getEncodedProofs([token])}
+			{getEncodedToken({
+				token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
+			})}
 		</div>
 	</td>
 </tr>

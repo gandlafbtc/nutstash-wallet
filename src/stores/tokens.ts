@@ -1,18 +1,36 @@
 import { browser } from '$app/environment';
-import type { Token } from 'src/model/token';
+import { PUBLIC_SELFHOSTED } from '$env/static/public';
+import type { Proof } from '@cashu/cashu-ts';
 
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
+import { isSyncTokens, selfhostedSyncTokens } from './selfhosted';
 
 const initialValueSting: string = browser ? window.localStorage.getItem('tokens') ?? '[]' : '[]';
 
-const initialValue: Array<Token> = JSON.parse(initialValueSting);
+const initialValue: Array<Proof> = JSON.parse(initialValueSting);
 
-const token = writable<Array<Token>>(initialValue);
+const token = writable<Array<Proof>>(initialValue);
 
-token.subscribe((value) => {
+token.subscribe(async (value) => {
+
 	if (browser) {
-		window.localStorage.setItem('tokens', JSON.stringify(value));
+		const stringValue =  JSON.stringify(value)
+		window.localStorage.setItem('tokens',stringValue);
+		if (PUBLIC_SELFHOSTED && get(selfhostedSyncTokens)) {
+			isSyncTokens.set(true)
+			await fetch("/api/backup/tokens", {
+				method: "post",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: stringValue
+			})
+			isSyncTokens.set(false)
+		}
 	}
 });
+
+
 
 export { token };

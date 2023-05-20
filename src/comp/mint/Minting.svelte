@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from '@gandlaf21/cashu-ts';
+	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
@@ -7,12 +7,12 @@
 	import { browser } from '$app/environment';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
-	import type { Token } from '../../model/token';
 	import { history } from '../../stores/history';
 	import { HistoryItemType } from '../../model/historyItem';
 	import { getKeysetsOfTokens } from '../util/walletUtils';
 	import { mintRequests } from '../../stores/mintReqs';
 	import { onMount } from 'svelte';
+	import type { Proof } from "@cashu/cashu-ts";
 
 	export let mint: Mint;
 	export let active;
@@ -57,7 +57,7 @@
 			mintingHash = hash;
 			qrCode = pr;
 			mintRequests.update((state) => [
-				{ invoice: qrCode, mintUrl: mint.mintURL, isCompleted: false, paymentHash: mintingHash },
+				{ invoice: qrCode??'', mintUrl: mint.mintURL, isCompleted: false, paymentHash: mintingHash??'' },
 				...state
 			]);
 			await mintTokens();
@@ -72,7 +72,7 @@
 		try {
 			if (wallet && mintingHash) {
 				isPolling = true;
-				const tokens: Array<Token> = await wallet.requestTokens(mintAmount, mintingHash);
+				const tokens: Array<Proof> = await wallet.requestTokens(mintAmount, mintingHash);
 				console.log(tokens);
 				token.update((state) => [...state, ...tokens]);
 
@@ -188,22 +188,28 @@
 			</div>
 		</div>
 	{:else}
-		<h3 class="font-bold text-lg">Request minting of new tokens:</h3>
-		<input
-			type="number"
-			bind:value={mintAmount}
-			placeholder="Type here"
-			class="input w-full input-primary col-span-4"
-		/>
-		<div class="flex gap-2">
-			<p class="font-bold">Mint:</p>
-			<p class="break-all">
-				{mint.mintURL}
-			</p>
-		</div>
-		<div class="modal-action">
-			<button class="btn btn-outline" on:click={resetState}>cancel</button>
-			<button class="btn" on:click={() => mintRequest()}>request Mint</button>
+		<div class="flex flex-col gap-2">
+			<h3 class="font-bold text-lg">Request minting of new tokens:</h3>
+			<div class="flex gap-2 items-center">
+				<input
+					type="number"
+					bind:value={mintAmount}
+					placeholder="Type here"
+					class="input w-full input-primary col-span-4"
+				/>
+				<p>satoshi</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Mint:</p>
+				<p class="break-all">
+					{mint.mintURL}
+				</p>
+			</div>
+			<div class="modal-action">
+				<button class="btn btn-outline" on:click={resetState}>cancel</button>
+				<button class="btn btn-primary" on:click={() => mintRequest()}>request Mint</button>
+			</div>
 		</div>
 	{/if}
 </div>

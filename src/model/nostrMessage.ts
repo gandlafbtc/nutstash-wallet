@@ -1,8 +1,8 @@
-import type { Token } from './token';
+import type { Proof } from "@cashu/cashu-ts";
 import type { Event } from 'nostr-tools';
 interface NostrMessage {
 	event: Event;
-	token: { proofs: Array<Token>; mints: Array<{ url: string; ids: Array<string> }> };
+	token: { token: { proofs: Proof[]; mint: string }[]; memo?: string };
 	isAccepted: boolean;
 }
 
