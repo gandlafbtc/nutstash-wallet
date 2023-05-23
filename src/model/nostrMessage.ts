@@ -1,4 +1,4 @@
-import type { Proof } from "@cashu/cashu-ts";
+import type { Proof } from '@cashu/cashu-ts';
 import type { Event } from 'nostr-tools';
 interface NostrMessage {
 	event: Event;

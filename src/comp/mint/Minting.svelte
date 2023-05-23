@@ -12,7 +12,8 @@
 	import { getKeysetsOfTokens } from '../util/walletUtils';
 	import { mintRequests } from '../../stores/mintReqs';
 	import { onMount } from 'svelte';
-	import type { Proof } from "@cashu/cashu-ts";
+	import type { Proof } from '@cashu/cashu-ts';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let mint: Mint;
 	export let active;
@@ -42,7 +43,7 @@
 			mintingHash = mintReq?.paymentHash;
 			qrCode = mintReq?.invoice;
 			const cashuMint = new CashuMint(mint.mintURL);
-			wallet = new CashuWallet(mint.keys, cashuMint);
+			wallet = new CashuWallet(cashuMint, mint.keys);
 			mintTokens();
 		}
 	});
@@ -52,12 +53,17 @@
 			isComplete = false;
 			isLoading = true;
 			const cashuMint = new CashuMint(mint.mintURL);
-			wallet = new CashuWallet(mint.keys, cashuMint);
+			wallet = new CashuWallet(cashuMint, mint.keys);
 			const { pr, hash } = await wallet.requestMint(mintAmount);
 			mintingHash = hash;
 			qrCode = pr;
 			mintRequests.update((state) => [
-				{ invoice: qrCode??'', mintUrl: mint.mintURL, isCompleted: false, paymentHash: mintingHash??'' },
+				{
+					invoice: qrCode ?? '',
+					mintUrl: mint.mintURL,
+					isCompleted: false,
+					paymentHash: mintingHash ?? ''
+				},
 				...state
 			]);
 			await mintTokens();
@@ -72,8 +78,10 @@
 		try {
 			if (wallet && mintingHash) {
 				isPolling = true;
-				const tokens: Array<Proof> = await wallet.requestTokens(mintAmount, mintingHash);
-				console.log(tokens);
+				const { proofs: tokens, newKeys } = await wallet.requestTokens(mintAmount, mintingHash);
+				if (newKeys) {
+					updateMintKeys(mint, newKeys);
+				}
 				token.update((state) => [...state, ...tokens]);
 
 				history.update((state) => [

@@ -17,4 +17,4 @@ services:
       - /tmp/nutstash/nutstash-data:/app/data
 
 volumes:
-  nutstash-data: 
+  nutstash-data:

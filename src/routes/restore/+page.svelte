@@ -5,7 +5,7 @@
 	import Step3 from '../../comp/restore/Step3.svelte';
 	import Step4 from '../../comp/restore/Step4.svelte';
 	import type { Mint } from '../../model/mint';
-	
+
 	import { mints } from '../../stores/mints';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';

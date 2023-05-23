@@ -19,6 +19,7 @@
 	import type { Contact } from '../../model/contact';
 	import type { Mint } from '../../model/mint';
 	import { onMount } from 'svelte';
+	import { updateMintKeys } from '../../actions/walletActions';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
@@ -98,13 +99,16 @@
 			}
 
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(mint.keys, cashuMint);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 			const encodedProofs = getEncodedToken(nostrMessage.token);
 
 			isLoading = true;
 			//todo tokens with errors are not handled
-			const { proofs, tokensWithErrors } = await cashuWallet.receive(encodedProofs);
-
+			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedProofs);
+			if (newKeys) {
+				updateMintKeys(mint, newKeys);
+			}
+			const proofs = tokens.token.map((t) => t.proofs).flat();
 			token.update((state) => [...proofs, ...state]);
 
 			nostrMessages.update((state) => {

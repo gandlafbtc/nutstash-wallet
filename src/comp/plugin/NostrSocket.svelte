@@ -21,8 +21,7 @@
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
-			? 
-			  await window.nostr.getPublicKey()
+			? await window.nostr.getPublicKey()
 			: await Promise.resolve($nostrPubKey);
 	};
 
@@ -92,8 +91,7 @@
 					return;
 				}
 				const decodedMessage = $useExternalNostrKey
-					? 
-					  await window.nostr.nip04.decrypt(event.pubkey, event.content)
+					? await window.nostr.nip04.decrypt(event.pubkey, event.content)
 					: await nostrTools.nip04.decrypt($nostrPrivKey, event.pubkey, event.content);
 
 				let token;
