@@ -32,12 +32,8 @@ export const updateMintKeys = (mint: Mint, newKeys: MintKeys) => {
 		throw new Error('could not update mint keys');
 	}
 	toBeUpdated.keys = newKeys;
-    const newKeyset = deriveKeysetId(newKeys)
+	const newKeyset = deriveKeysetId(newKeys);
 	toBeUpdated.keysets = [newKeyset, ...toBeUpdated.keysets];
 	mints.set(allMints);
-	toast(
-		'info',
-		'the new keyset ID is: ' + newKeyset,
-		'The keys of this mint have rotated'
-	);
+	toast('info', 'the new keyset ID is: ' + newKeyset, 'The keys of this mint have rotated');
 };

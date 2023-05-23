@@ -41,15 +41,15 @@
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet( cashuMint ,mint.keys);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 
 			isLoading = true;
-			const { token: tokens, tokensWithErrors,newKeys } = await cashuWallet.receive(encodedToken);
+			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedToken);
 
 			if (newKeys) {
-				updateMintKeys(mint, newKeys)
+				updateMintKeys(mint, newKeys);
 			}
-			const proofs = tokens.token.map(t=> t.proofs).flat()
+			const proofs = tokens.token.map((t) => t.proofs).flat();
 			token.update((state) => [...state, ...proofs]);
 
 			if (tokensWithErrors) {
@@ -79,8 +79,7 @@
 				'Tokens are invalid or have already been redeemed',
 				'Tokens could not be received'
 			);
-		}
-		finally {
+		} finally {
 			isLoading = false;
 		}
 	};

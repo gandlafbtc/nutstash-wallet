@@ -104,11 +104,11 @@
 
 			isLoading = true;
 			//todo tokens with errors are not handled
-			const { token: tokens , tokensWithErrors, newKeys } = await cashuWallet.receive(encodedProofs);
+			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedProofs);
 			if (newKeys) {
-				updateMintKeys(mint, newKeys)
+				updateMintKeys(mint, newKeys);
 			}
-			const proofs = tokens.token.map(t=> t.proofs).flat()
+			const proofs = tokens.token.map((t) => t.proofs).flat();
 			token.update((state) => [...proofs, ...state]);
 
 			nostrMessages.update((state) => {
