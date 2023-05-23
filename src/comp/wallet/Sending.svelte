@@ -36,6 +36,7 @@
 	import { page } from '$app/stores';
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import { updateMintKeys } from '../../actions/walletActions';
+	import TokenQr from '../elements/TokenQR.svelte';
 
 	export let active;
 
@@ -51,6 +52,7 @@
 	let hasBeenCopied = false;
 	let nostrSendLoading = false;
 	let sendAsLink = false;
+	let showTokenQr = false;
 
 	const send = async () => {
 		tokensForMint = getTokensForMint(mint, $token);
@@ -203,6 +205,7 @@
 		active = 'base';
 		hasBeenCopied = false;
 		sendAsLink = false;
+		showTokenQr = false;
 	};
 </script>
 
@@ -210,21 +213,19 @@
 	<LoadingCenter />
 {:else if encodedToken}
 	<div class="grid grid-cols-1 gap-2">
-		<!-- <div>
-					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
-				</div> -->
 		<div class="flex flex-col gap-2">
 			<div class="text-center">
 				<p class="text-xl font-bold text-success">Tokens are ready to be sent!</p>
 				<p class="font-bold">Copy the new token and send it to to someone!</p>
 			</div>
+
 			<div class="flex gap-2">
 				<input
 					type="text"
 					class="w-full input input-primary"
 					id="send-token-input"
 					readonly
-					value={sendAsLink ? $page.url.href + '#' + encodedToken : encodedToken}
+					value={sendAsLink ? 'https://wallet.nutstash.app/#' + encodedToken : encodedToken}
 				/>
 				<button class="btn btn-square" on:click={copyToken}>
 					<svg
@@ -248,6 +249,20 @@
 			<span class="label-text">Send as link</span>
 			<input type="checkbox" class="toggle toggle-primary" bind:checked={sendAsLink} />
 		</label>
+		<div class="h-72 w-full flex items-center justify-center">
+			{#if showTokenQr}
+				<TokenQr token={encodedToken} />
+			{:else}
+				<button class="btn btn-primary"
+					on:click={() => {
+						showTokenQr = true;
+					}}
+				>
+					Show QR
+				</button>
+			{/if}
+		</div>
+
 		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
 				<p class="font-bold">Send via Nostr:</p>

@@ -10,18 +10,20 @@
 	import { getKeysetsOfTokens, validateMintKeys } from '../util/walletUtils';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
 	import { updateMintKeys } from '../../actions/walletActions';
+	import ScanToken from '../elements/ScanToken.svelte';
 
-	export let active;
+	export let active: string;
+	export let encodedToken: string = '';
 
 	let mint: Mint | undefined;
 	let mintId: string = '';
-	export let encodedToken: string = '';
 	let isValid = false;
 	let isLoading = false;
 	let amount = 0;
 	let mintToAdd = '';
 	let isLoadingMint = false;
 	let pasteMessage = 'from clipboard';
+	let activeR = 'receive'
 
 	const receive = async () => {
 		if (!isValid) {
@@ -30,7 +32,7 @@
 		}
 
 		try {
-			mint = findMintById($mints, mintId);
+			mint = $mints.find(m=>{return m.mintURL === mintId})
 			if (!mint) {
 				toast(
 					'warning',
@@ -84,18 +86,23 @@
 		}
 	};
 
-	const findMintById = (mints: Array<Mint>, id: string) => {
-		return mints.filter((m) => m.isAdded && m.keysets.includes(id))[0];
-	};
+	$: {
+		encodedToken = encodedToken
+		validateToken()
+	}
 
 	const validateToken = () => {
+		if(!encodedToken){
+			return
+		}
 		amount = 0;
 		try {
 			const { token } = getDecodedToken(encodedToken);
 			const proofs = token[0].proofs;
 			const mint = token[0].mint;
+			mintId = mint
+			console.log(mintId)
 			proofs.forEach((t) => {
-				mintId = t.id;
 				amount += t.amount;
 			});
 			isValid = true;
@@ -169,7 +176,7 @@
 		validateToken();
 	}
 </script>
-
+{#if activeR==="receive"}
 <div class="flex flex-col gap-2">
 	{#if isLoading}
 		<LoadingCenter />
@@ -188,7 +195,8 @@
 					class="w-full input input-primary"
 					id="receive-token-input"
 					bind:value={encodedToken}
-					on:input={validateToken}
+					on:change={validateToken}
+				
 				/>
 			</div>
 
@@ -204,7 +212,7 @@
 					{/if}
 				</div>
 			{/if}
-			<div class="grid grid-cols-5 h-16 text-start">
+			<div class="grid grid-cols-5 h-24 text-start">
 				{#if mintId}
 					<p class="font-bold">Amount:</p>
 					<p class="col-span-4">
@@ -217,10 +225,17 @@
 				{/if}
 			</div>
 		</div>
-
+		
+		<div class="flex items-center justify-center">
+			<button class="btn btn-primary" on:click={()=> {activeR = 'scan-receive'}}>
+				
+				Scan Token
+			</button>
+		</div>
+		
 		<NostrReceiveQr />
 
-		<div class="flex  gap-2">
+		<div class="flex  gap-2 mt-10">
 			<button class="btn" on:click={resetState}>cancel</button>
 			<button class="btn {isValid ? 'btn-success' : 'btn-disabled'}" on:click={receive}>
 				receive</button
@@ -228,3 +243,6 @@
 		</div>
 	{/if}
 </div>
+{:else if activeR==='scan-receive'}	
+<ScanToken bind:activeR bind:scannedToken={encodedToken} ></ScanToken>
+{/if}
