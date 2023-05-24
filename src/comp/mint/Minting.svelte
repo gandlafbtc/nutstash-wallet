@@ -134,33 +134,33 @@
 	};
 </script>
 
-<div>
+<div class="flex justify-center">
 	{#if isLoading}
 		<LoadingCenter />
 	{:else if qrCode}
-		<div class="grid grid-cols-2  gap-2">
-			<a href="lightning:{qrCode}">
-				<div
-					class="col-span-2 lg:col-span-1 w-full flex items-center justify-center ml-20 lg:ml-auto"
-				>
-					<QRCodeImage text={qrCode} scale={3} displayType="canvas" />
-				</div>
-			</a>
+		<div class="flex gap-2">
+			
 			<div
 				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between"
 			>
 				<div class="flex flex-col items-center">
-					<p>Pay this invoice before continuing</p>
-					<div>
+					<p class="font-bold text-lg pb-2">Pay this invoice to mint ecash and top up your wallet.</p>
+					<div class="flex gap-1">
 						<p class="font-bold">Amount:</p>
 						<p>
 							{decode(qrCode).sections[2].value / 1000} satoshi
 						</p>
 					</div>
-					<div class="flex gap-2">
+					<div class="flex gap-1">
+						<p class="font-bold">Custodian:</p>
+						<p class="break-all">
+							{mint.mintURL}
+						</p>
+					</div>
+					<div class="flex gap-2 pt-4">
 						<input
 							type="text"
-							class="w-32 input input-primary"
+							class="w-32 input input-success"
 							id="invoice-input"
 							readonly
 							value={qrCode}
@@ -183,7 +183,18 @@
 						</button>
 					</div>
 				</div>
-
+				<a href="lightning:{qrCode}">
+					<div class="w-full flex items-center justify-center">
+						<div class="flex items-center justify-center flex-col">
+							<div class="text-sm bg-success text-success-content rounded-t-lg p-1 px-2">
+								Invoice - Scan with Lightning wallet
+							</div>
+							<div class="border-success border-2 rounded-md p-2">
+						<QRCodeImage text={qrCode} displayHeight={350} displayWidth={350} margin={1} />
+							</div>
+							</div>
+					</div>
+				</a>
 				<div class="h-8">
 					{#if isPolling}
 						<div class="btn btn-disabled btn-xs loading btn-square" />
@@ -203,7 +214,7 @@
 					type="number"
 					bind:value={mintAmount}
 					placeholder="Type here"
-					class="input w-full input-primary col-span-4"
+					class="input w-full input-success col-span-4"
 				/>
 				<p>satoshi</p>
 			</div>
@@ -216,7 +227,7 @@
 			</div>
 			<div class="modal-action">
 				<button class="btn btn-outline" on:click={resetState}>cancel</button>
-				<button class="btn btn-primary" on:click={() => mintRequest()}>request Mint</button>
+				<button class="btn btn-success" on:click={() => mintRequest()}>request Mint</button>
 			</div>
 		</div>
 	{/if}

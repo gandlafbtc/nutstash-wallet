@@ -58,7 +58,7 @@
 		<div class="btn-square invisible" />
 	</div>
 	<div class="w-full">
-		<div id="ln-qr-reader" class="w-full h-full" style="/qr-styles.css" />
+		<div id="ln-qr-reader" class="w-full h-full qr-reader-box" style="/qr-styles.css" />
 	</div>
 </div>
 

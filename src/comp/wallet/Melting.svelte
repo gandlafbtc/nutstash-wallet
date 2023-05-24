@@ -189,7 +189,7 @@
 				<input
 					id="melt-invoice-input"
 					type="text"
-					class="input input-primary w-full "
+					class="input input-warning w-full "
 					bind:value={invoice}
 					on:input={decodeInvoice}
 				/>

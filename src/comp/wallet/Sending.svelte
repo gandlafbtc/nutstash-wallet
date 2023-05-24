@@ -393,7 +393,7 @@
 			<button
 				class="btn {isCoinSelection && getAmountForTokenSet(selectedTokens) < amountToSend
 					? 'btn-disabled'
-					: 'btn-success'}"
+					: 'btn-primary'}"
 				on:click={send}>send</button
 			>
 		</div>

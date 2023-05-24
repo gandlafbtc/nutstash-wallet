@@ -15,11 +15,14 @@
 	import { goto } from '$app/navigation';
 	import { checkAutomatically, checkNonPending, checkPending } from '../../stores/settings';
 	import { activeTab } from '../../stores/activeTab';
+	import MintButton from '../elements/MintButton.svelte';
+	import Minting from '../mint/Minting.svelte';
 
 	let active = 'base';
 	let scannedlnInvoice = '';
 	let encodedToken = '';
 	let isChecking = false;
+	let selectedMint = $mints[0];
 
 	onMount(async () => {
 		const searchParams = $page.url.searchParams;
@@ -252,6 +255,9 @@
 							</svg>
 						</button>
 					</div>
+					<div>
+						<MintButton bind:active={active} bind:selectedMint />
+					</div>
 				</div>
 			{/if}
 		</div>
@@ -265,4 +271,6 @@
 	<Melting bind:active bind:invoice={scannedlnInvoice} />
 {:else if active === 'scan'}
 	<ScanLn bind:active bind:scannedlnInvoice />
+{:else if active === 'minting'}
+	<Minting bind:active bind:mint={selectedMint} />
 {/if}

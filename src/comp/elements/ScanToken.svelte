@@ -85,7 +85,7 @@
 		<div class="btn-square invisible" />
 	</div>
 	<div class="w-full">
-		<div id="token-qr-reader" class="w-full h-full" style="/qr-styles.css" />
+		<div id="token-qr-reader" class="w-full h-full qr-reader-box" style="/qr-styles.css" />
 	</div>
 	<p>
 		scanning..
