@@ -45,7 +45,9 @@
 		</div>
 	{/if}
 </div>
-{#if activeTab === 'history'}
+<div class="w-full max-h-72">
+
+	{#if activeTab === 'history'}
 	<div class="flex flex-col w-full h-full justify-start">
 		<TokenTable />
 	</div>
@@ -62,3 +64,5 @@
 		</div>
 	{/if}
 {/if}
+
+</div>

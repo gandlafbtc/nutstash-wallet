@@ -76,7 +76,7 @@
 
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
-		<div class="max-h-52 overflow-auto scrollbar-hide">
+		<div class="max-h-72 overflow-auto scrollbar-hide">
 			<table class="table table-auto w-full">
 				<!-- head -->
 				<thead>
@@ -129,7 +129,7 @@
 			<p class="text-xl font-bold">Add a new Mint:</p>
 		</div>
 		{#if $mints.filter((m) => !m.isAdded).length > 0}
-			<div class="max-h-56">
+			<div>
 				<table class="table table-compact table-zebra table-auto w-full">
 					<!-- head -->
 					<thead>
@@ -159,11 +159,15 @@
 					class="input w-full input-primary col-span-4"
 				/>
 			</div>
+			<div>
+				
+			</div>
 			{#if isLoading}
 				<LoadingCenter />
 			{:else}
+
 				<button
-					class="btn btn-primary h-full z-20 flex gap-2 items-center"
+					class="btn {mintURL?'btn-disabled':'btn-primary'} h-full z-20 flex gap-2 items-center"
 					on:click={() => {
 						addMint();
 					}}

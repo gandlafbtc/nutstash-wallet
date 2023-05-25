@@ -9,6 +9,7 @@
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import SelfhostedSetting from './elements/SelfhostedSetting.svelte';
+	import WipeWalletButton from './elements/WipeWalletButton.svelte';
 
 	let isShowDangerzone = false;
 
@@ -172,12 +173,18 @@
 			<p>Dangerzone</p>
 		</div>
 		{#if isShowDangerzone}
-			<div class="col-span-1">
-				<label for="delete-history-button">Delete History</label>
-			</div>
-			<div class="col-span-4">
-				<ResetHistoryButton />
-			</div>
+		<div class="col-span-1">
+			<label for="delete-history-button">Delete History</label>
+		</div>
+		<div class="col-span-4">
+			<ResetHistoryButton />
+		</div>
+		<div class="col-span-1">
+			<label for="delete-history-button" class="font-bold text-error">Wipe wallet</label>
+		</div>
+		<div class="col-span-4">
+			<WipeWalletButton />
+		</div>
 		{/if}
 	</div>
 </div>
