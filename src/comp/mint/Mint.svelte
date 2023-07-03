@@ -142,7 +142,7 @@
 			{:else}
 
 				<button
-					class="btn {mintURL?'btn-disabled':'btn-primary'} h-full z-20 flex gap-2 items-center"
+					class="btn {mintURL?'btn-primary':'btn-disabled'} h-full z-20 flex gap-2 items-center"
 					on:click={() => {
 						addMint();
 					}}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { isOnboarded } from "../../stores/message";
 	import { mints } from "../../stores/mints";
 	import { untrustedMints } from "../../stores/untrustedMints";
 	import MintRowAdd from "../mint/MintRowAdd.svelte";
@@ -17,13 +18,12 @@
 
     const persistMints = () => {
         mints.set($untrustedMints)
+        isOnboarded.set(true)
     }
 </script>
 
 <!-- {#await getMints() then mints} -->
-<div>
 
-</div>
 <div class="card bg-base-100 col-span-2 flex justify-center">
     <div class="card-body flex flex-col gap-4 w-full items-center justify-start p-3">
         <h1 class="text-xl font-bold">
@@ -41,9 +41,7 @@
         </button>
     </div>
 </div>
-<div>
 
-</div>
 <!-- {:catch error}
     {error}
 {/await} -->

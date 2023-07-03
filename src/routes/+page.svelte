@@ -14,6 +14,7 @@
 	import { isSyncMints, isSyncTokens } from '../stores/selfhosted';
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
 	import RecommendedMints from '../comp/onboarding/RecommendedMints.svelte';
+	import { page } from '$app/stores';
 
 	$activeTab = 'wallet';
 
@@ -27,11 +28,9 @@
 	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-2 bg-gradient-to-br from-primary to-secondary overflow-auto"
 	data-theme={$theme}
 >
-	{#if !$isOnboarded}
-	
+	{#if !$isOnboarded && !$page.url.hash && !$page.url.searchParams?.get('mint')}
 	<Onboarding />
-	{:else if !$mints.length}
-		 <RecommendedMints/>
+		 
 	{:else}
 		<div class="hidden lg:flex" />
 		<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">

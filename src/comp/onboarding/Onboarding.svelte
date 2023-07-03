@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { isOnboarded } from '../../stores/message';
+	import RecommendedMints from './RecommendedMints.svelte';
 
 	let page: number = 0;
 
@@ -10,7 +11,7 @@
 </script>
 
 <div />
-{#if page != 0}
+{#if page !== 0 && page !==5}
 	<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2">
 		<div class="h-56 w-56 flex flex-col items-center justify-center gap-3">
 			<img src="/icons/hat.svg" alt="hat" class="{page === 4 ? '' : 'hidden'} w-32" />
@@ -52,14 +53,15 @@
 		{:else if page === 4}
 			<h1 class="text-lg font-bold">Choose your custodian</h1>
 			<p>
-				nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you connect to.
+				nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you connect
+				to.
 			</p>
 			<div class="flex gap-2">
 				<button class="btn btn-outline" on:click={() => page--}> back </button>
 				<button
 					class="btn btn-primary"
 					on:click={() => {
-						isOnboarded.set(true);
+						page++
 					}}
 				>
 					Set up Mints
@@ -85,25 +87,14 @@
 			/>
 		</div>
 	</div>
-    {:else}
-    <div class="flex items-center justify-center w-full col-span-2">
-        
-
-
-
-        <div class="coin">
-            <img src="/icons/coin.gif" alt="loading" class="h-20">
-        </div>
-
-
-  
-  
-    </div>
-    {/if}
-	<div />
-
-
-    <style>
-  
-
-    </style>
+{:else if page!==5}
+	<div class="flex items-center justify-center w-full col-span-2">
+		<div class="coin">
+			<img src="/icons/coin.gif" alt="loading" class="h-20" />
+		</div>
+	</div>
+{/if}
+{#if page===5}
+     <RecommendedMints/>
+{/if}
+<div />

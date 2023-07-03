@@ -17,6 +17,7 @@
 	import { activeTab } from '../../stores/activeTab';
 	import MintButton from '../elements/MintButton.svelte';
 	import Minting from '../mint/Minting.svelte';
+	import { isOnboarded } from '../../stores/message';
 
 	let active = 'base';
 	let scannedlnInvoice = '';
@@ -27,12 +28,14 @@
 	onMount(async () => {
 		const searchParams = $page.url.searchParams;
 		if (searchParams) {
+			isOnboarded.set(true)
 			const mintUrl = searchParams.get('mint');
 			if (mintUrl) {
 				$activeTab = 'mint';
 			}
 		}
 		if ($page.url.hash) {
+			isOnboarded.set(true)
 			active = 'receive';
 			const originalUrl = $page.url.toString();
 			const newUrl = originalUrl.split('#')[0];
