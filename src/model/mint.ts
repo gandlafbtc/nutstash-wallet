@@ -4,7 +4,6 @@ interface Mint {
 	mintURL: string;
 	keys: MintKeys;
 	keysets: Array<string>;
-	isAdded: boolean;
 }
 
 export type { Mint };

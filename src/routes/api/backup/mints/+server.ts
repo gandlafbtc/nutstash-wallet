@@ -26,7 +26,6 @@ export async function POST({ request }) {
 	if (!data || !data.length) {
 		return json({}, { status: 200, statusText: 'no mints to sync' });
 	}
-	data = data.filter((m) => m.isAdded);
 
 	if (!data || !data.length) {
 		return json({}, { status: 200, statusText: 'no added mints to sync' });

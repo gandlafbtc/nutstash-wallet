@@ -160,7 +160,7 @@
 
 				<p class="text-4xl">satoshi</p>
 			</div>
-			{#if $mints.filter((m) => m.isAdded).length === 0}
+			{#if $mints.length === 0}
 				<button class="btn btn-warning btn-disabled"
 					>You have to be connected to a mint to send and receive Tokens.</button
 				>
