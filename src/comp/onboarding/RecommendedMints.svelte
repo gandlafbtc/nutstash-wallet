@@ -25,11 +25,11 @@
 
 </div>
 <div class="card bg-base-100 col-span-2 flex justify-center">
-    <div class="card-body flex flex-col gap-4 w-full items-center justify-start">
+    <div class="card-body flex flex-col gap-4 w-full items-center justify-start p-3">
         <h1 class="text-xl font-bold">
             Add some mints
         </h1>
-        <div class="h-10">
+        <div class="h-10 text-center">
             Remember, the mint you select will have custody over your satoshis.  
         </div>
         {#each someMints as url}

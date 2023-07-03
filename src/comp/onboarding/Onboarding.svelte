@@ -23,7 +23,7 @@
 				⚠️ Nutstash is still in beta development. Please make sure you understand the <a
 					href=""
 					class="link link-primary">risks</a
-				> before using the app. 👉
+				> before using the app.
 			</p>
 			<div class="flex gap-2">
 				<button class="btn btn-outline invisible"> back </button>
@@ -33,7 +33,7 @@
 			<h1 class="text-lg font-bold">Ecash for Privacy</h1>
 			<p>
 				nutstash is a custodial lightning wallet that uses the Cashu ecash protocol to protect your
-				privacy. 👉
+				privacy.
 			</p>
 			<div class="flex gap-2">
 				<button class="btn btn-outline" on:click={() => page--}> back </button>
@@ -43,7 +43,7 @@
 			<h1 class="text-lg font-bold">Transact Anonymously</h1>
 			<p>
 				Ecash works without accounts. Cashu tokens are bearer assets, that are stored locally on
-				your nutstash wallet. 👉
+				your nutstash wallet.
 			</p>
 			<div class="flex gap-2">
 				<button class="btn btn-outline" on:click={() => page--}> back </button>
@@ -52,7 +52,7 @@
 		{:else if page === 4}
 			<h1 class="text-lg font-bold">Choose your custodian</h1>
 			<p>
-				nutstash is <b> not </b> custodian. The custodian of your sats are the mints you connect to.
+				nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you connect to.
 			</p>
 			<div class="flex gap-2">
 				<button class="btn btn-outline" on:click={() => page--}> back </button>
@@ -68,19 +68,19 @@
 		{/if}
 		<div class="w-40 flex mt-10 justify-center gap-3">
 			<button
-				on:click={() => (page = 0)}
+				on:click={() => (page = 1)}
 				class="bg-base-100 {page === 1 ? 'opacity-80' : 'opacity-40'} w-2 h-2 rounded-full"
 			/>
 			<button
-				on:click={() => (page = 1)}
+				on:click={() => (page = 2)}
 				class="bg-base-100 {page === 2 ? 'opacity-80' : 'opacity-40'} w-2 h-2 rounded-full"
 			/>
 			<button
-				on:click={() => (page = 2)}
+				on:click={() => (page = 3)}
 				class="bg-base-100 {page === 3 ? 'opacity-80' : 'opacity-40'} w-2 h-2 rounded-full"
 			/>
 			<button
-				on:click={() => (page = 3)}
+				on:click={() => (page = 4)}
 				class="bg-base-100 {page === 4 ? 'opacity-80' : 'opacity-40'} w-2 h-2 rounded-full"
 			/>
 		</div>
