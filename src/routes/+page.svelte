@@ -28,7 +28,7 @@
 	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-2 bg-gradient-to-br from-primary to-secondary overflow-auto"
 	data-theme={$theme}
 >
-	{#if !$isOnboarded && !$page.url.hash && !$page.url.searchParams?.get('mint')}
+	{#if !$isOnboarded && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint')}
 	<Onboarding />
 		 
 	{:else}
@@ -85,7 +85,7 @@
 								/>
 								<path d="M12 7.875a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" />
 							</svg>
-
+							<p class="hidden lg:flex">Mints	</p>
 						</button>
 						<button
 							on:click={() => changeTab('setting')}

@@ -225,7 +225,7 @@
 					class="w-full input input-primary"
 					id="send-token-input"
 					readonly
-					value={sendAsLink ? 'https://wallet.nutstash.app/#' + encodedToken : encodedToken}
+					value={sendAsLink ? 'https://wallet.nutstash.app/?token=' + encodedToken : encodedToken}
 				/>
 				<button class="btn btn-square" on:click={copyToken}>
 					<svg

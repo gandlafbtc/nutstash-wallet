@@ -33,18 +33,18 @@
 			if (mintUrl) {
 				$activeTab = 'mint';
 			}
-		}
-		if ($page.url.hash) {
-			isOnboarded.set(true)
-			active = 'receive';
-			const originalUrl = $page.url.toString();
-			const newUrl = originalUrl.split('#')[0];
-			encodedToken = $page.url.hash.replace(/^#/, '');
-			await goto(newUrl, {
-				replaceState: true,
-				keepFocus: true,
-				noScroll: true
-			});
+			else if (searchParams.get('token')){
+				isOnboarded.set(true)
+				active = 'receive';
+				const originalUrl = $page.url.toString();
+				const newUrl = originalUrl.split('#')[0];
+				encodedToken = $page.url.hash.replace(/^#/, '');
+				await goto(newUrl, {
+					replaceState: true,
+					keepFocus: true,
+					noScroll: true
+				});
+			}
 		}
 		if ($checkAutomatically && ($checkPending || $checkNonPending)) {
 			checkTokens();
