@@ -81,12 +81,11 @@
 				<thead>
 					<tr>
 						<th class="w-full">Mint</th>
-						<th>Actions</th>
 						<th>
 							<p class="hidden lg:flex">Balance</p>
 							<p class="flex lg:hidden">Amt</p>
 						</th>
-						<th />
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
