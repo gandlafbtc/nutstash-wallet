@@ -4,8 +4,18 @@
 	import RecommendedMints from './RecommendedMints.svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 
 let setUpMint = false
+
+const doSetupMint = async () => {
+	await goto('/', {
+		replaceState: true,
+		keepFocus: true,
+		noScroll: true
+	});
+	setUpMint=true
+}
 </script>
 
 <div />
@@ -56,22 +66,6 @@ let setUpMint = false
 				</div>
 			</div>
 			<div id="2" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
-				<!-- <a class="absolute left-0 z-10" href="#1">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-10 h-10"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
-						/>
-					</svg>
-				</a> -->
 				<img src="/icons/shades.svg" alt="shades" class=" w-32" />
 				<h1 class="text-lg font-bold">Ecash for Privacy</h1>
 				<p>
@@ -168,7 +162,7 @@ let setUpMint = false
 					<button
 						class="btn btn-primary"
 						on:click={() => {
-							setUpMint = true;
+							doSetupMint()
 						}}
 					>
 						Set up Mints
