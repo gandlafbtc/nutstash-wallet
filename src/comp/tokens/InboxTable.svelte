@@ -38,7 +38,6 @@
 						mintURL: mint.mintUrl,
 						keys,
 						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))],
-						isAdded: false
 					};
 				}
 

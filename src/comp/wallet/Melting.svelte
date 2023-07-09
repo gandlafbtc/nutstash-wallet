@@ -241,7 +241,7 @@
 							tabindex="0"
 							class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 						>
-							{#each $mints.filter((m) => m.isAdded) as m}
+							{#each $mints as m}
 								<!-- svelte-ignore a11y-missing-attribute -->
 								<!-- svelte-ignore a11y-click-events-have-key-events -->
 								<li

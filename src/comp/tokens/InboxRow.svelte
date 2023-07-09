@@ -64,7 +64,6 @@
 				mintURL: mint.mintUrl,
 				keys,
 				keysets: keysets.keysets,
-				isAdded: true
 			};
 
 			mints.update((state) => [storeMint, ...state]);
@@ -89,15 +88,7 @@
 				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
 				return;
 			}
-			if (!mint.isAdded) {
-				toast(
-					'warning',
-					'This token is from a mint you have not added yet.',
-					'Token could not be added'
-				);
-				return;
-			}
-
+			
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 			const encodedProofs = getEncodedToken(nostrMessage.token);

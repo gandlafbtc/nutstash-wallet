@@ -3,18 +3,18 @@ import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 
 const initialValueSting: string = browser
-	? window.localStorage.getItem('message') ??
-	  'Before using nutstash, please make sure you understand the risks.'
-	: '';
+	? window.localStorage.getItem('isOnBoarded') ??
+	  'false'
+	: 'false';
 
-const initialValue: string = initialValueSting;
+const initialValue: boolean = JSON.parse(initialValueSting);
 
-const message = writable<string>(initialValue);
+const isOnboarded = writable<boolean>(initialValue);
 
-message.subscribe((value) => {
+isOnboarded.subscribe((value) => {
 	if (browser) {
-		window.localStorage.setItem('message', value);
+		window.localStorage.setItem('isOnBoarded', JSON.stringify(value));
 	}
 });
 
-export { message };
+export { isOnboarded };

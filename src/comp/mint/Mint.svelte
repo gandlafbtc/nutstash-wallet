@@ -56,7 +56,6 @@
 				mintURL: mint.mintUrl,
 				keys,
 				keysets: keysets.keysets,
-				isAdded: true
 			};
 
 			mints.update((state) => [...state, storeMint]);
@@ -82,12 +81,11 @@
 				<thead>
 					<tr>
 						<th class="w-full">Mint</th>
-						<th>Actions</th>
 						<th>
 							<p class="hidden lg:flex">Balance</p>
 							<p class="flex lg:hidden">Amt</p>
 						</th>
-						<th />
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -97,14 +95,12 @@
 						</tr>
 					{/if}
 					{#each $mints as mint, mintIndex}
-						{#if mint.isAdded}
 							<MintRow {mint} {mintIndex} bind:activeMint bind:active />
-						{/if}
 					{/each}
 				</tbody>
 			</table>
 		</div>
-		{#if $mints.filter((m) => m.isAdded).length > 1}
+		{#if $mints.length > 1}
 			<div class="flex w-full items-center justify-center">
 				<button class="btn btn-lg btn-info flex gap-2" on:click={() => (active = 'swap')}>
 					<p>Inter-mint Swap</p>
@@ -125,29 +121,7 @@
 				</button>
 			</div>
 		{/if}
-		<div class="pt-5">
-			<p class="text-xl font-bold">Add a new Mint:</p>
-		</div>
-		{#if $mints.filter((m) => !m.isAdded).length > 0}
-			<div>
-				<table class="table table-compact table-zebra table-auto w-full">
-					<!-- head -->
-					<thead>
-						<tr>
-							<th>Mint</th>
-							<th class="max-w-min" />
-						</tr>
-					</thead>
-					<tbody>
-						{#each $mints as mint, mintIndex}
-							{#if !mint.isAdded}
-								<MintRowAdd {mint} {mintIndex} />
-							{/if}
-						{/each}
-					</tbody>
-				</table>
-			</div>
-		{/if}
+
 
 		<div class="grid grid-cols-5 gap-2">
 			<div class="col-span-5 grid grid-cols-5 items-center">
@@ -167,7 +141,7 @@
 			{:else}
 
 				<button
-					class="btn {mintURL?'btn-disabled':'btn-primary'} h-full z-20 flex gap-2 items-center"
+					class="btn {mintURL?'btn-primary':'btn-disabled'} h-full z-20 flex gap-2 items-center"
 					on:click={() => {
 						addMint();
 					}}

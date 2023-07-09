@@ -129,14 +129,13 @@
 		try {
 			const mintIndex = $mints.findIndex((m) => m.mintURL === mint.mintUrl);
 			if (mintIndex > -1) {
-				if ($mints[mintIndex].isAdded) {
+				if ($mints[mintIndex]) {
 					toast('warning', 'this mint has already been added.', "Didn't add mint!");
 					return;
 				}
 
 				const allMints = $mints;
 				const [newMint] = allMints.splice(mintIndex, 1);
-				newMint.isAdded = true;
 				mints.set([newMint, ...allMints]);
 				mintToAdd = '';
 				return;
@@ -154,7 +153,6 @@
 				mintURL: mint.mintUrl,
 				keys,
 				keysets: keysets.keysets,
-				isAdded: true
 			};
 
 			mints.update((state) => [storeMint, ...state]);

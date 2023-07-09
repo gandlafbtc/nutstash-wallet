@@ -17,6 +17,7 @@
 	import { activeTab } from '../../stores/activeTab';
 	import MintButton from '../elements/MintButton.svelte';
 	import Minting from '../mint/Minting.svelte';
+	import { isOnboarded } from '../../stores/message';
 
 	let active = 'base';
 	let scannedlnInvoice = '';
@@ -27,21 +28,23 @@
 	onMount(async () => {
 		const searchParams = $page.url.searchParams;
 		if (searchParams) {
+			isOnboarded.set(true)
 			const mintUrl = searchParams.get('mint');
 			if (mintUrl) {
 				$activeTab = 'mint';
 			}
-		}
-		if ($page.url.hash) {
-			active = 'receive';
-			const originalUrl = $page.url.toString();
-			const newUrl = originalUrl.split('#')[0];
-			encodedToken = $page.url.hash.replace(/^#/, '');
-			await goto(newUrl, {
-				replaceState: true,
-				keepFocus: true,
-				noScroll: true
-			});
+			else if (searchParams.get('token')){
+				isOnboarded.set(true)
+				active = 'receive';
+				const originalUrl = $page.url.toString();
+				const newUrl = originalUrl.split('#')[0];
+				encodedToken = $page.url.hash.replace(/^#/, '');
+				await goto(newUrl, {
+					replaceState: true,
+					keepFocus: true,
+					noScroll: true
+				});
+			}
 		}
 		if ($checkAutomatically && ($checkPending || $checkNonPending)) {
 			checkTokens();
@@ -160,7 +163,7 @@
 
 				<p class="text-4xl">satoshi</p>
 			</div>
-			{#if $mints.filter((m) => m.isAdded).length === 0}
+			{#if $mints.length === 0}
 				<button class="btn btn-warning btn-disabled"
 					>You have to be connected to a mint to send and receive Tokens.</button
 				>
