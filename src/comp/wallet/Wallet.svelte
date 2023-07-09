@@ -7,7 +7,7 @@
 	import Tokens from '../tokens/Tokens.svelte';
 	import Melting from './Melting.svelte';
 	import { onMount } from 'svelte';
-	import { getTokensForMint } from '../util/walletUtils';
+	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { pendingTokens } from '../../stores/pendingtokens';
@@ -28,13 +28,12 @@
 	onMount(async () => {
 		const searchParams = $page.url.searchParams;
 		if (searchParams) {
-			isOnboarded.set(true)
+			isOnboarded.set(true);
 			const mintUrl = searchParams.get('mint');
 			if (mintUrl) {
 				$activeTab = 'mint';
-			}
-			else if (searchParams.get('token')){
-				isOnboarded.set(true)
+			} else if (searchParams.get('token')) {
+				isOnboarded.set(true);
 				active = 'receive';
 				const originalUrl = $page.url.toString();
 				const newUrl = originalUrl.split('#')[0];
@@ -134,9 +133,9 @@
 						return count + t.amount;
 					}, 0) ?? 0}
 				</p>
-				<div class="flex gap-2">
+				<div class="flex gap-2 items-center justify-center">
 					{#if !$checkAutomatically && ($checkNonPending || $checkPending)}
-						<button class="btn btn-sm btn-warning btn-circle" on:click={checkTokens}>
+						<button class="btn btn-sm btn-secondary btn-circle" on:click={checkTokens}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
@@ -153,45 +152,41 @@
 							</svg>
 						</button>
 					{/if}
-					<p class="text-md">
-						(pending
-						{$pendingTokens.reduce((count, t) => {
-							return count + t.amount;
-						}, 0) ?? 0})
-					</p>
+					<p class="text-4xl">sats</p>
 				</div>
-
-				<p class="text-4xl">satoshi</p>
+				<p class="text-md">
+					(pending
+					{$pendingTokens.reduce((count, t) => {
+						return count + t.amount;
+					}, 0) ?? 0})
+				</p>
 			</div>
-			{#if $mints.length === 0}
-				<button class="btn btn-warning btn-disabled"
-					>You have to be connected to a mint to send and receive Tokens.</button
-				>
-			{:else}
+
+			<div class="flex flex-col gap-4">
 				<div class="flex flex-col gap-4">
-					<div class="flex gap-2">
-						<button
-							class="btn btn-primary btn-outline flex gap-1 items-center"
-							on:click={() => {
-								active = 'receive';
-							}}
+					<button
+						class="btn btn-secondary flex gap-1 items-center"
+						on:click={() => {
+							active = 'receive';
+						}}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
 						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-								/>
-							</svg>
-							<p>receive</p>
-						</button>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+							/>
+						</svg>
+						<p>receive</p>
+					</button>
+					{#if getAmountForTokenSet($token)}
 						<button
 							class="btn btn-primary flex gap-1 items-center"
 							on:click={() => {
@@ -214,55 +209,9 @@
 							</svg>
 							<p>send</p>
 						</button>
-					</div>
-					<div class="flex gap-1 w-full">
-						<button
-							class="btn btn-warning flex-grow font-bold text-xl flex gap-1"
-							on:click={() => (active = 'melt')}
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-								/>
-							</svg>
-							pay</button
-						>
-						<button class=" btn  btn-square btn-warning" on:click={scanPay}>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-								/>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
-								/>
-							</svg>
-						</button>
-					</div>
-					<div>
-						<MintButton bind:active={active} bind:selectedMint />
-					</div>
+					{/if}
 				</div>
-			{/if}
+			</div>
 		</div>
 		<Tokens />
 	</div>

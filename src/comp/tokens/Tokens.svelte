@@ -1,32 +1,46 @@
 <script lang="ts">
+	import { history } from '../../stores/history';
 	import { useNostr, nostrMessages } from '../../stores/nostr';
+	import { pendingTokens } from '../../stores/pendingtokens';
+	import { token } from '../../stores/tokens';
+	import FirstTimeWarning from '../elements/FirstTimeWarning.svelte';
 	import AvailableTokensTable from './AvailableTokensTable.svelte';
 	import InboxTable from './InboxTable.svelte';
 
 	import TokenTable from './TokenTable.svelte';
 
-	let activeTab = 'history';
+	let activeTab = $history.length?'history':'tokens';
 
 	const changeTab = (tabName: string) => {
 		activeTab = tabName;
 	};
 </script>
+{#if !$token.length && !$history.length && !$pendingTokens.length}
+	 <FirstTimeWarning></FirstTimeWarning>
+	 {:else}
+
 
 <div class="tabs">
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
+{#if $history.length }
+
 	<div
-		class="tab tab-bordered {activeTab === 'history' ? 'tab-active' : ''}"
-		on:click={() => changeTab('history')}
+	class="tab tab-bordered {activeTab === 'history' ? 'tab-active' : ''}"
+	on:click={() => changeTab('history')}
 	>
-		History
-	</div>
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	History
+</div>
+{/if}
+
+{#if $token.length || $pendingTokens.length}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
 		class="tab tab-bordered {activeTab === 'tokens' ? 'tab-active' : ''}"
 		on:click={() => changeTab('tokens')}
 	>
 		Tokens
 	</div>
+	{/if}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	{#if $useNostr}
 		<div
@@ -47,7 +61,7 @@
 </div>
 <div class="w-full max-h-72">
 
-	{#if activeTab === 'history'}
+{#if activeTab === 'history'}
 	<div class="flex flex-col w-full h-full justify-start">
 		<TokenTable />
 	</div>
@@ -64,5 +78,5 @@
 		</div>
 	{/if}
 {/if}
-
 </div>
+{/if}

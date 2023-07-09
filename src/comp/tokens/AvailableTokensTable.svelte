@@ -4,13 +4,14 @@
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import TokenRow from './TokenRow.svelte';
 	import type { Proof } from '@cashu/cashu-ts';
+	import { onMount } from 'svelte';
 	export let mint: Mint | undefined = undefined;
 	export let selectedTokens: Proof[] = [];
 
 	$: selectedTokensBool = [];
 
 	$: isPending = mint ? false : true;
-
+	
 	$: page = 20;
 	$: tokenSelection = isPending ? $pendingTokens : $token;
 	$: tokenFromMint = mint
@@ -22,6 +23,10 @@
 	const loadMore = () => {
 		page += 20;
 	};
+
+	onMount(()=> {
+		isPending = isPending && !$pendingTokens.length?false:true 
+	})
 </script>
 
 <div class="overflow-x-scroll overflow-y-scroll  scrollbar-hide">
