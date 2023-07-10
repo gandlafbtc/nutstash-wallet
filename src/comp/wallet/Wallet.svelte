@@ -37,8 +37,8 @@
 				isOnboarded.set(true);
 				active = 'receive';
 				const originalUrl = $page.url.toString();
-				const newUrl = originalUrl.split('#')[0];
-				encodedToken = $page.url.hash.replace(/^#/, '');
+				const newUrl = originalUrl.split('?')[0];
+				encodedToken = searchParams.get('token')??''
 				await goto(newUrl, {
 					replaceState: true,
 					keepFocus: true,
