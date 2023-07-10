@@ -14,10 +14,13 @@
 	import { onMount } from 'svelte';
 	import type { Proof } from '@cashu/cashu-ts';
 	import { updateMintKeys } from '../../actions/walletActions';
+	import { mints } from '../../stores/mints';
+	import MintSelector from '../elements/MintSelector.svelte';
 
-	export let mint: Mint;
+	export let mint: Mint = $mints[0];
 	export let active;
-	let mintAmount = 10;
+	export let isMinting: boolean
+	let mintAmount = '0';
 	let qrCode: string | undefined;
 	let mintingHash: string | undefined;
 	let wallet: CashuWallet | undefined;
@@ -25,6 +28,15 @@
 	let isPolling: boolean = false;
 	let isComplete: boolean = false;
 
+	$: {
+		mintAmount = mintAmount
+		if (mintAmount && mintAmount!=='0') {
+			isMinting=true
+		}
+		else {
+			isMinting=false
+		}
+	}
 	// todo clean up the states
 
 	const copyInvoice = () => {
@@ -132,6 +144,11 @@
 		isComplete = false;
 		active = 'base';
 	};
+	onMount(()=>{
+		if (browser) {
+			document.getElementById('mint-req-amt')?.focus()
+		}
+	})
 </script>
 
 <div class="flex justify-center">
@@ -208,26 +225,26 @@
 		</div>
 	{:else}
 		<div class="flex flex-col gap-2">
-			<h3 class="font-bold text-lg">Request minting of new tokens:</h3>
-			<div class="flex gap-2 items-center">
-				<input
-					type="number"
-					bind:value={mintAmount}
-					placeholder="Type here"
-					class="input w-full input-success col-span-4"
-				/>
-				<p>satoshi</p>
+			<div class="flex flex-col gap-2 items-center">
+				<p contenteditable="true"
+					id="mint-req-amt"
+					bind:textContent={mintAmount}
+					class="text-7xl focus:outline-none {mintAmount?'':'w-10 bg-base-200 rounded-lg'}"
+				></p>
+				<p class="font-bold text-2xl">receive sats</p>
+				<p class="">Create a Lightning invoice to top up this wallet.</p>
 			</div>
 
-			<div class="flex gap-2">
-				<p class="font-bold">Mint:</p>
-				<p class="break-all">
-					{mint.mintURL}
+			<div class="flex gap-2 lg:gap-0 flex-col lg:flex-row join">
+				<MintSelector bind:mint></MintSelector>
+				<button class="btn btn-warning flex gap-1 join-item" on:click={() => mintRequest()}> 
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+					  </svg>
+					<p>
+					Top up wallet
 				</p>
-			</div>
-			<div class="modal-action">
-				<button class="btn btn-outline" on:click={resetState}>cancel</button>
-				<button class="btn btn-success" on:click={() => mintRequest()}>request Mint</button>
+				</button>
 			</div>
 		</div>
 	{/if}

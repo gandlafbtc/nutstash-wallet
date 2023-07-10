@@ -63,7 +63,7 @@
 	});
 </script>
 
-<div class="flex flex-col items-center h-full w-full gap-2">
+<div class="flex flex-col items-center w-full gap-2">
 	<div class="flex justify-between w-full items-center gap-1">
 		<button class="btn-square btn" on:click={() => (activeR = 'receive')}>
 			<svg

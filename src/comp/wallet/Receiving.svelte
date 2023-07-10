@@ -14,6 +14,7 @@
 
 	export let active: string;
 	export let encodedToken: string = '';
+	export let isToken: boolean
 
 	let mint: Mint | undefined;
 	let mintId: string = '';
@@ -93,8 +94,10 @@
 
 	const validateToken = () => {
 		if(!encodedToken){
+			isToken=false
 			return
 		}
+		isToken=true
 		amount = 0;
 		try {
 			const { token } = getDecodedToken(encodedToken);
@@ -180,24 +183,13 @@
 		<LoadingCenter />
 	{:else}
 		<div class="flex flex-col gap-2 text-center">
-			<p class="text-xl font-bold">Receive Tokens</p>
-			<p>Paste a Cashu Token.</p>
+			
+			<h2 class="font-bold text-2xl">Redeem Token</h2>
 
-			<div class="flex gap-2 items-center">
-				<label for="receive-token-input">
-					<p class="font-bold">Token:</p>
-				</label>
-
-				<input
-					type="text"
-					class="w-full input input-primary"
-					id="receive-token-input"
-					bind:value={encodedToken}
-					on:change={validateToken}
-				
-				/>
-			</div>
-
+			<textarea
+			id="receive-token-input"
+			bind:value={encodedToken}
+			on:change={validateToken} class="textarea textarea-primary h-40" placeholder="Paste a cashu token. It should look like this: cashuAey...13a35efc"></textarea>
 			{#if mintToAdd}
 				<div>
 					{mintToAdd}
@@ -225,16 +217,17 @@
 		</div>
 		
 		<div class="flex items-center justify-center">
-			<button class="btn btn-primary" on:click={()=> {activeR = 'scan-receive'}}>
+			<button class="btn btn-primary" on:click={()=> {
+				activeR = 'scan-receive'
+				isToken = true
+				}}>
 				
 				Scan Token
 			</button>
 		</div>
 		
-		<NostrReceiveQr />
 
 		<div class="flex  gap-2 mt-10">
-			<button class="btn" on:click={resetState}>cancel</button>
 			<button class="btn {isValid ? 'btn-success' : 'btn-disabled'}" on:click={receive}>
 				receive</button
 			>

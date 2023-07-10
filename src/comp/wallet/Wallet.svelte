@@ -18,6 +18,7 @@
 	import MintButton from '../elements/MintButton.svelte';
 	import Minting from '../mint/Minting.svelte';
 	import { isOnboarded } from '../../stores/message';
+	import Receive from './Receive.svelte';
 
 	let active = 'base';
 	let scannedlnInvoice = '';
@@ -125,7 +126,7 @@
 </script>
 
 {#if active === 'base'}
-	<div class="flex flex-col w-full h-full items-center justify-center gap-5">
+	<div class="flex flex-col w-full h-full items-center justify-start gap-5">
 		<div class="flex items-center justify-center flex-col gap-5 w-full">
 			<div class="flex flex-col justify-center items-center">
 				<p class="text-8xl">
@@ -163,7 +164,7 @@
 			</div>
 
 			<div class="flex flex-col gap-4">
-				<div class="flex flex-col gap-4">
+				<div class="flex flex-col gap-2">
 					<button
 						class="btn btn-secondary flex gap-1 items-center"
 						on:click={() => {
@@ -216,7 +217,7 @@
 		<Tokens />
 	</div>
 {:else if active === 'receive'}
-	<Receiving bind:active {encodedToken} />
+	<Receive bind:active {encodedToken} />
 {:else if active === 'send'}
 	<Sending bind:active />
 {:else if active === 'melt'}
