@@ -3,6 +3,14 @@
 	import { mints } from '../../stores/mints';
 
 	export let mint: Mint;
+    const formatMintText = (url: string) => {
+        if (url.length<=20) {
+            return url
+        }
+        const first10 = url.substring(0,10)
+        const last10 = url.substring(url.length-10,url.length)
+return `${first10}...${last10}`
+    }
 </script>
 
 <button class="dropdown dropdown-bottom join-item">
@@ -26,7 +34,8 @@
 				</svg>
 			</div>
 			<p class="truncate max-w-xs text-xs">
-				{mint.mintURL}
+
+				{formatMintText(mint.mintURL)}
 			</p>
 		</div>
 	</label>

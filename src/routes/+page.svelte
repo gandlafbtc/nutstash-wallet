@@ -25,7 +25,7 @@
 
 
 <div
-	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-2 bg-gradient-to-br from-primary to-secondary overflow-auto"
+	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-1 bg-gradient-to-br from-primary to-secondary overflow-auto"
 	data-theme={$theme}
 >
 	{#if !$isOnboarded && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint')}
@@ -33,7 +33,7 @@
 		 
 	{:else}
 		<div class="hidden lg:flex" />
-		<div class="col-span-2 mx-2 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
+		<div class="col-span-2 mx-0.5 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
 			<div class="dropdown">
 				<div class="bg-opacity-100 h-full">
 					<div class="tabs w-full flex-grow-0">

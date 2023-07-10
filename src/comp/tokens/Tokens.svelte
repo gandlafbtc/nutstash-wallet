@@ -59,7 +59,7 @@
 		</div>
 	{/if}
 </div>
-<div class="w-full max-h-72">
+<div class="w-full max-h-64">
 
 {#if activeTab === 'history'}
 	<div class="flex flex-col w-full h-full justify-start">

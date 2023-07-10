@@ -19,7 +19,8 @@
 
 	export let mint: Mint = $mints[0];
 	export let active;
-	export let isMinting: boolean
+	export let isMinting: boolean;
+	export let doMint = false;
 	let mintAmount = '0';
 	let qrCode: string | undefined;
 	let mintingHash: string | undefined;
@@ -29,14 +30,19 @@
 	let isComplete: boolean = false;
 
 	$: {
-		mintAmount = mintAmount
-		if (mintAmount && mintAmount!=='0') {
-			isMinting=true
-		}
-		else {
-			isMinting=false
+		mintAmount;
+		if (mintAmount && mintAmount != '0') {
+			isMinting = true;
+		} else {
+			isMinting = false;
 		}
 	}
+
+	$: {
+		mint;
+		checkForMintInProgress();
+	}
+
 	// todo clean up the states
 
 	const copyInvoice = () => {
@@ -50,23 +56,40 @@
 	};
 
 	onMount(() => {
+		if (browser) {
+			document.getElementById('mint-req-amt')?.focus();
+		}
+		checkForMintInProgress();
+	});
+
+	const checkForMintInProgress = () => {
 		if ($mintRequests.map((mR) => mR.mintUrl).includes(mint.mintURL)) {
 			const mintReq = $mintRequests.find((mR) => mR.mintUrl === mint.mintURL);
 			mintingHash = mintReq?.paymentHash;
 			qrCode = mintReq?.invoice;
+			if (qrCode) {
+				mintAmount = decode(qrCode).sections[2].value / 1000;
+			}
 			const cashuMint = new CashuMint(mint.mintURL);
 			wallet = new CashuWallet(cashuMint, mint.keys);
-			mintTokens();
+		} else {
+			qrCode = undefined;
+			mintAmount = '0';
 		}
-	});
+	};
 
 	const mintRequest = async () => {
 		try {
+			let amount = parseInt(mintAmount);
+			if (isNaN(amount) || amount <= 0) {
+				toast('warning', 'amount must be a number greater than 0', 'Could not create invoice');
+				return;
+			}
 			isComplete = false;
 			isLoading = true;
 			const cashuMint = new CashuMint(mint.mintURL);
 			wallet = new CashuWallet(cashuMint, mint.keys);
-			const { pr, hash } = await wallet.requestMint(mintAmount);
+			const { pr, hash } = await wallet.requestMint(amount);
 			mintingHash = hash;
 			qrCode = pr;
 			mintRequests.update((state) => [
@@ -79,6 +102,7 @@
 				...state
 			]);
 			await mintTokens();
+			doMint = true;
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -122,50 +146,46 @@
 		} finally {
 			isPolling = false;
 			if (!isComplete) {
-				if (wallet) {
+				if (doMint) {
 					setTimeout(mintTokens, 5000);
 				}
 			} else {
 				abortMint();
+				resetState();
 			}
 		}
 	};
 
 	const abortMint = () => {
 		mintRequests.update((state) => state.filter((mR) => !(mR.mintUrl === mint.mintURL)));
-		resetState();
 	};
 
 	const resetState = () => {
-		mintAmount = 10;
+		mintAmount = '0';
 		qrCode = undefined;
 		mintingHash = undefined;
 		wallet = undefined;
 		isComplete = false;
-		active = 'base';
+		doMint = false;
 	};
-	onMount(()=>{
-		if (browser) {
-			document.getElementById('mint-req-amt')?.focus()
-		}
-	})
 </script>
 
 <div class="flex justify-center">
 	{#if isLoading}
 		<LoadingCenter />
-	{:else if qrCode}
+	{:else if doMint}
 		<div class="flex gap-2">
-			
 			<div
 				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between"
 			>
 				<div class="flex flex-col items-center">
-					<p class="font-bold text-lg pb-2">Pay this invoice to mint ecash and top up your wallet.</p>
+					<p class="font-bold text-lg pb-2">
+						Pay this invoice to mint ecash and top up your wallet.
+					</p>
 					<div class="flex gap-1">
 						<p class="font-bold">Amount:</p>
 						<p>
-							{decode(qrCode).sections[2].value / 1000} satoshi
+							{mintAmount} satoshi
 						</p>
 					</div>
 					<div class="flex gap-1">
@@ -207,9 +227,9 @@
 								Invoice - Scan with Lightning wallet
 							</div>
 							<div class="border-success border-2 rounded-md p-2">
-						<QRCodeImage text={qrCode} displayHeight={350} displayWidth={350} margin={1} />
+								<QRCodeImage text={qrCode} displayHeight={350} displayWidth={350} margin={1} />
 							</div>
-							</div>
+						</div>
 					</div>
 				</a>
 				<div class="h-8">
@@ -219,32 +239,103 @@
 				</div>
 				<div class="flex gap-2">
 					<button class="btn btn-outline" on:click={resetState}>cancel</button>
-					<button class="btn btn-outline btn-error" on:click={abortMint}>Abort</button>
+					<button
+						class="btn btn-outline btn-error"
+						on:click={() => {
+							abortMint();
+							resetState();
+						}}>Abort</button
+					>
 				</div>
 			</div>
 		</div>
 	{:else}
 		<div class="flex flex-col gap-2">
 			<div class="flex flex-col gap-2 items-center">
-				<p contenteditable="true"
-					id="mint-req-amt"
-					bind:textContent={mintAmount}
-					class="text-7xl focus:outline-none {mintAmount?'':'w-10 bg-base-200 rounded-lg'}"
-				></p>
+				{#if qrCode}
+					<p
+						id="mint-req-amt"
+						class="text-7xl focus:outline-none {mintAmount ? '' : 'w-10 bg-base-200 rounded-lg'}"
+					>
+						{mintAmount}
+					</p>
+				{:else}
+					<p
+						contenteditable="true"
+						id="mint-req-amt"
+						bind:textContent={mintAmount}
+						class="text-7xl focus:outline-none {mintAmount ? '' : 'w-10 bg-base-200 rounded-lg'}"
+					/>
+				{/if}
 				<p class="font-bold text-2xl">receive sats</p>
+				{#if qrCode}
+					<div class="flex flex-col lg:flex-row gap-1 items-center">
+						<p class="text-warning">Invoice is pending.</p>
+						<button
+							class="btn btn-xs btn-warning"
+							on:click={() => {
+								abortMint();
+								checkForMintInProgress();
+							}}
+							>abort
+						</button>
+						<p class="text-warning">to create a new invoice.</p>
+					</div>
+				{/if}
 				<p class="">Create a Lightning invoice to top up this wallet.</p>
 			</div>
 
-			<div class="flex gap-2 lg:gap-0 flex-col lg:flex-row join">
-				<MintSelector bind:mint></MintSelector>
-				<button class="btn btn-warning flex gap-1 join-item" on:click={() => mintRequest()}> 
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-					  </svg>
-					<p>
-					Top up wallet
-				</p>
-				</button>
+			<div class="flex join justify-center">
+				<MintSelector bind:mint />
+				{#if qrCode}
+					<button
+						class="btn btn-warning flex gap-1 join-item"
+						on:click={() => {
+							doMint = true;
+							mintTokens();
+						}}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+							/>
+						</svg>
+						<p class="hidden lg:block">Top up wallet</p>
+					</button>
+				{:else}
+					<button
+						class="btn btn-warning flex gap-1 join-item"
+						on:click={() => {
+							mintRequest();
+						}}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+							/>
+						</svg>
+						<p class="hidden lg:block">Top up wallet</p>
+					</button>
+					<!-- else content here -->
+				{/if}
 			</div>
 		</div>
 	{/if}

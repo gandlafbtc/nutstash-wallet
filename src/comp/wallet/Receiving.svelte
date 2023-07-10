@@ -15,6 +15,7 @@
 	export let active: string;
 	export let encodedToken: string = '';
 	export let isToken: boolean
+	export let activeR = 'receive'
 
 	let mint: Mint | undefined;
 	let mintId: string = '';
@@ -24,7 +25,6 @@
 	let mintToAdd = '';
 	let isLoadingMint = false;
 	let pasteMessage = 'from clipboard';
-	let activeR = 'receive'
 
 	const receive = async () => {
 		if (!isValid) {
@@ -183,7 +183,21 @@
 		<LoadingCenter />
 	{:else}
 		<div class="flex flex-col gap-2 text-center">
-			
+			{#if mintId}
+			<div class="flex flex-col justify-center items-center">
+				<p class="text-8xl">
+					{amount === 0 ? '' : amount}
+				</p>
+
+				<div class="flex gap-2 items-baseline">
+
+					<p class="">From</p>
+					<p class="col-span-4 font-bold text-xs">
+						{mintId ? mintId : ''}
+					</p>
+				</div>
+			</div>
+			{/if}
 			<h2 class="font-bold text-2xl">Redeem Token</h2>
 
 			<div class="inline-block relative w-full">
@@ -191,7 +205,7 @@
 			<textarea
 			id="receive-token-input"
 			bind:value={encodedToken}
-			on:change={validateToken} class="textarea textarea-primary w-full h-40" placeholder="Paste a cashu token. It should look like this: cashuAey...13a35efc"></textarea>
+			on:change={validateToken} class="textarea textarea-primary w-full h-40" placeholder="Paste a cashu token. It should look like this: cashuAeyJ0b2tlbiI6W3sicHJvb2ZzIjpbeyJpZCI6IjBOSTNUVUFz..."></textarea>
 			<div class="absolute z-10 bottom-4 right-4">
 				<button class="" on:click={()=> {
 					activeR = 'scan-receive'
@@ -202,7 +216,6 @@
 						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
 						<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
 					  </svg>
-					  
 				</button>
 			</div>
 		</div>
@@ -215,23 +228,13 @@
 					{#if isLoadingMint}
 						<button class="btn btn-disabled btn-square loading" />
 					{:else}
-						<button class="btn btn-success" on:click={trustMint}> trust this Mint </button>
+						<button class="btn btn-primary" on:click={trustMint}> trust this Mint </button>
 					{/if}
 				</div>
 			{/if}
 			<div class="grid grid-cols-5 h-24 text-start">
-				{#if mintId}
-					<p class="font-bold">Amount:</p>
-					<p class="col-span-4">
-						{amount === 0 ? '' : amount + ' sats'}
-					</p>
-					<p class="font-bold">From Mint:</p>
-					<p class="col-span-4">
-						{mintId ? mintId : ''}
-					</p>
-				{/if}
 				<div class="flex  gap-2 mt-10">
-					<button class="btn {isValid ? 'btn-success' : 'btn-disabled'}" on:click={receive}>
+					<button class="btn {isValid ? 'btn-primary' : 'btn-disabled'}" on:click={receive}>
 						receive</button
 					>
 				</div>
