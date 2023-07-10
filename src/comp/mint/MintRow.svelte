@@ -91,7 +91,7 @@
 	<td class="overflow-clip xl:max-w-xs max-w-0">
 		<div class="flex gap-1 items-center">
 			{#if mintIndex === 0}
-			<div class="w-4 h-4">
+			<div class="w-4 h-4 flex items-center">
 				<button class="cursor-pointer rounded-full bg-success w-4 h-4 p-0.5">
 					<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +106,7 @@
 				</button>
 			</div>
 			{:else}
-			<div class="w-4 h-4">
+			<div class="w-4 h-4 flex items-center">
 				<button
 					class="cursor-pointer rounded-full border border-white w-4 h-4 p-0.5"
 					on:click={makeDefaultMint}
