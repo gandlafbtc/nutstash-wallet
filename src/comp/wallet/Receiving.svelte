@@ -205,14 +205,14 @@
 			<textarea
 			id="receive-token-input"
 			bind:value={encodedToken}
-			on:change={validateToken} class="textarea textarea-primary w-full h-40" placeholder="Paste a cashu token. It should look like this: cashuAeyJ0b2tlbiI6W3sicHJvb2ZzIjpbeyJpZCI6IjBOSTNUVUFz..."></textarea>
+			on:change={validateToken} class="textarea textarea-secondary w-full h-40" placeholder="Paste a cashu token. It should look like this: cashuAeyJ0b2tlbiI6W3sicHJvb2ZzIjpbeyJpZCI6IjBOSTNUVUFz..."></textarea>
 			<div class="absolute z-10 bottom-4 right-4">
 				<button class="" on:click={()=> {
 					activeR = 'scan-receive'
 					isToken = true
 					}}>
 					
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-secondary w-6 h-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
 						<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
 					  </svg>
@@ -228,13 +228,13 @@
 					{#if isLoadingMint}
 						<button class="btn btn-disabled btn-square loading" />
 					{:else}
-						<button class="btn btn-primary" on:click={trustMint}> trust this Mint </button>
+						<button class="btn btn-secondary" on:click={trustMint}> trust this Mint </button>
 					{/if}
 				</div>
 			{/if}
 			<div class="grid grid-cols-5 h-24 text-start">
 				<div class="flex  gap-2 mt-10">
-					<button class="btn {isValid ? 'btn-primary' : 'btn-disabled'}" on:click={receive}>
+					<button class="btn {isValid ? 'btn-secondary' : 'btn-disabled'}" on:click={receive}>
 						receive</button
 					>
 				</div>

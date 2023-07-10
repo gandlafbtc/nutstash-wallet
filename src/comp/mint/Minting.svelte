@@ -39,8 +39,8 @@
 	}
 
 	$: {
-		mint;
-		checkForMintInProgress();
+		mint
+			checkForMintInProgress();
 	}
 
 	// todo clean up the states
@@ -63,6 +63,9 @@
 	});
 
 	const checkForMintInProgress = () => {
+		if(!mint){
+			return
+		}
 		if ($mintRequests.map((mR) => mR.mintUrl).includes(mint.mintURL)) {
 			const mintReq = $mintRequests.find((mR) => mR.mintUrl === mint.mintURL);
 			mintingHash = mintReq?.paymentHash;

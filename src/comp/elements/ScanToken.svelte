@@ -74,7 +74,7 @@
 	<p>
 		scanning..
 	</p>
-	<div class="radial-progress text-primary" style="--value:{isNaN(chunkPerc)?0:chunkPerc}; --size:5rem; --thickness: 0.5rem;">{isNaN(chunkPerc)?0:chunkPerc}%</div>
+	<div class="radial-progress text-secondary" style="--value:{isNaN(chunkPerc)?0:chunkPerc}; --size:5rem; --thickness: 0.5rem;">{isNaN(chunkPerc)?0:chunkPerc}%</div>
 </div>
 
 
