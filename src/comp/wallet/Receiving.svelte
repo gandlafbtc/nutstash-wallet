@@ -232,18 +232,14 @@
 					{/if}
 				</div>
 			{/if}
-			<div class="grid grid-cols-5 h-24 text-start">
-				<div class="flex  gap-2 mt-10">
+			<div class="h-24 text">
+				<div class="flex justify-center  gap-2 mt-10">
 					<button class="btn {isValid ? 'btn-secondary' : 'btn-disabled'}" on:click={receive}>
 						receive</button
 					>
 				</div>
 			</div>
 		</div>
-		
-		
-
-
 	{/if}
 </div>
 {:else if activeR==='scan-receive'}	

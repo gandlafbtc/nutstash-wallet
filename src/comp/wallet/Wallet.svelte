@@ -221,10 +221,6 @@
 	<Receive bind:active {encodedToken} />
 {:else if active === 'send'}
 	<Send bind:active />
-{:else if active === 'melt'}
-	<Melting bind:active bind:invoice={scannedlnInvoice} />
-{:else if active === 'scan'}
-	<ScanLn bind:active bind:scannedlnInvoice />
 {:else if active === 'minting'}
 	<Minting bind:active bind:mint={selectedMint} isMinting={false} doMint={false} />
 {/if}
