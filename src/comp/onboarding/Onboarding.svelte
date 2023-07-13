@@ -25,7 +25,9 @@ const doSetupMint = async () => {
 	<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2">
 		<div class="carousel max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl">
 			<div id="1" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
-				
+				<div class="w-32 h-32">
+					<img src="/nutstash_app.svg" alt="">
+				</div>
 				<h1 class="text-lg font-bold">Welcome to nutstash</h1>
 				<p>
 					Nutstash is still in beta development. Please use at own risk.

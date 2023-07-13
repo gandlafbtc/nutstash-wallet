@@ -124,27 +124,29 @@
 				{#if $activeTab === 'setting'}
 					<Setting />
 				{/if}
-				<div class="flex justify-end items-center flex-col">
-					<div class="w-full items-end justify-between flex">
-						<Donate />
-						<div class="flex items-baseline gap-1 justify-center">
-							<div class="flex gap-2 items-center">
-								<div class="w-6 h6">
-									{#if $isSyncMints || $isSyncTokens}
-										<div class="btn btn-success btn-disabled loading btn-square btn-xs" />
-									{/if}
-								</div>
-								<Logo />
-							</div>
-							<p class="text-base-300 text-xs">
-								{$version}
-							</p>
-						</div>
-						<Code />
-					</div>
-				</div>
 			</div>
 		</div>
 		<div class="hidden lg:flex" />
-	{/if}
-</div>
+		<div></div>
+		<div class="flex justify-end items-center flex-col col-span-2">
+			<div class="w-full items-end justify-between flex">
+				<Donate />
+				<div class="flex items-baseline gap-1 justify-center">
+					<div class="flex gap-2 items-center">
+						<div class="w-6 h6">
+							{#if $isSyncMints || $isSyncTokens}
+								<div class="btn btn-success btn-disabled loading btn-square btn-xs" />
+							{/if}
+						</div>
+						<Logo />
+					</div>
+					<p class="text-base-300 text-xs">
+						{$version}
+					</p>
+				</div>
+				<Code />
+			</div>
+		</div>
+		<div></div>
+		{/if}
+	</div>

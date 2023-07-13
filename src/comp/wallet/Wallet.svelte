@@ -19,6 +19,7 @@
 	import Minting from '../mint/Minting.svelte';
 	import { isOnboarded } from '../../stores/message';
 	import Receive from './Receive.svelte';
+	import Send from './Send.svelte';
 
 	let active = 'base';
 	let scannedlnInvoice = '';
@@ -219,11 +220,11 @@
 {:else if active === 'receive'}
 	<Receive bind:active {encodedToken} />
 {:else if active === 'send'}
-	<Sending bind:active />
+	<Send bind:active />
 {:else if active === 'melt'}
 	<Melting bind:active bind:invoice={scannedlnInvoice} />
 {:else if active === 'scan'}
 	<ScanLn bind:active bind:scannedlnInvoice />
 {:else if active === 'minting'}
-	<Minting bind:active bind:mint={selectedMint} />
+	<Minting bind:active bind:mint={selectedMint} isMinting={false} doMint={false} />
 {/if}

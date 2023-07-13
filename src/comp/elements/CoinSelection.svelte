@@ -11,7 +11,7 @@
 	export let isCoinSelection = false;
 </script>
 
-<div class="flex flex-col gap-2 ">
+<div class="flex flex-col gap-2 items-center w-full">
 	<label class="label cursor-pointer p-0">
 		<div class="flex gap-1 items-center">
 			<span class="label-text font-bold">Use coin selection</span>

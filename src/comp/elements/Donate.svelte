@@ -6,7 +6,7 @@
 			viewBox="0 0 24 24"
 			stroke-width="1.5"
 			stroke="currentColor"
-			class="w-6 h-6 text-primary hover:text-error transition-all"
+			class="w-6 h-6 text-base-300 hover:text-error transition-all"
 		>
 			<path
 				stroke-linecap="round"

@@ -25,11 +25,10 @@
 	};
 
 	onMount(()=> {
-		isPending = isPending && !$pendingTokens.length?false:true 
 	})
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll  scrollbar-hide">
+<div class="overflow-x-scroll overflow-y-scroll scrollbar-hide max-h-56 w-full">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>

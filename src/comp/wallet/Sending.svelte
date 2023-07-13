@@ -40,12 +40,13 @@
 
 	export let active;
 
-	let mint: Mint = $mints[0];
+	export let mint: Mint
+	export let amount = 0;
+	export let selectedTokens: Proof[]
+	export let isCoinSelection: boolean
+	
 	$: tokensForMint = getTokensForMint(mint, $token);
-	$: selectedTokens = [];
-	$: isCoinSelection = false;
 
-	let amountToSend = 0;
 	let encodedToken: string = '';
 	let isLoading = false;
 	let sendToNostrKey = '';
@@ -55,20 +56,24 @@
 	let showTokenQr = false;
 
 	const send = async () => {
+		if(isNaN(parseInt(amount)) || amount <=0){
+			toast('warning', 'Send amount has to be a number larger than 0','Could not create token')
+			return
+		}
 		tokensForMint = getTokensForMint(mint, $token);
 
 		let tokensToSend: Proof[] = [];
 		if (isCoinSelection) {
 			tokensToSend = selectedTokens;
 		} else {
-			tokensToSend = getTokensToSend(amountToSend, tokensForMint);
+			tokensToSend = getTokensToSend(amount, tokensForMint);
 		}
 
-		if (amountToSend <= 0) {
+		if (amount <= 0) {
 			toast('warning', 'amount must be larger than 0', 'Could not send');
 			return;
 		}
-		if (amountToSend > getAmountForTokenSet(tokensToSend)) {
+		if (amount > getAmountForTokenSet(tokensToSend)) {
 			toast('warning', 'not enough funds', 'Could not Send');
 			isLoading = false;
 			return;
@@ -80,7 +85,7 @@
 			const cashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet = new CashuWallet(cashuMint, mint.keys);
 
-			const { returnChange, send, newKeys } = await cashuWallet.send(amountToSend, tokensToSend);
+			const { returnChange, send, newKeys } = await cashuWallet.send(amount, tokensToSend);
 
 			if (newKeys) {
 				updateMintKeys(mint, newKeys);
@@ -98,7 +103,7 @@
 			history.update((state) => [
 				{
 					type: HistoryItemType.SEND,
-					amount: amountToSend,
+					amount: amount,
 					date: Date.now(),
 					data: {
 						encodedToken,
@@ -199,7 +204,7 @@
 	};
 
 	const resetState = () => {
-		amountToSend = 0;
+		amount = 0;
 		encodedToken = '';
 		isLoading = false;
 		active = 'base';
@@ -329,69 +334,10 @@
 	</div>
 {:else}
 	<div class=" flex flex-col gap-2">
-		<p class="font-bold text-xl">Send Tokens</p>
-		<p>Create a sendable Cashu Token.</p>
-		<div class="grid grid-cols-5 items-center">
-			<div class="col-span-2">
-				<label for="mint-send-dropdown">
-					<p class="font-bold">Mint:</p>
-				</label>
-			</div>
-			{#if mint}
-				<div class="dropdown dropdown-bottom" id="mint-send-dropdown">
-					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label
-						tabindex="0"
-						class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip"
-					>
-						<p class=" truncate max-w-xs text-xs">
-							{mint.mintURL}
-						</p>
-					</label>
-
-					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-					<ul
-						tabindex="0"
-						class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
-					>
-						{#each $mints as m}
-							<!-- svelte-ignore a11y-missing-attribute -->
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<li
-								on:click={() => (mint = m)}
-								class="rounded-xl {m.mintURL === mint.mintURL ? 'bg-primary' : ''}"
-							>
-								<a>{m.mintURL}</a>
-							</li>
-						{/each}
-					</ul>
-				</div>
-			{/if}
-		</div>
-		<div class="grid grid-cols-5">
-			<p class="font-bold col-span-2">Available:</p>
-			<p class="col-span-3">{getAmountForTokenSet(tokensForMint)} sats</p>
-		</div>
-		<div class="grid grid-cols-5 items-center">
-			<p class="font-bold col-span-2">Amount:</p>
-			<input
-				type="number"
-				name=""
-				id="send-amount-input"
-				class="input input-primary col-span-3"
-				bind:value={amountToSend}
-			/>
-		</div>
-		<div class="grid grid-cols-5">
-			<div class="col-span-5">
-				<CoinSelection amount={amountToSend} {mint} bind:selectedTokens bind:isCoinSelection />
-			</div>
-		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={() => resetState()}>cancel</button>
 			<button
-				class="btn {isCoinSelection && getAmountForTokenSet(selectedTokens) < amountToSend
+				class="btn {isCoinSelection && getAmountForTokenSet(selectedTokens) < amount
 					? 'btn-disabled'
 					: 'btn-primary'}"
 				on:click={send}>send</button

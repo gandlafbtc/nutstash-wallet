@@ -21,7 +21,7 @@
 	export let active;
 	export let isMinting: boolean;
 	export let doMint = false;
-	let mintAmount = '0';
+	let mintAmount = '';
 	let qrCode: string | undefined;
 	let mintingHash: string | undefined;
 	let wallet: CashuWallet | undefined;
@@ -31,7 +31,10 @@
 
 	$: {
 		mintAmount;
-		if (mintAmount && mintAmount != '0') {
+		if (!/^[0-9]*$/.test(mintAmount)) {
+			mintAmount = '';
+		}
+		if (mintAmount && mintAmount != '') {
 			isMinting = true;
 		} else {
 			isMinting = false;
@@ -77,7 +80,7 @@
 			wallet = new CashuWallet(cashuMint, mint.keys);
 		} else {
 			qrCode = undefined;
-			mintAmount = '0';
+			mintAmount = '';
 		}
 	};
 
@@ -104,8 +107,8 @@
 				},
 				...state
 			]);
-			await mintTokens();
 			doMint = true;
+			mintTokens();
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -155,6 +158,7 @@
 			} else {
 				abortMint();
 				resetState();
+				active='base'
 			}
 		}
 	};
@@ -164,7 +168,7 @@
 	};
 
 	const resetState = () => {
-		mintAmount = '0';
+		mintAmount = '';
 		qrCode = undefined;
 		mintingHash = undefined;
 		wallet = undefined;
@@ -263,12 +267,14 @@
 						{mintAmount}
 					</p>
 				{:else}
-					<p
-						contenteditable="true"
-						id="mint-req-amt"
-						bind:textContent={mintAmount}
-						class="text-7xl focus:outline-none {mintAmount ? '' : 'w-10 bg-base-200 rounded-lg'}"
-					/>
+				<input
+				id="mint-req-amt"
+				placeholder="0"
+				bind:value={mintAmount}
+				class="mt-10 text-7xl focus:outline-none text-center max-w-xs {mintAmount
+					? 'bg-base-100'
+					: 'w-10 bg-base-200 rounded-lg'}"
+			/>
 				{/if}
 				<p class="font-bold text-2xl">receive sats</p>
 				{#if qrCode}
