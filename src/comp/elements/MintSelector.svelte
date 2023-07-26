@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
+	import { token } from '../../stores/tokens';
+	import TokenIcon from '../tokens/TokenIcon.svelte';
+	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 
 	export let mint: Mint;
     const formatMintText = (url: string) => {
@@ -49,7 +52,7 @@ return `${first10}...${last10}`
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<ul
 		tabindex="0"
-		class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
+		class="z-10 dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
 	>
 		{#each $mints as m}
 			<!-- svelte-ignore a11y-missing-attribute -->
@@ -73,6 +76,14 @@ return `${first10}...${last10}`
                         </svg>
                     </div>
                     {/if}
+					<div class="flex gap-1 items-center">
+						<p class="font-bold">
+							{getAmountForTokenSet(getTokensForMint(m, $token)) }
+						</p>
+						<div>
+							<TokenIcon />
+						</div>
+					</div>
                     <a>{m.mintURL}</a>
                 </div>
 			</li>

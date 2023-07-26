@@ -6,12 +6,10 @@
 </script>
 
 <div class="flex items-center justify-center flex-col">
-    <div class="text-sm bg-primary text-primary-content rounded-t-lg p-1 px-2">
-        Token - scan to receive
-    </div>
-	<div class="border-primary border-2 rounded-md p-2">
+   
+	<div class="border-primary border  rounded-md p-2">
         {#if token.length < 400}
-        <QRCodeImage text={token} displayHeight={250} displayWidth={250} />
+        <QRCodeImage text={token} displayHeight={275} displayWidth={275} />
         {:else}
         <BigTokenQr {token} />
         {/if}

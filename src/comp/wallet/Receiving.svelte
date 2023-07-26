@@ -180,7 +180,10 @@
 {#if activeR==="receive"}
 <div class="flex flex-col gap-2">
 	{#if isLoading}
+	<div class=" h-full flex items-center justify-center gap-5 flex-col">
+		<p>Receiving token...</p>
 		<LoadingCenter />
+	</div>
 	{:else}
 		<div class="flex flex-col gap-2 text-center">
 			{#if mintId}
