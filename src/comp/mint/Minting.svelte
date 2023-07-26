@@ -179,66 +179,62 @@
 
 <div class="flex justify-center">
 	{#if isLoading}
+	<div class=" h-full flex items-center justify-center gap-5 flex-col">
+		<p>Creating lightning invoice...</p>
 		<LoadingCenter />
+	</div>
 	{:else if doMint}
 		<div class="flex gap-2">
 			<div
 				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between"
 			>
-				<div class="flex flex-col items-center">
-					<p class="font-bold text-lg pb-2">
-						Pay this invoice to mint ecash and top up your wallet.
-					</p>
-					<div class="flex gap-1">
-						<p class="font-bold">Amount:</p>
-						<p>
-							{mintAmount} satoshi
-						</p>
-					</div>
-					<div class="flex gap-1">
-						<p class="font-bold">Custodian:</p>
-						<p class="break-all">
-							{mint.mintURL}
-						</p>
-					</div>
-					<div class="flex gap-2 pt-4">
-						<input
-							type="text"
-							class="w-32 input input-success"
-							id="invoice-input"
-							readonly
-							value={qrCode}
-						/>
-						<button class="btn btn-square" on:click={copyInvoice}>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
-								/>
-							</svg>
-						</button>
-					</div>
-				</div>
 				<a href="lightning:{qrCode}">
 					<div class="w-full flex items-center justify-center">
 						<div class="flex items-center justify-center flex-col">
-							<div class="text-sm bg-success text-success-content rounded-t-lg p-1 px-2">
-								Invoice - Scan with Lightning wallet
-							</div>
-							<div class="border-success border-2 rounded-md p-2">
-								<QRCodeImage text={qrCode} displayHeight={350} displayWidth={350} margin={1} />
+							<div class="border-warning border rounded-md p-2">
+								<QRCodeImage text={qrCode} displayHeight={275} displayWidth={275} margin={1} />
 							</div>
 						</div>
 					</div>
 				</a>
+				<div class="flex flex-col items-center">
+			
+					<p class="text-3xl">
+						Receive {mintAmount} sats
+					</p>
+					<p class="font-bold">at</p>
+					<div class="flex gap-1">
+						<p class="font-bold">Custodian</p>
+						<p class="break-all">
+							{mint.mintURL}
+						</p>
+					</div>
+				</div>
+				<div class="flex pt-4 join w-72 ">
+					<input
+						type="text"
+						class="input input-warning join-item"
+						id="invoice-input"
+						readonly
+						value={qrCode}
+					/>
+					<button class="btn btn-square join-item btn-warning" on:click={copyInvoice}>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+							/>
+						</svg>
+					</button>
+				</div>
 				<div class="h-8">
 					{#if isPolling}
 						<div class="btn btn-disabled btn-xs loading btn-square" />
@@ -251,7 +247,7 @@
 						on:click={() => {
 							abortMint();
 							resetState();
-						}}>Abort</button
+						}}>delete invoice</button
 					>
 				</div>
 			</div>
