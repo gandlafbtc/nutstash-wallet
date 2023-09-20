@@ -173,18 +173,18 @@
 			<p>Dangerzone</p>
 		</div>
 		{#if isShowDangerzone}
-		<div class="col-span-1">
-			<label for="delete-history-button">Delete History</label>
-		</div>
-		<div class="col-span-4">
-			<ResetHistoryButton />
-		</div>
-		<div class="col-span-1">
-			<label for="delete-history-button" class="font-bold text-error">Wipe wallet</label>
-		</div>
-		<div class="col-span-4">
-			<WipeWalletButton />
-		</div>
+			<div class="col-span-1">
+				<label for="delete-history-button">Delete History</label>
+			</div>
+			<div class="col-span-4">
+				<ResetHistoryButton />
+			</div>
+			<div class="col-span-1">
+				<label for="delete-history-button" class="font-bold text-error">Wipe wallet</label>
+			</div>
+			<div class="col-span-4">
+				<WipeWalletButton />
+			</div>
 		{/if}
 	</div>
 </div>

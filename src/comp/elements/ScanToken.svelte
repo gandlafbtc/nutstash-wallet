@@ -5,36 +5,33 @@
 
 	export let activeR;
 	export let scannedToken;
-	let scanning = false
+	let scanning = false;
 
-	let isChunk = false
-	$: chunkTotalLen = 0
-	let chunks : string[] = []
-	$: chunkPerc = Math.ceil((chunks.filter(c=>c).length/chunkTotalLen)*100)
+	let isChunk = false;
+	$: chunkTotalLen = 0;
+	let chunks: string[] = [];
+	$: chunkPerc = Math.ceil((chunks.filter((c) => c).length / chunkTotalLen) * 100);
 
 	let qrScanner: Html5QrcodeScanner;
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
-		console.log(decodedText)
+		console.log(decodedText);
 		if (decodedText.startsWith('chunk')) {
-			isChunk = true
-			const [x, chunkI, len, chunk] = decodedText.split(':')
-			chunkTotalLen = parseInt(len)??0
-			chunks[parseInt(chunkI)??0] = chunk
-			chunks = [...chunks]
-		}
-
-		else {
-			scannedToken = decodedText
+			isChunk = true;
+			const [x, chunkI, len, chunk] = decodedText.split(':');
+			chunkTotalLen = parseInt(len) ?? 0;
+			chunks[parseInt(chunkI) ?? 0] = chunk;
+			chunks = [...chunks];
+		} else {
+			scannedToken = decodedText;
 		}
 
 		if (isChunk) {
-			if ( chunks.filter(c=> c).length<chunkTotalLen) {
-				return
-			}
-			else {
-				scannedToken = chunks.join('').split('=')[0]
-				console.log(scannedToken)
+			if (chunks.filter((c) => c).length < chunkTotalLen) {
+				return;
+			} else {
+				scannedToken = chunks.join('').split('=')[0];
+				console.log(scannedToken);
 			}
 		}
 		if (browser) {
@@ -53,7 +50,7 @@
 	});
 
 	onMount(() => {
-		scanning = true
+		scanning = true;
 		qrScanner = new Html5QrcodeScanner(
 			'token-qr-reader',
 			{ fps: 24, qrbox: { width: 250, height: 250 } },
@@ -71,12 +68,14 @@
 	<div class="w-full">
 		<div id="token-qr-reader" class="w-full h-full qr-reader-box" style="/qr-styles.css" />
 	</div>
-	<p>
-		scanning..
-	</p>
-	<div class="radial-progress text-secondary" style="--value:{isNaN(chunkPerc)?0:chunkPerc}; --size:5rem; --thickness: 0.5rem;">{isNaN(chunkPerc)?0:chunkPerc}%</div>
+	<p>scanning..</p>
+	<div
+		class="radial-progress text-secondary"
+		style="--value:{isNaN(chunkPerc) ? 0 : chunkPerc}; --size:5rem; --thickness: 0.5rem;"
+	>
+		{isNaN(chunkPerc) ? 0 : chunkPerc}%
+	</div>
 </div>
-
 
 <style>
 </style>

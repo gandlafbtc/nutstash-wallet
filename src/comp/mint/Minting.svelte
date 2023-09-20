@@ -19,8 +19,8 @@
 
 	export let mint: Mint = $mints[0];
 	export let active;
-	export let isMinting: boolean;
 	export let doMint = false;
+	export let isMinting: boolean;
 	let mintAmount = '';
 	let qrCode: string | undefined;
 	let mintingHash: string | undefined;
@@ -42,8 +42,8 @@
 	}
 
 	$: {
-		mint
-			checkForMintInProgress();
+		mint;
+		checkForMintInProgress();
 	}
 
 	// todo clean up the states
@@ -66,8 +66,8 @@
 	});
 
 	const checkForMintInProgress = () => {
-		if(!mint){
-			return
+		if (!mint) {
+			return;
 		}
 		if ($mintRequests.map((mR) => mR.mintUrl).includes(mint.mintURL)) {
 			const mintReq = $mintRequests.find((mR) => mR.mintUrl === mint.mintURL);
@@ -158,7 +158,7 @@
 			} else {
 				abortMint();
 				resetState();
-				active='base'
+				active = 'base';
 			}
 		}
 	};
@@ -179,10 +179,10 @@
 
 <div class="flex justify-center">
 	{#if isLoading}
-	<div class=" h-full flex items-center justify-center gap-5 flex-col">
-		<p>Creating lightning invoice...</p>
-		<LoadingCenter />
-	</div>
+		<div class=" h-full flex items-center justify-center gap-5 flex-col">
+			<p>Creating lightning invoice...</p>
+			<LoadingCenter />
+		</div>
 	{:else if doMint}
 		<div class="flex gap-2">
 			<div
@@ -198,7 +198,6 @@
 					</div>
 				</a>
 				<div class="flex flex-col items-center">
-			
 					<p class="text-3xl">
 						Receive {mintAmount} sats
 					</p>
@@ -210,7 +209,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="flex pt-4 join w-72 ">
+				<div class="flex pt-4 join w-72">
 					<input
 						type="text"
 						class="input input-warning join-item"
@@ -263,14 +262,14 @@
 						{mintAmount}
 					</p>
 				{:else}
-				<input
-				id="mint-req-amt"
-				placeholder="0"
-				bind:value={mintAmount}
-				class="mt-10 text-7xl focus:outline-none text-center max-w-xs {mintAmount
-					? 'bg-base-100'
-					: 'w-10 bg-base-200 rounded-lg'}"
-			/>
+					<input
+						id="mint-req-amt"
+						placeholder="0"
+						bind:value={mintAmount}
+						class="mt-10 text-7xl focus:outline-none text-center max-w-xs {mintAmount
+							? 'bg-base-100'
+							: 'w-10 bg-base-200 rounded-lg'}"
+					/>
 				{/if}
 				<p class="font-bold text-2xl">receive sats</p>
 				{#if qrCode}

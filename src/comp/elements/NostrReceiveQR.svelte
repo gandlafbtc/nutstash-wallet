@@ -27,10 +27,8 @@
 
 {#await getEncodedNpub() then npub}
 	{#if $useNostr && npub}
-	<div class="divider">
-		nostr
-	</div>
-	<!-- content here -->
+		<div class="divider">nostr</div>
+		<!-- content here -->
 		<div class="flex items-center justify-center w-full">
 			<div class="flex flex-col gap-2 items-center">
 				<div class="flex items-center justify-center flex-col">
@@ -38,9 +36,9 @@
 						Nostr - receive to npub
 					</div>
 					<div class="border-info border-2 rounded-md p-2">
-				<QRCodeImage text={npub} displayHeight={250} displayWidth={250} margin={2} />
-			</div>
-		</div>
+						<QRCodeImage text={npub} displayHeight={250} displayWidth={250} margin={2} />
+					</div>
+				</div>
 			</div>
 		</div>
 	{/if}

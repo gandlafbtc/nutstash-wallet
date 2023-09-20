@@ -248,14 +248,13 @@
 							<TokenQr token={encodedToken} />
 						</div>
 						<input
-						class="w-72 input input-primary"
-						id="send-token-input"
-						readonly
-						value={encodedToken}
+							class="w-72 input input-primary"
+							id="send-token-input"
+							readonly
+							value={encodedToken}
 						/>
 					</div>
 					<div class="flex gap-2 w-full justify-center pt-4">
-						
 						<button class="btn btn-secondary" on:click={shareLink}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"

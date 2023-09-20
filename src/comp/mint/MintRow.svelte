@@ -91,27 +91,27 @@
 	<td class="overflow-clip xl:max-w-xs max-w-0">
 		<div class="flex gap-1 items-center">
 			{#if mintIndex === 0}
-			<div class="w-4 h-4 flex items-center">
-				<button class="cursor-pointer rounded-full bg-success w-4 h-4 p-0.5">
-					<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="text-white"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					>
-						<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-					</svg>
-				</button>
-			</div>
+				<div class="w-4 h-4 flex items-center">
+					<button class="cursor-pointer rounded-full bg-success w-4 h-4 p-0.5">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="text-white"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+						>
+							<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+						</svg>
+					</button>
+				</div>
 			{:else}
-			<div class="w-4 h-4 flex items-center">
-				<button
-					class="cursor-pointer rounded-full border border-white w-4 h-4 p-0.5"
-					on:click={makeDefaultMint}
-				/>
-			</div>
+				<div class="w-4 h-4 flex items-center">
+					<button
+						class="cursor-pointer rounded-full border border-white w-4 h-4 p-0.5"
+						on:click={makeDefaultMint}
+					/>
+				</div>
 			{/if}
 			<p class="overflow-scroll scrollbar-hide">
 				{mint.mintURL}
@@ -129,32 +129,29 @@
 	</td>
 	<td class="flex gap-2 justify-end w-full">
 		{#if isEdit}
-			<div class="z-10 fixed top-0 left-0 w-screen h-screen" on:click={()=> isEdit=false}>
-
-			</div>
+			<div class="z-10 fixed top-0 left-0 w-screen h-screen" on:click={() => (isEdit = false)} />
 			<div class="z-20 fixed bg-base-300 w-44 rounded-md">
 				<div class="flex flex-col">
 					<div class="flex items-center justify-between border-b-[0.5px] border-base-100 p-2">
 						<p class="font-bold text-sm">mint actions</p>
-						<button on:click={()=> isEdit=false} class="p-1 rounded-full hover:bg-base-100">
-
+						<button on:click={() => (isEdit = false)} class="p-1 rounded-full hover:bg-base-100">
 							<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-4 h-4"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-4 h-4"
 							>
-							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-						</svg>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+							</svg>
 						</button>
 					</div>
 					<button
 						class="gap-1 flex items-center justify-start border-b-[0.5px] border-base-100 p-2 hover:text-secondary"
-						on:click={()=> {
-							makeDefaultMint()
-							isEdit=false
+						on:click={() => {
+							makeDefaultMint();
+							isEdit = false;
 						}}
 					>
 						<svg
@@ -175,32 +172,45 @@
 					</button>
 					<button
 						class="gap-1 flex items-center justify-start border-b-[0.5px] border-base-100 p-2 hover:text-secondary"
-						on:click={() =>{ copyShareLink() }}
+						on:click={() => {
+							copyShareLink();
+						}}
 					>
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-					  </svg>
-					  
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-5 h-5"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"
+							/>
+						</svg>
+
 						<p class="font-bold">share link</p>
 					</button>
 					<button
 						class="gap-1 flex items-center justify-start border-b-[0.5px] border-base-100 p-2 hover:text-secondary"
 						on:click={reloadKeys}
 					>
-					<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-5 h-5 {isReloadingKeys ? 'animate-spin' : ''}"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-					/>
-				</svg>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-5 h-5 {isReloadingKeys ? 'animate-spin' : ''}"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+							/>
+						</svg>
 						<p class="font-bold">update keys</p>
 					</button>
 					<button
@@ -224,11 +234,10 @@
 								d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
 							/>
 						</svg>
-							<p class="font-bold">mint ecash</p>
-					</button
-					>
+						<p class="font-bold">mint ecash</p>
+					</button>
 					<button
-						class="gap-1 text-error flex items-center justify-start border-b-[0.5px] border-base-100 p-2 "
+						class="gap-1 text-error flex items-center justify-start border-b-[0.5px] border-base-100 p-2"
 						on:click={() => {
 							if (browser) {
 								// @ts-expect-error

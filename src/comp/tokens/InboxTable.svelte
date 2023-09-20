@@ -37,7 +37,7 @@
 					const storeMint: Mint = {
 						mintURL: mint.mintUrl,
 						keys,
-						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))],
+						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))]
 					};
 				}
 

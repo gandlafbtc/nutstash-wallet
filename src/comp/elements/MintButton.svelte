@@ -1,25 +1,22 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
-	import { mints } from "../../stores/mints";
-    export let active
-    export let selectedMint = $mints[0]
-    let isDialogOpen = false
-    const openMintDialog = () => {
-        if (browser) {
-            isDialogOpen = true
-        }
-    }
+	import { browser } from '$app/environment';
+	import { mints } from '../../stores/mints';
+	export let active;
+	export let selectedMint = $mints[0];
+	let isDialogOpen = false;
+	const openMintDialog = () => {
+		if (browser) {
+			isDialogOpen = true;
+		}
+	};
 
-    const startMint = () => {
-        isDialogOpen = false
-        active = 'minting'
-
-    }
+	const startMint = () => {
+		isDialogOpen = false;
+		active = 'minting';
+	};
 </script>
 
-<button class="btn-success btn btn-sm w-full flex gap-1"
-on:click={openMintDialog}
->
+<button class="btn-success btn btn-sm w-full flex gap-1" on:click={openMintDialog}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		fill="none"
@@ -37,30 +34,32 @@ on:click={openMintDialog}
 	invoice (mint ecash)
 </button>
 
-
-
 <!-- Put this part before </body> tag -->
-<input type="checkbox" id="my-modal" class="modal-toggle"  bind:checked={isDialogOpen}/>
+<input type="checkbox" id="my-modal" class="modal-toggle" bind:checked={isDialogOpen} />
 <div class="modal">
-  <div class="modal-box">
-    <h3 class="font-bold text-lg">Select a mint</h3>
-    <p class="py-4">The mint you select will create a lightning invoice and become the custodian of your sats.</p>
+	<div class="modal-box">
+		<h3 class="font-bold text-lg">Select a mint</h3>
+		<p class="py-4">
+			The mint you select will create a lightning invoice and become the custodian of your sats.
+		</p>
 
-    {#each $mints as mint}
-    <label class="flex items-center gap-2 pb-2">
-        <input type="radio" class="radio radio-primary font-bold" bind:group={selectedMint} value={mint} />
-        <p class="font-bold">
-            {mint.mintURL}
-        </p>
-      </label>
-    {/each}
+		{#each $mints as mint}
+			<label class="flex items-center gap-2 pb-2">
+				<input
+					type="radio"
+					class="radio radio-primary font-bold"
+					bind:group={selectedMint}
+					value={mint}
+				/>
+				<p class="font-bold">
+					{mint.mintURL}
+				</p>
+			</label>
+		{/each}
 
-    <div class="modal-action">
-      <label for="my-modal" class="btn">close</label>
-      <button class="btn btn-success" on:click={startMint}>
-        mint
-      </button>
-
-    </div>
-  </div>
+		<div class="modal-action">
+			<label for="my-modal" class="btn">close</label>
+			<button class="btn btn-success" on:click={startMint}> mint </button>
+		</div>
+	</div>
 </div>

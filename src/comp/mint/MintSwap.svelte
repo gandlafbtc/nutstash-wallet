@@ -7,10 +7,12 @@
 	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { updateMintKeys } from '../../actions/walletActions';
+	import MintSelector from '../elements/MintSelector.svelte';
+	import TokenIcon from '../tokens/TokenIcon.svelte';
 
 	export let active;
-	let swapOutMint: Mint;
-	let swapInMint: Mint;
+	let swapOutMint: Mint = $mints[1];
+	let swapInMint: Mint = $mints[0];
 	let swapAmount: number;
 	let fees: number;
 	let paymentHash: string;
@@ -138,8 +140,6 @@
 	};
 
 	const resetState = () => {
-		swapOutMint = undefined;
-		swapInMint = undefined;
 		swapAmount = undefined;
 		fees = undefined;
 		paymentHash = undefined;
@@ -152,8 +152,6 @@
 </script>
 
 {#if isComplete}
-	<!-- content here -->
-
 	<div class="flex w-full h-full flex-col items-center justify-center gap-5">
 		<p class="text-lg font-bold text-success">Tokens have been swapped.</p>
 		<button class="btn btn-success">
@@ -179,148 +177,19 @@
 {:else}
 	<!-- else content here -->
 	<div class="flex flex-col gap-2">
-		<p class="text-xl font-bold">Inter-Mint Swap</p>
-		<p class="">Swap tokens from one mint for tokens from another mint.</p>
-		<p class="">
+		<p class="text-xl font-bold">Swap sats between mints.</p>
+		<p class="text-warning">
 			⚠️ For a brief moment, you will be trusting two mints at the same time. There is things that
 			can go wrong. Use at own risk.
 		</p>
-		<div class="grid grid-cols-5 items-center gap-4">
-			<div class="col-span-2">
-				<label for="mint-send-dropdown">
-					<p class="font-bold">Swap-Out Mint:</p>
-				</label>
-			</div>
-			<div class="dropdown col-span-3" id="mint-swapOut-dropdown">
-				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label
-					tabindex="0"
-					class="btn {fees !== undefined
-						? 'btn-disabled'
-						: ''} max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em]"
-				>
-					<p class="truncate max-w-xs text-xs">
-						{swapOutMint?.mintURL ?? 'choose a mint'}
-					</p>
-				</label>
-
-				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-				<ul
-					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
-				>
-					{#each $mints.filter((m) => m != swapInMint) as m}
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<li on:click={() => (swapOutMint = m)}><a>{m.mintURL}</a></li>
-					{/each}
-				</ul>
-			</div>
-			<button
-				on:click={inverseMints}
-				class="col-span-5 btn btn-circle {fees !== undefined ? 'btn-disabled' : ''}"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-6 h-6"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
-					/>
-				</svg>
-			</button>
-			<div class="col-span-2">
-				<label for="mint-send-dropdown">
-					<p class="font-bold">Swap-In Mint:</p>
-				</label>
-			</div>
-			<div class="dropdown" id="mint-swapIn-dropdown">
-				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label
-					tabindex="0"
-					class="btn {fees !== undefined
-						? 'btn-disabled'
-						: ''} max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em]"
-				>
-					<p class="truncate max-w-xs text-xs">
-						{swapInMint?.mintURL ?? 'choose a mint'}
-					</p>
-				</label>
-
-				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-				<ul
-					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
-				>
-					{#each $mints.filter((m) => m != swapOutMint) as m}
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<li on:click={() => (swapInMint = m)}><a>{m.mintURL}</a></li>
-					{/each}
-				</ul>
-			</div>
-		</div>
-		{#if swapInMint && swapOutMint}
-			<div class="grid grid-cols-5 gap-2 items-center pt-5">
-				<p class="col-span-2">Available:</p>
-				<p class="col-span-3">
-					{getAmountForTokenSet(getTokensForMint(swapOutMint, $token))}
-				</p>
-				<p class="col-span-2">Amount to swap:</p>
-				<input
-					type="number"
-					class="col-span-3 input {fees !== undefined ? 'btn-disabled' : 'input-primary'}"
-					bind:value={swapAmount}
-				/>
-
-				<p class="col-span-2">{fees !== undefined ? 'Fees:' : 'Prepare Swap:'}</p>
-				<div class="col-span-3">
-					{#if isPrepare}
-						<div class="flex justify-start w-min">
-							<LoadingCenter />
-						</div>
-					{:else}
-						<!-- else content here -->
-						{#if fees !== undefined}
-							<p>{fees}</p>
-						{:else}
-							<button
-								class="btn btn-primary {swapAmount ? '' : 'btn-disabled'}"
-								on:click={prepareSwap}
-							>
-								Confirm Amount
-							</button>
-						{/if}
-					{/if}
-				</div>
-				{#if fees !== undefined}
-					<div class="col-span-5 divider m-1" />
-					<p class="col-span-2 font-bold">Total:</p>
-					<p class="col-span-3 font-bold">{swapAmount + fees}</p>
-				{/if}
-			</div>
-		{/if}
-
-		<div class="pt-5" />
-
-		<div class="flex gap-2">
-			<button class="btn" on:click={resetState}> cancel </button>
-			{#if isPerform}
-				<div>
-					<LoadingCenter />
-				</div>
-			{:else}
+		<div class="flex flex-col gap-2 self-center">
+			<div class="join">
+				<MintSelector bind:mint={swapOutMint} />
 				<button
-					class="btn {fees !== undefined ? 'btn-primary' : 'btn-disabled'} flex gap-2"
-					on:click={performSwap}
+					on:click={inverseMints}
+					class="col-span-5 btn btn-active join-item btn-square {fees !== undefined
+						? 'btn-disabled'
+						: ''}"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -336,9 +205,84 @@
 							d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
 						/>
 					</svg>
-					<p>Swap</p>
 				</button>
-			{/if}
+				<MintSelector bind:mint={swapInMint} />
+			</div>
+
+			<div class="flex justify-between items-center z-0">
+				<div class="flex gap-1 items-center">
+					<TokenIcon />
+					<p class="font-bold">
+						{getAmountForTokenSet(getTokensForMint(swapOutMint, $token))}
+						sats
+					</p>
+
+					<p class="">Available</p>
+				</div>
+				<div class="flex gap-2 items-start">
+					<p class="col-span-2">Will receive:</p>
+					<div class="join flex items-center">
+						{#if fees !== undefined}
+							<div class="flex flex-col gap-1 items-start justify-start">
+								<p class="font-bold">{swapAmount} sats</p>
+								<div class="flex gap-1 text-sm">
+									<p class="font-bold">-{fees} sats</p>
+									<p>fee</p>
+								</div>
+							</div>
+						{:else}
+							<input
+								type="number"
+								class="join-item w-32 input-sm col-span-3 input input-primary"
+								bind:value={swapAmount}
+							/>
+							<button
+								class="btn join-item btn-sm btn-primary {swapAmount
+									? ''
+									: 'btn-disabled'} {isPrepare ? 'btn-disabled ' : ''}"
+								on:click={prepareSwap}
+							>
+								{#if !isPrepare}
+									ok
+								{:else}
+									<p class="loading loading-spinner" />
+								{/if}
+							</button>
+						{/if}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="pt-5" />
+
+		<div class="flex gap-2">
+			<button class="btn" on:click={resetState}> cancel </button>
+
+			<button
+				class="btn {fees === undefined || isPerform ? 'btn-disabled' : 'btn-primary'} flex gap-2"
+				on:click={performSwap}
+			>
+				{#if isPerform}
+					<div class="loading" />
+				{:else}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+						/>
+					</svg>
+					<p>Swap</p>
+				{/if}
+			</button>
 		</div>
 	</div>
 {/if}

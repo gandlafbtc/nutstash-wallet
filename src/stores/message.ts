@@ -3,8 +3,7 @@ import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 
 const initialValueSting: string = browser
-	? window.localStorage.getItem('isOnBoarded') ??
-	  'false'
+	? window.localStorage.getItem('isOnBoarded') ?? 'false'
 	: 'false';
 
 const initialValue: boolean = JSON.parse(initialValueSting);

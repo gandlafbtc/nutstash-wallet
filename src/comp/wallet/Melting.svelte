@@ -94,7 +94,7 @@
 			isLoading = false;
 			return;
 		}
-		processing = true
+		processing = true;
 		const { returnChange, send, newKeys } = await cashuWallet.send(amount + fees, tokensToSend);
 		if (newKeys) {
 			updateMintKeys(mint, newKeys);
@@ -139,8 +139,8 @@
 			//re-add tokens that were sent if error
 			token.update((state) => [...send, ...state]);
 			console.error(error);
-		}finally {
-			isLoading = false
+		} finally {
+			isLoading = false;
 		}
 	};
 	const resetState = () => {

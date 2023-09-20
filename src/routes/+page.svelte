@@ -23,14 +23,12 @@
 	};
 </script>
 
-
 <div
 	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-1 bg-gradient-to-br from-primary to-secondary overflow-auto"
 	data-theme={$theme}
 >
 	{#if !$isOnboarded && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint')}
-	<Onboarding />
-		 
+		<Onboarding />
 	{:else}
 		<div class="hidden lg:flex" />
 		<div class="col-span-2 mx-0.5 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
@@ -85,7 +83,7 @@
 								/>
 								<path d="M12 7.875a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" />
 							</svg>
-							<p class="hidden lg:flex">Mints	</p>
+							<p class="hidden lg:flex">Mints</p>
 						</button>
 						<button
 							on:click={() => changeTab('setting')}
@@ -127,7 +125,7 @@
 			</div>
 		</div>
 		<div class="hidden lg:flex" />
-		<div></div>
+		<div />
 		<div class="flex justify-end items-center flex-col col-span-2">
 			<div class="w-full items-end justify-between flex">
 				<Donate />
@@ -147,6 +145,6 @@
 				<Code />
 			</div>
 		</div>
-		<div></div>
-		{/if}
-	</div>
+		<div />
+	{/if}
+</div>

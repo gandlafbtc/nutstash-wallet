@@ -11,7 +11,7 @@
 	$: selectedTokensBool = [];
 
 	$: isPending = mint ? false : true;
-	
+
 	$: page = 20;
 	$: tokenSelection = isPending ? $pendingTokens : $token;
 	$: tokenFromMint = mint
@@ -24,8 +24,7 @@
 		page += 20;
 	};
 
-	onMount(()=> {
-	})
+	onMount(() => {});
 </script>
 
 <div class="overflow-x-scroll overflow-y-scroll scrollbar-hide max-h-56 w-full">
@@ -40,7 +39,7 @@
 							<input
 								type="checkbox"
 								bind:checked={isPending}
-								class="{mint ? 'disabled hidden' : ''} checkbox checkbox-primary "
+								class="{mint ? 'disabled hidden' : ''} checkbox checkbox-primary"
 							/>
 						{/if}
 					</div>
