@@ -183,7 +183,7 @@
 			can go wrong. Use at own risk.
 		</p>
 		<div class="flex flex-col gap-2 self-center">
-			<div class="join">
+			<div class="lg:join flex flex-col gap-1 lg:gap-0 items-center lg:flex-row">
 				<MintSelector bind:mint={swapOutMint} />
 				<button
 					on:click={inverseMints}
@@ -209,7 +209,7 @@
 				<MintSelector bind:mint={swapInMint} />
 			</div>
 
-			<div class="flex justify-between items-center z-0">
+			<div class="flex justify-between items-center z-0 lg:flex-row flex-col">
 				<div class="flex gap-1 items-center">
 					<TokenIcon />
 					<p class="font-bold">
