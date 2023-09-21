@@ -63,11 +63,10 @@
 	};
 </script>
 
-<div class="divider col-span-5 font-bold">Selfhosted</div>
-<div class="col-span-2">
+<div class="divider font-bold">Selfhosted</div>
+<div class="flex justify-between items-center">
 	<label for="">Sync tokens to server</label>
-</div>
-<div class="col-span-3 flex gap-2">
+
 	<input
 		type="checkbox"
 		class="toggle toggle-success"
@@ -77,10 +76,9 @@
 </div>
 <div class="divider col-span-5" />
 
-<div class="col-span-2">
+<div class="flex justify-between items-center">
 	<label for="">Restore from server</label>
-</div>
-<div class="col-span-3 flex gap-2">
+
 	<div class="form-control">
 		<label class="label cursor-pointer">
 			<input type="checkbox" bind:checked={isMintsChecked} class="checkbox checkbox-primary" />

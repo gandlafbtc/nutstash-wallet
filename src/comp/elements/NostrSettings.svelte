@@ -39,19 +39,22 @@
 		}
 	};
 </script>
+<div class="flex justify-between items-center">
 
 <div class="col-span-1">
-	<label for="delete-history-button">Nostr</label>
+	<label for="use-nostr">Nostr</label>
 </div>
 
 <div class="col-span-4">
 	<input type="checkbox" class="toggle toggle-success" bind:checked={$useNostr} />
 </div>
-
+</div>
 {#if $useNostr}
 	<NostrRelaysConfig />
+	<div class="flex justify-between items-center">
+	
 	<div class="col-span-1">
-		<label for="delete-history-button">Use external Key (nos2x, etc...)</label>
+		<label for="use-external-nostr">Use external Key (nos2x, etc...)</label>
 	</div>
 
 	<div class="col-span-4 flex gap-2">
@@ -82,8 +85,11 @@
 		{/if}
 	</div>
 
+	</div>
+	
+
 	{#if !$useExternalNostrKey}
-		<div class="col-span-5 inline-flex items-center gap-2">
+	<div class="col-span-5 inline-flex items-center gap-2">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -103,15 +109,20 @@
 				generate throwaway keys.
 			</p>
 		</div>
+	<div class="flex justify-between items-center">
+
 		<div class="col-span-1">
-			<label for="delete-history-button">Edit Nostr Keys</label>
+			<label for="edit-nkeys">Edit Nostr Keys</label>
 		</div>
 
 		<div class="col-span-4">
 			<input type="checkbox" class="toggle toggle-info" bind:checked={isEditNostr} />
 		</div>
+	</div>
+	<div class="flex justify-between items-center">
+
 		<div class="col-span-1">
-			<label for="delete-history-button">Nostr Private Key</label>
+			<label for="nsec">nsec</label>
 		</div>
 
 		<div class="col-span-4 flex gap-2">
@@ -144,11 +155,14 @@
 				</button>
 			</div>
 		</div>
+	</div>
+	<div class="flex justify-between items-center">
+
 		<div class="col-span-1">
-			<label for="delete-history-button">Nostr Public Key</label>
+			<label for="npub">npub</label>
 		</div>
 
-		<div class="col-span-4 flex gap-2 w-full">
+		<div class="col-span-4 flex gap-2">
 			{#if isEditNostr}
 				<input
 					id="nostr-pubkey-input"
@@ -182,5 +196,6 @@
 				</svg>
 			</button>
 		</div>
+	</div>
 	{/if}
 {/if}

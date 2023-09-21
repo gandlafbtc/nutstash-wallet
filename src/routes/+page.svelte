@@ -108,7 +108,7 @@
 				</div>
 			</div>
 			<div
-				class="bg-base-100 grid w-full h-full overflow-auto flex-grow gap-3 rounded-xl p-6 shadow-xl {$activeTab ===
+				class="bg-base-100 grid w-full h-full flex-grow gap-3 rounded-xl p-6 shadow-xl {$activeTab ===
 				'wallet'
 					? 'rounded-tl-none'
 					: ''} {$activeTab === 'setting' ? 'rounded-tr-none' : ''}"

@@ -18,13 +18,13 @@
 	};
 </script>
 
-<div class="flex flex-col justify-start gap-3 w-full">
-	<div class="grid grid-cols-5 w-full items-center gap-2 overflow-y-scroll scrollbar-hide">
-		<p class="text-xl font-bold col-span-5">Settings</p>
-		<div class="-span-1">
+<div class="flex flex-col justify-start gap-3">
+	<p class="text-xl font-bold">Settings</p>
+	<div class="flex justify-between items-center">
+		<div>
 			<label for="theme-dropdown">Theme:</label>
 		</div>
-		<div class="dropdown col-span-4" id="theme-dropdown">
+		<div class="dropdown" id="theme-dropdown">
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label tabindex="0" class="btn">{$theme}</label>
@@ -41,30 +41,40 @@
 				{/each}
 			</ul>
 		</div>
-		<div class="col-span-1">
+	</div>
+	<div class="flex justify-between items-center">
+		<div>
 			<label for="">Backup Tokens</label>
 		</div>
-		<div class="col-span-4">
+		<div>
 			<BackupButton />
 		</div>
+	</div>
+	<div class="flex justify-between items-center">
 		<div class="col-span-1">
 			<label for="">Restore from Backup</label>
 		</div>
 		<div class="col-span-4">
 			<a href="/restore" class="btn btn-primary">restore</a>
 		</div>
+	</div>
+	<div class="flex justify-between items-center">
 		<div class="col-span-1">
 			<label for="">History</label>
 		</div>
-		<div class="col-span-4">
-			<a href="/history" class="btn btn-outline">History</a>
+
+		<div class="flex justify-between items-center">
+			<div class="col-span-4">
+				<a href="/history" class="btn btn-outline">History</a>
+			</div>
 		</div>
+
 		{#if PUBLIC_SELFHOSTED}
 			<SelfhostedSetting />
 		{/if}
-
-		<div class="divider col-span-5">Cashu</div>
-
+	</div>
+	<div class="divider col-span-5">Cashu</div>
+	<div class="flex justify-between items-center">
 		<div class="col-span-2">
 			<label for="">Check pending tokens</label>
 		</div>
@@ -93,6 +103,8 @@
 				</a>
 			</div>
 		</div>
+	</div>
+	<div class="flex justify-between items-center">
 		<div class="col-span-2">
 			<label for="">Check non-pending tokens</label>
 		</div>
@@ -121,7 +133,9 @@
 				</a>
 			</div>
 		</div>
-		{#if $checkPending || $checkNonPending}
+	</div>
+	{#if $checkPending || $checkNonPending}
+		<div class="flex justify-between items-center">
 			<div class="col-span-2">
 				<label for="">Check tokens automatically</label>
 			</div>
@@ -150,42 +164,46 @@
 					</a>
 				</div>
 			</div>
-		{/if}
-
-		<div class="divider col-span-5">Nostr</div>
-
-		<NostrSettings />
-		<div class="divider col-span-5 flex">
-			<div>
-				<button on:click={() => (isShowDangerzone = !isShowDangerzone)}>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-4 h-4 transition-transform {isShowDangerzone ? 'rotate-90' : ''}"
-					>
-						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-					</svg>
-				</button>
-			</div>
-			<p>Dangerzone</p>
 		</div>
-		{#if isShowDangerzone}
+	{/if}
+
+	<div class="divider col-span-5">Nostr</div>
+
+	<NostrSettings />
+	<div class="divider col-span-5 flex">
+		<div>
+			<button on:click={() => (isShowDangerzone = !isShowDangerzone)}>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-4 h-4 transition-transform {isShowDangerzone ? 'rotate-90' : ''}"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+				</svg>
+			</button>
+		</div>
+		<p>Dangerzone</p>
+	</div>
+	{#if isShowDangerzone}
+		<div class="flex justify-between items-center">
 			<div class="col-span-1">
 				<label for="delete-history-button">Delete History</label>
 			</div>
 			<div class="col-span-4">
 				<ResetHistoryButton />
 			</div>
+		</div>
+		<div class="flex justify-between items-center">
 			<div class="col-span-1">
 				<label for="delete-history-button" class="font-bold text-error">Wipe wallet</label>
 			</div>
 			<div class="col-span-4">
 				<WipeWalletButton />
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </div>
 <NostrRelayModal />
