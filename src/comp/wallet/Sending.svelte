@@ -292,25 +292,52 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="pt-2 flex flex-col gap-2 items-center w-full">
+			<div class="divider">OR</div>
+			<p class="font-bold text-center">Send via Nostr:</p>
+			<div class="pt-2 flex gap-2 items-center w-full">
 				{#if $useNostr}
-					<p class="font-bold">Send via Nostr:</p>
-					<div class="w-full flex items-center gap-2">
-						<input
+					<div class="inline-block relative w-full join">
+						<div class="flex">
+							
+							<input
 							type="text"
-							class="input input-primary w-full"
+							class="input input-info w-full join-item"
 							bind:value={sendToNostrKey}
 							placeholder="npub / hex / nip-05"
-						/>
-						<label for="npub-scan-modal" class="btn btn-square btn-info">
+							/>
+
+							{#if nostrSendLoading}
+							<div class="btn btn-square btn-disabled loading join-item" />
+							{:else}
+							<button
+								class="btn {sendToNostrKey ? 'btn-info' : 'btn-disabled'} flex gap-1 join-item"
+								on:click={sendWithNostr}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-6 h-6 rotate-12"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+									/>
+								</svg>
+							</button>
+						{/if}
+					</div>
+						<label for="npub-scan-modal" class="absolute z-10 bottom-3 right-20">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								class="w-6 h-6"
+								class="w-6 h-6 text-info"
 							>
 								<path
 									stroke-linecap="round"
@@ -324,38 +351,14 @@
 								/>
 							</svg>
 						</label>
+
+						
 					</div>
 				{/if}
 			</div>
 		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={resetState}>close</button>
-			{#if $useNostr}
-				{#if nostrSendLoading}
-					<div class="btn btn-square btn-disabled loading" />
-				{:else}
-					<button
-						class="btn {sendToNostrKey ? 'btn-info' : 'btn-disabled'} flex gap-1"
-						on:click={sendWithNostr}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-6 h-6 rotate-12"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-							/>
-						</svg>
-						Send over Nostr</button
-					>
-				{/if}
-			{/if}
 		</div>
 	{:else}
 		<CoinSelection {amount} {mint} bind:selectedTokens bind:isCoinSelection />

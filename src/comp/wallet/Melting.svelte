@@ -161,7 +161,10 @@
 
 <div class="w-full flex-col flex gap-10 py-9">
 	{#if isLoading}
+	<div class=" h-full flex items-center justify-center gap-5 flex-col">
+		<p>Paying lightning invoice...</p>
 		<LoadingCenter />
+	</div>
 	{:else if isPaySuccess}
 		<div class="flex w-full h-full flex-col items-center justify-center gap-5">
 			<p class="text-lg font-bold text-success">Lightning invoice has been paid.</p>
