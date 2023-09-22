@@ -121,7 +121,7 @@
 					</div>
 				</div>
 				{#if isSend || (invoice && amount)}
-					<div class="h-40 flex flex-col items-center">
+					<div class="h-52 flex flex-col items-center">
 						<input
 							readonly={isSend ? false : true}
 							id="send-amt"
@@ -132,6 +132,9 @@
 								: 'w-10 bg-base-200 rounded-lg'}"
 						/>
 						<p />
+						<p class="font-bold text-xl ">
+							Sats
+						</p>
 						{#if !isSend && fees}
 							<div class="text-sm flex gap-2">
 								<p class="font-bold">
