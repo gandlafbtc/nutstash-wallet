@@ -4,6 +4,7 @@
 		CashuWallet,
 		getDecodedToken,
 		getEncodedToken,
+		type AmountPreference,
 		type Proof
 	} from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
@@ -35,6 +36,7 @@
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import { updateMintKeys } from '../../actions/walletActions';
 	import TokenQr from '../elements/TokenQR.svelte';
+	import CustomSplits from '../elements/CustomSplits.svelte';
 
 	export let active;
 
@@ -51,6 +53,13 @@
 	let hasBeenCopied = false;
 	let nostrSendLoading = false;
 	let showTokenQr = false;
+	let preference: AmountPreference[];
+	let useAmountPreference = false;
+
+	$: useAmountPreference, (() => {
+		preference = []
+		amount = 0
+	})();
 
 	const send = async () => {
 		if (isNaN(parseInt(amount)) || amount <= 0) {
@@ -82,7 +91,15 @@
 			const cashuMint = new CashuMint(mint.mintURL);
 			const cashuWallet = new CashuWallet(cashuMint, mint.keys);
 
-			const { returnChange, send, newKeys } = await cashuWallet.send(amount, tokensToSend);
+			let sendPreference = undefined;
+			if (useAmountPreference) {
+				sendPreference = preference;
+			}
+			const { returnChange, send, newKeys } = await cashuWallet.send(
+				amount,
+				tokensToSend,
+				sendPreference
+			);
 
 			if (newKeys) {
 				updateMintKeys(mint, newKeys);
@@ -220,10 +237,13 @@
 		hasBeenCopied = false;
 		showTokenQr = false;
 		processing = false;
+		useAmountPreference = false;
+		isCoinSelection = false;
+		preference = [];
 	};
 </script>
 
-<div class="flex flex-col gap-10">
+<div class="flex flex-col gap-5">
 	{#if isLoading}
 		<div class=" h-full flex items-center justify-center gap-5 flex-col">
 			<p>Creating sendable token...</p>
@@ -298,38 +318,37 @@
 				{#if $useNostr}
 					<div class="inline-block relative w-full join">
 						<div class="flex">
-							
 							<input
-							type="text"
-							class="input input-info w-full join-item"
-							bind:value={sendToNostrKey}
-							placeholder="npub / hex / nip-05"
+								type="text"
+								class="input input-info w-full join-item"
+								bind:value={sendToNostrKey}
+								placeholder="npub / hex / nip-05"
 							/>
 
 							{#if nostrSendLoading}
-							<div class="btn btn-square btn-disabled loading join-item" />
+								<div class="btn btn-square btn-disabled loading join-item" />
 							{:else}
-							<button
-								class="btn {sendToNostrKey ? 'btn-info' : 'btn-disabled'} flex gap-1 join-item"
-								on:click={sendWithNostr}
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="w-6 h-6 rotate-12"
+								<button
+									class="btn {sendToNostrKey ? 'btn-info' : 'btn-disabled'} flex gap-1 join-item"
+									on:click={sendWithNostr}
 								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-									/>
-								</svg>
-							</button>
-						{/if}
-					</div>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6 rotate-12"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+										/>
+									</svg>
+								</button>
+							{/if}
+						</div>
 						<label for="npub-scan-modal" class="absolute z-10 bottom-3 right-20">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -351,8 +370,6 @@
 								/>
 							</svg>
 						</label>
-
-						
 					</div>
 				{/if}
 			</div>
@@ -361,7 +378,48 @@
 			<button class="btn" on:click={resetState}>close</button>
 		</div>
 	{:else}
+		
+	<label class="label cursor-pointer p-0 flex justify-center">
+		<div class="flex gap-1 items-center">
+			<input
+				id="use-amount-preference"
+				type="checkbox"
+				bind:checked={useAmountPreference}
+				class="checkbox checkbox-primary"
+			/>
+			<span class="label-text font-bold">Custom Outputs</span>
+		</div>
+	</label>
+
+	{#if useAmountPreference}
+		<CustomSplits {mint} bind:preference bind:amount />
+	{:else}
+		<p class="text-sm">
+			Cashu tokens consist of unified coin sizes to increase privacy. Per default, nutstash will
+			try to create the token with the minimal number of coins. With <label for="use-amount-preference" class=" cursor-pointer text-primary">
+				custom outputs 
+			</label>
+			 you can define the coins that will be created.
+		</p>
+	{/if}
 		<CoinSelection {amount} {mint} bind:selectedTokens bind:isCoinSelection />
+
+		
+		<div class="inline-flex text-sm text-neutral gap-1 justify-center">
+			{#if !isCoinSelection}
+				<p>Inputs</p>
+			{/if}
+			{#if !useAmountPreference && !isCoinSelection}
+				<p>and</p>
+			{/if}
+			{#if !useAmountPreference}
+				<p>Outputs</p>
+			{/if}
+			{#if !useAmountPreference || !isCoinSelection}
+				<p>will be selected automatically</p>
+			{/if}
+		</div>
+
 		<div class=" flex flex-col gap-2 w-full items-center">
 			<div class="flex gap-2">
 				<button

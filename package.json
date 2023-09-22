@@ -14,7 +14,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@cashu/cashu-ts": "^0.8.0-rc.3",
+		"@cashu/cashu-ts": "0.8.2-rc.4",
 		"@sveltejs/adapter-auto": "^1.0.3",
 		"@sveltejs/kit": "^1.18.0",
 		"@typescript-eslint/eslint-plugin": "^5.59.7",
