@@ -312,10 +312,10 @@
 					</div>
 				</div>
 			</div>
+			{#if $useNostr}
 			<div class="divider">OR</div>
 			<p class="font-bold text-center">Send via Nostr:</p>
 			<div class="pt-2 flex gap-2 items-center w-full">
-				{#if $useNostr}
 					<div class="inline-block relative w-full join">
 						<div class="flex">
 							<input
@@ -371,8 +371,8 @@
 							</svg>
 						</label>
 					</div>
+				</div>
 				{/if}
-			</div>
 		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={resetState}>close</button>
