@@ -1,33 +1,43 @@
 <script lang="ts">
 	import type { AmountPreference } from '@cashu/cashu-ts';
-	import type { Mint } from '../../model/mint';
-	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
-	import { token } from '../../stores/tokens';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
+	import { onMount } from 'svelte';
 
 	export let preference: AmountPreference[];
-	export let mint: Mint;
 	export let amount: number;
+
+	let preferenceAmount = 0
 
 	if (!preference) {
 		preference = [];
 	}
 
-	const mintBalance = getAmountForTokenSet(getTokensForMint(mint, $token));
 
-	$: available = getAvailableCoins();
+	onMount(()=> {preference= []})
+
+	
+	$: amount, 
+		(() => {
+		possible = getPossibleCoins()
+		available = getAvailableCoins()
+	})();
+
+	
+
+	$: available = getAvailableCoins()
 	$: possible = getPossibleCoins();
 
 	const getAvailableCoins = () => {
 		const a: number[] = [];
-		for (let index = 1; index <= mintBalance; index = index * 2) {
+		for (let index = 1; index <= amount; index = index * 2) {
 			a.push(index);
 		}
 		return a;
 	};
 	const getPossibleCoins = () => {
 		const a: number[] = [];
-		for (let index = 1; index <= mintBalance - amount; index = index * 2) {
+		console.log(preferenceAmount)
+		for (let index = 1; index <= amount - preferenceAmount; index = index * 2) {
 			a.push(index);
 		}
 		return a;
@@ -41,7 +51,7 @@
 			preference.push({ amount: a, count: 1 });
 		}
 		preference = preference;
-		amount = preference.reduce((acc, curr) => acc + curr.amount * curr.count, 0);
+		preferenceAmount = preference.reduce((acc, curr) => acc + curr.amount * curr.count, 0)
 		possible = getPossibleCoins();
 	};
 
@@ -56,22 +66,16 @@
 			);
 		}
 		preference = preference;
-		amount = preference.reduce((acc, curr) => acc + curr.amount * curr.count, 0);
-		possible = getPossibleCoins();
-	};
-
-	const reset = () => {
-		preference = [];
-		amount = 0;
+		preferenceAmount = preference.reduce((acc, curr) => acc + curr.amount * curr.count, 0)
 		possible = getPossibleCoins();
 	};
 </script>
 
 <div class="flex flex-col gap-2">
 	<div class="overflow-x-auto overflow-y-scroll scrollbar-hide max-h-56 w-full">
-		<table class="table table-zebra table-sm h-64 ">
+		<table class="table table-zebra table-sm flex">
 			<!-- head -->
-			<thead>
+			<thead class="h-6">
 				<tr>
 					<th>Amount</th>
 					<th>Count</th>
@@ -79,12 +83,23 @@
 					<th>Total</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="h-56">
 				{#each available as denomination}
-					<tr>
-						<th class="flex gap-1 items-center"><TokenIcon />{denomination} sat</th>
-						<td>{preference.find((p) => p.amount === denomination)?.count ?? 0}</td>
-						<td class="flex gap-3">
+					<tr class="h-6 max-h-6">
+						<th>
+							<p class="flex gap-2 items-center">
+
+								<TokenIcon />{denomination} sat
+							</p>
+						</th>
+						<td>
+							<p>
+							{preference.find((p) => p.amount === denomination)?.count ?? 0}
+						</p>
+					</td>
+						<td>
+							<div class="flex gap-2 items-center">
+
 							<button
 								class="btn btn-square btn-error btn-xs {preference.filter(
 									(p) => p.amount === denomination
@@ -120,7 +135,9 @@
 								>
 									<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
 								</svg>
-							</button></td
+							</button>
+							</div>
+							</td
 						>
 						<td>
 							{preference.filter(
@@ -133,8 +150,26 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="grid grid-cols-4 gap-1">
+	<div class="flex flex-col gap-1 pt-2 items-center">
+		<div class="flex justify-center items-center gap-2 w-full">
+
+			<progress class="progress w-full {preferenceAmount==amount? 'progress-success':'progress-warning'} {preferenceAmount>amount? 'progress-warning':''}" value="{preferenceAmount}" max="{amount}"></progress>
+		</div>
+		<div class="flex flex-col items-center justify-center">
+			{#if amount}
+			<p>
+				{preferenceAmount} / {amount?? 0} sats
+			</p>
+			{#if amount-preferenceAmount > 0}
+			<div class="flex flex-col items-center">
+				<p class="font-bold">Change:</p>
+				<p class="">{amount-preferenceAmount} sats</p>
+			</div>
+			{/if}
+			{/if}
+		</div>
 		<div class="col-span-3" />
-		<button on:click={reset} class="btn btn-active"> reset </button>
 	</div>
+	
+	
 </div>

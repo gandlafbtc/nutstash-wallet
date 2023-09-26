@@ -37,7 +37,7 @@
 	import { updateMintKeys } from '../../actions/walletActions';
 	import TokenQr from '../elements/TokenQR.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
-
+	import TokenIcon from '../tokens/TokenIcon.svelte';
 	export let active;
 
 	export let mint: Mint;
@@ -56,10 +56,13 @@
 	let preference: AmountPreference[];
 	let useAmountPreference = false;
 
-	$: useAmountPreference, (() => {
-		preference = []
-		amount = 0
-	})();
+	$: input = isCoinSelection
+		? getAmountForTokenSet(selectedTokens)
+		: getAmountForTokenSet(getTokensToSend(amount, getTokensForMint(mint, $token)));
+	$: output = useAmountPreference
+		? preference?.reduce((acc, curr) => acc + curr.amount * curr.count, 0) ?? 0
+		: amount;
+	$: change = input-output
 
 	const send = async () => {
 		if (isNaN(parseInt(amount)) || amount <= 0) {
@@ -313,9 +316,9 @@
 				</div>
 			</div>
 			{#if $useNostr}
-			<div class="divider">OR</div>
-			<p class="font-bold text-center">Send via Nostr:</p>
-			<div class="pt-2 flex gap-2 items-center w-full">
+				<div class="divider">OR</div>
+				<p class="font-bold text-center">Send via Nostr:</p>
+				<div class="pt-2 flex gap-2 items-center w-full">
 					<div class="inline-block relative w-full join">
 						<div class="flex">
 							<input
@@ -372,39 +375,54 @@
 						</label>
 					</div>
 				</div>
-				{/if}
+			{/if}
 		</div>
 		<div class="flex gap-2">
 			<button class="btn" on:click={resetState}>close</button>
 		</div>
 	{:else}
-		
-	<label class="label cursor-pointer p-0 flex justify-center">
-		<div class="flex gap-1 items-center">
-			<input
-				id="use-amount-preference"
-				type="checkbox"
-				bind:checked={useAmountPreference}
-				class="checkbox checkbox-primary"
-			/>
-			<span class="label-text font-bold">Custom Outputs</span>
-		</div>
-	</label>
-
-	{#if useAmountPreference}
-		<CustomSplits {mint} bind:preference bind:amount />
-	{:else}
-		<p class="text-sm">
-			Cashu tokens consist of unified coin sizes to increase privacy. Per default, nutstash will
-			try to create the token with the minimal number of coins. With <label for="use-amount-preference" class=" cursor-pointer text-primary">
-				custom outputs 
-			</label>
-			 you can define the coins that will be created.
-		</p>
-	{/if}
 		<CoinSelection {amount} {mint} bind:selectedTokens bind:isCoinSelection />
+		<div class="flex gap-1 justify-center items-center">
+			<label class="label cursor-pointer gap-1 flex justify-center items-center">
+				<input
+					id="use-amount-preference"
+					type="checkbox"
+					bind:checked={useAmountPreference}
+					class="checkbox checkbox-primary"
+				/>
 
-		
+				<span class="label-text">Custom Outputs</span>
+			</label>
+
+			<div
+				class="tooltip"
+				data-tip="Cashu tokens consist of unified coin sizes to increase privacy. Per default, nutstash will try to create the token with the minimal number of coins. With custom outputs you can define the coins that will be created."
+			>
+				<div class="hover:text-primary cursor-help">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-5 h-5"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+						/>
+					</svg>
+				</div>
+			</div>
+		</div>
+
+		{#if useAmountPreference}
+			<div>
+				<CustomSplits bind:preference {amount} />
+			</div>
+		{/if}
+
 		<div class="inline-flex text-sm text-neutral gap-1 justify-center">
 			{#if !isCoinSelection}
 				<p>Inputs</p>
@@ -420,10 +438,128 @@
 			{/if}
 		</div>
 
+		{#if amount && getAmountForTokenSet(getTokensForMint(mint, $token)) >= amount}
+			{#if !change && !useAmountPreference}
+				<div class="flex gap-2 text-success justify-center items-center">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+					<p>token will be created offline</p>
+				</div>
+			{:else}
+				<div class="flex gap-2 text-warning justify-center items-center">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+					<p>token will be split before send</p>
+				</div>
+			{/if}
+		{/if}
+		{#if !(!amount || getAmountForTokenSet(getTokensForMint(mint, $token)) < amount || (isCoinSelection && getAmountForTokenSet(selectedTokens) < amount))}
+			<div class="flex gap-2 justify-center w-full items-center">
+				<p class="flex gap-1 items-center">
+					<span class="font-bold"> Input </span>
+					<TokenIcon />
+					{input}
+					<span> sats </span>
+				</p>
+
+				<div class="flex flex-col">
+					{#if !change && !useAmountPreference}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+							/>
+						</svg>
+					{:else}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
+							/>
+						</svg>
+
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M4.5 4.5l15 15m0 0V8.25m0 11.25H8.25"
+							/>
+						</svg>
+					{/if}
+				</div>
+
+				<div class="flex flex-col gap-3">
+					{#if !(!change && !useAmountPreference)}
+						<p class="flex gap-1 items-center">
+							<span class="font-bold"> change </span>
+							<TokenIcon />
+							{change}
+							<span> sats </span>
+						</p>
+					{/if}
+					<p class="flex gap-1 items-center">
+						<span class="font-bold"> Output </span>
+						<TokenIcon />
+						{output}
+						<span> sats </span>
+					</p>
+				</div>
+			</div>
+		{/if}
+
 		<div class=" flex flex-col gap-2 w-full items-center">
 			<div class="flex gap-2">
 				<button
-					class="btn {!amount || (isCoinSelection && getAmountForTokenSet(selectedTokens) < amount)
+					class="btn {!amount ||
+					getAmountForTokenSet(getTokensForMint(mint, $token)) < amount ||
+					(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount)
 						? 'btn-disabled'
 						: 'btn-primary'}"
 					on:click={send}>send</button

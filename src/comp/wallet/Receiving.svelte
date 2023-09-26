@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedToken } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getDecodedToken, type AmountPreference } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
@@ -11,6 +11,7 @@
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
 	import { updateMintKeys } from '../../actions/walletActions';
 	import ScanToken from '../elements/ScanToken.svelte';
+	import CustomSplits from '../elements/CustomSplits.svelte';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -18,6 +19,8 @@
 	export let activeR = 'receive';
 
 	let mint: Mint | undefined;
+	let preference: AmountPreference[];
+
 	let mintId: string = '';
 	let isValid = false;
 	let isLoading = false;
@@ -25,6 +28,7 @@
 	let mintToAdd = '';
 	let isLoadingMint = false;
 	let pasteMessage = 'from clipboard';
+	let isCustomSplits = false;
 
 	const receive = async () => {
 		if (!isValid) {
@@ -49,7 +53,16 @@
 			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 
 			isLoading = true;
-			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedToken);
+
+			let receiveCustomSplits = undefined;
+			if (isCustomSplits) {
+				receiveCustomSplits = preference;
+			}
+			const {
+				token: tokens,
+				tokensWithErrors,
+				newKeys
+			} = await cashuWallet.receive(encodedToken, receiveCustomSplits);
 
 			if (newKeys) {
 				updateMintKeys(mint, newKeys);
@@ -106,7 +119,6 @@
 			const proofs = token[0].proofs;
 			const mint = token[0].mint;
 			mintId = mint;
-			console.log(mintId);
 			proofs.forEach((t) => {
 				amount += t.amount;
 			});
@@ -128,6 +140,7 @@
 		active = 'base';
 		mintToAdd = '';
 		pasteMessage = 'from clipboard';
+		preference = [];
 	};
 	const trustMint = async () => {
 		const mint = new CashuMint(mintToAdd);
@@ -256,7 +269,44 @@
 						{/if}
 					</div>
 				{/if}
-				<div class="h-24 text">
+				{#if amount && encodedToken}
+
+					<div class="justify-center w-full flex gap-1 items-center">
+						<label class="label cursor-pointer p-0 flex gap-1 justify-center">
+							<input
+							type="checkbox"
+								bind:checked={isCustomSplits}
+								class="checkbox checkbox-primary"
+								/>
+								<span class="label-text">Custom Outputs</span>
+						</label>
+						<div
+							class="tooltip"
+							data-tip="Cashu tokens consist of unified coin sizes to increase privacy. Per default, nutstash will try to create the token with the minimal number of coins. With custom outputs you can define the coins that will be created."
+							>
+							<div class="hover:text-primary cursor-help">
+								<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-5 h-5"
+								>
+								<path
+								stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+									/>
+								</svg>
+							</div>
+						</div>
+					</div>
+					{/if}
+					{#if isCustomSplits}
+					<CustomSplits {amount} bind:preference />
+					{/if}
+					<div class="h-24 text">
 					<div class="flex justify-center gap-2 mt-10">
 						<button class="btn {isValid ? 'btn-secondary' : 'btn-disabled'}" on:click={receive}>
 							receive</button
