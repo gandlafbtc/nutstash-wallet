@@ -538,7 +538,7 @@
 				<div class="flex flex-col gap-3">
 					{#if !(!change && !useAmountPreference)}
 						<p class="flex gap-1 items-center">
-							<span class="font-bold"> change </span>
+							<span class="font-bold"> Change </span>
 							<TokenIcon />
 							{change}
 							<span> sats </span>

@@ -155,20 +155,18 @@
 
 			<progress class="progress w-full {preferenceAmount==amount? 'progress-success':'progress-warning'} {preferenceAmount>amount? 'progress-warning':''}" value="{preferenceAmount}" max="{amount}"></progress>
 		</div>
-		<div class="flex flex-col items-center justify-center">
+		<div class="flex items-center justify-center gap-2">
 			{#if amount}
-			<p>
 				{preferenceAmount} / {amount?? 0} sats
-			</p>
-			{#if amount-preferenceAmount > 0}
-			<div class="flex flex-col items-center">
-				<p class="font-bold">Change:</p>
-				<p class="">{amount-preferenceAmount} sats</p>
-			</div>
-			{/if}
+				{#if amount-preferenceAmount > 0}
+				<div class="flex gap-1 items-center">
+					<p class="font-bold">|</p>
+					<p class="">{amount-preferenceAmount} sats</p>
+					<p >change</p>
+				</div>
+				{/if}
 			{/if}
 		</div>
-		<div class="col-span-3" />
 	</div>
 	
 	

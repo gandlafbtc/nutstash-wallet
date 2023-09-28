@@ -57,13 +57,14 @@
 			</div>
 			<span class="">
 				{selectedAmount} / {amount ?? 0} sats
+				{#if selectedAmount - amount > 0}
+					<span class="font-bold"> | </span>
+					<span class="">
+						{selectedAmount - amount} sats
+					</span>
+					<span > change </span>
+				{/if}
 			</span>
-			{#if selectedAmount - amount > 0}
-				<span class="font-bold"> Change: </span>
-				<span class="">
-					{selectedAmount - amount} sats
-				</span>
-			{/if}
 		</div>
 	{:else}{/if}
 </div>
