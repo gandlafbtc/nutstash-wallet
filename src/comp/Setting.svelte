@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { PUBLIC_SELFHOSTED } from '$env/static/public';
+	import { mnemonic } from '../stores/mnemonic';
 	import { checkAutomatically, checkNonPending, checkPending } from '../stores/settings';
 	import { THEMES } from '../stores/static/themes';
 
@@ -9,6 +10,7 @@
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import SelfhostedSetting from './elements/SelfhostedSetting.svelte';
+	import ShowSeed from './elements/ShowSeed.svelte';
 	import WipeWalletButton from './elements/WipeWalletButton.svelte';
 
 	let isShowDangerzone = false;
@@ -53,6 +55,24 @@
 	<div class="flex justify-between items-center">
 		<div class="col-span-1">
 			<label for="">Restore from Backup</label>
+		</div>
+		<div class="col-span-4">
+			<a href="/restore" class="btn btn-primary">restore</a>
+		</div>
+	</div>
+	{#if $mnemonic}
+	<div class="flex justify-between items-center">
+		<div class="col-span-1">
+			<label for="">show seed</label>
+		</div>
+		<div class="col-span-4">
+			<ShowSeed></ShowSeed>
+		</div>
+	</div>
+	{/if}
+	<div class="flex justify-between items-center">
+		<div class="col-span-1">
+			<label for="">Restore from seed</label>
 		</div>
 		<div class="col-span-4">
 			<a href="/restore" class="btn btn-primary">restore</a>

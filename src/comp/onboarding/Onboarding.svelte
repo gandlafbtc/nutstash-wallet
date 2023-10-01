@@ -1,12 +1,28 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { isOnboarded } from '../../stores/message';
 	import RecommendedMints from './RecommendedMints.svelte';
 	import { page } from '$app/stores';
-	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
+	import { mnemonic } from '../../stores/mnemonic';
+	import { CashuMint, CashuWallet, generateNewMnemonic } from '@cashu/cashu-ts';
+	import { validateMnemonic } from '@scure/bip39';
+	import { wordlist } from '@scure/bip39/wordlists/english';
+	import { toast } from '../../stores/toasts';
+	import Mnemonic from '../elements/Mnemonic.svelte';
+	import { browser } from '$app/environment';
+	import { token } from '../../stores/tokens';
 
 	let setUpMint = false;
+
+	let isRestore = false;
+
+	let restoreSeed: Array<string> = new Array(12);
+	
+	let seedString: string = ''
+
+	const populateSeed = () => {
+		restoreSeed = seedString.split(' ')
+		seedString = ''
+	}
 
 	const doSetupMint = async () => {
 		await goto('/', {
@@ -16,6 +32,27 @@
 		});
 		setUpMint = true;
 	};
+
+	const createMnemonic = () => {
+		mnemonic.set(generateNewMnemonic());
+	};
+	const restore = async () => {
+		//todo restore logic
+		const seed = restoreSeed.join(' ')
+		if (!validateMnemonic(seed, wordlist)) {
+			toast('warning', 'not a valid seed phrase', 'could not restore from seed')
+			return
+		}
+		const mint = new CashuMint('https://testnut.cashu.space')
+		const keys = await mint.getKeys()
+		const wallet = new CashuWallet(mint, keys, seed)
+		const proofs = await wallet.restore(100)
+		token.update(state=> [...proofs,...state])
+		mnemonic.set(restoreSeed.join(' '));
+		isRestore = false;
+	};
+
+	
 </script>
 
 <div />
@@ -149,7 +186,96 @@
 					</div>
 				</div>
 				<div id="4" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
-					<img src="/icons/hat.svg" alt="hat" class="w-32" />
+					<img src="/icons/coin.gif" alt="loading" class="h-20" />
+
+					<h1 class="text-lg font-bold">Deterministic backups</h1>
+					{#if isRestore}
+						<div class="card max-w-xl bg-base-100 shadow-xl">
+							<div class="card-body">
+								<p>Insert your seed phrase in the correct order</p>
+								<input type="text" on:paste={populateSeed} bind:value={seedString}>
+								<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+									{#each restoreSeed as input, i}
+										<div class="flex gap-1">
+											<p>{i + 1}.</p>
+											<input
+												type="text"
+												class="input input-sm w-24 bg-base-300"
+												bind:value={restoreSeed[i]}
+											/>
+										</div>
+									{/each}
+								</div>
+								<div class="card-actions flex items-center justify-center w-full pt-3">
+									<button class="btn" on:click={() => (isRestore = false)}> abort </button>
+									<button
+										class="btn {restoreSeed.includes(undefined) ? 'btn-disabled' : 'btn-primary'}"
+										on:click={restore}
+									>
+										restore
+								</button>
+								</div>
+							</div>
+						</div>
+					{/if}
+					{#if $mnemonic}
+						<div class="card max-w-xl bg-base-100 shadow-xl">
+							<div class="card-body">
+								<Mnemonic></Mnemonic>
+								<div class="card-actions flex items-center justify-center w-full pt-3">
+									<a href="#5" class="btn btn-primary"> i wrote it down </a>
+								</div>
+							</div>
+						</div>
+					{:else if !isRestore}
+						<p>
+							By creating a seed phrase token secrets and blinding factors will be generated
+							deterministically, so that in case of loss of wallet data the tokens can be restored
+							with the mints help.
+						</p>
+					{/if}
+					<div class="flex flex-col gap-4">
+						{#if !$mnemonic && !isRestore}
+							<button class="btn btn-primary" on:click={createMnemonic}> create new seed </button>
+							<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
+								restore from seed
+							</button>
+							<a href="#5" class="text-xl link flex justify-center items-center">
+								skip <span class="relative flex h-10 w-10">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+										/>
+									</svg>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-10 h-10 relative inline-flex rounded-full"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+										/>
+									</svg>
+								</span>
+							</a>
+						{/if}
+					</div>
+				</div>
+				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<h1 class="text-lg font-bold">Choose your custodian</h1>
 					<p>
 						nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you connect
@@ -192,6 +318,12 @@
 						? 'opacity-80'
 						: 'opacity-40'} w-2 h-2 rounded-full"
 				/>
+				<a
+					href="#5"
+					class="bg-base-100 {$page.url.hash === '#5'
+						? 'opacity-80'
+						: 'opacity-40'} w-2 h-2 rounded-full"
+				/>
 			</div>
 		</div>
 	</div>
@@ -199,7 +331,6 @@
 	<!-- {:else if page!==5}
 	<div class="flex items-center justify-center w-full col-span-2">
 		<div class="coin">
-			<img src="/icons/coin.gif" alt="loading" class="h-20" />
 		</div>
 	</div> -->
 	<!-- {/if} -->

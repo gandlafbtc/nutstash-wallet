@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedToken, type AmountPreference } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getDecodedToken, type AmountPreference, deriveKeysetId } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
@@ -9,9 +9,11 @@
 	import { HistoryItemType } from '../../model/historyItem';
 	import { getKeysetsOfTokens, validateMintKeys } from '../util/walletUtils';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import { updateCount, updateMintKeys } from '../../actions/walletActions';
 	import ScanToken from '../elements/ScanToken.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
+	import { counts } from '../../stores/counts';
+	import { mnemonic } from '../../stores/mnemonic';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -50,7 +52,13 @@
 				return;
 			}
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys, $mnemonic?$mnemonic:undefined);
+			let count = undefined 
+			let keysetId = ''
+			if ($mnemonic) {
+				keysetId = deriveKeysetId(mint.keys)
+				count = $counts.find(c=>c.keysetId===keysetId)?.count??1
+			}
 
 			isLoading = true;
 
@@ -62,12 +70,17 @@
 				token: tokens,
 				tokensWithErrors,
 				newKeys
-			} = await cashuWallet.receive(encodedToken, receiveCustomSplits);
+			} = await cashuWallet.receive(encodedToken, receiveCustomSplits, count);
 
 			if (newKeys) {
 				updateMintKeys(mint, newKeys);
 			}
 			const proofs = tokens.token.map((t) => t.proofs).flat();
+
+			if ($mnemonic) {
+				updateCount(keysetId, (count??1)+proofs.length)
+			}
+
 			token.update((state) => [...state, ...proofs]);
 
 			if (tokensWithErrors) {

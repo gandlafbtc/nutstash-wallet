@@ -3,6 +3,7 @@ import type { Mint } from '../model/mint';
 import { mints } from '../stores/mints';
 import { get } from 'svelte/store';
 import { toast } from '../stores/toasts';
+import { counts } from '../stores/counts';
 
 // export const send = async () => {
 
@@ -37,3 +38,15 @@ export const updateMintKeys = (mint: Mint, newKeys: MintKeys) => {
 	mints.set(allMints);
 	toast('info', 'the new keyset ID is: ' + newKeyset, 'The keys of this mint have rotated');
 };
+
+export const updateCount = (keysetId: string, newCount: number) => {
+	const allCounts = [...get(counts)];
+	let toBeUpdated = allCounts.find((c) => c.keysetId === keysetId);
+	if (!toBeUpdated) {
+		toBeUpdated = {keysetId, count:newCount}
+		allCounts.push(toBeUpdated)
+	}
+	toBeUpdated.count = newCount;
+	counts.set(allCounts);
+};
+
