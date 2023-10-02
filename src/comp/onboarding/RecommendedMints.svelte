@@ -6,8 +6,12 @@
 	const someMints = [
 		'https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC',
 		'https://8333.space:3338',
-		'https://nuts.semisol.dev'
+		'https://nuts.semisol.dev',
+		'https://testnut.cashu.space',
 	];
+
+	export let isRestore = false
+
 	//fetch from server when cors allowed
 	// async function getMints() {
 	//     const res = await fetch('https://mintindex.gandlaf.com')
@@ -22,6 +26,9 @@
 
 	const persistMints = () => {
 		mints.set($untrustedMints);
+		if (isRestore) {
+			return
+		}
 		isOnboarded.set(true);
 	};
 </script>
