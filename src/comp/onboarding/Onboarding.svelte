@@ -3,32 +3,13 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { mnemonic } from '../../stores/mnemonic';
-	import { CashuMint, CashuWallet, generateNewMnemonic } from '@cashu/cashu-ts';
-	import { validateMnemonic } from '@scure/bip39';
-	import { wordlist } from '@scure/bip39/wordlists/english';
-	import { toast } from '../../stores/toasts';
+	import { generateNewMnemonic} from '@cashu/cashu-ts';
 	import Mnemonic from '../elements/Mnemonic.svelte';
-	import { browser } from '$app/environment';
-	import { token } from '../../stores/tokens';
-	import { updateMintKeys } from '../../actions/walletActions';
-	import { mints } from '../../stores/mints';
-	import { getAmountForTokenSet } from '../util/walletUtils';
-	import { isOnboarded } from '../../stores/message';
+	import RestoreFromSeed from './RestoreFromSeed.svelte';
 
 	let setUpMint = false;
 
 	let isRestore = false;
-	let isRestoring = false;
-
-	let restoreSeed: Array<string> = new Array(12);
-
-	let seedString: string = '';
-
-	const populateSeed = () => {
-		setTimeout(() => {
-			restoreSeed = seedString.split(' ');
-		}, 100);
-	};
 
 	const doSetupMint = async () => {
 		await goto('/', {
@@ -42,29 +23,7 @@
 	const createMnemonic = () => {
 		mnemonic.set(generateNewMnemonic());
 	};
-	const restore = async () => {
-		//todo restore logic
-		const seed = restoreSeed.join(' ');
-		let restoredAmount = 0;
-		if (!validateMnemonic(seed, wordlist)) {
-			toast('warning', 'not a valid seed phrase', 'could not restore from seed');
-			return;
-		}
-		for (const mint of $mints) {
-			const cashuMint = new CashuMint(mint.mintURL);
-			const wallet = new CashuWallet(cashuMint, mint.keys, seed);
-			const { proofs, newKeys } = await wallet.restore(100);
-			if (newKeys) {
-				updateMintKeys(mint, newKeys);
-			}
-			token.update((state) => [...proofs, ...state]);
-			restoredAmount += getAmountForTokenSet(proofs);
-		}
-		mnemonic.set(restoreSeed.join(' '));
-		isRestore = false;
-		toast('success', `${restoredAmount} sats were restored`, 'Seed imported');
-		isOnboarded.set(true);
-	};
+
 </script>
 
 <div />
@@ -202,47 +161,9 @@
 
 					<h1 class="text-lg font-bold">Deterministic backups</h1>
 					{#if isRestore}
-						<div class="card max-w-xl bg-base-100 shadow-xl">
-							<div class="card-body">
-								{#if $mints.length}
-									<p>Insert your seed phrase in the correct order</p>
-									<input
-										type="text"
-										class="input input-primary input-sm"
-										placeholder="or paste seed here... you lazy bastard"
-										on:paste={populateSeed}
-										bind:value={seedString}
-									/>
-									<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-										{#each restoreSeed as input, i}
-											<div class="flex gap-1">
-												<p>{i + 1}.</p>
-												<input
-													type="text"
-													class="input input-sm w-24 bg-base-300"
-													bind:value={restoreSeed[i]}
-												/>
-											</div>
-										{/each}
-									</div>
-									<div class="card-actions flex items-center justify-center w-full pt-3">
-										<button class="btn" on:click={() => (isRestore = false)}> abort </button>
-										<button
-											class="btn {restoreSeed.includes(undefined) || isRestoring
-												? 'btn-disabled'
-												: 'btn-primary'}"
-											on:click={restore}
-										>
-											restore
-										</button>
-									</div>
-								{:else}
-									<RecommendedMints isRestore={true} />
-								{/if}
-							</div>
-						</div>
+						<RestoreFromSeed bind:isRestore></RestoreFromSeed>
 					{/if}
-					{#if $mnemonic}
+					{#if $mnemonic && !isRestore}
 						<div class="card max-w-xl bg-base-100 shadow-xl">
 							<div class="card-body">
 								<Mnemonic />

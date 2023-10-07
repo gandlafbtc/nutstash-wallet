@@ -83,7 +83,6 @@
 			toast('success', 'The swap has successfully been completed', 'Swap complete');
 			isPerform = false;
 			isComplete = true;
-			//todo history
 		} catch (e) {
 			isPerform = false;
 			console.error(e);

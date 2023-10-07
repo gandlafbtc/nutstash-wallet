@@ -37,10 +37,18 @@
 
 <div class="card bg-base-100 col-span-2 flex justify-center">
 	<div class="card-body flex flex-col gap-4 w-full items-center justify-start p-3">
+		{#if isRestore}
+		<h1 class="text-xl font-bold">Mints to restore</h1>
+		<div class="h-10 text-center">
+			Add the mints you want to restore tokens from
+		</div>
+		{:else}
 		<h1 class="text-xl font-bold">Add some mints</h1>
 		<div class="h-10 text-center">
 			Remember, the mint you select will have custody over your satoshis.
 		</div>
+
+		{/if}
 		{#each someMints as url}
 			<MintRowAdd {url} isPredefined={true} />
 		{/each}

@@ -17,7 +17,8 @@
 	<p>
 		Before using nutstash, please make sure you understand the <a
 			class="link link-secondary"
-			href=""
+			href="https://nutstash.app/#faq"
+			target="_blank"
 		>
 			risks.
 		</a>
