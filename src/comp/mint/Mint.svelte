@@ -137,7 +137,7 @@
 {:else if active === 'minting'}
 	<Minting isMinting={false} mint={activeMint} bind:active />
 {/if}
-{#if $mints.length > 1 && active==='base'}
-<div class="divider" />
+{#if $mints.length > 1 && active === 'base'}
+	<div class="divider" />
 	<MintSwap bind:active />
 {/if}

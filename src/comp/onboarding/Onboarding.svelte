@@ -45,7 +45,7 @@
 	const restore = async () => {
 		//todo restore logic
 		const seed = restoreSeed.join(' ');
-		let restoredAmount = 0
+		let restoredAmount = 0;
 		if (!validateMnemonic(seed, wordlist)) {
 			toast('warning', 'not a valid seed phrase', 'could not restore from seed');
 			return;
@@ -58,12 +58,12 @@
 				updateMintKeys(mint, newKeys);
 			}
 			token.update((state) => [...proofs, ...state]);
-			restoredAmount += getAmountForTokenSet(proofs)
+			restoredAmount += getAmountForTokenSet(proofs);
 		}
 		mnemonic.set(restoreSeed.join(' '));
 		isRestore = false;
-		toast('success', `${restoredAmount} sats were restored`, 'Seed imported')
-		isOnboarded.set(true)
+		toast('success', `${restoredAmount} sats were restored`, 'Seed imported');
+		isOnboarded.set(true);
 	};
 </script>
 
@@ -205,37 +205,37 @@
 						<div class="card max-w-xl bg-base-100 shadow-xl">
 							<div class="card-body">
 								{#if $mints.length}
-								<p>Insert your seed phrase in the correct order</p>
-								<input
-									type="text"
-									class="input input-primary input-sm"
-									placeholder="or paste seed here... you lazy bastard"
-									on:paste={populateSeed}
-									bind:value={seedString}
-								/>
-								<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-									{#each restoreSeed as input, i}
-										<div class="flex gap-1">
-											<p>{i + 1}.</p>
-											<input
-												type="text"
-												class="input input-sm w-24 bg-base-300"
-												bind:value={restoreSeed[i]}
-											/>
-										</div>
-									{/each}
-								</div>
-								<div class="card-actions flex items-center justify-center w-full pt-3">
-									<button class="btn" on:click={() => (isRestore = false)}> abort </button>
-									<button
-										class="btn {restoreSeed.includes(undefined) || isRestoring
-											? 'btn-disabled'
-											: 'btn-primary'}"
-										on:click={restore}
-									>
-										restore
-									</button>
-								</div>
+									<p>Insert your seed phrase in the correct order</p>
+									<input
+										type="text"
+										class="input input-primary input-sm"
+										placeholder="or paste seed here... you lazy bastard"
+										on:paste={populateSeed}
+										bind:value={seedString}
+									/>
+									<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+										{#each restoreSeed as input, i}
+											<div class="flex gap-1">
+												<p>{i + 1}.</p>
+												<input
+													type="text"
+													class="input input-sm w-24 bg-base-300"
+													bind:value={restoreSeed[i]}
+												/>
+											</div>
+										{/each}
+									</div>
+									<div class="card-actions flex items-center justify-center w-full pt-3">
+										<button class="btn" on:click={() => (isRestore = false)}> abort </button>
+										<button
+											class="btn {restoreSeed.includes(undefined) || isRestoring
+												? 'btn-disabled'
+												: 'btn-primary'}"
+											on:click={restore}
+										>
+											restore
+										</button>
+									</div>
 								{:else}
 									<RecommendedMints isRestore={true} />
 								{/if}

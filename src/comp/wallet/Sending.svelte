@@ -1,26 +1,11 @@
 <script lang="ts">
-	import {
-		CashuMint,
-		CashuWallet,
-		getDecodedToken,
-		getEncodedToken,
-		type AmountPreference,
-		type Proof
-	} from '@cashu/cashu-ts';
+	import { getDecodedToken, type AmountPreference, type Proof } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { token } from '../../stores/tokens';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import {
-		getAmountForTokenSet,
-		getKeysetsOfTokens,
-		getTokensForMint,
-		getTokensToSend,
-		getTokenSubset
-	} from '../util/walletUtils';
+	import { getAmountForTokenSet, getTokensForMint, getTokensToSend } from '../util/walletUtils';
 	import { browser } from '$app/environment';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
 	import {
 		nostrPool,
 		nostrPrivKey,
@@ -31,13 +16,12 @@
 	} from '../../stores/nostr';
 	import type { Event } from 'nostr-tools';
 	import * as nostrTools from 'nostr-tools';
-	import { pendingTokens } from '../../stores/pendingtokens';
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
 	import TokenQr from '../elements/TokenQR.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
+	import * as walletActions from '../../actions/walletActions';
 	export let active;
 
 	export let mint: Mint;
@@ -62,7 +46,7 @@
 	$: output = useAmountPreference
 		? preference?.reduce((acc, curr) => acc + curr.amount * curr.count, 0) ?? 0
 		: amount;
-	$: change = input-output
+	$: change = input - output;
 
 	const send = async () => {
 		if (isNaN(parseInt(amount)) || amount <= 0) {
@@ -91,47 +75,12 @@
 		try {
 			isLoading = true;
 
-			const cashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet = new CashuWallet(cashuMint, mint.keys);
-
 			let sendPreference = undefined;
 			if (useAmountPreference) {
 				sendPreference = preference;
 			}
-			const { returnChange, send, newKeys } = await cashuWallet.send(
-				amount,
-				tokensToSend,
-				sendPreference
-			);
 
-			if (newKeys) {
-				updateMintKeys(mint, newKeys);
-			}
-
-			//remove all tokens that have been sent to mint from storage
-			token.update((state) => getTokenSubset(state, tokensToSend));
-			//add the tokens that are being sent to pending
-			pendingTokens.update((state) => [...send, ...state]);
-
-			//add newly minted tokens that have been returned as change
-			token.update((state) => [...state, ...returnChange]);
-
-			encodedToken = getEncodedToken({ token: [{ proofs: send, mint: mint.mintURL }] });
-			history.update((state) => [
-				{
-					type: HistoryItemType.SEND,
-					amount: amount,
-					date: Date.now(),
-					data: {
-						encodedToken,
-						mint: mint.mintURL,
-						keyset: getKeysetsOfTokens([...tokensToSend, ...returnChange]),
-						send,
-						returnChange
-					}
-				},
-				...state
-			]);
+			encodedToken = await walletActions.send(mint, amount, tokensToSend, sendPreference);
 			toast('success', 'Copy the token and send it to someone', 'Sendable Token created.');
 			isLoading = false;
 		} catch {

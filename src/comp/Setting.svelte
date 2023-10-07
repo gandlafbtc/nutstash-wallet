@@ -61,14 +61,14 @@
 		</div>
 	</div>
 	{#if $mnemonic}
-	<div class="flex justify-between items-center">
-		<div class="col-span-1">
-			<label for="">show seed</label>
+		<div class="flex justify-between items-center">
+			<div class="col-span-1">
+				<label for="">show seed</label>
+			</div>
+			<div class="col-span-4">
+				<ShowSeed />
+			</div>
 		</div>
-		<div class="col-span-4">
-			<ShowSeed></ShowSeed>
-		</div>
-	</div>
 	{/if}
 	<div class="flex justify-between items-center">
 		<div class="col-span-1">

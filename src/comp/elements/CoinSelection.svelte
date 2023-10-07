@@ -15,7 +15,7 @@
 
 <div class="flex flex-col gap-2 items-center w-full">
 	<div class="flex gap-2 items-center">
-		<label class="label flex gap-1 cursor-pointer p-0  items-center">
+		<label class="label flex gap-1 cursor-pointer p-0 items-center">
 			<input type="checkbox" bind:checked={isCoinSelection} class="checkbox checkbox-primary" />
 			<span class="label-text">Custom Inputs</span>
 		</label>
@@ -62,7 +62,7 @@
 					<span class="">
 						{selectedAmount - amount} sats
 					</span>
-					<span > change </span>
+					<span> change </span>
 				{/if}
 			</span>
 		</div>

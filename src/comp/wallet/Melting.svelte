@@ -1,21 +1,17 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, type Proof } from '@cashu/cashu-ts';
+	import { CashuMint, type Proof } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
-	import { mints } from '../../stores/mints';
 	import {
 		getAmountForTokenSet,
-		getKeysetsOfTokens,
 		getTokensForMint,
 		getTokensToSend
 	} from '../util/walletUtils';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
 	import { onMount } from 'svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import * as walletActions from '../../actions/walletActions';
 	import type { Mint } from '../../model/mint';
 
 	export let active;
@@ -78,66 +74,28 @@
 			toast('warning', 'Invoice is not payable', 'Invoice not paid');
 			return;
 		}
-		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-
-		const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
-
-		let tokensToSend: Array<Proof> = [];
-
-		if (isCoinSelection) {
-			tokensToSend = selectedTokens;
-		} else {
-			tokensToSend = getTokensToSend(amount + fees, getTokensForMint(mint, $token));
-		}
-		if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
-			toast('warning', 'not enough funds', 'Could not Send');
-			isLoading = false;
-			return;
-		}
-		processing = true;
-		const { returnChange, send, newKeys } = await cashuWallet.send(amount + fees, tokensToSend);
-		if (newKeys) {
-			updateMintKeys(mint, newKeys);
-		}
-		console.log(send);
-		// remove sent tokens from storage
-		token.update((state) => {
-			return state.filter((token) => !tokensToSend.includes(token));
-		});
 		try {
-			if (returnChange) {
-				token.update((state) => [...returnChange, ...state]);
+			let tokensToSend: Array<Proof> = [];
+
+			if (isCoinSelection) {
+				tokensToSend = selectedTokens;
+			} else {
+				tokensToSend = getTokensToSend(amount + fees, getTokensForMint(mint, $token));
 			}
 
-			const { isPaid, preimage, change } = await cashuWallet.payLnInvoice(invoice, send);
-			token.update((state) => [...change, ...state]);
-			history.update((state) => [
-				{
-					type: HistoryItemType.MELT,
-					amount: amount + fees - getAmountForTokenSet(change),
-					date: Date.now(),
-					data: {
-						preimage,
-						mint: mint?.mintURL,
-						keyset: getKeysetsOfTokens(tokensToSend),
-						invoice,
-						change: returnChange
-					}
-				},
-				...state
-			]);
-			if (!isPaid) {
+			if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
+				toast('warning', 'not enough funds', 'Could not Send');
 				isLoading = false;
-				//re-add tokens that were sent if invoice is not paid
-				token.update((state) => [...send, ...state]);
-				toast('warning', 'Try again later', 'Invoice could not be paid!');
 				return;
 			}
+			processing = true;
+			const isPaid = await walletActions.melt(mint, amount, fees, tokensToSend, invoice);
+
 			isPaySuccess = true;
 			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
 		} catch (error) {
 			//re-add tokens that were sent if error
-			token.update((state) => [...send, ...state]);
+			toast('error', 'Could not pay invoice', 'Error');
 			console.error(error);
 		} finally {
 			isLoading = false;
@@ -161,10 +119,10 @@
 
 <div class="w-full flex-col flex gap-10 py-9">
 	{#if isLoading}
-	<div class=" h-full flex items-center justify-center gap-5 flex-col">
-		<p>Paying lightning invoice...</p>
-		<LoadingCenter />
-	</div>
+		<div class=" h-full flex items-center justify-center gap-5 flex-col">
+			<p>Paying lightning invoice...</p>
+			<LoadingCenter />
+		</div>
 	{:else if isPaySuccess}
 		<div class="flex w-full h-full flex-col items-center justify-center gap-5">
 			<p class="text-lg font-bold text-success">Lightning invoice has been paid.</p>

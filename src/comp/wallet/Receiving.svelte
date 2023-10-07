@@ -1,19 +1,13 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getDecodedToken, type AmountPreference, deriveKeysetId } from '@cashu/cashu-ts';
+	import { CashuMint, getDecodedToken, type AmountPreference } from '@cashu/cashu-ts';
+	import * as walletActions from '../../actions/walletActions';
 	import { toast } from '../../stores/toasts';
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { token } from '../../stores/tokens';
 	import type { Mint } from '../../model/mint';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
-	import { getKeysetsOfTokens, validateMintKeys } from '../util/walletUtils';
-	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
-	import { updateCount, updateMintKeys } from '../../actions/walletActions';
+	import { getAmountForTokenSet, validateMintKeys } from '../util/walletUtils';
 	import ScanToken from '../elements/ScanToken.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
-	import { counts } from '../../stores/counts';
-	import { mnemonic } from '../../stores/mnemonic';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -51,57 +45,13 @@
 				mintToAdd = getDecodedToken(encodedToken).token[0].mint;
 				return;
 			}
-			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys, $mnemonic?$mnemonic:undefined);
-			let count = undefined 
-			let keysetId = ''
-			if ($mnemonic) {
-				keysetId = deriveKeysetId(mint.keys)
-				count = $counts.find(c=>c.keysetId===keysetId)?.count??1
-			}
-
 			isLoading = true;
-
 			let receiveCustomSplits = undefined;
 			if (isCustomSplits) {
 				receiveCustomSplits = preference;
 			}
-			const {
-				token: tokens,
-				tokensWithErrors,
-				newKeys
-			} = await cashuWallet.receive(encodedToken, receiveCustomSplits, count);
-
-			if (newKeys) {
-				updateMintKeys(mint, newKeys);
-			}
-			const proofs = tokens.token.map((t) => t.proofs).flat();
-
-			if ($mnemonic) {
-				updateCount(keysetId, (count??1)+proofs.length)
-			}
-
-			token.update((state) => [...state, ...proofs]);
-
-			if (tokensWithErrors) {
-				throw new Error('Not all tokens could be redeemed');
-			}
-
-			history.update((state) => [
-				{
-					type: HistoryItemType.RECEIVE,
-					amount,
-					date: Date.now(),
-					data: {
-						encodedToken,
-						mint: mint?.mintURL ?? '',
-						keyset: getKeysetsOfTokens(proofs),
-						receivedTokens: proofs
-					}
-				},
-				...state
-			]);
-			toast('success', `${amount} tokens received`, 'Tokens received!');
+			const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits);
+			toast('success', `${getAmountForTokenSet(proofs)} tokens received`, 'Tokens received!');
 			resetState();
 		} catch (error) {
 			console.error(error);
@@ -283,31 +233,30 @@
 					</div>
 				{/if}
 				{#if amount && encodedToken}
-
 					<div class="justify-center w-full flex gap-1 items-center">
 						<label class="label cursor-pointer p-0 flex gap-1 justify-center">
 							<input
-							type="checkbox"
+								type="checkbox"
 								bind:checked={isCustomSplits}
 								class="checkbox checkbox-primary"
-								/>
-								<span class="label-text">Custom Outputs</span>
+							/>
+							<span class="label-text">Custom Outputs</span>
 						</label>
 						<div
 							class="tooltip"
 							data-tip="Cashu tokens consist of unified coin sizes to increase privacy. Per default, nutstash will try to create the token with the minimal number of coins. With custom outputs you can define the coins that will be created."
-							>
+						>
 							<div class="hover:text-primary cursor-help">
 								<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
 									stroke-width="1.5"
 									stroke="currentColor"
 									class="w-5 h-5"
 								>
-								<path
-								stroke-linecap="round"
+									<path
+										stroke-linecap="round"
 										stroke-linejoin="round"
 										d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
 									/>
@@ -315,11 +264,11 @@
 							</div>
 						</div>
 					</div>
-					{/if}
-					{#if isCustomSplits}
+				{/if}
+				{#if isCustomSplits}
 					<CustomSplits {amount} bind:preference />
-					{/if}
-					<div class="h-24 text">
+				{/if}
+				<div class="h-24 text">
 					<div class="flex justify-center gap-2 mt-10">
 						<button class="btn {isValid ? 'btn-secondary' : 'btn-disabled'}" on:click={receive}>
 							receive</button

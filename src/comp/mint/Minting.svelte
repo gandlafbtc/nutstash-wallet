@@ -59,10 +59,13 @@
 	};
 
 	onMount(() => {
+		checkForMintInProgress();
 		if (browser) {
+			if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+				return
+			}
 			document.getElementById('mint-req-amt')?.focus();
 		}
-		checkForMintInProgress();
 	});
 
 	const checkForMintInProgress = () => {

@@ -7,10 +7,10 @@
 		'https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC',
 		'https://8333.space:3338',
 		'https://nuts.semisol.dev',
-		'https://testnut.cashu.space',
+		'https://testnut.cashu.space'
 	];
 
-	export let isRestore = false
+	export let isRestore = false;
 
 	//fetch from server when cors allowed
 	// async function getMints() {
@@ -27,7 +27,7 @@
 	const persistMints = () => {
 		mints.set($untrustedMints);
 		if (isRestore) {
-			return
+			return;
 		}
 		isOnboarded.set(true);
 	};

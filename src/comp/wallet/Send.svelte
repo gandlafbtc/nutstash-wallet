@@ -36,6 +36,9 @@
 
 	onMount(() => {
 		if (browser) {
+			if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+				return
+			}
 			document.getElementById('send-amt')?.focus();
 		}
 	});
@@ -132,9 +135,7 @@
 								: 'w-10 bg-base-200 rounded-lg'}"
 						/>
 						<p />
-						<p class="font-bold text-xl ">
-							Sats
-						</p>
+						<p class="font-bold text-xl">Sats</p>
 						{#if !isSend && fees}
 							<div class="text-sm flex gap-2">
 								<p class="font-bold">
