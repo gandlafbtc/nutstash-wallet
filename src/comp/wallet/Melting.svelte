@@ -4,11 +4,7 @@
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
-	import {
-		getAmountForTokenSet,
-		getTokensForMint,
-		getTokensToSend
-	} from '../util/walletUtils';
+	import { getAmountForTokenSet, getTokensForMint, getTokensToSend } from '../util/walletUtils';
 	import { onMount } from 'svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import * as walletActions from '../../actions/walletActions';

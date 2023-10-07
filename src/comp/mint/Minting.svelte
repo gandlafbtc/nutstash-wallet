@@ -6,16 +6,11 @@
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import { browser } from '$app/environment';
 	import { toast } from '../../stores/toasts';
-	import { token } from '../../stores/tokens';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
-	import { getKeysetsOfTokens } from '../util/walletUtils';
 	import { mintRequests } from '../../stores/mintReqs';
 	import { onMount } from 'svelte';
-	import type { Proof } from '@cashu/cashu-ts';
-	import { updateMintKeys } from '../../actions/walletActions';
 	import { mints } from '../../stores/mints';
 	import MintSelector from '../elements/MintSelector.svelte';
+	import * as walletActions from '../../actions/walletActions';
 
 	export let mint: Mint = $mints[0];
 	export let active;
@@ -61,8 +56,10 @@
 	onMount(() => {
 		checkForMintInProgress();
 		if (browser) {
-			if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-				return
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+			) {
+				return;
 			}
 			document.getElementById('mint-req-amt')?.focus();
 		}
@@ -123,30 +120,13 @@
 		try {
 			if (wallet && mintingHash) {
 				isPolling = true;
-				const { proofs: tokens, newKeys } = await wallet.requestTokens(mintAmount, mintingHash);
-				if (newKeys) {
-					updateMintKeys(mint, newKeys);
+				let amount = parseInt(mintAmount);
+
+				const { proofs } = await walletActions.mint(mint, amount, mintingHash, qrCode ?? '');
+				if (proofs.length) {
+					toast('success', `${mintAmount} Tokens have been minted.`, 'Success!');
+					isComplete = true;
 				}
-				token.update((state) => [...state, ...tokens]);
-
-				history.update((state) => [
-					{
-						type: HistoryItemType.MINT,
-						amount: mintAmount,
-						date: Date.now(),
-						data: {
-							mintingHash,
-							mint: mint?.mintURL,
-							keyset: getKeysetsOfTokens(tokens),
-							invoice: qrCode,
-							tokens
-						}
-					},
-					...state
-				]);
-
-				toast('success', `${mintAmount} Tokens have been minted.`, 'Success!');
-				isComplete = true;
 			} else {
 				toast('error', 'No minting request was provided.', 'Could not mint Tokens.');
 			}

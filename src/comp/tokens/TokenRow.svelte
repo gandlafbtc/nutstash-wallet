@@ -2,14 +2,14 @@
 	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { Proof } from '@cashu/cashu-ts';
-	import { getMintForToken, getTokenSubset } from '../util/walletUtils';
+	import { getAmountForTokenSet, getMintForToken, getTokenSubset } from '../util/walletUtils';
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
 	import type { Mint } from '../../model/mint';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import { receive, send, updateMintKeys } from '../../actions/walletActions';
 
 	export let mint: Mint | undefined;
 	export let isSelected = false;
@@ -25,32 +25,11 @@
 			toast('warning', 'Add the mint first', 'Cannot recycle token!');
 			return;
 		}
-		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-
-		const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
-		try {
-			await checkTokenSpent();
 			try {
 				isLoading = true;
-				const encodedProofs = getEncodedToken({
-					token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
-				});
-				const {
-					token: tokens,
-					tokensWithErrors,
-					newKeys
-				} = await cashuWallet.receive(encodedProofs);
-				const proofs = tokens.token.map((t) => t.proofs).flat();
-				if (newKeys) {
-					updateMintKeys(mint, newKeys);
-				}
-				if (tokensWithErrors) {
-					throw new Error('could not redeem token');
-				}
-				//remove old token
-				tokenStore.update((state) => getTokenSubset(state, [token]));
-				//add new token
-				tokenStore.update((state) => [...proofs, ...state]);
+
+				const encodedProofs = await send(mint, getAmountForTokenSet([token]), [token])
+				await receive(mint, encodedProofs)
 				toast('success', 'Token has been recycled.', 'Success!');
 				isLoading = false;
 			} catch (e) {
@@ -62,11 +41,7 @@
 					document.getElementById('token-item-modal-' + i).checked = true;
 				}
 			}
-		} catch (e) {
-			isLoading = false;
-			console.error(e);
-			toast('error', 'You might have lost your connection to the mint', 'an Error occurred');
-		}
+		
 	};
 	const deleteToken = () => {
 		tokenStore.update((state) => getTokenSubset(state, [token]));

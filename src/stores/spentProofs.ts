@@ -3,7 +3,9 @@ import type { Proof } from '@cashu/cashu-ts';
 
 import { writable } from 'svelte/store';
 
-const initialValueSting: string = browser ? window.localStorage.getItem('spent-tokens') ?? '[]' : '[]';
+const initialValueSting: string = browser
+	? window.localStorage.getItem('spent-tokens') ?? '[]'
+	: '[]';
 
 const initialValue: Array<Proof> = JSON.parse(initialValueSting);
 

@@ -6,7 +6,7 @@
 	import { toast } from '../../stores/toasts';
 	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import * as walletActions from '../../actions/walletActions';
 	import MintSelector from '../elements/MintSelector.svelte';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 
@@ -73,61 +73,13 @@
 			const cashuSwapInMint = new CashuMint(swapInMint.mintURL);
 			const cashuSwapInWallet = new CashuWallet(cashuSwapInMint, swapInMint.keys);
 
-			const cashuSwapOutMint = new CashuMint(swapOutMint.mintURL);
-			const cashuSwapOutWallet = new CashuWallet(cashuSwapOutMint, swapOutMint.keys);
-
 			const proofsToSend = getTokensToSend(
 				swapAmount + fees,
 				getTokensForMint(swapOutMint, $token)
 			);
+			const isPaid = await walletActions.melt(swapOutMint,swapAmount, fees, proofsToSend,invoice)
 
-			const {
-				returnChange,
-				send,
-				newKeys: newOutKeys
-			} = await cashuSwapOutWallet.send(swapAmount + fees, proofsToSend);
-			if (newOutKeys) {
-				updateMintKeys(swapOutMint, newOutKeys);
-			}
-			console.log(send);
-			// remove sent tokens from storage
-			token.update((state) => {
-				return state.filter((token) => !proofsToSend.includes(token));
-			});
-			if (returnChange) {
-				token.update((state) => [...returnChange, ...state]);
-			}
-			const {
-				isPaid,
-				preimage,
-				change,
-				newKeys: newInKeys
-			} = await cashuSwapOutWallet.payLnInvoice(invoice, send);
-			if (newInKeys) {
-				updateMintKeys(swapOutMint, newInKeys);
-			}
-			if (!isPaid) {
-				token.update((state) => [...send, ...state]);
-				isPerform = false;
-
-				toast(
-					'error',
-					'Something went wrong. Please try again',
-					'Error occured when performing swap'
-				);
-				return;
-			} else {
-				token.update((state) => [...change, ...state]);
-			}
-
-			const { proofs: newProofs, newKeys } = await cashuSwapInWallet.requestTokens(
-				swapAmount,
-				paymentHash
-			);
-			if (newKeys) {
-				updateMintKeys(swapOutMint, newKeys);
-			}
-			token.update((state) => [...newProofs, ...state]);
+			const {proofs} =  await walletActions.mint(swapInMint,swapAmount, paymentHash, invoice)
 			toast('success', 'The swap has successfully been completed', 'Swap complete');
 			isPerform = false;
 			isComplete = true;

@@ -7,19 +7,15 @@
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import {
 		getAmountForTokenSet,
-		getKeysetsOfTokens,
 		getMintForToken,
 		validateMintKeys
 	} from '../util/walletUtils';
-	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
 	import { contacts } from '../../stores/contacts';
 	import type { Contact } from '../../model/contact';
 	import type { Mint } from '../../model/mint';
 	import { onMount } from 'svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import * as walletActions from '../../actions/walletActions';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
@@ -88,20 +84,9 @@
 				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
 				return;
 			}
-
-			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 			const encodedProofs = getEncodedToken(nostrMessage.token);
-
 			isLoading = true;
-			//todo tokens with errors are not handled
-			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedProofs);
-			if (newKeys) {
-				updateMintKeys(mint, newKeys);
-			}
-			const proofs = tokens.token.map((t) => t.proofs).flat();
-			token.update((state) => [...proofs, ...state]);
-
+			await walletActions.receive(mint, encodedProofs)
 			nostrMessages.update((state) => {
 				const everythingElse = state.filter((nM) => {
 					return nM.event.id !== nostrMessage.event.id;
@@ -109,26 +94,6 @@
 				nostrMessage.isAccepted = true;
 				return [nostrMessage, ...everythingElse];
 			});
-
-			history.update((state) => [
-				{
-					type: HistoryItemType.RECEIVE_NOSTR,
-					amount: getAmountForTokenSet(nostrMessage.token.token[0].proofs),
-					date: Date.now(),
-					data: {
-						encodedToken: encodedProofs,
-						mint: mint?.mintURL ?? '',
-						keyset: getKeysetsOfTokens(proofs),
-						receivedTokens: proofs,
-						sender: nostrMessage.event.pubkey,
-						eventId: nostrMessage.event.id
-					}
-				},
-				...state
-			]);
-			if (tokensWithErrors) {
-				throw new Error('Not all tokens could be redeemed');
-			}
 			toast('success', 'the Tokens have been successfully received', 'Success!');
 		} catch (e) {
 			console.error(e);

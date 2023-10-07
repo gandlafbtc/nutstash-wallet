@@ -36,8 +36,10 @@
 
 	onMount(() => {
 		if (browser) {
-			if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-				return
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+			) {
+				return;
 			}
 			document.getElementById('send-amt')?.focus();
 		}

@@ -25,14 +25,15 @@ export const send = async (
 	proofsToSend: Proof[],
 	preference?: AmountPreference[]
 ) => {
-	const cashuMint = new CashuMint(mint.mintURL);
-	const cashuWallet = new CashuWallet(cashuMint, mint.keys);
-	const { returnChange, send, newKeys } = await cashuWallet.send(amount, proofsToSend, preference);
+	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
+	const { returnChange, send, newKeys } = await wallet.send(amount, proofsToSend, preference, count);
 
 	if (newKeys) {
 		updateMintKeys(mint, newKeys);
 	}
-
+	if (seedPhrase) {
+		updateCount(keysetId, (count ?? 1) + returnChange.length + send.length);
+	}
 	//remove all tokens that have been sent to mint from storage
 	token.update((state) => getTokenSubset(state, proofsToSend));
 	//add the tokens that are being sent to pending
@@ -62,39 +63,75 @@ export const send = async (
 	return encodedToken;
 };
 
-// export const mint = async () => {
+const getWalletStuff = (mint: Mint) => {
+	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+	const seedPhrase = get(mnemonic);
+	const wallet: CashuWallet = new CashuWallet(
+		cashuMint,
+		mint.keys,
+		seedPhrase ? seedPhrase : undefined
+	);
+	let count = undefined;
+	let keysetId = '';
+	if (seedPhrase) {
+		keysetId = deriveKeysetId(mint.keys);
+		count = get(counts).find((c) => c.keysetId === keysetId)?.count ?? 1;
+	}
+	return { count, keysetId, wallet, seedPhrase };
+};
 
-// }
+export const mint = async (
+	mint: Mint,
+	amount: number,
+	hash: string,
+	invoice: string,
+	preference?: AmountPreference[]
+) => {
+	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
+	const { proofs, newKeys } = await wallet.requestTokens(amount, hash, preference, count);
+	if (newKeys) {
+		updateMintKeys(mint, newKeys);
+	}
+	if (seedPhrase) {
+		updateCount(keysetId, (count ?? 1) + proofs.length);
+	}
+	token.update((state) => [...state, ...proofs]);
+	history.update((state) => [
+		{
+			type: HistoryItemType.MINT,
+			amount: amount,
+			date: Date.now(),
+			data: {
+				mintingHash: hash,
+				mint: mint?.mintURL,
+				keyset: getKeysetsOfTokens(proofs),
+				invoice: invoice,
+				tokens: proofs
+			}
+		},
+		...state
+	]);
+	return { proofs };
+};
 
 export const receive = async (
 	mint: Mint,
 	encodedToken: string,
 	preference?: AmountPreference[]
 ) => {
-	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-	const cashuWallet: CashuWallet = new CashuWallet(
-		cashuMint,
-		mint.keys,
-		get(mnemonic) ? get(mnemonic) : undefined
-	);
-	let count = undefined;
-	let keysetId = '';
-	if (get(mnemonic)) {
-		keysetId = deriveKeysetId(mint.keys);
-		count = get(counts).find((c) => c.keysetId === keysetId)?.count ?? 1;
-	}
+	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
 	const {
 		token: tokens,
 		tokensWithErrors,
 		newKeys
-	} = await cashuWallet.receive(encodedToken, preference, count);
+	} = await wallet.receive(encodedToken, preference, count);
 
 	if (newKeys) {
 		updateMintKeys(mint, newKeys);
 	}
 	const proofs = tokens.token.map((t) => t.proofs).flat();
 
-	if (get(mnemonic)) {
+	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
 	}
 
@@ -129,15 +166,20 @@ export const melt = async (
 	proofs: Proof[],
 	invoice: string
 ) => {
-	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-
-	const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
-
-	const { returnChange, send, newKeys } = await cashuWallet.send(amount + fees, proofs);
+	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
+	const { returnChange, send, newKeys } = await wallet.send(
+		amount + fees,
+		proofs,
+		undefined,
+		count
+	);
 	if (newKeys) {
 		updateMintKeys(mint, newKeys);
 	}
-	console.log(send);
+	if (seedPhrase) {
+		updateCount(keysetId, (count ?? 1) + returnChange.length + send.length);
+	}
+
 	// remove sent tokens from storage
 	token.update((state) => {
 		return state.filter((token) => !proofs.includes(token));
@@ -146,7 +188,19 @@ export const melt = async (
 		token.update((state) => [...returnChange, ...state]);
 	}
 
-	const { isPaid, preimage, change } = await cashuWallet.payLnInvoice(invoice, send);
+	const {
+		isPaid,
+		preimage,
+		change,
+		newKeys: newKeys2
+	} = await wallet.payLnInvoice(invoice, send, undefined, count);
+	if (newKeys2) {
+		updateMintKeys(mint, newKeys2);
+	}
+	if (seedPhrase) {
+		updateCount(keysetId, (count ?? 1) + change.length);
+	}
+
 	token.update((state) => [...change, ...state]);
 	history.update((state) => [
 		{
