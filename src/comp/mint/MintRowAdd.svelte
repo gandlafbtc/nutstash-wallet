@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { untrustedMints } from '../../stores/untrustedMints';
-	import { deriveKeysetId } from '@cashu/cashu-ts';
+	import { CashuMint, deriveKeysetId } from '@cashu/cashu-ts';
 	import { toast } from '../../stores/toasts';
 
 	export let url: string;
@@ -12,15 +12,13 @@
 	const addMint = async () => {
 		try {
 			isLoading = true;
-			const res = await fetch(`${url}/keys`);
-			const data = await res.json();
-			if (!res.ok) {
-				toast('error', 'could not load mint', 'mint not added');
-				return;
-			}
+			const cashuMint = new CashuMint(url)
+			const keys = await cashuMint.getKeys()
+			const {keysets} = await cashuMint.getKeySets()
+			
 			untrustedMints.update((state) => [
 				...state,
-				{ mintURL: url, keys: data, keysets: [deriveKeysetId(data)] }
+				{ mintURL: url, keys, keysets }
 			]);
 			console.log('asdf');
 			isLoaded = true;

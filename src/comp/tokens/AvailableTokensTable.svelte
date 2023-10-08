@@ -27,8 +27,8 @@
 	onMount(() => {});
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll scrollbar-hide max-h-56 w-full">
-	<table class="table table-compact table-zebra w-full">
+<div class="overflow-y-scroll scrollbar-hide max-h-56 w-full">
+	<table class="table table-compact table-zebra">
 		<thead>
 			<tr>
 				<th>

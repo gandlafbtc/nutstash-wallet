@@ -35,6 +35,8 @@
 			token: [{ proofs: meltData.change ?? [], mint: meltData.mint ?? '' }]
 		});
 	}
+
+
 </script>
 
 <tr>
@@ -42,13 +44,13 @@
 	<td>{historyItem.amount}</td>
 	<td>
 		<p class="hidden lg:flex">
-			{date.toLocaleString('en-us', {
-				dateStyle: 'medium',
-				timeStyle: 'medium'
+			{date.toLocaleString('en-uk', {
+				dateStyle: 'short',
+				timeStyle: 'short',
 			})}
 		</p>
 		<p class="flex lg:hidden">
-			{date.toLocaleString('en-us', {
+			{date.toLocaleString('en-uk', {
 				dateStyle: 'short'
 			})}
 		</p>
