@@ -3,7 +3,7 @@
 	import { mints } from '../../stores/mints';
 	import { untrustedMints } from '../../stores/untrustedMints';
 	import MintRowAdd from '../mint/MintRowAdd.svelte';
-	const someMints = [
+	let someMints = [
 		'https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC',
 		'https://8333.space:3338',
 		'https://nuts.semisol.dev',
@@ -50,9 +50,11 @@
 
 		{/if}
 		{#each someMints as url}
-			<MintRowAdd {url} isPredefined={true} />
+			<MintRowAdd {url} isPredefined={true} afterAdd={()=>{}} />
 		{/each}
-		<MintRowAdd url={''} isPredefined={false} />
+		<MintRowAdd url={''} isPredefined={false} afterAdd={(url)=>{someMints.push(url)
+		someMints=[...someMints]}} />
+		
 		<button
 			class="btn {$untrustedMints.length ? 'btn-primary ' : 'btn-disabled'}"
 			on:click={persistMints}

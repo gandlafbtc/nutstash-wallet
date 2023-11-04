@@ -5,6 +5,7 @@
 
 	export let url: string;
 	export let isPredefined: boolean;
+	export let afterAdd: Function
 
 	let isLoading = false;
 	let isLoaded = false;
@@ -22,6 +23,7 @@
 			]);
 			console.log('asdf');
 			isLoaded = true;
+			afterAdd(url)
 		} catch (error) {
 			toast('error', 'could not load mint', 'mint not added');
 			console.log(error);
@@ -42,7 +44,7 @@
 		{:else}
 			<input
 				type="text"
-				class="w-48 lg:w-full input input-primary bg-base-300 {isLoaded ? 'input-disabled' : ''}"
+				class="w-48 lg:w-full input input-primary bg-base-300"
 				placeholder="your favorite mint"
 				bind:value={url}
 			/>
@@ -51,10 +53,10 @@
 	<div class="w-24 h-16 flex items-center justify-center">
 		{#if isLoading}
 			<button class="loading btn btn-disabled btn-sm" />
-		{:else if $untrustedMints.find((m) => m.mintURL === url)}
+		{:else if $untrustedMints.find((m) => m.mintURL === url) && isPredefined}
 			<button class="btn btn-error" on:click={removeMint}> remove </button>
 		{:else}
-			<button class="btn {url ? 'btn-primary' : 'btn-disabled'} flex gap-1" on:click={addMint}>
+			<button class="btn  btn-primary  flex gap-1" on:click={addMint}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
