@@ -159,7 +159,7 @@ const populateSeed = () => {
             <input
             type="text"
                 class="input input-primary input-sm"
-                placeholder="or paste seed here... you lazy bastard"
+                placeholder="or paste seed here..."
                 on:paste={populateSeed}
                 bind:value={seedString}
             />

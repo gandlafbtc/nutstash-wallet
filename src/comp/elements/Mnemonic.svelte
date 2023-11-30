@@ -52,7 +52,7 @@
 <div class="flex flex-col gap-6">
 	<p>Write down these 12 words in the correct order and store them securely</p>
 	<div class="flex flex-col gap-1 items-center justify-center bg-base-200 p-2 rounded-xl">
-		<p>Or just copy it. You lazy bastard</p>
+		<p>Or just copy it.</p>
 		<button on:click={copyMnemonic} class="btn btn-square btn-info btn-sm"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
