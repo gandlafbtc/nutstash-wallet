@@ -45,7 +45,13 @@
 		{:else}
 		<h1 class="text-xl font-bold">Add some mints</h1>
 		<div class="h-10 text-center">
-			Remember, the mint you select will have custody over your satoshis.
+			<p>
+
+				Remember, the mint you select will have custody over your satoshis. 
+			</p>
+			<p>
+				You will also need to remember from which mints you hold ecash, in order to be able to restore them from seed.
+			</p>
 		</div>
 
 		{/if}
