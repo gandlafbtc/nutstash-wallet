@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_SELFHOSTED } from '$env/static/public';
 	import { mnemonic } from '../stores/mnemonic';
 	import { checkAutomatically, checkNonPending, checkPending } from '../stores/settings';
 	import { THEMES } from '../stores/static/themes';
@@ -9,7 +8,6 @@
 	import NostrRelayModal from './elements/NostrRelayModal.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
-	import SelfhostedSetting from './elements/SelfhostedSetting.svelte';
 	import ShowSeed from './elements/ShowSeed.svelte';
 	import WipeWalletButton from './elements/WipeWalletButton.svelte';
 
@@ -88,10 +86,6 @@
 				<a href="/history" class="btn btn-outline">History</a>
 			</div>
 		</div>
-
-		{#if PUBLIC_SELFHOSTED}
-			<SelfhostedSetting />
-		{/if}
 	</div>
 	<div class="divider col-span-5">Cashu</div>
 	<div class="flex justify-between items-center">

@@ -11,7 +11,6 @@
 	import Code from '../comp/elements/Code.svelte';
 	import { version } from '../stores/version';
 	import { activeTab } from '../stores/activeTab';
-	import { isSyncMints, isSyncTokens } from '../stores/selfhosted';
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
 	import RecommendedMints from '../comp/onboarding/RecommendedMints.svelte';
 	import { page } from '$app/stores';
@@ -131,11 +130,6 @@
 				<Donate />
 				<div class="flex items-baseline gap-1 justify-center">
 					<div class="flex gap-2 items-center">
-						<div class="w-6 h6">
-							{#if $isSyncMints || $isSyncTokens}
-								<div class="btn btn-success btn-disabled loading btn-square btn-xs" />
-							{/if}
-						</div>
 						<Logo />
 					</div>
 					<p class="text-base-300 text-xs">

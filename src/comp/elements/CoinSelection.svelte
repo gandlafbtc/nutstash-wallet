@@ -22,7 +22,7 @@
 		<div
 			class="tooltip"
 			data-tip="Cashu tokens are stored in your wallet as coins. Coins will be selected randomly to create a new sendable token. With Custom Inputs
-		you can define which coins from your wllet will be used."
+		you can define which coins from your wallet will be used."
 		>
 			<div class="hover:text-primary cursor-help">
 				<svg
