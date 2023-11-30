@@ -1,6 +1,6 @@
 {
 	"name": "svelte-cashu-wallet",
-	"version": "0.2.3-0",
+	"version": "0.2.3",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",

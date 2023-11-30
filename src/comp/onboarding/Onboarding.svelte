@@ -159,7 +159,7 @@
 				<div id="4" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<img src="/icons/coin.gif" alt="loading" class="h-20" />
 
-					<h1 class="text-lg font-bold">Deterministic backups</h1>
+					<h1 class="text-lg font-bold">Seed phrase backup</h1>
 					{#if isRestore}
 						<RestoreFromSeed bind:isRestore></RestoreFromSeed>
 					{/if}
@@ -174,8 +174,7 @@
 						</div>
 					{:else if !isRestore}
 						<p>
-							By creating a seed phrase token secrets and blinding factors will be generated
-							deterministically, so that in case of loss of wallet data the tokens can be restored
+							By creating a seed phrase token secrets will be generated deterministically, so that in case of loss of wallet data the tokens can be restored
 							with the mints help.
 						</p>
 					{/if}
