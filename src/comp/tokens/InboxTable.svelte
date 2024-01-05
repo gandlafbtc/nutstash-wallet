@@ -4,10 +4,9 @@
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
 	import { toast } from '../../stores/toasts';
-	import { token } from '../../stores/tokens';
 	import { getAmountForTokenSet } from '../util/walletUtils';
 	import InboxRow from './InboxRow.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import { receive } from '../../actions/walletActions';
 
 	$: page = 20;
 	$: nostrMessagesSub = $nostrMessages.slice(0, page);
@@ -34,34 +33,21 @@
 					keys = $mints.filter((m) => m.mintURL === mint.mintUrl)[0].keys;
 				} else {
 					keys = await mint.getKeys();
-					const storeMint: Mint = {
-						mintURL: mint.mintUrl,
-						keys,
-						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))]
-					};
 				}
-
+				const storeMint: Mint = {
+					mintURL: mint.mintUrl,
+					keys,
+					keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))]
+				};
+				
 				const wallet = new CashuWallet(mint, keys);
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const {
-						token: tokens,
-						tokensWithErrors,
-						newKeys
-					} = await wallet.receive(getEncodedToken(nM.token));
-					const storedMint = $mints.find((m) => mint.mintUrl === m.mintURL);
-					if (newKeys && storedMint) {
-						updateMintKeys(storedMint, newKeys);
-					}
-					const proofs = tokens.token.map((t) => t.proofs).flat();
-					token.update((state) => [...proofs, ...state]);
+					const {proofs} = await receive(storeMint, getEncodedToken(nM.token))
 					totalReceived += getAmountForTokenSet(proofs);
-					if (tokensWithErrors) {
-						throw new Error('Could not redeem all tokens');
-					}
 				}
 				totalSpent += getAmountForTokenSet(spentProofs);
 			} catch (error) {
