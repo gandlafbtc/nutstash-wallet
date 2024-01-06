@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { nostrPrivKey, useNostr, nostrPubKey, useExternalNostrKey } from '../../stores/nostr';
-	import { generatePrivateKey, getPublicKey } from 'nostr-tools';
+	import { generateSecretKey, getPublicKey } from 'nostr-tools';
 	import { browser } from '$app/environment';
 	import { toast } from '../../stores/toasts';
 	import NostrRelaysConfig from './NostrRelaysConfig.svelte';
+	import { bytesToHex } from "@noble/hashes/utils";
 
 	let isEditNostr = false;
 	const generateNostrPrivKey = () => {
 		if (!isEditNostr) {
 			return false;
 		}
-		nostrPrivKey.set(generatePrivateKey());
-		nostrPubKey.set(getPublicKey($nostrPrivKey));
+		const priv =generateSecretKey()
+		nostrPrivKey.set(bytesToHex(priv));
+		nostrPubKey.set(getPublicKey(priv));
 		restartNostr();
 	};
 

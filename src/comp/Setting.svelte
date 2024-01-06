@@ -78,30 +78,14 @@
 		</div>
 	</div>
 
-	{#if showLegacy}
-	<div class="flex flex-col gap-2 h-32 bg-base-200 p-2 rounded-lg">
 		<div class="flex justify-between items-center">
 			<div>
-				<label for="">Backup Tokens</label>
+				<label for="">Export ecash</label>
 			</div>
 			<div>
 				<BackupButton />
 			</div>
 		</div>
-		<div class="flex justify-between items-center">
-			<div class="col-span-1">
-				<label for="">Restore from File</label>
-			</div>
-			<div class="col-span-4">
-				<a href="/restore" class="btn btn-primary">restore</a>
-			</div>
-		</div>
-	</div>
-		 {:else}
-	<div class="flex border-dashed border flex-col items-center justify-center gap-2 h-32 bg-base-200 p-2 rounded-lg">
-		<button class="btn btn-outline" on:click={()=>showLegacy=true}>show legacy options</button>
-	</div>	
-	{/if}
 	<div class="divider col-span-5">Cashu</div>
 	<div class="flex justify-between items-center">
 		<div class="col-span-2">

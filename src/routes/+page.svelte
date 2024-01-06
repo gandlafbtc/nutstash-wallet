@@ -14,6 +14,8 @@
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
 	import RecommendedMints from '../comp/onboarding/RecommendedMints.svelte';
 	import { page } from '$app/stores';
+	export const prerender = true
+	export const ssr = false
 
 	$activeTab = 'wallet';
 
@@ -33,7 +35,7 @@
 		<div class="col-span-2 mx-0.5 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
 			<div class="dropdown">
 				<div class="bg-opacity-100 h-full">
-					<div class="tabs w-full flex-grow-0">
+					<div class="tabs tabs-lifted w-full flex-grow-0">
 						<button
 							on:click={() => changeTab('wallet')}
 							class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'wallet'

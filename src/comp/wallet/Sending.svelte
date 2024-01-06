@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getDecodedToken, type AmountPreference, type Proof } from '@cashu/cashu-ts';
+	import { hexToBytes } from "@noble/hashes/utils";
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { token } from '../../stores/tokens';
@@ -148,7 +149,7 @@
 		try {
 			nostrSendLoading = true;
 			const event: Event = {
-				kind: nostrTools.Kind.EncryptedDirectMessage,
+				kind: nostrTools.kinds.EncryptedDirectMessage,
 				//@ts-ignore
 				tags: [['p', await getConvertedPubKey()]],
 				content: await getEncryptedContent(),
@@ -163,11 +164,10 @@
 				);
 			} else {
 				event.id = nostrTools.getEventHash(event);
-				const signature: string = nostrTools.signEvent(event, $nostrPrivKey);
-				event.sig = signature;
+				const signedEvent = nostrTools.finalizeEvent(event, hexToBytes($nostrPrivKey));
 				console.log(event);
 				$nostrPool.publish(
-					event,
+					signedEvent,
 					$nostrRelays.map((r) => r.url)
 				);
 			}

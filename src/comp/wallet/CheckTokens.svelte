@@ -6,6 +6,14 @@
 	import { getTokensForMint } from "../util/walletUtils";
 	import { checkAutomatically, checkNonPending, checkPending } from "../../stores/settings";
 	import { toast } from "../../stores/toasts";
+	import { onMount } from "svelte";
+
+
+	onMount(()=> {
+		if ($checkAutomatically && ($checkPending || $checkNonPending)) {
+			checkTokens();
+		}
+	})
 
     let isChecking = false 
 const checkTokens = async () => {

@@ -48,9 +48,6 @@
 				});
 			}
 		}
-		if ($checkAutomatically && ($checkPending || $checkNonPending)) {
-			checkTokens();
-		}
 	});
 
 	

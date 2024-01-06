@@ -19,7 +19,7 @@
 {#if !$token.length && !$history.length && !$pendingTokens.length}
 	<FirstTimeWarning />
 {:else}
-	<div class="tabs">
+	<div class="tabs tabs-bordered">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		{#if $history.length}
 			<div

@@ -78,7 +78,7 @@
 		nostrPool.set(new rp.RelayPool(activeRelays));
 		const nostrPubK: string = await getPubKey();
 		$nostrPool?.subscribe(
-			[{ kinds: [nostrTools.Kind.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK] }],
+			[{ kinds: [nostrTools.kinds.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK] }],
 			activeRelays,
 			async (event, isAfterEose, relayURL) => {
 				console.log(event);
