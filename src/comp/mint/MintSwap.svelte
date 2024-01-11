@@ -127,7 +127,7 @@
 	</div>
 {:else}
 	<!-- else content here -->
-	<div class="flex flex-col gap-2">
+	<div class="flex flex-col gap-2 items-center">
 		<p class="text-xl font-bold">Swap sats between mints.</p>
 		<p class="text-warning">
 			⚠️ For a brief moment, you will be trusting two mints at the same time. There is things that

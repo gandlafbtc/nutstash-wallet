@@ -57,7 +57,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="divider col-span-5">Backup restore</div>
+	<div class="divider col-span-5">Backup</div>
 
 	{#if $mnemonic}
 		<div class="flex justify-between items-center">
@@ -69,15 +69,6 @@
 			</div>
 		</div>
 	{/if}
-	<div class="flex justify-between items-center">
-		<div class="col-span-1">
-			<label for="">Restore from seed</label>
-		</div>
-		<div class="col-span-4">
-			<a href="/restore" class="btn btn-primary">restore</a>
-		</div>
-	</div>
-
 		<div class="flex justify-between items-center">
 			<div>
 				<label for="">Export ecash</label>
