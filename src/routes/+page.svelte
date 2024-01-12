@@ -119,8 +119,8 @@
 					? 'rounded-tl-none'
 					: ''} {$activeTab === 'setting' ? 'rounded-tr-none' : ''}"
 			>
-				{#if $activeTab === 'wallet'}
-					<Wallet />
+			{#if $activeTab === 'wallet'}
+			<Wallet />
 				{/if}
 				{#if $activeTab === 'mint'}
 					<Mint />
@@ -129,7 +129,9 @@
 					<Setting />
 				{/if}
 			</div>
+			
 		</div>
+		
 		<div class="hidden lg:flex" />
 		<div />
 		<div class="flex justify-end items-center flex-col col-span-2">

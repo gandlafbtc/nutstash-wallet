@@ -23,6 +23,8 @@
         }
         key.set(await kdf(pass))
         $isEncrypted=true
+     pass = '' 
+     confPass = ''
     }
 
     const unlockWallet =async  () => {
@@ -34,6 +36,9 @@
             key.set(undefined)
             toast('error', 'can not unlock', 'wrong password')
         }
+        finally {
+            pass = '' 
+        }
     }
 </script>
 {#if $isEncrypted===undefined}
@@ -44,23 +49,22 @@
                 Encrypt wallet storage
             </p>
             <p>
-                Set up an encryption key to keep ecash tokens stored in nutstash safe
+                Set up wallet encryption to keep your nuts safe
             </p>
-            <div class="flex justify-between">
-                <div class="text-success flex flex-col gap-1">
-                    <p>+ lock wallet automatically</p>
-                    <p>+ ecash inaccessible outside wallet</p>
-                </div>
-                <div class="divider-vertical divider"></div>
-                <div class="text-error flex flex-col gap-1">
 
-                    <p>
-                        - Wallet might be slower
-                    </p>
+            <div class="flex justify-between">
+                <div class="text-error font-bold flex flex-col gap-1">
                     <p>
                         - no password reset function
                     </p>
-                </div>    
+                    <p>
+                        - wallet might be slower
+                    </p>
+                    <div class="text-success text-xs font-normal flex flex-col gap-1">
+                        <p>+ lock wallet automatically</p>
+                        <p>+ ecash inaccessible outside wallet</p>
+                    </div>    
+                </div>
             </div>
         </div>
         <input type="password" class="input input-bordered" placeholder="password" bind:value={pass}>

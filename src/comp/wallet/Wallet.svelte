@@ -2,30 +2,22 @@
 	import { page } from '$app/stores';
 	import { token } from '../../stores/tokens';
 	import { mints } from '../../stores/mints';
-	import Sending from './Sending.svelte';
-	import Receiving from './Receiving.svelte';
 	import Tokens from '../tokens/Tokens.svelte';
-	import Melting from './Melting.svelte';
 	import { onMount } from 'svelte';
-	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
-	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
-	import { toast } from '../../stores/toasts';
+	import { getAmountForTokenSet } from '../util/walletUtils';
 	import { pendingTokens } from '../../stores/pendingtokens';
-	import ScanLn from '../elements/ScanLN.svelte';
 	import { goto } from '$app/navigation';
-	import { checkAutomatically, checkNonPending, checkPending } from '../../stores/settings';
+	import { checkAutomatically, checkNonPending, checkPending, isEncrypted } from '../../stores/settings';
 	import { activeTab } from '../../stores/activeTab';
-	import MintButton from '../elements/MintButton.svelte';
 	import Minting from '../mint/Minting.svelte';
 	import { isOnboarded } from '../../stores/message';
 	import Receive from './Receive.svelte';
 	import Send from './Send.svelte';
 	import CheckTokens from './CheckTokens.svelte';
+	import { key } from '../../stores/key';
 
 	let active = 'base';
-	let scannedlnInvoice = '';
 	let encodedToken = '';
-	let isChecking = false;
 	let selectedMint = $mints[0];
 
 	onMount(async () => {
@@ -37,6 +29,7 @@
 				$activeTab = 'mint';
 			} else if (searchParams.get('token')) {
 				isOnboarded.set(true);
+				isEncrypted.set(false);
 				active = 'receive';
 				const originalUrl = $page.url.toString();
 				const newUrl = originalUrl.split('?')[0];
@@ -132,6 +125,21 @@
 			</div>
 		</div>
 		<Tokens />
+		{#if $isEncrypted}
+		
+			 <div class=" h-full flex flex-col justify-end cursor-pointer">
+				<div class="tooltip" data-tip="lock wallet">
+
+					<button class="btn btn-square hover:text-info" on:click={()=> {key.set(undefined)}}>
+						
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+						<path d="M18 1.5c2.9 0 5.25 2.35 5.25 5.25v3.75a.75.75 0 0 1-1.5 0V6.75a3.75 3.75 0 1 0-7.5 0v3a3 3 0 0 1 3 3v6.75a3 3 0 0 1-3 3H3.75a3 3 0 0 1-3-3v-6.75a3 3 0 0 1 3-3h9v-3c0-2.9 2.35-5.25 5.25-5.25Z" />
+					</svg>
+				</button>
+			</div>
+				  
+			 </div>
+		{/if}
 	</div>
 {:else if active === 'receive'}
 	<Receive bind:active {encodedToken} />
