@@ -49,7 +49,7 @@
                 Encrypt wallet storage
             </p>
             <p>
-                Set up wallet encryption to keep your nuts safe
+                Set up wallet encryption to keep your nuts safe. This cannot be changed later
             </p>
 
             <div class="flex justify-between">
