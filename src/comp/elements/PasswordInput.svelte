@@ -35,6 +35,7 @@
         } catch (error) {
             key.set(undefined)
             toast('error', 'can not unlock', 'wrong password')
+            console.log(error)
         }
         finally {
             pass = '' 

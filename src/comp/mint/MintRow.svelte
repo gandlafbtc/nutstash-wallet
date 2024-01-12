@@ -130,7 +130,7 @@
 	<td class="flex gap-2 justify-end w-full">
 		{#if isEdit}
 			<div class="z-10 fixed top-0 left-0 w-screen h-screen" on:click={() => (isEdit = false)} />
-			<div class="z-20 fixed bg-base-300 w-44 rounded-md">
+			<div class="z-20 fixed bg-base-300 bg-opacity-100 w-44 rounded-md">
 				<div class="flex flex-col">
 					<div class="flex items-center justify-between border-b-[0.5px] border-base-100 p-2">
 						<p class="font-bold text-sm">mint actions</p>

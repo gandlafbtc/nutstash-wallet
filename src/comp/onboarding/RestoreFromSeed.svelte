@@ -10,10 +10,11 @@
 	import { mnemonic } from "../../stores/mnemonic";
 	import RecommendedMints from "./RecommendedMints.svelte";
 	import CheckTokens from "../wallet/CheckTokens.svelte";
-	import { checkNonPending } from "../../stores/settings";
+	import { checkNonPending, isEncrypted } from "../../stores/settings";
 	import { isOnboarded } from "../../stores/message";
 	import type { Mint } from "../../model/mint";
 	import KeysetModal from "./KeysetModal.svelte";
+	import PasswordInput from "../elements/PasswordInput.svelte";
 
     export let isRestore
 
@@ -192,7 +193,11 @@ const populateSeed = () => {
             </div>
             {/if}
         {:else}
+            {#if $isEncrypted===undefined}
+                 <PasswordInput></PasswordInput>
+            {:else}
             <RecommendedMints isRestore={true} />
+            {/if}
         {/if}
     </div>
 </div>
