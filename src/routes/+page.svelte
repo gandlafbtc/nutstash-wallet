@@ -14,6 +14,9 @@
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
 	import RecommendedMints from '../comp/onboarding/RecommendedMints.svelte';
 	import { page } from '$app/stores';
+	import { key } from '../stores/key';
+	import { isEncrypted } from '../stores/settings';
+	import PasswordInput from '../comp/elements/PasswordInput.svelte';
 	export const prerender = true
 	export const ssr = false
 
@@ -28,9 +31,11 @@
 	class="w-full grid lg:grid-cols-4 h-screen max-h-screen p-1 bg-gradient-to-br from-primary to-secondary overflow-auto"
 	data-theme={$theme}
 >
+
 	{#if !$isOnboarded && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint')}
 		<Onboarding />
 	{:else}
+		<PasswordInput >
 		<div class="hidden lg:flex" />
 		<div class="col-span-2 mx-0.5 flex flex-shrink-0 flex-col h-full xl:mx-0 xl:w-full">
 			<div class="dropdown">
@@ -142,5 +147,6 @@
 			</div>
 		</div>
 		<div />
+		</PasswordInput>
 	{/if}
 </div>

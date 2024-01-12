@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { mnemonic } from '../stores/mnemonic';
-	import { checkAutomatically, checkNonPending, checkPending } from '../stores/settings';
+	import { checkAutomatically, checkNonPending, checkPending, isEncrypted } from '../stores/settings';
 	import { THEMES } from '../stores/static/themes';
 
 	import { theme } from '../stores/theme';
@@ -211,3 +211,31 @@
 	{/if}
 </div>
 <NostrRelayModal />
+<div class="flex flex-col items-center justify-end">
+	<div class="flex gap-2">
+
+		{#if $isEncrypted}
+		<div class="tooltip" data-tip="wallet uses encryption">
+			
+		<div class="bg-base-200 p-2 rounded-lg">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-success w-6 h-6">
+				<path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd" />
+			</svg>
+		</div>
+	</div>
+	{/if}
+	{#if $mnemonic}
+	<div class="tooltip" data-tip="wallet uses mnemonic backup">
+
+		<div class="bg-base-200 p-2 rounded-lg">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-info w-6 h-6">
+				<path fill-rule="evenodd" d="M15.75 1.5a6.75 6.75 0 0 0-6.651 7.906c.067.39-.032.717-.221.906l-6.5 6.499a3 3 0 0 0-.878 2.121v2.818c0 .414.336.75.75.75H6a.75.75 0 0 0 .75-.75v-1.5h1.5A.75.75 0 0 0 9 19.5V18h1.5a.75.75 0 0 0 .53-.22l2.658-2.658c.19-.189.517-.288.906-.22A6.75 6.75 0 1 0 15.75 1.5Zm0 3a.75.75 0 0 0 0 1.5A2.25 2.25 0 0 1 18 8.25a.75.75 0 0 0 1.5 0 3.75 3.75 0 0 0-3.75-3.75Z" clip-rule="evenodd" />
+			  </svg>
+			  
+			</div>
+		</div>
+		{/if}
+	</div>
+
+</div>
+
