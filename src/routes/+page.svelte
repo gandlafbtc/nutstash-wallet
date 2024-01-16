@@ -6,16 +6,12 @@
 	import Logo from '../comp/elements/Logo.svelte';
 	import { isOnboarded } from '../stores/message';
 	import { nostrMessages } from '../stores/nostr';
-	import { mints } from '../stores/mints';
 	import Donate from '../comp/elements/Donate.svelte';
 	import Code from '../comp/elements/Code.svelte';
 	import { version } from '../stores/version';
 	import { activeTab } from '../stores/activeTab';
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
-	import RecommendedMints from '../comp/onboarding/RecommendedMints.svelte';
 	import { page } from '$app/stores';
-	import { key } from '../stores/key';
-	import { isEncrypted } from '../stores/settings';
 	import PasswordInput from '../comp/elements/PasswordInput.svelte';
 	export const prerender = true;
 	export const ssr = false;
@@ -31,10 +27,10 @@
 	class="w-full h-screen max-h-screen p-1 bg-gradient-to-br from-primary to-secondary overflow-auto flex justify-center"
 	data-theme={$theme}
 >
+	<PasswordInput>
 	{#if !$isOnboarded && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint')}
 		<Onboarding />
 	{:else}
-		<PasswordInput>
 			<div class="flex flex-col w-full max-w-5xl">
 				<div class="grow flex flex-col">
 					<div class="dropdown">
@@ -146,6 +142,6 @@
 					</div>
 				</div>
 			</div>
-		</PasswordInput>
-	{/if}
+			{/if}
+	</PasswordInput>
 </div>

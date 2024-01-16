@@ -5,33 +5,27 @@
 	import { key } from "../../stores/key";
 	import { toast } from "../../stores/toasts";
 	import { browser } from "$app/environment";
-	import { decrypt, encrypt, kdf } from "../../actions/walletActions";
+	import { decrypt, decryptSeed, encrypt, kdf } from "../../actions/walletActions";
 	import { token } from "../../stores/tokens";
-	import { encryptedStorage } from "../../stores/encrypted";
+	import { encryptedStorage, encryptedStorageSeed } from "../../stores/encrypted";
+	import { mnemonic } from "../../stores/mnemonic";
 
     let pass = '' 
-    let confPass = ''
-
-    const enableEncryption =async () => {
-        if (!pass) {
-            toast('warning', 'Invalid Password','Password cannot be empty')
-            return
-        }
-        if (pass!==confPass) {
-            toast('warning', 'Invalid Password', 'Passwords do not match')
-            return
-        }
-        key.set(await kdf(pass))
-        $isEncrypted=true
-     pass = '' 
-     confPass = ''
-    }
 
     const unlockWallet =async  () => {
         key.set(await kdf(pass))
         try {
-            const decrypted = await decrypt($encryptedStorage)
-            token.set(decrypted)
+            if ($encryptedStorage) {
+                const decrypted = await decrypt($encryptedStorage)
+                token.set(decrypted)
+            }
+            else {
+                token.set([])
+            }
+            if (encryptedStorageSeed) {
+                const decryptedSeed = await decryptSeed($encryptedStorageSeed)
+                mnemonic.set( decryptedSeed)
+            }
         } catch (error) {
             key.set(undefined)
             toast('error', 'can not unlock', 'wrong password')
@@ -42,53 +36,16 @@
         }
     }
 </script>
-{#if $isEncrypted===undefined}
-<div class="w-screen h-screen bg-black bg-opacity-80 z-50 fixed top-0 left-0 flex items-center justify-center">
-    <div class="bg-base-100 max-w-2xl rounded-2xl p-10 flex flex-col gap-3">
-        <div class="flex flex-col gap-2">
-            <p class="text-lg font-bold">
-                Encrypt wallet storage
-            </p>
-            <p>
-                Set up wallet encryption to keep your nuts safe. This cannot be changed later
-            </p>
 
-            <div class="flex justify-between">
-                <div class="text-error font-bold flex flex-col gap-1">
-                    <p>
-                        - no password reset function
-                    </p>
-                    <p>
-                        - wallet might be slower
-                    </p>
-                    <div class="text-success text-xs font-normal flex flex-col gap-1">
-                        <p>+ lock wallet automatically</p>
-                        <p>+ ecash inaccessible outside wallet</p>
-                    </div>    
-                </div>
-            </div>
-        </div>
-        <input type="password" class="input input-bordered" placeholder="password" bind:value={pass}>
-        <input type="password" class="input input-bordered" placeholder="confirm password" bind:value={confPass}>
-        <div class="flex gap-2 justify-end">
-            <button class="btn btn-success" on:click={enableEncryption}>
-                encrypt
-            </button>
-        </div>
-        <button class="link" on:click={()=> {isEncrypted.set(false)}}>
-            don't encrypt
-        </button>
-    </div>
-</div>
-{:else if $isEncrypted && !$key}
+{#if $isEncrypted && !$key}
 <div class="w-screen h-screen bg-black bg-opacity-80 z-50 fixed top-0 left-0 flex items-center justify-center">
     <div class="bg-base-100 max-w-2xl rounded-2xl p-10 flex flex-col gap-3">
         <div class="flex flex-col gap-2">
             <p class="text-lg font-bold">
-                Unlock Wallet
+                Wallet is locked.
             </p>
             <p>
-                Wallet is locked. Enter your password to unlock.
+                Enter your password to unlock.
             </p>
         </div>
 

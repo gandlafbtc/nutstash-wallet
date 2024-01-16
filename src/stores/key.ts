@@ -18,7 +18,20 @@ iv.subscribe((value) => {
 	}
 });
 
-export { iv };
+const initialValueStingSeed: string = browser ? window.localStorage.getItem('key-iv-seed') ?? bytesToHex(randomBytes(16)) : bytesToHex(randomBytes(16));
+
+const initialValueSeed: string = initialValueStingSeed;
+
+const seedIv = writable<Uint8Array>(hexToBytes(initialValueSeed));
+
+seedIv.subscribe((value) => {
+	if (browser) {
+        console.log(bytesToHex(value))
+		window.localStorage.setItem('key-iv-seed', bytesToHex(value));
+	}
+});
+
+export { iv,seedIv};
 
 
 export let key = writable<CryptoKey|undefined>()

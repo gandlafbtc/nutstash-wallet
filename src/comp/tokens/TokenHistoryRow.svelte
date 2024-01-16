@@ -7,6 +7,7 @@
 	import type { SendData } from '../../model/data/SendData';
 	import { HistoryItemType, type HistoryItem } from '../../model/historyItem';
 	import HistoryIcon from '../history/HistoryIcon.svelte';
+	import {isEncrypted } from '../../stores/settings';
 
 	export let historyItem: HistoryItem<any>;
 
@@ -56,6 +57,6 @@
 		</p>
 	</td>
 	<td class="max-w-0 overflow-clip">
-		{token}
+		{$isEncrypted?'*********':token}
 	</td>
 </tr>

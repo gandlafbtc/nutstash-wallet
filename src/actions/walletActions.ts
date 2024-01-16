@@ -20,10 +20,9 @@ import { HistoryItemType } from '../model/historyItem';
 import { getAmountForTokenSet, getKeysetsOfTokens, getTokenSubset } from '../comp/util/walletUtils';
 import { pendingTokens } from '../stores/pendingtokens';
 import { browser } from '$app/environment';
-import { iv, key } from '../stores/key';
-import { randomBytes, bytesToHex } from '@noble/hashes/utils';
+import { iv, key, seedIv } from '../stores/key';
+import { randomBytes } from '@noble/hashes/utils';
 import { isEncrypted } from '../stores/settings';
-import { encryptedStorage } from '../stores/encrypted';
 
 export const send = async (
 	mint: Mint,
@@ -57,11 +56,11 @@ export const send = async (
 			amount: amount,
 			date: Date.now(),
 			data: {
-				encodedToken,
+				encodedToken: get(isEncrypted)?'':encodedToken,
 				mint: mint.mintURL,
 				keyset: getKeysetsOfTokens([...proofsToSend, ...returnChange]),
-				send,
-				returnChange
+				send: get(isEncrypted)?[]:send,
+				returnChange: get(isEncrypted)?[]:returnChange
 			}
 		},
 		...state
@@ -112,7 +111,7 @@ export const mint = async (
 				mint: mint?.mintURL,
 				keyset: getKeysetsOfTokens(proofs),
 				invoice: invoice,
-				tokens: proofs
+				tokens: get(isEncrypted)?[]:proofs
 			}
 		},
 		...state
@@ -153,10 +152,10 @@ export const receive = async (
 			amount: getAmountForTokenSet(proofs),
 			date: Date.now(),
 			data: {
-				encodedToken,
+				encodedToken: get(isEncrypted)?'':encodedToken,
 				mint: mint?.mintURL ?? '',
 				keyset: getKeysetsOfTokens(proofs),
-				receivedTokens: proofs
+				receivedTokens: get(isEncrypted)?[]:proofs
 			}
 		},
 		...state
@@ -218,7 +217,7 @@ export const melt = async (
 				mint: mint?.mintURL,
 				keyset: getKeysetsOfTokens(send),
 				invoice,
-				change: returnChange
+				change: get(isEncrypted)?[]:returnChange
 			}
 		},
 		...state
@@ -275,6 +274,25 @@ export const decrypt = async (payload: string) => {
 	if (browser && k) {
 		const decrypted = await window.crypto.subtle.decrypt({ name: "AES-CBC", iv: get(iv) }, k , encodeBase64toUint8(payload))
 		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)))
+	}
+}
+export const encryptSeed = async (payload: string) => {
+	const k = get(key)
+	if (browser && k) {
+		seedIv.set(randomBytes(16))
+		console.log(payload)
+		const encrypted = await window.crypto.subtle.encrypt({ name: "AES-CBC", iv: get(seedIv) }, k , new TextEncoder().encode(payload))
+		return encodeUint8toBase64(new Uint8Array(encrypted))
+	}
+}
+
+export const decryptSeed = async (payload: string) => {
+	const k = get(key)
+	if (browser && k) {
+		const decrypted = await window.crypto.subtle.decrypt({ name: "AES-CBC", iv: get(seedIv) }, k , encodeBase64toUint8(payload))
+		let decoded = new TextDecoder().decode(decrypted)
+		decoded = decoded.replace(/^"(.*)"$/, '$1');
+		return decoded
 	}
 }
 

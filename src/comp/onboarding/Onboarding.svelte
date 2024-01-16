@@ -5,7 +5,10 @@
 	import { mnemonic } from '../../stores/mnemonic';
 	import { generateNewMnemonic} from '@cashu/cashu-ts';
 	import Mnemonic from '../elements/Mnemonic.svelte';
+	import PasswordSetup from '../elements/PasswordSetup.svelte';
 	import RestoreFromSeed from './RestoreFromSeed.svelte';
+	import { isEncrypted } from '../../stores/settings';
+
 
 	let setUpMint = false;
 
@@ -21,7 +24,8 @@
 	};
 
 	const createMnemonic = () => {
-		mnemonic.set(generateNewMnemonic());
+		const m = generateNewMnemonic()
+		mnemonic.set(m);
 	};
 
 </script>
@@ -158,7 +162,9 @@
 				</div>
 				<div id="4" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<img src="/icons/coin.gif" alt="loading" class="h-20" />
-
+					{#if $isEncrypted===undefined}
+						 <PasswordSetup></PasswordSetup>
+					{:else}
 					<h1 class="text-lg font-bold">Seed phrase backup</h1>
 					{#if isRestore}
 						<RestoreFromSeed bind:isRestore></RestoreFromSeed>
@@ -218,7 +224,10 @@
 							</a>
 						{/if}
 					</div>
+					{/if}
+
 				</div>
+
 				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<h1 class="text-lg font-bold">Choose your custodian</h1>
 					<p>
