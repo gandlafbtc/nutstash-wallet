@@ -75,7 +75,7 @@ const populateSeed = () => {
 	};
 
 	const lookForProofs = async (wallet: CashuWallet, count:number, start:number, keysetId?:string, foundProofs?: Proof[]) => {
-		const { proofs, newKeys } = await wallet.restore(count, start, keysetId);
+		const { proofs, newKeys } = await wallet.restore(start, count, keysetId);
 		foundProofs = foundProofs??[]
 		if (proofs.length) {
 			foundProofs.push(...proofs)

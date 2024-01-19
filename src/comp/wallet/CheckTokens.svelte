@@ -7,6 +7,7 @@
 	import { checkAutomatically, checkNonPending, checkPending } from "../../stores/settings";
 	import { toast } from "../../stores/toasts";
 	import { onMount } from "svelte";
+	import { spentTokens } from "../../stores/spenttokens";
 
 
 	onMount(()=> {
@@ -32,6 +33,7 @@ const checkTokens = async () => {
 
 				if ($checkNonPending) {
 					const spentProofs = await cashuWallet.checkProofsSpent(mintTokens);
+					const beforeChecking = [...$token]
 					token.update((state) =>
 						state.filter((p) => {
 							if (!spentProofs.includes(p)) {
@@ -48,9 +50,12 @@ const checkTokens = async () => {
 							return false;
 						})
 					);
+					const diff = beforeChecking.filter(p=>!$token.includes(p))
+					spentTokens.update((state)=> [...diff,...state])
 				}
 				if ($checkPending) {
 					const spentPendingProofs = await cashuWallet.checkProofsSpent(mintPendingTokens);
+					const beforeChecking = [...$pendingTokens]
 					pendingTokens.update((state) =>
 						state.filter((p) => {
 							if (!spentPendingProofs.includes(p)) {
@@ -67,6 +72,8 @@ const checkTokens = async () => {
 							return false;
 						})
 					);
+					const diff = beforeChecking.filter(p=>!$pendingTokens.includes(p))
+					spentTokens.update((state)=> [...diff,...state])
 				}
 				if (!$checkAutomatically && isFirst && isFirstPending) {
 					toast(
