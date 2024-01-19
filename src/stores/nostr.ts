@@ -20,8 +20,8 @@ useNostr.subscribe((value) => {
 });
 
 const initialValueExternalKeySting: string = browser
-	? window.localStorage.getItem('use-external-nostr') ?? 'true'
-	: 'true';
+	? window.localStorage.getItem('use-external-nostr') ?? 'false'
+	: 'false';
 
 const initialValueExternalKey: boolean = JSON.parse(initialValueExternalKeySting);
 

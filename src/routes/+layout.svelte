@@ -4,6 +4,7 @@
 	import '../app.css';
 	import StorageManager from '../comp/plugin/StorageManager.svelte';
 	import Toasts from '../comp/Toasts.svelte';
+	export const ssr = false
 </script>
 
 {#if $useNostr}

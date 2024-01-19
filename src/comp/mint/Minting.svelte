@@ -171,15 +171,13 @@
 			<div
 				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between"
 			>
-				<a href="lightning:{qrCode}">
-					<div class="w-full flex items-center justify-center">
-						<div class="flex items-center justify-center flex-col">
-							<div class="border-warning border rounded-md p-2">
-								<QRCodeImage text={qrCode} displayHeight={275} displayWidth={275} margin={1} />
-							</div>
+				<div class="w-full flex items-center justify-center">
+					<div class="flex items-center justify-center flex-col">
+						<div class="border-warning border rounded-md p-2">
+							<QRCodeImage text={qrCode} displayHeight={275} displayWidth={275} margin={1} />
 						</div>
 					</div>
-				</a>
+				</div>
 				<div class="flex flex-col items-center">
 					<p class="text-3xl">
 						Receive {mintAmount} sats

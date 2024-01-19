@@ -1,5 +1,5 @@
 <div class="w-6 h-6">
-	<a href="https://github.com/gandlafbtc/nutstash-wallet" class="link link-primary">
+	<a href="https://github.com/gandlafbtc/nutstash-wallet" class="link link-primary" target="_blank">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"

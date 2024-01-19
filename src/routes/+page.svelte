@@ -13,7 +13,6 @@
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
 	import { page } from '$app/stores';
 	import PasswordInput from '../comp/elements/PasswordInput.svelte';
-	export const prerender = true;
 	export const ssr = false;
 
 	$activeTab = 'wallet';
@@ -28,7 +27,8 @@
 	data-theme={$theme}
 >
 	<PasswordInput>
-	{#if !$isOnboarded && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint')}
+		<!-- && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint') -->
+	{#if !$isOnboarded }
 		<Onboarding />
 	{:else}
 			<div class="flex flex-col w-full max-w-5xl">

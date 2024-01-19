@@ -21,26 +21,26 @@
 	let selectedMint = $mints[0];
 
 	onMount(async () => {
-		const searchParams = $page.url.searchParams;
-		if (searchParams) {
-			isOnboarded.set(true);
-			const mintUrl = searchParams.get('mint');
-			if (mintUrl) {
-				$activeTab = 'mint';
-			} else if (searchParams.get('token')) {
-				isOnboarded.set(true);
-				isEncrypted.set(false);
-				active = 'receive';
-				const originalUrl = $page.url.toString();
-				const newUrl = originalUrl.split('?')[0];
-				encodedToken = searchParams.get('token') ?? '';
-				await goto(newUrl, {
-					replaceState: true,
-					keepFocus: true,
-					noScroll: true
-				});
-			}
-		}
+		// const searchParams = $page.url.searchParams;
+		// if (searchParams) {
+		// 	isOnboarded.set(true);
+		// 	const mintUrl = searchParams.get('mint');
+		// 	if (mintUrl) {
+		// 		$activeTab = 'mint';
+		// 	} else if (searchParams.get('token')) {
+		// 		isOnboarded.set(true);
+		// 		isEncrypted.set(false);
+		// 		active = 'receive';
+		// 		const originalUrl = $page.url.toString();
+		// 		const newUrl = originalUrl.split('?')[0];
+		// 		encodedToken = searchParams.get('token') ?? '';
+		// 		await goto(newUrl, {
+		// 			replaceState: true,
+		// 			keepFocus: true,
+		// 			noScroll: true
+		// 		});
+		// 	}
+		// }
 	});
 
 	

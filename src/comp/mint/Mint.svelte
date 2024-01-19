@@ -18,19 +18,19 @@
 	let active = 'base';
 
 	onMount(() => {
-		const searchParams = $page.url.searchParams;
+		// const searchParams = $page.url.searchParams;
 
-		if (searchParams) {
-			const mintUrlParam = searchParams.get('mint');
-			if (mintUrlParam) {
-				mintURL = mintUrlParam;
-				$page.url.searchParams.delete('mint');
-				history.replaceState({}, '', $page.url);
-				if (mintURL) {
-					isAddMintPing = true;
-				}
-			}
-		}
+		// if (searchParams) {
+		// 	const mintUrlParam = searchParams.get('mint');
+		// 	if (mintUrlParam) {
+		// 		mintURL = mintUrlParam;
+		// 		$page.url.searchParams.delete('mint');
+		// 		history.replaceState({}, '', $page.url);
+		// 		if (mintURL) {
+		// 			isAddMintPing = true;
+		// 		}
+		// 	}
+		// }
 	});
 
 	const addMint = async () => {

@@ -10,15 +10,26 @@
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import ShowSeed from './elements/ShowSeed.svelte';
 	import WipeWalletButton from './elements/WipeWalletButton.svelte';
+	import HistoryTable from './history/HistoryTable.svelte';
 
 	let isShowDangerzone = false;
-	let showLegacy = false
+	let showHistory = false
 
 	const setTheme = (t: string) => {
 		theme.set(t);
 	};
 </script>
 
+{#if showHistory}
+<div class="flex flex-col">
+	<div>
+		<button class="btn" on:click={()=> showHistory=false}>
+			back
+		</button>
+	</div>
+	<HistoryTable></HistoryTable>
+</div>
+	{:else}
 <div class="flex flex-col justify-start gap-3">
 	<p class="text-xl font-bold">Settings</p>
 	<div class="flex justify-between items-center">
@@ -53,7 +64,7 @@
 
 		<div class="flex justify-between items-center">
 			<div class="col-span-4">
-				<a href="/history" class="btn btn-outline">History</a>
+				<button class="btn btn-outline" on:click={()=>{showHistory=true}}>History</button>
 			</div>
 		</div>
 	</div>
@@ -69,7 +80,7 @@
 			</div>
 		</div>
 	{/if}
-		<div class="flex justify-between items-center">
+	<div class="flex justify-between items-center">
 			<div>
 				<label for="">Export ecash</label>
 			</div>
@@ -82,8 +93,7 @@
 		<div class="col-span-2">
 			<div class="inline-flex gap-1">
 			<label for="">Check pending tokens</label>
-				<a
-					href="https://nutstash.app/faq/#pending-tokens"
+				<div
 					class="lg:tooltip link-primary"
 					data-tip="Will send the secret of all your unspent tokens to the mint. The mint will verify if any of them have already been spent"
 				>
@@ -101,7 +111,7 @@
 							d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
 						/>
 					</svg>
-				</a>
+				</div>
 			</div>
 		</div>
 		<div class="col-span-3 flex gap-2">
@@ -112,8 +122,7 @@
 		<div class="col-span-2">
 			<div class="inline-flex gap-1">
 			<label for="">Check non-pending tokens</label>
-				<a
-					href="https://nutstash.app/faq/#pending-tokens"
+				<div
 					class="lg:tooltip link-primary"
 					data-tip="Will send the secret of all your unspent tokens to the mint. The mint will verify if any of them have already been spent. It is only advised to use this option if privacy is not a priority and you have a strong trust relationship with the mints you're connected to."
 				>
@@ -131,7 +140,7 @@
 							d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
 						/>
 					</svg>
-				</a>
+				</div>
 			</div>
 		</div>
 		<div class="col-span-3 flex gap-2">
@@ -143,8 +152,7 @@
 			<div class="col-span-2">
 				<div class="inline-flex gap-1">
 				<label for="">Check tokens automatically</label>
-					<a
-						href="https://nutstash.app/faq/#pending-tokens"
+					<div
 						class="lg:tooltip link-primary"
 						data-tip="You can activate this option to check for invalid tokens in your wallet automatically. It is only advised to use this option if privacy is not a priority."
 					>
@@ -162,7 +170,7 @@
 								d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
 							/>
 						</svg>
-					</a>
+					</div>
 				</div>
 			</div>
 			<div class="col-span-3 flex gap-2">
@@ -238,4 +246,4 @@
 	</div>
 
 </div>
-
+{/if}
