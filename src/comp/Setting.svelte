@@ -80,11 +80,8 @@
 	<div class="divider col-span-5">Cashu</div>
 	<div class="flex justify-between items-center">
 		<div class="col-span-2">
+			<div class="inline-flex gap-1">
 			<label for="">Check pending tokens</label>
-		</div>
-		<div class="col-span-3 flex gap-2">
-			<input type="checkbox" class="toggle toggle-warning" bind:checked={$checkPending} />
-			<div>
 				<a
 					href="https://nutstash.app/faq/#pending-tokens"
 					class="lg:tooltip link-primary"
@@ -107,14 +104,14 @@
 				</a>
 			</div>
 		</div>
+		<div class="col-span-3 flex gap-2">
+			<input type="checkbox" class="toggle toggle-warning" bind:checked={$checkPending} />
+		</div>
 	</div>
 	<div class="flex justify-between items-center">
 		<div class="col-span-2">
+			<div class="inline-flex gap-1">
 			<label for="">Check non-pending tokens</label>
-		</div>
-		<div class="col-span-3 flex gap-2">
-			<input type="checkbox" class="toggle toggle-error" bind:checked={$checkNonPending} />
-			<div>
 				<a
 					href="https://nutstash.app/faq/#pending-tokens"
 					class="lg:tooltip link-primary"
@@ -137,15 +134,15 @@
 				</a>
 			</div>
 		</div>
+		<div class="col-span-3 flex gap-2">
+			<input type="checkbox" class="toggle toggle-error" bind:checked={$checkNonPending} />
+		</div>
 	</div>
 	{#if $checkPending || $checkNonPending}
 		<div class="flex justify-between items-center">
 			<div class="col-span-2">
+				<div class="inline-flex gap-1">
 				<label for="">Check tokens automatically</label>
-			</div>
-			<div class="col-span-3 flex gap-2">
-				<input type="checkbox" class="toggle toggle-error" bind:checked={$checkAutomatically} />
-				<div>
 					<a
 						href="https://nutstash.app/faq/#pending-tokens"
 						class="lg:tooltip link-primary"
@@ -167,6 +164,9 @@
 						</svg>
 					</a>
 				</div>
+			</div>
+			<div class="col-span-3 flex gap-2">
+				<input type="checkbox" class="toggle toggle-error" bind:checked={$checkAutomatically} />
 			</div>
 		</div>
 	{/if}
