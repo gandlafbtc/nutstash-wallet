@@ -11,9 +11,7 @@
 	import { version } from '../stores/version';
 	import { activeTab } from '../stores/activeTab';
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
-	import { page } from '$app/stores';
 	import PasswordInput from '../comp/elements/PasswordInput.svelte';
-	export const ssr = false;
 
 	$activeTab = 'wallet';
 

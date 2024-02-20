@@ -6,8 +6,8 @@ const initialValue = browser
 	? window.localStorage.getItem('setting-check-non-pending') ?? 'false'
 	: 'false';
 	const initialValue2 = browser
-	? window.localStorage.getItem('setting-check-pending') ?? 'false'
-	: 'false';
+	? window.localStorage.getItem('setting-check-pending') ?? 'true'
+	: 'true';
 	const initialValue3 = browser
 	? window.localStorage.getItem('setting-check-token-auto') ?? 'false'
 	: 'false';
