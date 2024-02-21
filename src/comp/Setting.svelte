@@ -5,7 +5,6 @@
 
 	import { theme } from '../stores/theme';
 	import BackupButton from './elements/BackupButton.svelte';
-	import NostrRelayModal from './elements/NostrRelayModal.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import ShowSeed from './elements/ShowSeed.svelte';
@@ -218,7 +217,6 @@
 		</div>
 	{/if}
 </div>
-<NostrRelayModal />
 <div class="flex flex-col items-center justify-end">
 	<div class="flex gap-2">
 

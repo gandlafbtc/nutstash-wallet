@@ -152,7 +152,7 @@ const populateSeed = () => {
                 <KeysetModal bind:keysetMap ></KeysetModal>
 
             <div class="flex justify-center gap-2">
-                <button class="btn" on:click={finish}>finish</button>
+                <button class="btn btn-primary" on:click={finish}>finish</button>
             </div>
         </div>
             {:else}

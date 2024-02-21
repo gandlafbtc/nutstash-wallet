@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getDecodedToken, type AmountPreference, type Proof } from '@cashu/cashu-ts';
-	import { hexToBytes } from "@noble/hashes/utils";
+	import { hexToBytes } from '@noble/hashes/utils';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { token } from '../../stores/tokens';
@@ -124,7 +124,7 @@
 		return $useExternalNostrKey
 			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
 			: //@ts-ignore
-			  await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
+				await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
 	const getConvertedPubKey = async () => {
 		await resolveNip05();
@@ -269,7 +269,7 @@
 				<p class="font-bold text-center">Send via Nostr:</p>
 				<div class="pt-2 flex gap-2 items-center w-full">
 					<div class="inline-block relative w-full join">
-						<div class="flex">
+						<div class="flex join">
 							<input
 								type="text"
 								class="input input-info w-full join-item"
@@ -278,7 +278,7 @@
 							/>
 
 							{#if nostrSendLoading}
-								<div class="btn btn-square btn-disabled loading join-item" />
+								<button class="btn btn-square btn-disabled loading join-item" />
 							{:else}
 								<button
 									class="btn {sendToNostrKey ? 'btn-info' : 'btn-disabled'} flex gap-1 join-item"
@@ -324,6 +324,18 @@
 						</label>
 					</div>
 				</div>
+				{#if $nostrRelays.filter((e) => e.isActive).length && sendToNostrKey}
+					<div class="p-3 flex flex-col bg-base-200 rounded-lg">
+						<p class="text-center">The event will be posted as a nip-04 encrypted direct message to the following relays:</p>
+						<div class="flex flex-col gap-2">
+							{#each $nostrRelays.filter((e) => e.isActive) as r}
+							<div class="badge badge-sm badge-info">
+								{r.url}
+							</div>
+							{/each}
+						</div>
+					</div>
+				{/if}
 			{/if}
 		</div>
 		<div class="flex gap-2">

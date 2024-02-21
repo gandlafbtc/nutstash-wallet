@@ -18,6 +18,8 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { toast } from '../../stores/toasts';
 	import { browser } from '$app/environment';
+	import { bytesToHex } from "@noble/hashes/utils";
+
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
@@ -36,6 +38,12 @@
 		if (!$useNostr) {
 			console.log('nostr is disabled');
 			return;
+		}
+
+		if (!$nostrPubKey && !$nostrPrivKey) {
+			const priv = nostrTools.generateSecretKey()
+			nostrPrivKey.set(bytesToHex(priv));
+			nostrPubKey.set(nostrTools.getPublicKey(priv));
 		}
 
 		const activeRelays: Array<string> = [];

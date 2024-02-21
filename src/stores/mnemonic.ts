@@ -11,15 +11,14 @@ const mnemonic = writable<string>(initialValue);
 
 mnemonic.subscribe(async (value) => {
 	if (browser) {
-		const stringValue = JSON.stringify(value);
 		if (get(isEncrypted)) {
-			if (stringValue=='') {
+			if (value=='') {
 				return
 			}else{
-				encryptedStorageSeed.set(await encryptSeed(stringValue)??'')
+				encryptedStorageSeed.set(await encryptSeed(value)??"")
 			}
 		} else {
-			window.localStorage.setItem('mnemonic', stringValue);
+			window.localStorage.setItem('mnemonic', value);
 		}
 	}
 });
