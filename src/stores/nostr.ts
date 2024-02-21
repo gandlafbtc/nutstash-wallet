@@ -73,8 +73,8 @@ nostrMessages.subscribe((value) => {
 
 const initialValueStingNostrRelays: string = browser
 	? window.localStorage.getItem('nostr-relays') ??
-	  '[{"url": "wss://nostr-pub.wellorder.net","isActive":"true"}]'
-	: '[{"url": "wss://nostr-pub.wellorder.net","isActive":"true"}]';
+	  '[{"url": "wss://relay.damus.io","isActive":"true"}]'
+	: '[{"url": "wss://relay.damus.io","isActive":"true"}]';
 
 const initialValueNostrRelays: Array<NostrRelay> = JSON.parse(initialValueStingNostrRelays);
 

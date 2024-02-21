@@ -88,7 +88,9 @@ const checkTokens = async () => {
 				console.log(e);
 				toast('error', 'Mint: ' + mint.mintURL, 'There was a problem when syncing with a mint.');
 			}
-			isChecking = false;
+			finally {
+				isChecking = false;
+			}
 		});
 	};
 </script>

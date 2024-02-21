@@ -4,9 +4,8 @@
 	import { untrustedMints } from '../../stores/untrustedMints';
 	import MintRowAdd from '../mint/MintRowAdd.svelte';
 	let someMints = [
-		'https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC',
 		'https://8333.space:3338',
-		'https://nuts.semisol.dev',
+		'https://mint.minibits.cash',
 		'https://testnut.cashu.space'
 	];
 
@@ -37,36 +36,45 @@
 
 <div class="card bg-base-100 col-span-2 flex justify-center">
 	<div class="card-body flex flex-col gap-4 w-full items-center justify-start p-3">
-		{#if isRestore}
-		<h1 class="text-xl font-bold">Mints to restore</h1>
-		<div class="h-10 text-center">
-			Add the mints you want to restore tokens from
+		<div class="py-6">
+			{#if isRestore}
+				<h1 class="text-xl font-bold text-center">Mints to restore</h1>
+				<div class="p-3">Add the mints you want to restore tokens from</div>
+			{:else}
+				<h1 class="text-xl font-bold text-center">Add some mints</h1>
+				<div class="p-3">
+					<p>Remember, the mint you select will have custody over your satoshis.</p>
+					<p>
+						You will also need to remember from which mints you hold ecash, in order to be able to
+						restore them from seed.
+					</p>
+				</div>
+			{/if}
 		</div>
-		{:else}
-		<h1 class="text-xl font-bold">Add some mints</h1>
-		<div class="h-10 text-center">
-			<p>
+		<div class="flex flex-col gap-4">
+			{#each someMints as url}
+				<MintRowAdd {url} isPredefined={true} afterAdd={() => {}}>
+					{#if url === 'https://testnut.cashu.space'}
+						<div class="badge badge-error">TEST</div>
+					{/if}
+				</MintRowAdd>
+			{/each}
+			<MintRowAdd
+				url={''}
+				isPredefined={false}
+				afterAdd={(url) => {
+					someMints.push(url);
+					someMints = [...someMints];
+				}}
+			/>
 
-				Remember, the mint you select will have custody over your satoshis. 
-			</p>
-			<p>
-				You will also need to remember from which mints you hold ecash, in order to be able to restore them from seed.
-			</p>
+			<button
+				class="btn {$untrustedMints.length ? 'btn-primary ' : 'btn-disabled'}"
+				on:click={persistMints}
+			>
+				confirm
+			</button>
 		</div>
-
-		{/if}
-		{#each someMints as url}
-			<MintRowAdd {url} isPredefined={true} afterAdd={()=>{}} />
-		{/each}
-		<MintRowAdd url={''} isPredefined={false} afterAdd={(url)=>{someMints.push(url)
-		someMints=[...someMints]}} />
-		
-		<button
-			class="btn {$untrustedMints.length ? 'btn-primary ' : 'btn-disabled'}"
-			on:click={persistMints}
-		>
-			confirm
-		</button>
 	</div>
 </div>
 

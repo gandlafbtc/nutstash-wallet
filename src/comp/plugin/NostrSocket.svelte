@@ -77,8 +77,15 @@
 		console.log('connecting to nostr relays...', activeRelays);
 		nostrPool.set(new rp.RelayPool(activeRelays));
 		const nostrPubK: string = await getPubKey();
+
+		const filter : {kinds: number[],limit: number,'#p': string[], since?:number}  = { kinds: [nostrTools.kinds.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK]}
+
+		if ($nostrMessages.length) {
+			filter.since= $nostrMessages.map(m=> m.event.created_at).reduce((prev, curr)=>{ return prev>=curr?prev:curr})
+		}
+
 		$nostrPool?.subscribe(
-			[{ kinds: [nostrTools.kinds.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK] }],
+			[filter],
 			activeRelays,
 			async (event, isAfterEose, relayURL) => {
 				console.log(event);
