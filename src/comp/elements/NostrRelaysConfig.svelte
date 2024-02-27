@@ -5,6 +5,10 @@
 	let relayUrl: string;
 
 	const addRelay = () => {
+		if (!relayUrl.includes('wss://')) {
+			toast('warning', 'not a valid relay', 'Relay not added.');
+			return
+		}
 		if ($nostrRelays.map((r) => r.url).includes(relayUrl)) {
 			toast('warning', 'this relay is already added', 'Relay not added.');
 			return;
