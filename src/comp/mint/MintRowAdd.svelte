@@ -5,7 +5,7 @@
 
 	export let url: string;
 	export let isPredefined: boolean;
-	export let afterAdd: Function
+	export let afterAdd: Function;
 
 	let isLoading = false;
 	let isLoaded = false;
@@ -13,17 +13,14 @@
 	const addMint = async () => {
 		try {
 			isLoading = true;
-			const cashuMint = new CashuMint(url)
-			const keys = await cashuMint.getKeys()
-			const {keysets} = await cashuMint.getKeySets()
-			
-			untrustedMints.update((state) => [
-				...state,
-				{ mintURL: url, keys, keysets }
-			]);
+			const cashuMint = new CashuMint(url);
+			const keys = await cashuMint.getKeys();
+			const { keysets } = await cashuMint.getKeySets();
+
+			untrustedMints.update((state) => [...state, { mintURL: url, keys, keysets }]);
 			console.log('asdf');
 			isLoaded = true;
-			afterAdd(url)
+			afterAdd(url);
 		} catch (error) {
 			toast('error', 'could not load mint', 'mint not added');
 			console.log(error);
@@ -43,7 +40,7 @@
 			<div class="flex flex-col lg:flex-row lg:items-center gap-2">
 				{url}
 				<div>
-					<slot></slot>
+					<slot />
 				</div>
 			</div>
 		{:else}
@@ -61,7 +58,7 @@
 		{:else if $untrustedMints.find((m) => m.mintURL === url) && isPredefined}
 			<button class="btn btn-error" on:click={removeMint}> remove </button>
 		{:else}
-			<button class="btn  btn-primary  flex gap-1" on:click={addMint}>
+			<button class="btn btn-primary flex gap-1" on:click={addMint}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"

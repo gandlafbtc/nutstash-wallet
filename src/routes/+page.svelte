@@ -26,9 +26,9 @@
 >
 	<PasswordInput>
 		<!-- && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint') -->
-	{#if !$isOnboarded }
-		<Onboarding />
-	{:else}
+		{#if !$isOnboarded}
+			<Onboarding />
+		{:else}
 			<div class="flex flex-col w-full max-w-5xl">
 				<div class="grow flex flex-col">
 					<div class="dropdown">
@@ -140,6 +140,6 @@
 					</div>
 				</div>
 			</div>
-			{/if}
+		{/if}
 	</PasswordInput>
 </div>

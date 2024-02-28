@@ -30,15 +30,20 @@
 
 <div class="flex gap-2 items-center">
 	<div class="flex gap-2">
-		<input type="checkbox" class="toggle toggle-sm toggle-success" bind:checked={relay.isActive} on:click={setRelayActive} />
+		<input
+			type="checkbox"
+			class="toggle toggle-sm toggle-success"
+			bind:checked={relay.isActive}
+			on:click={setRelayActive}
+		/>
 	</div>
-		
+
 	<div class="flex gap-2 items-center">
 		<p>{relay.url}</p>
 
 		{#if relay.isActive}
 			<div class="w-4 h-4 flex">
-								<svg
+				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"

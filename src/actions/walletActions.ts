@@ -7,7 +7,11 @@ import {
 	type MintKeys,
 	type Proof
 } from '@cashu/cashu-ts';
-import {encodeBase64toUint8, encodeUint8toBase64, encodeBase64ToJson} from '@cashu/cashu-ts/src/base64';
+import {
+	encodeBase64toUint8,
+	encodeUint8toBase64,
+	encodeBase64ToJson
+} from '@cashu/cashu-ts/src/base64';
 import type { Mint } from '../model/mint';
 import { mints } from '../stores/mints';
 import { get } from 'svelte/store';
@@ -31,7 +35,12 @@ export const send = async (
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { returnChange, send, newKeys } = await wallet.send(amount, proofsToSend, preference, count);
+	const { returnChange, send, newKeys } = await wallet.send(
+		amount,
+		proofsToSend,
+		preference,
+		count
+	);
 
 	if (newKeys) {
 		updateMintKeys(mint, newKeys);
@@ -56,11 +65,11 @@ export const send = async (
 			amount: amount,
 			date: Date.now(),
 			data: {
-				encodedToken: get(isEncrypted)?'':encodedToken,
+				encodedToken: get(isEncrypted) ? '' : encodedToken,
 				mint: mint.mintURL,
 				keyset: getKeysetsOfTokens([...proofsToSend, ...returnChange]),
-				send: get(isEncrypted)?[]:send,
-				returnChange: get(isEncrypted)?[]:returnChange
+				send: get(isEncrypted) ? [] : send,
+				returnChange: get(isEncrypted) ? [] : returnChange
 			}
 		},
 		...state
@@ -111,7 +120,7 @@ export const mint = async (
 				mint: mint?.mintURL,
 				keyset: getKeysetsOfTokens(proofs),
 				invoice: invoice,
-				tokens: get(isEncrypted)?[]:proofs
+				tokens: get(isEncrypted) ? [] : proofs
 			}
 		},
 		...state
@@ -152,10 +161,10 @@ export const receive = async (
 			amount: getAmountForTokenSet(proofs),
 			date: Date.now(),
 			data: {
-				encodedToken: get(isEncrypted)?'':encodedToken,
+				encodedToken: get(isEncrypted) ? '' : encodedToken,
 				mint: mint?.mintURL ?? '',
 				keyset: getKeysetsOfTokens(proofs),
-				receivedTokens: get(isEncrypted)?[]:proofs
+				receivedTokens: get(isEncrypted) ? [] : proofs
 			}
 		},
 		...state
@@ -217,7 +226,7 @@ export const melt = async (
 				mint: mint?.mintURL,
 				keyset: getKeysetsOfTokens(send),
 				invoice,
-				change: get(isEncrypted)?[]:returnChange
+				change: get(isEncrypted) ? [] : returnChange
 			}
 		},
 		...state
@@ -259,70 +268,89 @@ export const updateCount = (keysetId: string, newCount: number) => {
 	counts.set(allCounts);
 };
 
-
 export const encrypt = async (payload: string) => {
-	const k = get(key)
+	const k = get(key);
 	if (browser && k) {
-		iv.set(randomBytes(16))
-		const encrypted = await window.crypto.subtle.encrypt({ name: "AES-CBC", iv: get(iv) }, k , new TextEncoder().encode(payload))
-		return encodeUint8toBase64(new Uint8Array(encrypted))
+		iv.set(randomBytes(16));
+		const encrypted = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv: get(iv) },
+			k,
+			new TextEncoder().encode(payload)
+		);
+		return encodeUint8toBase64(new Uint8Array(encrypted));
 	}
-}
+};
 
 export const decrypt = async (payload: string) => {
-	const k = get(key)
+	const k = get(key);
 	if (browser && k) {
-		const decrypted = await window.crypto.subtle.decrypt({ name: "AES-CBC", iv: get(iv) }, k , encodeBase64toUint8(payload))
-		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)))
+		const decrypted = await window.crypto.subtle.decrypt(
+			{ name: 'AES-CBC', iv: get(iv) },
+			k,
+			encodeBase64toUint8(payload)
+		);
+		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
 	}
-}
+};
 export const encryptSeed = async (payload: string) => {
-	const k = get(key)
+	const k = get(key);
 	if (browser && k) {
-		seedIv.set(randomBytes(16))
-		console.log(payload)
-		const encrypted = await window.crypto.subtle.encrypt({ name: "AES-CBC", iv: get(seedIv) }, k , new TextEncoder().encode(payload))
-		return encodeUint8toBase64(new Uint8Array(encrypted))
+		seedIv.set(randomBytes(16));
+		console.log(payload);
+		const encrypted = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv: get(seedIv) },
+			k,
+			new TextEncoder().encode(payload)
+		);
+		return encodeUint8toBase64(new Uint8Array(encrypted));
 	}
-}
+};
 
 export const decryptSeed = async (payload: string) => {
-	const k = get(key)
+	const k = get(key);
 	if (browser && k) {
-		const decrypted = await window.crypto.subtle.decrypt({ name: "AES-CBC", iv: get(seedIv) }, k , encodeBase64toUint8(payload))
-		let decoded = new TextDecoder().decode(decrypted)
+		const decrypted = await window.crypto.subtle.decrypt(
+			{ name: 'AES-CBC', iv: get(seedIv) },
+			k,
+			encodeBase64toUint8(payload)
+		);
+		let decoded = new TextDecoder().decode(decrypted);
 		decoded = decoded.replace(/^"(.*)"$/, '$1');
-		return decoded
+		return decoded;
 	}
-}
+};
 
-export const kdf = async (password: string): Promise<CryptoKey> =>{
-	return await window.crypto.subtle.importKey(
-		//the format that we are input
-		"raw",
-		//the input in the properly format
-		new TextEncoder().encode(password),
-		//the kind of key (in that case it's a password to derive a key!)
-		{name: "PBKDF2"},
-		//if I permit that this material could be exported
-		false,
-		//what I permit to be processed against that (password to derive a) key
-		["deriveBits", "deriveKey"]
-	  // the derive key process
-	  ).then(keyMaterial => window.crypto.subtle.deriveKey(
-		{
-		  "name": "PBKDF2",
-		  salt: new TextEncoder().encode("21mil"),
-		  "iterations": 1000,
-		  "hash": "SHA-256"
-		},
-		// it should be an object of CryptoKey type
-		keyMaterial,
-		// which kind of algorithm I permit to be used with that key
-		{ "name": "AES-CBC", "length": 256},
-		// is that exportable?
-		true,
-		// what is allowed to do with that key
-		[ "encrypt", "decrypt" ]
-	  ))
-}
+export const kdf = async (password: string): Promise<CryptoKey> => {
+	return await window.crypto.subtle
+		.importKey(
+			//the format that we are input
+			'raw',
+			//the input in the properly format
+			new TextEncoder().encode(password),
+			//the kind of key (in that case it's a password to derive a key!)
+			{ name: 'PBKDF2' },
+			//if I permit that this material could be exported
+			false,
+			//what I permit to be processed against that (password to derive a) key
+			['deriveBits', 'deriveKey']
+			// the derive key process
+		)
+		.then((keyMaterial) =>
+			window.crypto.subtle.deriveKey(
+				{
+					name: 'PBKDF2',
+					salt: new TextEncoder().encode('21mil'),
+					iterations: 1000,
+					hash: 'SHA-256'
+				},
+				// it should be an object of CryptoKey type
+				keyMaterial,
+				// which kind of algorithm I permit to be used with that key
+				{ name: 'AES-CBC', length: 256 },
+				// is that exportable?
+				true,
+				// what is allowed to do with that key
+				['encrypt', 'decrypt']
+			)
+		);
+};

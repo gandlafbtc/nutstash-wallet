@@ -7,7 +7,7 @@
 	import type { SendData } from '../../model/data/SendData';
 	import { HistoryItemType, type HistoryItem } from '../../model/historyItem';
 	import HistoryIcon from '../history/HistoryIcon.svelte';
-	import {isEncrypted } from '../../stores/settings';
+	import { isEncrypted } from '../../stores/settings';
 
 	export let historyItem: HistoryItem<any>;
 
@@ -36,8 +36,6 @@
 			token: [{ proofs: meltData.change ?? [], mint: meltData.mint ?? '' }]
 		});
 	}
-
-
 </script>
 
 <tr>
@@ -47,7 +45,7 @@
 		<p class="hidden lg:flex">
 			{date.toLocaleString('en-uk', {
 				dateStyle: 'short',
-				timeStyle: 'short',
+				timeStyle: 'short'
 			})}
 		</p>
 		<p class="flex lg:hidden">
@@ -57,6 +55,6 @@
 		</p>
 	</td>
 	<td class="max-w-0 overflow-clip">
-		{$isEncrypted?'*********':token}
+		{$isEncrypted ? '*********' : token}
 	</td>
 </tr>

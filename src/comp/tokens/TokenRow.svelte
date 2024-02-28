@@ -25,23 +25,22 @@
 			toast('warning', 'Add the mint first', 'Cannot recycle token!');
 			return;
 		}
-			try {
-				isLoading = true;
+		try {
+			isLoading = true;
 
-				const encodedProofs = await send(mint, getAmountForTokenSet([token]), [token])
-				await receive(mint, encodedProofs)
-				toast('success', 'Token has been recycled.', 'Success!');
-				isLoading = false;
-			} catch (e) {
-				isLoading = false;
-				console.error(e);
-				toast('error', 'could not recycle token', 'an Error occurred');
-				if (browser) {
-					// @ts-expect-error
-					document.getElementById('token-item-modal-' + i).checked = true;
-				}
+			const encodedProofs = await send(mint, getAmountForTokenSet([token]), [token]);
+			await receive(mint, encodedProofs);
+			toast('success', 'Token has been recycled.', 'Success!');
+			isLoading = false;
+		} catch (e) {
+			isLoading = false;
+			console.error(e);
+			toast('error', 'could not recycle token', 'an Error occurred');
+			if (browser) {
+				// @ts-expect-error
+				document.getElementById('token-item-modal-' + i).checked = true;
 			}
-		
+		}
 	};
 	const deleteToken = () => {
 		tokenStore.update((state) => getTokenSubset(state, [token]));

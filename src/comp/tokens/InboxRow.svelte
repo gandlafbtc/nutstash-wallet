@@ -5,11 +5,7 @@
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import {
-		getAmountForTokenSet,
-		getMintForToken,
-		validateMintKeys
-	} from '../util/walletUtils';
+	import { getAmountForTokenSet, getMintForToken, validateMintKeys } from '../util/walletUtils';
 	import { toast } from '../../stores/toasts';
 	import { contacts } from '../../stores/contacts';
 	import type { Contact } from '../../model/contact';
@@ -86,7 +82,7 @@
 			}
 			const encodedProofs = getEncodedToken(nostrMessage.token);
 			isLoading = true;
-			await walletActions.receive(mint, encodedProofs)
+			await walletActions.receive(mint, encodedProofs);
 			nostrMessages.update((state) => {
 				const everythingElse = state.filter((nM) => {
 					return nM.event.id !== nostrMessage.event.id;

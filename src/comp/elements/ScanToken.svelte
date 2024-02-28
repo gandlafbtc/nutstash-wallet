@@ -8,30 +8,30 @@
 	export let scannedToken;
 	let scanning = false;
 
-	let received = 0
+	let received = 0;
 
-	let decoder: URDecoder
+	let decoder: URDecoder;
 
 	onMount(async () => {
-		const {URDecoder} = await import('@gandlaf21/bc-ur');
-		decoder = new URDecoder()
+		const { URDecoder } = await import('@gandlaf21/bc-ur');
+		decoder = new URDecoder();
 	});
 
 	let qrScanner: Html5QrcodeScanner;
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
 		if (decodedText.startsWith('ur:')) {
-			decoder.receivePart(decodedText)
-			received++
+			decoder.receivePart(decodedText);
+			received++;
 			if (!decoder.isComplete()) {
-				return
-			} 
+				return;
+			}
 			if (!decoder.isSuccess()) {
 				throw new Error(`${decoder.resultError()}`);
 			}
-			const ur = decoder.resultUR()
-			const decoded = ur.decodeCBOR()
-			scannedToken = decoded.toString()
+			const ur = decoder.resultUR();
+			const decoded = ur.decodeCBOR();
+			scannedToken = decoded.toString();
 		} else {
 			scannedToken = decodedText;
 		}

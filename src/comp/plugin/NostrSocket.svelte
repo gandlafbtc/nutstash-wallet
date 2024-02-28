@@ -18,8 +18,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { toast } from '../../stores/toasts';
 	import { browser } from '$app/environment';
-	import { bytesToHex } from "@noble/hashes/utils";
-
+	import { bytesToHex } from '@noble/hashes/utils';
 
 	const getPubKey = async (): Promise<string> => {
 		return $useExternalNostrKey
@@ -41,7 +40,7 @@
 		}
 
 		if (!$nostrPubKey && !$nostrPrivKey) {
-			const priv = nostrTools.generateSecretKey()
+			const priv = nostrTools.generateSecretKey();
 			nostrPrivKey.set(bytesToHex(priv));
 			nostrPubKey.set(nostrTools.getPublicKey(priv));
 		}
@@ -86,10 +85,18 @@
 		nostrPool.set(new rp.RelayPool(activeRelays));
 		const nostrPubK: string = await getPubKey();
 
-		const filter : {kinds: number[],limit: number,'#p': string[], since?:number}  = { kinds: [nostrTools.kinds.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK]}
+		const filter: { kinds: number[]; limit: number; '#p': string[]; since?: number } = {
+			kinds: [nostrTools.kinds.EncryptedDirectMessage],
+			limit: 10,
+			'#p': [nostrPubK]
+		};
 
 		if ($nostrMessages.length) {
-			filter.since= $nostrMessages.map(m=> m.event.created_at).reduce((prev, curr)=>{ return prev>=curr?prev:curr})
+			filter.since = $nostrMessages
+				.map((m) => m.event.created_at)
+				.reduce((prev, curr) => {
+					return prev >= curr ? prev : curr;
+				});
 		}
 
 		$nostrPool?.subscribe(

@@ -39,14 +39,14 @@
 					keys,
 					keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))]
 				};
-				
+
 				const wallet = new CashuWallet(mint, keys);
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const {proofs} = await receive(storeMint, getEncodedToken(nM.token))
+					const { proofs } = await receive(storeMint, getEncodedToken(nM.token));
 					totalReceived += getAmountForTokenSet(proofs);
 				}
 				totalSpent += getAmountForTokenSet(spentProofs);

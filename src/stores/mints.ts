@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import type { Mint } from '../../src/model/mint';
 
-import {  writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 const initialMint: Array<Mint> = [];
 

@@ -19,7 +19,6 @@
 
 	onMount(() => {
 		// const searchParams = $page.url.searchParams;
-
 		// if (searchParams) {
 		// 	const mintUrlParam = searchParams.get('mint');
 		// 	if (mintUrlParam) {

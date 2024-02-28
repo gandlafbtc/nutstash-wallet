@@ -77,9 +77,9 @@
 				swapAmount + fees,
 				getTokensForMint(swapOutMint, $token)
 			);
-			const isPaid = await walletActions.melt(swapOutMint,swapAmount, fees, proofsToSend,invoice)
+			const isPaid = await walletActions.melt(swapOutMint, swapAmount, fees, proofsToSend, invoice);
 
-			const {proofs} =  await walletActions.mint(swapInMint,swapAmount, paymentHash, invoice)
+			const { proofs } = await walletActions.mint(swapInMint, swapAmount, paymentHash, invoice);
 			toast('success', 'The swap has successfully been completed', 'Swap complete');
 			isPerform = false;
 			isComplete = true;

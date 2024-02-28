@@ -122,13 +122,13 @@
 				<div class="flex flex-grow">
 					<label> show nsec </label>
 				</div>
-				<div class="flex gap-2" >
+				<div class="flex gap-2">
 					<input
 						id="nostr-pubkey-input"
 						readonly
 						type="text"
 						class="input input-bordered w-24 lg:w-56"
-						value="{isShowNsec? $nostrPrivKey: ''}"
+						value={isShowNsec ? $nostrPrivKey : ''}
 					/>
 					{#if isShowNsec === false}
 						<button class="btn btn-outline btn-square" on:click={() => (isShowNsec = true)}>

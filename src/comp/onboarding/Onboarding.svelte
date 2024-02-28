@@ -3,12 +3,11 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { mnemonic } from '../../stores/mnemonic';
-	import { generateNewMnemonic} from '@cashu/cashu-ts';
+	import { generateNewMnemonic } from '@cashu/cashu-ts';
 	import Mnemonic from '../elements/Mnemonic.svelte';
 	import PasswordSetup from '../elements/PasswordSetup.svelte';
 	import RestoreFromSeed from './RestoreFromSeed.svelte';
 	import { isEncrypted } from '../../stores/settings';
-
 
 	let setUpMint = false;
 
@@ -24,10 +23,9 @@
 	};
 
 	const createMnemonic = () => {
-		const m = generateNewMnemonic()
+		const m = generateNewMnemonic();
 		mnemonic.set(m);
 	};
-
 </script>
 
 <div />
@@ -162,70 +160,69 @@
 				</div>
 				<div id="4" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<img src="/icons/coin.gif" alt="loading" class="h-20" />
-					{#if $isEncrypted===undefined}
-						 <PasswordSetup></PasswordSetup>
+					{#if $isEncrypted === undefined}
+						<PasswordSetup></PasswordSetup>
 					{:else}
-					<h1 class="text-lg font-bold">Seed phrase backup</h1>
-					{#if isRestore}
-						<RestoreFromSeed bind:isRestore></RestoreFromSeed>
-					{/if}
-					{#if $mnemonic && !isRestore}
-						<div class="card max-w-xl bg-base-100 shadow-xl">
-							<div class="card-body">
-								<Mnemonic />
-								<div class="card-actions flex items-center justify-center w-full pt-3">
-									<a href="#5" class="btn btn-primary"> i wrote it down </a>
+						<h1 class="text-lg font-bold">Seed phrase backup</h1>
+						{#if isRestore}
+							<RestoreFromSeed bind:isRestore></RestoreFromSeed>
+						{/if}
+						{#if $mnemonic && !isRestore}
+							<div class="card max-w-xl bg-base-100 shadow-xl">
+								<div class="card-body">
+									<Mnemonic />
+									<div class="card-actions flex items-center justify-center w-full pt-3">
+										<a href="#5" class="btn btn-primary"> i wrote it down </a>
+									</div>
 								</div>
 							</div>
-						</div>
-					{:else if !isRestore}
-						<p>
-							By creating a seed phrase token secrets will be generated deterministically, so that in case of loss of wallet data the tokens can be restored
-							with the mints help.
-						</p>
-					{/if}
-					<div class="flex flex-col gap-4">
-						{#if !$mnemonic && !isRestore}
-							<button class="btn btn-primary" on:click={createMnemonic}> create new seed </button>
-							<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
-								restore from seed
-							</button>
-							<a href="#5" class="text-xl link flex justify-center items-center">
-								skip <span class="relative flex h-10 w-10">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="1.5"
-										stroke="currentColor"
-										class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-										/>
-									</svg>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="1.5"
-										stroke="currentColor"
-										class="w-10 h-10 relative inline-flex rounded-full"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-										/>
-									</svg>
-								</span>
-							</a>
+						{:else if !isRestore}
+							<p>
+								By creating a seed phrase token secrets will be generated deterministically, so that
+								in case of loss of wallet data the tokens can be restored with the mints help.
+							</p>
 						{/if}
-					</div>
+						<div class="flex flex-col gap-4">
+							{#if !$mnemonic && !isRestore}
+								<button class="btn btn-primary" on:click={createMnemonic}> create new seed </button>
+								<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
+									restore from seed
+								</button>
+								<a href="#5" class="text-xl link flex justify-center items-center">
+									skip <span class="relative flex h-10 w-10">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke-width="1.5"
+											stroke="currentColor"
+											class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+											/>
+										</svg>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke-width="1.5"
+											stroke="currentColor"
+											class="w-10 h-10 relative inline-flex rounded-full"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+											/>
+										</svg>
+									</span>
+								</a>
+							{/if}
+						</div>
 					{/if}
-
 				</div>
 
 				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">

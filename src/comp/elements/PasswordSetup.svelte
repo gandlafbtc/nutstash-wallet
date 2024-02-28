@@ -28,8 +28,10 @@
 		<div class="flex flex-col gap-2">
 			<p class="text-lg font-bold">Encrypt wallet storage</p>
 			<p>Set up wallet encryption to keep your nuts safe. This cannot be changed later</p>
-			<div class="rounded-lg bg-opacity-70 bg-base-100 flex flex-col justify-start items-start p-3 text-start">
-                <p class="font-bold">beware of these trade-offs</p>
+			<div
+				class="rounded-lg bg-opacity-70 bg-base-100 flex flex-col justify-start items-start p-3 text-start"
+			>
+				<p class="font-bold">beware of these trade-offs</p>
 				<p class="text-error">- no password reset function</p>
 				<p class="text-error">- wallet might be slower</p>
 				<p class="text-success">+ lock wallet automatically</p>

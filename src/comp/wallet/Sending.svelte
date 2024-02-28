@@ -326,12 +326,14 @@
 				</div>
 				{#if $nostrRelays.filter((e) => e.isActive).length && sendToNostrKey}
 					<div class="p-3 flex flex-col bg-base-200 rounded-lg">
-						<p class="text-center">The event will be posted as a nip-04 encrypted direct message to the following relays:</p>
+						<p class="text-center">
+							The event will be posted as a nip-04 encrypted direct message to the following relays:
+						</p>
 						<div class="flex flex-col gap-2">
 							{#each $nostrRelays.filter((e) => e.isActive) as r}
-							<div class="badge badge-sm badge-info">
-								{r.url}
-							</div>
+								<div class="badge badge-sm badge-info">
+									{r.url}
+								</div>
 							{/each}
 						</div>
 					</div>

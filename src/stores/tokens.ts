@@ -16,10 +16,10 @@ token.subscribe(async (value) => {
 	if (browser) {
 		const stringValue = JSON.stringify(value);
 		if (get(isEncrypted)) {
-			if (stringValue==='[]' || stringValue=='') {
-				return
+			if (stringValue === '[]' || stringValue == '') {
+				return;
 			}
-			encryptedStorage.set(await encrypt(stringValue)??'')
+			encryptedStorage.set((await encrypt(stringValue)) ?? '');
 		} else {
 			window.localStorage.setItem('tokens', stringValue);
 		}
