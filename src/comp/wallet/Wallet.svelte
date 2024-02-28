@@ -160,6 +160,9 @@
 		{#if $isEncrypted}
 			<WalletLock></WalletLock>
 		{/if}
+		<p class="scale-75 hidden lg:block">
+			Press <kbd class="kbd kbd-sm">shift</kbd> to show shortcuts.
+		</p>
 	</div>
 {:else if active === 'receive'}
 	<Receive bind:active {encodedToken} />
