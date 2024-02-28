@@ -40,14 +40,14 @@
 					<!-- svelte-ignore a11y-label-has-associated-control -->
 					<label class="input-group">
 						<input
-						type="text"
-						placeholder="wss://some-relay"
-						class="input input-bordered"
-						bind:value={relayUrl}
+							type="text"
+							placeholder="wss://some-relay"
+							class="input input-bordered"
+							bind:value={relayUrl}
 						/>
 					</label>
 				</div>
-				<input type="submit" class="btn-square btn-primary btn" value="add">
+				<input type="submit" class="btn-square btn-primary btn" value="add" />
 			</form>
 		</div>
 	</div>

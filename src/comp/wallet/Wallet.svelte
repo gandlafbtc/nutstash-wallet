@@ -28,24 +28,22 @@
 	let selectedMint = $mints[0];
 
 	onMount(() => {
-    const keyDown = (e: KeyboardEvent) => {
-	if (e.key==='r') {
-		active='receive'
-	}
-	else if (e.key==='s') {
-		active='send'
-	}
-	else if (e.key==='b') {
-		active='base'
-	}
-    }
-    window.addEventListener("keydown", keyDown);
+		const keyDown = (e: KeyboardEvent) => {
+			if (e.key === 'r') {
+				active = 'receive';
+			} else if (e.key === 's') {
+				active = 'send';
+			} else if (e.key === 'b') {
+				active = 'base';
+			}
+		};
+		window.addEventListener('keydown', keyDown);
 
-    return ()=>{
-      // this function is called when the component is destroyed
-      window.removeEventListener("keydown", keyDown);
-    }
-  });
+		return () => {
+			// this function is called when the component is destroyed
+			window.removeEventListener('keydown', keyDown);
+		};
+	});
 
 	onMount(async () => {
 		// const searchParams = $page.url.searchParams;
@@ -69,7 +67,6 @@
 		// 	}
 		// }
 	});
-
 </script>
 
 {#if active === 'base'}
@@ -119,8 +116,8 @@
 						</svg>
 						<p>receive</p>
 						<div class="relative">
-						{#if $showShortCuts}
-							<kbd class="absolute kbd text-neutral-content">r</kbd>
+							{#if $showShortCuts}
+								<kbd class="absolute kbd text-neutral-content">r</kbd>
 							{/if}
 						</div>
 					</button>
@@ -149,8 +146,8 @@
 							<div class="relative">
 								{#if $showShortCuts}
 									<kbd class="absolute kbd text-neutral-content">s</kbd>
-									{/if}
-								</div>
+								{/if}
+							</div>
 						</button>
 					{/if}
 				</div>

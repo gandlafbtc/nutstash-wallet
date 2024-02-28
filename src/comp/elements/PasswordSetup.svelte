@@ -39,15 +39,20 @@
 			</div>
 		</div>
 		<form class="flex flex-col gap-2" on:submit|preventDefault={enableEncryption}>
-		<input type="password" class="input input-bordered" placeholder="password" bind:value={pass} />
 			<input
-			type="password"
-			class="input input-bordered"
-			placeholder="confirm password"
-			bind:value={confPass}
+				type="password"
+				class="input input-bordered"
+				placeholder="password"
+				bind:value={pass}
+			/>
+			<input
+				type="password"
+				class="input input-bordered"
+				placeholder="confirm password"
+				bind:value={confPass}
 			/>
 			<div class="flex gap-2 justify-end">
-				<input type="submit" class="btn btn-success"  value="encrypt">
+				<input type="submit" class="btn btn-success" value="encrypt" />
 			</div>
 		</form>
 		<button

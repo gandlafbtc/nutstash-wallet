@@ -167,12 +167,11 @@
 					placeholder="or paste seed here..."
 					on:paste={populateSeed}
 					bind:value={seedString}
-					on:keydown={(e)=>{
-						if(e.key==='Enter'){
-							restore()
+					on:keydown={(e) => {
+						if (e.key === 'Enter') {
+							restore();
 						}
-					} 
-					}
+					}}
 				/>
 				<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
 					{#each restoreSeed as input, i}

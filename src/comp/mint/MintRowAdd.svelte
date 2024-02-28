@@ -49,12 +49,11 @@
 				class="w-48 lg:w-full input input-primary bg-base-300"
 				placeholder="your favorite mint"
 				bind:value={url}
-				on:keydown={(e)=>{
-					if(e.key==='Enter'){
-						addMint()
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						addMint();
 					}
-				} 
-				}
+				}}
 			/>
 		{/if}
 	</div>

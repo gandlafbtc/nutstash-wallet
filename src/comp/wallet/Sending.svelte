@@ -275,11 +275,11 @@
 								class="input input-info w-full join-item"
 								bind:value={sendToNostrKey}
 								placeholder="npub / hex / nip-05"
-								on:keydown={(e)=>{
-									if(e.key==='Enter'){
-										sendWithNostr()
+								on:keydown={(e) => {
+									if (e.key === 'Enter') {
+										sendWithNostr();
 									}
-								} }
+								}}
 							/>
 
 							{#if nostrSendLoading}

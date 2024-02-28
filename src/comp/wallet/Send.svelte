@@ -15,7 +15,7 @@
 	import { showShortCuts } from '../../stores/showShortCuts';
 
 	export let active: string;
-	let send: Function
+	let send: Function;
 	let mint = $mints[0];
 	let amount = '';
 	let isCoinSelection = false;
@@ -29,24 +29,22 @@
 	const navigate = () => {
 		active = 'base';
 	};
-	
 
 	onMount(() => {
-    const keyDown = (e: KeyboardEvent) => {
-	if (e.key==='e') {
-		isSend=true
-	}
-	else if (e.key==='l') {
-		isSend=false
-	}
-    }
-    window.addEventListener("keydown", keyDown);
+		const keyDown = (e: KeyboardEvent) => {
+			if (e.key === 'e') {
+				isSend = true;
+			} else if (e.key === 'l') {
+				isSend = false;
+			}
+		};
+		window.addEventListener('keydown', keyDown);
 
-    return ()=>{
-      // this function is called when the component is destroyed
-      window.removeEventListener("keydown", keyDown);
-    }
-  });
+		return () => {
+			// this function is called when the component is destroyed
+			window.removeEventListener('keydown', keyDown);
+		};
+	});
 
 	$: {
 		if (!/^[0-9]*$/.test(amount)) {
@@ -121,8 +119,8 @@
 								<div class="relative">
 									{#if $showShortCuts}
 										<kbd class="absolute kbd text-neutral-content">e</kbd>
-										{/if}
-									</div>
+									{/if}
+								</div>
 							</div>
 						</button>
 						<button
@@ -149,8 +147,8 @@
 								<div class="relative">
 									{#if $showShortCuts}
 										<kbd class="absolute kbd text-neutral-content">l</kbd>
-										{/if}
-									</div>
+									{/if}
+								</div>
 							</div>
 						</button>
 					</div>
@@ -165,11 +163,11 @@
 							class="mt-10 text-7xl focus:outline-none text-center max-w-xs {amount
 								? 'bg-base-100'
 								: 'w-10 bg-base-200 rounded-lg'}"
-							on:keydown={(e)=>{
-								if(e.key==='Enter'){
-									send()
+							on:keydown={(e) => {
+								if (e.key === 'Enter') {
+									send();
 								}
-							} }
+							}}
 						/>
 						<p />
 						<p class="font-bold text-xl">Sats</p>

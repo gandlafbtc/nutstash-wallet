@@ -43,15 +43,14 @@
 				<p>Enter your password to unlock.</p>
 			</div>
 			<form class="flex flex-col gap-2" on:submit|preventDefault={unlockWallet}>
-
 				<input
-				type="password"
-				class="input input-bordered"
-				placeholder="password"
-				bind:value={pass}
+					type="password"
+					class="input input-bordered"
+					placeholder="password"
+					bind:value={pass}
 				/>
 				<div class="flex gap-2 justify-end">
-					<input type="submit" class="btn btn-success" value="unlock">
+					<input type="submit" class="btn btn-success" value="unlock" />
 				</div>
 			</form>
 		</div>
