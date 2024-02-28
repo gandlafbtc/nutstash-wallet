@@ -9,7 +9,7 @@
 	export let scannedToken;
 	let scanning = false;
 
-	let received = 0;
+	let completion = 0;
 
 	let decoder: URDecoder;
 
@@ -24,7 +24,7 @@
 	function onScanSuccess(decodedText: string, decodedResult: any) {
 		if (decodedText.startsWith('ur:')) {
 			decoder.receivePart(decodedText);
-			received++;
+			completion = decoder.estimatedPercentComplete
 			if (!decoder.isComplete()) {
 				return;
 			}
@@ -35,6 +35,12 @@
 			const decoded = ur.decodeCBOR();
 			scannedToken = decoded.toString();
 		} else {
+			if (decodedText.startsWith("cashu:")) {
+				decodedText=decodedText.split(':')[1]
+			}
+			if (decodedText.startsWith('//')) {
+				decodedText=decodedText.slice(2)
+			}
 			scannedToken = decodedText;
 		}
 		if (browser) {
@@ -71,13 +77,9 @@
 	<div class="w-full">
 		<div id="token-qr-reader" class="w-full h-full qr-reader-box" style="/qr-styles.css" />
 	</div>
-	<p>scanning..</p>
-	<div
-		class="radial-progress text-secondary"
-		style="--value:{received}; --size:5rem; --thickness: 0.5rem;"
-	>
-		{received}
-	</div>
+	<p>scanning...</p>
+			<progress class="progress progress-primary w-56" value="{completion}" max="100"></progress>
+{completion} %
 </div>
 
 <style>
