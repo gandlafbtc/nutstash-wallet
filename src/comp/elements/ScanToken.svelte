@@ -24,7 +24,7 @@
 	function onScanSuccess(decodedText: string, decodedResult: any) {
 		if (decodedText.startsWith('ur:')) {
 			decoder.receivePart(decodedText);
-			completion = decoder.estimatedPercentComplete()
+			completion = Math.floor(decoder.estimatedPercentComplete()*100)
 			if (!decoder.isComplete()) {
 				return;
 			}
