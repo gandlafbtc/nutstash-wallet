@@ -35,12 +35,9 @@
 			{/each}
 		</div>
 		<div class="flex gap-2 items-end w-full">
-			<form on:submit|preventDefault={addRelay}>
+			<form class="flex gap-2" on:submit|preventDefault={addRelay}>
 				<div class="form-control">
 					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span class="label-text">Add new Relay</span>
-					</label>
 					<label class="input-group">
 						<input
 						type="text"

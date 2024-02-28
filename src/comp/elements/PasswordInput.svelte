@@ -42,7 +42,7 @@
 				<p class="text-lg font-bold">Wallet is locked.</p>
 				<p>Enter your password to unlock.</p>
 			</div>
-			<form on:submit|preventDefault={unlockWallet}>
+			<form class="flex flex-col gap-2" on:submit|preventDefault={unlockWallet}>
 
 				<input
 				type="password"

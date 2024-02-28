@@ -12,6 +12,7 @@
 	import type { Proof } from '@cashu/cashu-ts';
 	import Melting from './Melting.svelte';
 	import ScanLn from '../elements/ScanLN.svelte';
+	import { showShortCuts } from '../../stores/showShortCuts';
 
 	export let active: string;
 	let send: Function
@@ -28,6 +29,24 @@
 	const navigate = () => {
 		active = 'base';
 	};
+	
+
+	onMount(() => {
+    const keyDown = (e: KeyboardEvent) => {
+	if (e.key==='e') {
+		isSend=true
+	}
+	else if (e.key==='l') {
+		isSend=false
+	}
+    }
+    window.addEventListener("keydown", keyDown);
+
+    return ()=>{
+      // this function is called when the component is destroyed
+      window.removeEventListener("keydown", keyDown);
+    }
+  });
 
 	$: {
 		if (!/^[0-9]*$/.test(amount)) {
@@ -99,6 +118,11 @@
 									/>
 								</svg>
 								<p>send ecash</p>
+								<div class="relative">
+									{#if $showShortCuts}
+										<kbd class="absolute kbd text-neutral-content">e</kbd>
+										{/if}
+									</div>
 							</div>
 						</button>
 						<button
@@ -122,6 +146,11 @@
 								</svg>
 
 								<p>pay invoice</p>
+								<div class="relative">
+									{#if $showShortCuts}
+										<kbd class="absolute kbd text-neutral-content">l</kbd>
+										{/if}
+									</div>
 							</div>
 						</button>
 					</div>

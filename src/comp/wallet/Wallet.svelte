@@ -20,10 +20,32 @@
 	import Send from './Send.svelte';
 	import CheckTokens from './CheckTokens.svelte';
 	import { key } from '../../stores/key';
+	import { showShortCuts } from '../../stores/showShortCuts';
+	import WalletLock from '../elements/WalletLock.svelte';
 
 	let active = 'base';
 	let encodedToken = '';
 	let selectedMint = $mints[0];
+
+	onMount(() => {
+    const keyDown = (e: KeyboardEvent) => {
+	if (e.key==='r') {
+		active='receive'
+	}
+	else if (e.key==='s') {
+		active='send'
+	}
+	else if (e.key==='b') {
+		active='base'
+	}
+    }
+    window.addEventListener("keydown", keyDown);
+
+    return ()=>{
+      // this function is called when the component is destroyed
+      window.removeEventListener("keydown", keyDown);
+    }
+  });
 
 	onMount(async () => {
 		// const searchParams = $page.url.searchParams;
@@ -48,9 +70,6 @@
 		// }
 	});
 
-	const scanPay = () => {
-		active = 'scan';
-	};
 </script>
 
 {#if active === 'base'}
@@ -99,6 +118,11 @@
 							/>
 						</svg>
 						<p>receive</p>
+						<div class="relative">
+						{#if $showShortCuts}
+							<kbd class="absolute kbd text-neutral-content">r</kbd>
+							{/if}
+						</div>
 					</button>
 					{#if getAmountForTokenSet($token)}
 						<button
@@ -122,6 +146,11 @@
 								/>
 							</svg>
 							<p>send</p>
+							<div class="relative">
+								{#if $showShortCuts}
+									<kbd class="absolute kbd text-neutral-content">s</kbd>
+									{/if}
+								</div>
 						</button>
 					{/if}
 				</div>
@@ -129,27 +158,7 @@
 		</div>
 		<Tokens />
 		{#if $isEncrypted}
-			<div class=" h-full flex flex-col justify-end cursor-pointer">
-				<div class="tooltip" data-tip="lock wallet">
-					<button
-						class="btn btn-square hover:text-info"
-						on:click={() => {
-							key.set(undefined);
-						}}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-							class="w-6 h-6"
-						>
-							<path
-								d="M18 1.5c2.9 0 5.25 2.35 5.25 5.25v3.75a.75.75 0 0 1-1.5 0V6.75a3.75 3.75 0 1 0-7.5 0v3a3 3 0 0 1 3 3v6.75a3 3 0 0 1-3 3H3.75a3 3 0 0 1-3-3v-6.75a3 3 0 0 1 3-3h9v-3c0-2.9 2.35-5.25 5.25-5.25Z"
-							/>
-						</svg>
-					</button>
-				</div>
-			</div>
+			<WalletLock></WalletLock>
 		{/if}
 	</div>
 {:else if active === 'receive'}
