@@ -8,27 +8,26 @@
 	import { showShortCuts } from '../stores/showShortCuts';
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-	if (e.key==='Control') {
-		showShortCuts.set(true)
-	}
-    }
-	const keyUp = (e: KeyboardEvent) => {
-	if (e.key==='Control') {
-		showShortCuts.set(false)
-	}
-    }
-    window.addEventListener("keydown", keyDown);
-    window.addEventListener("keyup", keyUp);
+			console.log(e.key);
+			if (e.key === 'Shift') {
+				showShortCuts.set(true);
+			}
+		};
+		const keyUp = (e: KeyboardEvent) => {
+			if (e.key === 'Shift') {
+				showShortCuts.set(false);
+			}
+		};
+		window.addEventListener('keydown', keyDown);
+		window.addEventListener('keyup', keyUp);
 
-    return ()=>{
-      // this function is called when the component is destroyed
-      window.removeEventListener("keydown", keyDown);
-      window.removeEventListener("keyup", keyUp);
-    }
-  });
-
+		return () => {
+			// this function is called when the component is destroyed
+			window.removeEventListener('keydown', keyDown);
+			window.removeEventListener('keyup', keyUp);
+		};
+	});
 </script>
-
 
 <div
 	class="w-full h-screen max-h-screen p-1 bg-gradient-to-br from-primary to-secondary overflow-auto flex justify-center"
