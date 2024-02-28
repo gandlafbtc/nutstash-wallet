@@ -10,9 +10,10 @@
 	const firstSeqNum = 0;
 
 	onMount(async () => {
+		// @ts-ignore
 		const { UR, UREncoder } = await import('@gandlaf21/bc-ur');
 
-		const ur = UR.fromBuffer(Buffer.from(JSON.stringify({ token })));
+		const ur = UR.fromBuffer(Buffer.from(token));
 		const encoder = new UREncoder(ur, maxFragmentLength, firstSeqNum);
 		const qrInterval = setInterval(() => {
 			chunk = encoder.nextPart();

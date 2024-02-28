@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	// @ts-ignore
 	import type { URDecoder } from '@gandlaf21/bc-ur';
 	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
@@ -13,6 +14,7 @@
 	let decoder: URDecoder;
 
 	onMount(async () => {
+		// @ts-ignore
 		const { URDecoder } = await import('@gandlaf21/bc-ur');
 		decoder = new URDecoder();
 	});
