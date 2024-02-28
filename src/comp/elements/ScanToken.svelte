@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import type { URDecoder } from '@gandlaf21/bc-ur';
 	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
 
@@ -7,32 +8,32 @@
 	export let scannedToken;
 	let scanning = false;
 
-	let isChunk = false;
-	$: chunkTotalLen = 0;
-	let chunks: string[] = [];
-	$: chunkPerc = Math.ceil((chunks.filter((c) => c).length / chunkTotalLen) * 100);
+	let received = 0
+
+	let decoder: URDecoder
+
+	onMount(async () => {
+		const {URDecoder} = await import('@gandlaf21/bc-ur');
+		decoder = new URDecoder()
+	});
 
 	let qrScanner: Html5QrcodeScanner;
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
-		console.log(decodedText);
-		if (decodedText.startsWith('chunk')) {
-			isChunk = true;
-			const [x, chunkI, len, chunk] = decodedText.split(':');
-			chunkTotalLen = parseInt(len) ?? 0;
-			chunks[parseInt(chunkI) ?? 0] = chunk;
-			chunks = [...chunks];
+		if (decodedText.startsWith('ur:')) {
+			decoder.receivePart(decodedText)
+			received++
+			if (!decoder.isComplete()) {
+				return
+			} 
+			if (!decoder.isSuccess()) {
+				throw new Error(`${decoder.resultError()}`);
+			}
+			const ur = decoder.resultUR()
+			const decoded = ur.decodeCBOR()
+			scannedToken = decoded.toString()
 		} else {
 			scannedToken = decodedText;
-		}
-
-		if (isChunk) {
-			if (chunks.filter((c) => c).length < chunkTotalLen) {
-				return;
-			} else {
-				scannedToken = chunks.join('').split('=')[0];
-				console.log(scannedToken);
-			}
 		}
 		if (browser) {
 			document.getElementById('html5-qrcode-button-camera-stop')?.click();
@@ -71,9 +72,9 @@
 	<p>scanning..</p>
 	<div
 		class="radial-progress text-secondary"
-		style="--value:{isNaN(chunkPerc) ? 0 : chunkPerc}; --size:5rem; --thickness: 0.5rem;"
+		style="--value:{received}; --size:5rem; --thickness: 0.5rem;"
 	>
-		{isNaN(chunkPerc) ? 0 : chunkPerc}%
+		{received}
 	</div>
 </div>
 

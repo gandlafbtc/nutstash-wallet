@@ -1,28 +1,32 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
+	import { Buffer } from "buffer";
 
 	export let token: string;
+	
+	let chunk = ''
+	const maxFragmentLength = 200
+	const firstSeqNum = 0
 
-	const CHUNK_SIZE = 200;
-	const chunks = token.match(new RegExp('.{1,' + CHUNK_SIZE + '}', 'g')) ?? [];
-	const constructedChunks = chunks.map((c, i) => `chunk:${i}:${chunks.length}:${c}`);
-	constructedChunks[constructedChunks.length - 1] = constructedChunks[
-		constructedChunks.length - 1
-	].padEnd(CHUNK_SIZE + 12, '=');
 
-	let activeChunk = 0;
+	onMount(async () => {
+		const {UR, UREncoder} = await import('@gandlaf21/bc-ur');
 
-	const qrInterval = setInterval(() => {
-		activeChunk = (activeChunk + 1) % constructedChunks.length;
+		const ur = UR.fromBuffer(Buffer.from(JSON.stringify({token})))
+		const encoder = new UREncoder(ur, maxFragmentLength, firstSeqNum)
+		const qrInterval = setInterval(() => {
+		chunk = encoder.nextPart()
 	}, 200);
 	onDestroy(() => {
 		clearInterval(qrInterval);
 	});
+	});
+
+
+	
 </script>
 
-{#each constructedChunks as chunk, i}
-	<div class={activeChunk === i ? '' : 'hidden'}>
-		<QRCodeImage text={chunk} displayHeight={250} displayWidth={250} />
-	</div>
-{/each}
+{#if chunk}
+	 <QRCodeImage bind:text={chunk} displayHeight={250} displayWidth={250} />
+{/if}
