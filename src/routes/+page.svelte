@@ -8,7 +8,6 @@
 	import { showShortCuts } from '../stores/showShortCuts';
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			console.log(e.key);
 			if (e.key === 'Shift') {
 				showShortCuts.set(true);
 			}
