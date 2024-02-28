@@ -221,7 +221,11 @@
 						</button>
 					{/if}
 					{#if showAdd}
-						<input type="text" class="input-xs input input-primary" bind:value={contactName} />
+						<input type="text" class="input-xs input input-primary" bind:value={contactName} on:keydown={(e)=>{
+							if(e.key==='Enter'){
+								addContact()
+							}
+						} } />
 						<button class="btn-xs btn-success rounded-md text-xs" on:click={addContact}>add</button>
 						<button class="btn-xs btn-square rounded-md text-xs" on:click={() => (showAdd = false)}
 							>cancel</button

@@ -150,6 +150,12 @@
 				on:input={decodeInvoice}
 				class="textarea textarea-warning w-full h-40"
 				placeholder="paste a lightning invoice: lnbc10n1pj2l66wpp5qhwv7pwqvrshmqu..."
+				on:keydown={(e)=>{
+					if(e.key==='Enter'){
+						e.preventDefault()
+						payInvoice()
+					}
+				} }
 			/>
 			<div class="absolute z-10 bottom-4 right-4">
 				<button class="" on:click={scanPay}>

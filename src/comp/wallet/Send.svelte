@@ -14,6 +14,7 @@
 	import ScanLn from '../elements/ScanLN.svelte';
 
 	export let active: string;
+	let send: Function
 	let mint = $mints[0];
 	let amount = '';
 	let isCoinSelection = false;
@@ -135,6 +136,11 @@
 							class="mt-10 text-7xl focus:outline-none text-center max-w-xs {amount
 								? 'bg-base-100'
 								: 'w-10 bg-base-200 rounded-lg'}"
+							on:keydown={(e)=>{
+								if(e.key==='Enter'){
+									send()
+								}
+							} }
 						/>
 						<p />
 						<p class="font-bold text-xl">Sats</p>
@@ -168,6 +174,7 @@
 		</div>
 		{#if isSend}
 			<Sending
+				bind:send
 				bind:active
 				bind:mint
 				bind:amount

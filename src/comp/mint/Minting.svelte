@@ -247,6 +247,12 @@
 						id="mint-req-amt"
 						placeholder="0"
 						bind:value={mintAmount}
+						on:keydown={(e)=>{
+							if(e.key==='Enter'){
+								e.preventDefault()
+								mintRequest()
+							}
+						} }
 						class="mt-10 text-7xl focus:outline-none text-center max-w-xs {mintAmount
 							? 'bg-base-100'
 							: 'w-10 bg-base-200 rounded-lg'}"

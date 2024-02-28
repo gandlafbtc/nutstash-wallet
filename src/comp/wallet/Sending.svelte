@@ -49,7 +49,7 @@
 		: amount;
 	$: change = input - output;
 
-	const send = async () => {
+	export const send = async () => {
 		if (isNaN(parseInt(amount)) || amount <= 0) {
 			toast('warning', 'Send amount has to be a number larger than 0', 'Could not create token');
 			return;
@@ -275,6 +275,11 @@
 								class="input input-info w-full join-item"
 								bind:value={sendToNostrKey}
 								placeholder="npub / hex / nip-05"
+								on:keydown={(e)=>{
+									if(e.key==='Enter'){
+										sendWithNostr()
+									}
+								} }
 							/>
 
 							{#if nostrSendLoading}

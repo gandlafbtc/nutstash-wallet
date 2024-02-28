@@ -186,6 +186,12 @@
 						id="receive-token-input"
 						bind:value={encodedToken}
 						on:change={validateToken}
+						on:keydown={(e)=>{
+							if(e.key==='Enter'){
+								e.preventDefault()
+								receive()
+							}
+						} }
 						class="textarea textarea-secondary w-full h-40"
 						placeholder="Paste a cashu token. It should look like this: cashuAeyJ0b2tlbiI6W3sicHJvb2ZzIjpbeyJpZCI6IjBOSTNUVUFz..."
 					/>

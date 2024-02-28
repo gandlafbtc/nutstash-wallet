@@ -42,16 +42,18 @@
 				<p class="text-lg font-bold">Wallet is locked.</p>
 				<p>Enter your password to unlock.</p>
 			</div>
+			<form on:submit|preventDefault={unlockWallet}>
 
-			<input
+				<input
 				type="password"
 				class="input input-bordered"
 				placeholder="password"
 				bind:value={pass}
-			/>
-			<div class="flex gap-2 justify-end">
-				<button class="btn btn-success" on:click={unlockWallet}> unlock </button>
-			</div>
+				/>
+				<div class="flex gap-2 justify-end">
+					<input type="submit" class="btn btn-success" value="unlock">
+				</div>
+			</form>
 		</div>
 	</div>
 {:else}

@@ -11,29 +11,14 @@
 	import { page } from '$app/stores';
 	let mintURL = '';
 	let isLoading = false;
-	let isAddMintPing = false;
 
 	let activeMint = $mints[0];
 
 	let active = 'base';
 
-	onMount(() => {
-		// const searchParams = $page.url.searchParams;
-		// if (searchParams) {
-		// 	const mintUrlParam = searchParams.get('mint');
-		// 	if (mintUrlParam) {
-		// 		mintURL = mintUrlParam;
-		// 		$page.url.searchParams.delete('mint');
-		// 		history.replaceState({}, '', $page.url);
-		// 		if (mintURL) {
-		// 			isAddMintPing = true;
-		// 		}
-		// 	}
-		// }
-	});
+	onMount(() => {});
 
 	const addMint = async () => {
-		isAddMintPing = false;
 		const mint = new CashuMint(mintURL);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
@@ -98,40 +83,30 @@
 			</table>
 		</div>
 
-		<div class="flex join">
-			<input
-				id="mint-url-input"
-				type="text"
-				placeholder="mint URL..."
-				bind:value={mintURL}
-				class=" join-item input w-full input-primary col-span-4"
-			/>
-
-			{#if isLoading}
-				<button
-					class="btn join-item loading-spinner btn-disabled h-full z-20 flex gap-2 items-center"
+		<form on:submit|preventDefault={addMint}>
+			<div class="flex join">
+				<input
+					id="mint-url-input"
+					type="text"
+					placeholder="mint URL..."
+					bind:value={mintURL}
+					class=" join-item input w-full input-primary col-span-4"
 				/>
-			{:else}
-				<button
-					class="z-0 btn join-item {mintURL
-						? 'btn-primary'
-						: 'btn-disabled'} h-full z-20 flex gap-2 items-center"
-					on:click={() => {
-						addMint();
-					}}
-				>
-					Add Mint
-					{#if isAddMintPing}
-						<span class="flex h-3 w-3">
-							<div
-								class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-secondary opacity-75"
-							/>
-							<div class="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
-						</span>
-					{/if}
-				</button>
-			{/if}
-		</div>
+
+				{#if isLoading}
+					<button
+						class="btn join-item loading-spinner btn-disabled h-full z-20 flex gap-2 items-center"
+					/>
+				{:else}
+					<input
+						type="submit"
+						class="z-0 btn join-item {mintURL
+							? 'btn-primary'
+							: 'btn-disabled'} h-full z-20 flex gap-2 items-center"
+					/>
+				{/if}
+			</div>
+		</form>
 	</div>
 {:else if active === 'minting'}
 	<Minting isMinting={false} mint={activeMint} bind:active />

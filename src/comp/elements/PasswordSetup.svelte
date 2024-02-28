@@ -38,16 +38,18 @@
 				<p class="text-success">+ ecash inaccessible outside wallet</p>
 			</div>
 		</div>
+		<form class="flex flex-col gap-2" on:submit|preventDefault={enableEncryption}>
 		<input type="password" class="input input-bordered" placeholder="password" bind:value={pass} />
-		<input
+			<input
 			type="password"
 			class="input input-bordered"
 			placeholder="confirm password"
 			bind:value={confPass}
-		/>
-		<div class="flex gap-2 justify-end">
-			<button class="btn btn-success" on:click={enableEncryption}> encrypt </button>
-		</div>
+			/>
+			<div class="flex gap-2 justify-end">
+				<input type="submit" class="btn btn-success"  value="encrypt">
+			</div>
+		</form>
 		<button
 			class="link"
 			on:click={() => {

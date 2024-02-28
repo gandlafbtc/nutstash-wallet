@@ -35,32 +35,23 @@
 			{/each}
 		</div>
 		<div class="flex gap-2 items-end w-full">
-			<div class="form-control">
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label class="label">
-					<span class="label-text">Add new Relay</span>
-				</label>
-				<label class="input-group">
-					<input
+			<form on:submit|preventDefault={addRelay}>
+				<div class="form-control">
+					<!-- svelte-ignore a11y-label-has-associated-control -->
+					<label class="label">
+						<span class="label-text">Add new Relay</span>
+					</label>
+					<label class="input-group">
+						<input
 						type="text"
 						placeholder="wss://some-relay"
 						class="input input-bordered"
 						bind:value={relayUrl}
-					/>
-				</label>
-			</div>
-			<button class="btn-square btn-primary btn" on:click={addRelay}>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-6 h-6"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-				</svg>
-			</button>
+						/>
+					</label>
+				</div>
+				<input type="submit" class="btn-square btn-primary btn" value="add">
+			</form>
 		</div>
 	</div>
 </div>

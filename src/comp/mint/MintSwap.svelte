@@ -186,6 +186,12 @@
 								type="number"
 								class="join-item w-32 input-sm col-span-3 input input-primary"
 								bind:value={swapAmount}
+								on:keydown={(e)=>{
+										if(e.key==='Enter'){
+											prepareSwap()
+										}
+									} 
+								}
 							/>
 							<button
 								class="btn join-item btn-sm btn-primary {swapAmount
