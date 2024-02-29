@@ -21,8 +21,11 @@
 
 	onMount(() => {
         setTimeout(()=>
-            seed.set(deriveSeedFromMnemonic($mnemonic))
-            , 300
+           { if ($mnemonic) {
+                
+                seed.set(deriveSeedFromMnemonic($mnemonic))
+            }
+           }     , 300
             )
 
 		const keyDown = (e: KeyboardEvent) => {
