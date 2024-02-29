@@ -181,17 +181,18 @@ export const melt = async (
 	invoice: string
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
+	let currentCount = count
 	const { returnChange, send, newKeys } = await wallet.send(
 		amount + fees,
 		proofs,
 		undefined,
-		count
+		currentCount
 	);
 	if (newKeys) {
 		updateMintKeys(mint, newKeys);
 	}
 	if (seedPhrase) {
-		updateCount(keysetId, (count ?? 1) + returnChange.length + send.length);
+		currentCount = updateCount(keysetId, (currentCount ?? 1) + returnChange.length + send.length);
 	}
 
 	// remove sent tokens from storage
@@ -202,17 +203,19 @@ export const melt = async (
 		token.update((state) => [...returnChange, ...state]);
 	}
 
+	
+
 	const {
 		isPaid,
 		preimage,
 		change,
 		newKeys: newKeys2
-	} = await wallet.payLnInvoice(invoice, send, undefined, count);
+	} = await wallet.payLnInvoice(invoice, send, undefined, currentCount);
 	if (newKeys2) {
 		updateMintKeys(mint, newKeys2);
 	}
 	if (seedPhrase) {
-		updateCount(keysetId, (count ?? 1) + change.length);
+		currentCount = updateCount(keysetId, (currentCount ?? 1) + change.length);
 	}
 
 	token.update((state) => [...change, ...state]);
@@ -257,7 +260,7 @@ export const updateMintKeys = (mint: Mint, newKeys: MintKeys) => {
 	toast('info', 'the new keyset ID is: ' + newKeyset, 'The keys of this mint have rotated');
 };
 
-export const updateCount = (keysetId: string, newCount: number) => {
+export const updateCount = (keysetId: string, newCount: number): number => {
 	const allCounts = [...get(counts)];
 	let toBeUpdated = allCounts.find((c) => c.keysetId === keysetId);
 	if (!toBeUpdated) {
@@ -266,6 +269,7 @@ export const updateCount = (keysetId: string, newCount: number) => {
 	}
 	toBeUpdated.count = newCount;
 	counts.set(allCounts);
+	return newCount
 };
 
 export const encrypt = async (payload: string) => {
