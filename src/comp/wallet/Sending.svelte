@@ -35,9 +35,7 @@
 	$: tokensForMint = getTokensForMint(mint, $token);
 	let isLoading = false;
 	let sendToNostrKey = '';
-	let hasBeenCopied = false;
 	let nostrSendLoading = false;
-	let showTokenQr = false;
 	let preference: AmountPreference[];
 	let useAmountPreference = false;
 
@@ -186,8 +184,6 @@
 		encodedToken = '';
 		isLoading = false;
 		active = 'base';
-		hasBeenCopied = false;
-		showTokenQr = false;
 		processing = false;
 		useAmountPreference = false;
 		isCoinSelection = false;

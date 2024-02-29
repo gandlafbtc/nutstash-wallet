@@ -32,9 +32,9 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'e') {
+			if (e.key === 'e'||e.key === 'E') {
 				isSend = true;
-			} else if (e.key === 'l') {
+			} else if (e.key === 'l'||e.key === 'L') {
 				isSend = false;
 			}
 		};
@@ -156,6 +156,7 @@
 				{#if isSend || (invoice && amount)}
 					<div class="h-52 flex flex-col items-center">
 						<input
+							autofocus
 							readonly={isSend ? false : true}
 							id="send-amt"
 							placeholder="0"

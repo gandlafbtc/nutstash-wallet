@@ -121,7 +121,7 @@
 		</button>
 	</div>
 	<div class="modal-action">
-		<button class="btn btn-outline" on:click={resetState}>ok</button>
+		<button class="btn btn-outline" on:click={resetState}>Ok</button>
 	</div>
 {:else}
 	<!-- else content here -->
@@ -197,7 +197,7 @@
 								on:click={prepareSwap}
 							>
 								{#if !isPrepare}
-									ok
+									Ok
 								{:else}
 									<p class="loading loading-spinner" />
 								{/if}
@@ -211,7 +211,7 @@
 		<div class="pt-5" />
 
 		<div class="flex gap-2">
-			<button class="btn" on:click={resetState}> cancel </button>
+			<button class="btn" on:click={resetState}> Cancel </button>
 
 			<button
 				class="btn {fees === undefined || isPerform ? 'btn-disabled' : 'btn-primary'} flex gap-2"

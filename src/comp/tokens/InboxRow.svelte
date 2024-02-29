@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
+	import { CashuMint, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
@@ -233,7 +233,7 @@
 						/>
 						<button class="btn-xs btn-success rounded-md text-xs" on:click={addContact}>add</button>
 						<button class="btn-xs btn-square rounded-md text-xs" on:click={() => (showAdd = false)}
-							>cancel</button
+							>Cancel</button
 						>
 					{:else}
 						<div class="badge badge-info gap-2">

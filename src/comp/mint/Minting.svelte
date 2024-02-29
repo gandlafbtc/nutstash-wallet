@@ -223,7 +223,7 @@
 					{/if}
 				</div>
 				<div class="flex gap-2">
-					<button class="btn btn-outline" on:click={resetState}>cancel</button>
+					<button class="btn btn-outline" on:click={resetState}>Cancel</button>
 					<button
 						class="btn btn-outline btn-error"
 						on:click={() => {

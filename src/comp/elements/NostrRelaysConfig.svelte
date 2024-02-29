@@ -47,7 +47,7 @@
 						/>
 					</label>
 				</div>
-				<input type="submit" class="btn-square btn-primary btn" value="add" />
+				<input type="submit" class="btn-square btn-primary btn" value="Add" />
 			</form>
 		</div>
 	</div>

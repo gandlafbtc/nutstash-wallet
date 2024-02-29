@@ -48,6 +48,7 @@
 					class="input input-bordered"
 					placeholder="password"
 					bind:value={pass}
+					autofocus
 				/>
 				<div class="flex gap-2 justify-end">
 					<input type="submit" class="btn btn-success" value="unlock" />

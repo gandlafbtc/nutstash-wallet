@@ -19,7 +19,7 @@ import { toast } from '../stores/toasts';
 import { counts } from '../stores/counts';
 import { history } from '../stores/history';
 import { token } from '../stores/tokens';
-import { mnemonic } from '../stores/mnemonic';
+import { mnemonic, seed } from '../stores/mnemonic';
 import { HistoryItemType } from '../model/historyItem';
 import { getAmountForTokenSet, getKeysetsOfTokens, getTokenSubset } from '../comp/util/walletUtils';
 import { pendingTokens } from '../stores/pendingtokens';
@@ -79,7 +79,7 @@ export const send = async (
 
 const getWalletStuff = (mint: Mint) => {
 	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-	const seedPhrase = get(mnemonic);
+	const seedPhrase = get(seed);
 	const wallet: CashuWallet = new CashuWallet(
 		cashuMint,
 		mint.keys,

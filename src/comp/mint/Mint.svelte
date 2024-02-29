@@ -86,6 +86,7 @@
 		<form on:submit|preventDefault={addMint}>
 			<div class="flex join">
 				<input
+					autofocus
 					id="mint-url-input"
 					type="text"
 					placeholder="mint URL..."
@@ -103,6 +104,7 @@
 						class="z-0 btn join-item {mintURL
 							? 'btn-primary'
 							: 'btn-disabled'} h-full z-20 flex gap-2 items-center"
+							value="Add mint"
 					/>
 				{/if}
 			</div>

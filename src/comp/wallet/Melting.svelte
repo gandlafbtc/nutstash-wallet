@@ -140,11 +140,12 @@
 			</button>
 		</div>
 		<div class="modal-action">
-			<label for="melt-modal" class="btn btn-outline" on:mouseup={resetState}>ok</label>
+			<label for="melt-modal" class="btn btn-outline" on:mouseup={resetState}>Ok</label>
 		</div>
 	{:else}
 		<div class="inline-block relative w-full">
 			<textarea
+				autofocus
 				id="receive-token-input"
 				bind:value={invoice}
 				on:input={decodeInvoice}

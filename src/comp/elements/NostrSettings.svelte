@@ -78,18 +78,18 @@
 							d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
 						/>
 					</svg>
-					<p>no extension found</p>
+					<p>No extension found</p>
 				</div>
 			{/if}
 		</div>
 	</div>
 
 	{#if !$useExternalNostrKey}
-		<div>keys</div>
+		<div>Keys</div>
 		<div class="bg-base-200 p-2 gap-2 rounded-md flex flex-col">
 			<div class="flex justify-between items-center">
 				<div class="">
-					<label for="npub">npub</label>
+					<label for="npub">Npub</label>
 				</div>
 
 				<div class="flex gap-2">
@@ -120,7 +120,7 @@
 			</div>
 			<div class="flex justify-between items-center">
 				<div class="flex flex-grow">
-					<label> show nsec </label>
+					<label> Show nsec </label>
 				</div>
 				<div class="flex gap-2">
 					<input
@@ -175,7 +175,7 @@
 			</div>
 			<div class="flex justify-between items-center">
 				<div class="">
-					<label>generate new keys</label>
+					<label>Generate new keys</label>
 				</div>
 				<div class="tooltip" data-tip="Generate new Nostr Keypair">
 					<button
@@ -209,7 +209,7 @@
 							<form method="dialog">
 								<button class="btn">abort</button>
 								<button class="btn btn-primary" on:click={generateNostrPrivKey}
-									>create new keys</button
+									>Create new keys</button
 								>
 							</form>
 						</div>

@@ -23,7 +23,7 @@
 			Are you sure you want to delete your history? You will keep your Tokens and Mints.
 		</p>
 		<div class="modal-action">
-			<label for="reset-history-modal" class="btn btn-outline">cancel</label>
+			<label for="reset-history-modal" class="btn btn-outline">Cancel</label>
 			<button on:click={resetHistory} class="btn btn-error">Delete</button>
 		</div>
 	</div>

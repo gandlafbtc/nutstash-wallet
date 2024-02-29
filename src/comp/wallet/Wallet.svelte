@@ -29,11 +29,11 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'r') {
+			if (e.key === 'r'||e.key === 'R') {
 				active = 'receive';
-			} else if (e.key === 's') {
+			} else if (e.key === 's'||e.key === 'S') {
 				active = 'send';
-			} else if (e.key === 'b') {
+			} else if (e.key === 'b'||e.key === 'B') {
 				active = 'base';
 			}
 		};
@@ -85,7 +85,7 @@
 					<p class="text-4xl">sats</p>
 				</div>
 				<p class="text-md">
-					(pending
+					(Pending
 					{$pendingTokens.reduce((count, t) => {
 						return count + t.amount;
 					}, 0) ?? 0})
