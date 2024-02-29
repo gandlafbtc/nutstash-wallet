@@ -5,7 +5,7 @@
 	import MintRowAdd from '../mint/MintRowAdd.svelte';
 	let someMints = [
 		'https://8333.space:3338',
-		'https://mint.minibits.cash',
+		'https://mint.minibits.cash/Bitcoin',
 		'https://testnut.cashu.space'
 	];
 
