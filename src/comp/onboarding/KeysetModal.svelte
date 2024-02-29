@@ -22,7 +22,7 @@
 <button class="btn" onclick="my_modal_1.showModal()">try a different keyset</button>
 <dialog id="my_modal_1" class="modal">
 	<div class="modal-box">
-		<h3 class="font-bold text-lg">Hello!</h3>
+		<h3 class="font-bold text-lg">Select keysets to restore</h3>
 		{#each keysetMap as m}
 			<p>
 				{m.mint.mintURL}
