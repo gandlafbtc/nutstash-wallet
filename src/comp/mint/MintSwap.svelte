@@ -70,16 +70,14 @@
 	const performSwap = async () => {
 		try {
 			isPerform = true;
-			const cashuSwapInMint = new CashuMint(swapInMint.mintURL);
-			const cashuSwapInWallet = new CashuWallet(cashuSwapInMint, swapInMint.keys);
-
 			const proofsToSend = getTokensToSend(
 				swapAmount + fees,
 				getTokensForMint(swapOutMint, $token)
 			);
 			const isPaid = await walletActions.melt(swapOutMint, swapAmount, fees, proofsToSend, invoice);
-
-			const { proofs } = await walletActions.mint(swapInMint, swapAmount, paymentHash, invoice);
+			if (isPaid) {
+				const { proofs } = await walletActions.mint(swapInMint, swapAmount, paymentHash, invoice);
+			}
 			toast('success', 'The swap has successfully been completed', 'Swap complete');
 			isPerform = false;
 			isComplete = true;

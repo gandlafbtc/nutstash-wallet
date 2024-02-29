@@ -174,7 +174,9 @@
 				<div class="w-full flex items-center justify-center">
 					<div class="flex items-center justify-center flex-col">
 						<div class="border-warning border rounded-md p-2">
-							<QRCodeImage text={qrCode} displayHeight={275} displayWidth={275} margin={1} />
+							<a class="cursor-pointer" href="lightning:{qrCode}">
+								<QRCodeImage text={qrCode} displayHeight={275} displayWidth={275} margin={1} />
+							</a>
 						</div>
 					</div>
 				</div>
