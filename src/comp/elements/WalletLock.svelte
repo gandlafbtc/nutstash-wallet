@@ -6,7 +6,7 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'x'||e.key === 'X') {
+			if (e.key === 'x' || e.key === 'X') {
 				key.set(undefined);
 			}
 		};

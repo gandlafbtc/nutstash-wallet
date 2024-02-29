@@ -32,9 +32,9 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'e'||e.key === 'E') {
+			if (e.key === 'e' || e.key === 'E') {
 				isSend = true;
-			} else if (e.key === 'l'||e.key === 'L') {
+			} else if (e.key === 'l' || e.key === 'L') {
 				isSend = false;
 			}
 		};

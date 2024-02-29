@@ -104,7 +104,7 @@
 						class="z-0 btn join-item {mintURL
 							? 'btn-primary'
 							: 'btn-disabled'} h-full z-20 flex gap-2 items-center"
-							value="Add mint"
+						value="Add mint"
 					/>
 				{/if}
 			</div>

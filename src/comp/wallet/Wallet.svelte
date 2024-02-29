@@ -29,11 +29,11 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'r'||e.key === 'R') {
+			if (e.key === 'r' || e.key === 'R') {
 				active = 'receive';
-			} else if (e.key === 's'||e.key === 'S') {
+			} else if (e.key === 's' || e.key === 'S') {
 				active = 'send';
-			} else if (e.key === 'b'||e.key === 'B') {
+			} else if (e.key === 'b' || e.key === 'B') {
 				active = 'base';
 			}
 		};

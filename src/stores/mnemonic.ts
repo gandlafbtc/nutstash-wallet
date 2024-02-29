@@ -23,6 +23,6 @@ mnemonic.subscribe(async (value) => {
 	}
 });
 
-const seed = writable<Uint8Array>()
+const seed = writable<Uint8Array>();
 
 export { mnemonic, seed };

@@ -181,7 +181,7 @@ export const melt = async (
 	invoice: string
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	let currentCount = count
+	let currentCount = count;
 	const { returnChange, send, newKeys } = await wallet.send(
 		amount + fees,
 		proofs,
@@ -202,8 +202,6 @@ export const melt = async (
 	if (returnChange) {
 		token.update((state) => [...returnChange, ...state]);
 	}
-
-	
 
 	const {
 		isPaid,
@@ -269,7 +267,7 @@ export const updateCount = (keysetId: string, newCount: number): number => {
 	}
 	toBeUpdated.count = newCount;
 	counts.set(allCounts);
-	return newCount
+	return newCount;
 };
 
 export const encrypt = async (payload: string) => {

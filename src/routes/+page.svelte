@@ -9,13 +9,13 @@
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Shift') {
-				e.preventDefault()
+				e.preventDefault();
 				showShortCuts.set(true);
 			}
 		};
 		const keyUp = (e: KeyboardEvent) => {
 			if (e.key === 'Shift') {
-				e.preventDefault()
+				e.preventDefault();
 				showShortCuts.set(false);
 			}
 		};
