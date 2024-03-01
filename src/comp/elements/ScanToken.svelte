@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	// @ts-ignore
-	import { URDecoder } from '@gandlaf21/bc-ur';
+	import type { URDecoder } from '@gandlaf21/bc-ur';
 	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
 	import { toast } from '../../stores/toasts';
@@ -22,12 +22,13 @@
 
 	let qrScanner: Html5QrcodeScanner;
 
-	function onScanSuccess(decodedText: string, decodedResult: any) {
+	async function onScanSuccess(decodedText: string, decodedResult: any) {
 		if (decodedText.startsWith('ur:')) {
 			decoder.receivePart(decodedText);
 			completion = Math.floor(decoder.estimatedPercentComplete() * 100);
 			if (decoder.isError()) {
 				toast("error","Restarting scan process...","Scanning error")
+				const { URDecoder } = await import('@gandlaf21/bc-ur');
 				decoder = new URDecoder()
 				return
 			}
