@@ -80,7 +80,7 @@
 			}
 
 			encodedToken = await walletActions.send(mint, amount, tokensToSend, sendPreference);
-			toast('success', 'Copy the token and send it to someone', 'Sendable Token created.');
+			toast('success', 'The token is ready', `${amount} sats Token created.`);
 			isLoading = false;
 		} catch {
 			resetState();
@@ -212,7 +212,7 @@
 
 				<div class="flex gap-2 flex-col justify-center w-full">
 					<div class="flex flex-col gap-2 items-center">
-						<div class="w-72 h-72">
+						<div class="w-72">
 							<TokenQr token={encodedToken} />
 						</div>
 						<input

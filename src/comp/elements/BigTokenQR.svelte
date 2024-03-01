@@ -2,28 +2,54 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
 	import { Buffer } from 'buffer';
+	import type { UREncoder } from '@gandlaf21/bc-ur';
 
 	export let token: string;
+	export let speed: number
+	export let size: number
+	
 
 	let chunk = '';
-	const maxFragmentLength = 200;
+	$: maxFragmentLength = size*50
+	$: intervalMS = 1000/speed
 	const firstSeqNum = 0;
+	let encoder: UREncoder
+	let qrInterval: number | undefined
 
-	onMount(async () => {
-		// @ts-ignore
+	$: if (intervalMS || maxFragmentLength) {
+		startLoop()
+	}
+
+	const getEncoder = async ()=>{
 		const { UR, UREncoder } = await import('@gandlaf21/bc-ur');
 
 		const ur = UR.fromBuffer(Buffer.from(token));
-		const encoder = new UREncoder(ur, maxFragmentLength, firstSeqNum);
-		const qrInterval = setInterval(() => {
+		encoder = new UREncoder(ur, maxFragmentLength, firstSeqNum);
+	}
+
+	const doInterval = () =>{
+		clearInterval(qrInterval);
+
+		qrInterval = setInterval(() => {
 			chunk = encoder.nextPart();
-		}, 200);
-		onDestroy(() => {
-			clearInterval(qrInterval);
-		});
+		}, intervalMS);
+	}
+	
+	$: startLoop = async () => {
+		await getEncoder()
+		doInterval()
+	}
+
+	onMount( () => {
+		startLoop()
+		// @ts-ignore
+	});
+	onDestroy(() => {
+		clearInterval(qrInterval);
 	});
 </script>
 
-{#if chunk}
-	<QRCodeImage bind:text={chunk} displayHeight={250} displayWidth={250} />
+
+{#if chunk && size && speed}
+	<QRCodeImage bind:text={chunk}/>
 {/if}

@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	// @ts-ignore
-	import type { URDecoder } from '@gandlaf21/bc-ur';
+	import { URDecoder } from '@gandlaf21/bc-ur';
 	import { Html5QrcodeScanner } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
+	import { toast } from '../../stores/toasts';
 
 	export let activeR;
 	export let scannedToken;
@@ -25,6 +26,11 @@
 		if (decodedText.startsWith('ur:')) {
 			decoder.receivePart(decodedText);
 			completion = Math.floor(decoder.estimatedPercentComplete() * 100);
+			if (decoder.isError()) {
+				toast("error","Restarting scan process...","Scanning error")
+				decoder = new URDecoder()
+				return
+			}
 			if (!decoder.isComplete()) {
 				return;
 			}
