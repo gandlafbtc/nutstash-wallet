@@ -21,6 +21,12 @@
 	{#if token.length >= 400}
 	{#if showControls}
 	<div class="p-4 flex gap-5 flex-col">
+		<div class="flex gap-2 items-start text-start text-primary">
+			<p class="w-12">
+				speed
+			</p>
+			<input type="range" min="1" max="5" bind:value={speed} class="range  w-56 range-primary" step="1" />
+		</div>
 		<div class="flex gap-1 items-center">
 			<div>
 
@@ -29,14 +35,8 @@
 				</svg>
 			</div>
 				<p>
-				After changing these settings, the scanning device has to restart the scanning process.
+				After changing the size, the scanning device has to restart the scanning process.
 			</p>
-		</div>
-		<div class="flex gap-2 items-start text-start text-primary">
-			<p class="w-12">
-				speed
-			</p>
-			<input type="range" min="1" max="5" bind:value={speed} class="range  w-56 range-primary" step="1" />
 		</div>
 		<div class="flex gap-2 items-start text-start text-secondary">
 			

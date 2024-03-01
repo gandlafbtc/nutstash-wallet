@@ -29,7 +29,6 @@
 
 	const doInterval = () =>{
 		clearInterval(qrInterval);
-
 		qrInterval = setInterval(() => {
 			chunk = encoder.nextPart();
 		}, intervalMS);
