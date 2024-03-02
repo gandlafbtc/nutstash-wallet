@@ -4,7 +4,7 @@
 	import { mnemonic } from '../../stores/mnemonic';
 	import { toast } from '../../stores/toasts';
 	const copyMnemonic = () => {
-		const text = $mnemonic.join(" ");
+		const text = $mnemonic.join(' ');
 		if (browser) {
 			copyTextToClipboard(text);
 		}

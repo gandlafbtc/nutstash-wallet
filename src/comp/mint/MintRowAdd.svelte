@@ -16,7 +16,7 @@
 			const cashuMint = new CashuMint(url);
 			const keys = await cashuMint.getKeys();
 			const { keysets } = await cashuMint.getKeySets();
-			const info = await cashuMint.getInfo()
+			const info = await cashuMint.getInfo();
 			untrustedMints.update((state) => [...state, { mintURL: url, keys, keysets, info }]);
 			isLoaded = true;
 			afterAdd(url);

@@ -12,7 +12,7 @@
 
 	let completion = 0;
 
-	let scanProcess = ''
+	let scanProcess = '';
 
 	let decoder: URDecoder;
 
@@ -26,13 +26,13 @@
 
 	async function onScanSuccess(decodedText: string, decodedResult: any) {
 		if (decodedText.startsWith('ur:')) {
-			const chunkProcess = decodedText.split("/")[1].split("-")[1]
+			const chunkProcess = decodedText.split('/')[1].split('-')[1];
 			if (scanProcess && scanProcess !== chunkProcess) {
-				toast('warning', 'Restarting scan process','QR code has changed')
+				toast('warning', 'Restarting scan process', 'QR code has changed');
 				const { URDecoder } = await import('@gandlaf21/bc-ur');
 				decoder = new URDecoder();
 			}
-			scanProcess=chunkProcess
+			scanProcess = chunkProcess;
 			decoder.receivePart(decodedText);
 			completion = Math.floor(decoder.estimatedPercentComplete() * 100);
 			if (!decoder.isComplete()) {

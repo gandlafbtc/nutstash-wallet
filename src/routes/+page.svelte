@@ -9,11 +9,10 @@
 	import { isLoaded } from '../stores/isLoaded';
 	import Loading from '../comp/base/Loading.svelte';
 	onMount(() => {
-		
-		if (!localStorage.getItem("is-loaded")) {
-			localStorage.setItem('is-loaded', 'true')
-			isLoaded.set('true')
-		} 
+		if (!localStorage.getItem('is-loaded')) {
+			localStorage.setItem('is-loaded', 'true');
+			isLoaded.set('true');
+		}
 
 		const keyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Shift') {

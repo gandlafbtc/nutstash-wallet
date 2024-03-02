@@ -18,7 +18,7 @@ const initialValue4 = browser
 const checkNonPending = writable<boolean>(JSON.parse(initialValue));
 const checkPending = writable<boolean>(JSON.parse(initialValue2));
 const checkAutomatically = writable<boolean>(JSON.parse(initialValue3));
-const isEncrypted = writable<boolean|undefined>(
+const isEncrypted = writable<boolean | undefined>(
 	initialValue4 === 'undefined' ? undefined : initialValue4 === 'true' ? true : false
 );
 

@@ -13,10 +13,10 @@ mnemonic.subscribe(async (value) => {
 	if (browser) {
 		if (get(isEncrypted)) {
 			if (!value) {
-				return
-			} 
-				encryptedStorageSeed.set(await encryptSeed(JSON.stringify(value)));
-				window.localStorage.setItem('mnemonic', '');
+				return;
+			}
+			encryptedStorageSeed.set(await encryptSeed(JSON.stringify(value)));
+			window.localStorage.setItem('mnemonic', '');
 		} else {
 			window.localStorage.setItem('mnemonic', JSON.stringify(value));
 			window.localStorage.setItem('encrypted-seed', '[]');

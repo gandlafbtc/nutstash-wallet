@@ -75,23 +75,22 @@
 			</div>
 		</div>
 		{#if !$isEncrypted}
-		<div class="flex justify-between items-center">
-			<div class="text-success">
-				<label >Encryption</label>
-			</div>
-
 			<div class="flex justify-between items-center">
-				<div class="col-span-4">
-					<button
-						class="btn btn-success"
-						on:click={() => {
-							isEncrypted.set(undefined);
-						}}>Encrypt wallet</button
-					>
+				<div class="text-success">
+					<label>Encryption</label>
+				</div>
+
+				<div class="flex justify-between items-center">
+					<div class="col-span-4">
+						<button
+							class="btn btn-success"
+							on:click={() => {
+								isEncrypted.set(undefined);
+							}}>Encrypt wallet</button
+						>
+					</div>
 				</div>
 			</div>
-		</div>
-		
 		{/if}
 		<div class="divider col-span-5">Backup</div>
 
@@ -234,14 +233,14 @@
 				</div>
 			</div>
 			{#if $isEncrypted}
-			<div class="flex justify-between items-center">
-				<div class="col-span-1">
-					<p class="font-bold text-error">Reset password</p>
+				<div class="flex justify-between items-center">
+					<div class="col-span-1">
+						<p class="font-bold text-error">Reset password</p>
+					</div>
+					<div class="col-span-4">
+						<ResetPasswordButton />
+					</div>
 				</div>
-				<div class="col-span-4">
-					<ResetPasswordButton />
-				</div>
-			</div>
 			{/if}
 			<div class="flex justify-between items-center">
 				<div class="col-span-1">

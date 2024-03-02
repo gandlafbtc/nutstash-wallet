@@ -9,7 +9,7 @@
 		'https://testnut.cashu.space'
 	];
 
-	export let restore: undefined | (() => void )
+	export let restore: undefined | (() => void);
 
 	//fetch from server when cors allowed
 	// async function getMints() {
@@ -26,9 +26,8 @@
 	const persistMints = () => {
 		mints.set($untrustedMints);
 		if (restore) {
-			restore()
-		}
-		else {
+			restore();
+		} else {
 			isOnboarded.set(true);
 		}
 	};

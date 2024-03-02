@@ -16,9 +16,8 @@ token.subscribe(async (value) => {
 	if (browser) {
 		let stringValue = JSON.stringify(value);
 		if (get(isEncrypted)) {
-
 			if (!stringValue) {
-				stringValue = '[]'
+				stringValue = '[]';
 			}
 			encryptedStorage.set(await encrypt(stringValue));
 			window.localStorage.setItem('tokens', '[]');

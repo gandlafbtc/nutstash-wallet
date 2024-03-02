@@ -280,10 +280,8 @@ export const encrypt = async (payload: string) => {
 			new TextEncoder().encode(payload)
 		);
 		return encodeUint8toBase64(new Uint8Array(encrypted));
-	}
-	else {
-		throw new Error("tried to use encryption without key ");
-		
+	} else {
+		throw new Error('tried to use encryption without key ');
 	}
 };
 
@@ -296,9 +294,8 @@ export const decrypt = async (payload: string): Promise<Proof[]> => {
 			encodeBase64toUint8(payload)
 		);
 		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
-	}
-	else {
-		throw new Error("tried to use encryption without key");
+	} else {
+		throw new Error('tried to use encryption without key');
 	}
 };
 export const encryptSeed = async (payload: string): Promise<string> => {
@@ -311,9 +308,8 @@ export const encryptSeed = async (payload: string): Promise<string> => {
 			new TextEncoder().encode(payload)
 		);
 		return encodeUint8toBase64(new Uint8Array(encrypted));
-	}
-	else {
-		throw new Error("tried to use encryption without key");
+	} else {
+		throw new Error('tried to use encryption without key');
 	}
 };
 
@@ -328,9 +324,8 @@ export const decryptSeed = async (payload: string) => {
 		let decoded = new TextDecoder().decode(decrypted);
 		decoded = decoded.replace(/^"(.*)"$/, '$1');
 		return JSON.parse(decoded);
-	}
-	else {
-		throw new Error("tried to use encryption without key");
+	} else {
+		throw new Error('tried to use encryption without key');
 	}
 };
 

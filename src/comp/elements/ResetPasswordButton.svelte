@@ -6,20 +6,19 @@
 	import { token } from '../../stores/tokens';
 	import { mnemonic } from '../../stores/mnemonic';
 
-	let currentPass = ''
+	let currentPass = '';
 	const removeEncryption = async () => {
-		key.set(undefined)
-		isEncrypted.set(false)
-		token.set($token)
-		mnemonic.set($mnemonic)
+		key.set(undefined);
+		isEncrypted.set(false);
+		token.set($token);
+		mnemonic.set($mnemonic);
 	};
 	const setNewPassword = async () => {
-		key.set(undefined)
-		isEncrypted.set(undefined)
-		token.set($token)
-		mnemonic.set($mnemonic)
+		key.set(undefined);
+		isEncrypted.set(undefined);
+		token.set($token);
+		mnemonic.set($mnemonic);
 	};
-	
 </script>
 
 <label for="reset-password-modal" class="btn btn-error">reset password</label>

@@ -60,14 +60,12 @@
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
 		<div class="max-h-72 overflow-auto scrollbar-hide">
-			
-					{#if $mints.length === 0}
-							 no mints added so far.
-					{/if}
-					{#each $mints as mint, mintIndex}
-						<MintRow {mint} {mintIndex} bind:activeMint bind:active />
-					{/each}
-				
+			{#if $mints.length === 0}
+				no mints added so far.
+			{/if}
+			{#each $mints as mint, mintIndex}
+				<MintRow {mint} {mintIndex} bind:activeMint bind:active />
+			{/each}
 		</div>
 
 		<form on:submit|preventDefault={addMint}>

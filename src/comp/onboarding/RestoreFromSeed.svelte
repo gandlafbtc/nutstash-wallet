@@ -21,8 +21,6 @@
 	let isRestoring = false;
 	let isRestored = false;
 	let showMints = false;
-	
-
 
 	let restoreSeed: Array<string> = new Array(12);
 	let restoredAmount = 0;
@@ -170,7 +168,7 @@
 				bind:value={seedString}
 				on:keydown={(e) => {
 					if (e.key === 'Enter') {
-						showMints=true
+						showMints = true;
 					}
 				}}
 			/>
@@ -192,7 +190,9 @@
 					class="btn {restoreSeed.includes(undefined) || isRestoring
 						? 'btn-disabled'
 						: 'btn-primary'}"
-					on:click={()=>{showMints=true}}
+					on:click={() => {
+						showMints = true;
+					}}
 				>
 					{#if isRestoring}
 						<div class="loading"></div>
