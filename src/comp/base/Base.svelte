@@ -11,7 +11,7 @@
 	import { onMount } from 'svelte';
 	import { showShortCuts } from '../../stores/showShortCuts';
 	import { mnemonic, seed } from '../../stores/mnemonic';
-	import { deriveSeedFromMnemonic } from '@cashu/cashu-ts';
+    import { deriveSeedFromMnemonic } from "@cashu/cashu-ts";
 
 	$activeTab = 'wallet';
 
@@ -20,19 +20,19 @@
 	};
 
 	onMount(() => {
-		setTimeout(() => {
-			if ($mnemonic) {
-				seed.set(deriveSeedFromMnemonic($mnemonic));
-			}
-		}, 300);
+        setTimeout(()=>
+           { if ($mnemonic) {
+                seed.set(deriveSeedFromMnemonic($mnemonic))
+            }
+           }     , 300
+            )
 
 		const keyDown = (e: KeyboardEvent) => {
-			console.log(e.key);
 			if (e.key === 'w' || e.key === 'W') {
 				$activeTab = 'wallet';
-			} else if (e.key === 'm' || e.key === 'M') {
+			} else if (e.key === 'm'||e.key === 'M') {
 				$activeTab = 'mint';
-			} else if (e.key === 'o' || e.key === 'O') {
+			} else if (e.key === 'o'||e.key === 'O') {
 				$activeTab = 'setting';
 			}
 		};

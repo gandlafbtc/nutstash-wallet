@@ -160,9 +160,7 @@
 				</div>
 				<div id="4" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<img src="/icons/coin.gif" alt="loading" class="h-20" />
-					{#if $isEncrypted === undefined}
-						<PasswordSetup></PasswordSetup>
-					{:else}
+					
 						<h1 class="text-lg font-bold">Seed phrase backup</h1>
 						{#if isRestore}
 							<RestoreFromSeed bind:isRestore></RestoreFromSeed>
@@ -222,7 +220,6 @@
 								</a>
 							{/if}
 						</div>
-					{/if}
 				</div>
 
 				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
@@ -277,15 +274,7 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- {:else if page!==5}
-	<div class="flex items-center justify-center w-full col-span-2">
-		<div class="coin">
-		</div>
-	</div> -->
-	<!-- {/if} -->
 {:else}
-	<!-- else content here -->
 	<RecommendedMints />
 {/if}
 <div />

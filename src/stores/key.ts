@@ -14,7 +14,6 @@ const iv = writable<Uint8Array>(hexToBytes(initialValue));
 
 iv.subscribe((value) => {
 	if (browser) {
-		console.log(bytesToHex(value));
 		window.localStorage.setItem('key-iv', bytesToHex(value));
 	}
 });
@@ -29,7 +28,6 @@ const seedIv = writable<Uint8Array>(hexToBytes(initialValueSeed));
 
 seedIv.subscribe((value) => {
 	if (browser) {
-		console.log(bytesToHex(value));
 		window.localStorage.setItem('key-iv-seed', bytesToHex(value));
 	}
 });

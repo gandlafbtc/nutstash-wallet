@@ -29,13 +29,11 @@
 	onDestroy(() => {
 		if ($nostrPool) {
 			$nostrPool.close();
-			console.log('close connections');
 		}
 	});
 
 	onMount(async () => {
 		if (!$useNostr) {
-			console.log('nostr is disabled');
 			return;
 		}
 

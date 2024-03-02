@@ -6,7 +6,15 @@
 	import Base from '../comp/base/Base.svelte';
 	import { onMount } from 'svelte';
 	import { showShortCuts } from '../stores/showShortCuts';
+	import { isLoaded } from '../stores/isLoaded';
+	import Loading from '../comp/base/Loading.svelte';
 	onMount(() => {
+		
+		if (!localStorage.getItem("is-loaded")) {
+			localStorage.setItem('is-loaded', 'true')
+			isLoaded.set('true')
+		} 
+
 		const keyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Shift') {
 				e.preventDefault();
@@ -36,10 +44,14 @@
 >
 	<PasswordInput>
 		<!-- && !$page.url.searchParams?.get('token') && !$page.url.searchParams?.get('mint') -->
-		{#if !$isOnboarded}
-			<Onboarding />
+		{#if $isLoaded}
+			{#if !$isOnboarded}
+				<Onboarding />
+			{:else}
+				<Base></Base>
+			{/if}
 		{:else}
-			<Base></Base>
+			<Loading></Loading>
 		{/if}
 	</PasswordInput>
 </div>

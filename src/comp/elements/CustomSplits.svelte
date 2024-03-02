@@ -34,7 +34,6 @@
 	};
 	const getPossibleCoins = () => {
 		const a: number[] = [];
-		console.log(preferenceAmount);
 		for (let index = 1; index <= amount - preferenceAmount; index = index * 2) {
 			a.push(index);
 		}

@@ -13,6 +13,9 @@ encryptedStorage.subscribe((value) => {
 		window.localStorage.setItem('encrypted', value);
 	}
 });
+
+
+
 const initialValueStingSeed: string = browser
 	? window.localStorage.getItem('encrypted-seed') ?? ''
 	: '';

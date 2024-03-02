@@ -124,6 +124,7 @@
 			isLoadingMint = true;
 			const keysets = await mint.getKeySets();
 			const keys = await mint.getKeys();
+			const info = await mint.getInfo()
 
 			if (!validateMintKeys(keys)) {
 				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
@@ -133,6 +134,7 @@
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
 				keys,
+				info,
 				keysets: keysets.keysets
 			};
 

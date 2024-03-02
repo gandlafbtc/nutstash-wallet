@@ -2,11 +2,12 @@
 	import { isEncrypted } from '../../stores/settings';
 	import { key } from '../../stores/key';
 	import { toast } from '../../stores/toasts';
-	import { browser } from '$app/environment';
-	import { decrypt, decryptSeed, encrypt, kdf } from '../../actions/walletActions';
+	import { decrypt, decryptSeed, kdf } from '../../actions/walletActions';
 	import { token } from '../../stores/tokens';
 	import { encryptedStorage, encryptedStorageSeed } from '../../stores/encrypted';
 	import { mnemonic } from '../../stores/mnemonic';
+	import PasswordSetup from './PasswordSetup.svelte';
+	import { isOnboarded } from '../../stores/message';
 
 	let pass = '';
 
@@ -19,21 +20,22 @@
 			} else {
 				token.set([]);
 			}
-			if (encryptedStorageSeed) {
+			if ($encryptedStorageSeed) {
 				const decryptedSeed = await decryptSeed($encryptedStorageSeed);
 				mnemonic.set(decryptedSeed);
 			}
 		} catch (error) {
 			key.set(undefined);
 			toast('error', 'can not unlock', 'wrong password');
-			console.log(error);
 		} finally {
 			pass = '';
 		}
 	};
 </script>
 
-{#if $isEncrypted && !$key}
+{#if $isOnboarded && $isEncrypted === undefined}
+	<PasswordSetup></PasswordSetup>
+{:else if $isEncrypted && !$key}
 	<div
 		class="w-screen h-screen bg-black bg-opacity-80 z-50 fixed top-0 left-0 flex items-center justify-center"
 	>

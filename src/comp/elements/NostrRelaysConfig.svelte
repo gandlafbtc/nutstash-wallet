@@ -28,13 +28,13 @@
 </div>
 
 <div class="bg-base-200 p-2 rounded-md">
-	<div class="flex flex-col gap-2">
+	<div class="flex justify-between gap-2 items-start">
 		<div class="w-full max-h-44 overflow-y-scroll flex flex-col gap-2 scrollbar-hide">
 			{#each $nostrRelays as relay, i}
 				<NostrRelayRow {relay} />
 			{/each}
 		</div>
-		<div class="flex gap-2 items-end w-full">
+		<div class="flex gap-2 justify-end items-start w-full">
 			<form class="flex gap-2" on:submit|preventDefault={addRelay}>
 				<div class="form-control">
 					<!-- svelte-ignore a11y-label-has-associated-control -->

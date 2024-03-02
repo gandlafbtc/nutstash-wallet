@@ -12,6 +12,7 @@
 	import BackupButton from './elements/BackupButton.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
+	import ResetPasswordButton from './elements/ResetPasswordButton.svelte';
 	import ShowSeed from './elements/ShowSeed.svelte';
 	import WipeWalletButton from './elements/WipeWalletButton.svelte';
 	import HistoryTable from './history/HistoryTable.svelte';
@@ -38,14 +39,14 @@
 			<div>
 				<label for="theme-dropdown">Theme:</label>
 			</div>
-			<div class="dropdown" id="theme-dropdown">
+			<div class="dropdown dropdown-bottom dropdown-end" id="theme-dropdown">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label tabindex="0" class="btn">{$theme}</label>
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<ul
 					tabindex="0"
-					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-56 overflow-scroll scrollbar-hide"
+					class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-60 overflow-scroll scrollbar-hide"
 				>
 					<!-- svelte-ignore a11y-missing-attribute -->
 					{#each THEMES as theme}
@@ -73,6 +74,25 @@
 				</div>
 			</div>
 		</div>
+		{#if !$isEncrypted}
+		<div class="flex justify-between items-center">
+			<div class="text-success">
+				<label >Encryption</label>
+			</div>
+
+			<div class="flex justify-between items-center">
+				<div class="col-span-4">
+					<button
+						class="btn btn-success"
+						on:click={() => {
+							isEncrypted.set(undefined);
+						}}>Encrypt wallet</button
+					>
+				</div>
+			</div>
+		</div>
+		
+		{/if}
 		<div class="divider col-span-5">Backup</div>
 
 		{#if $mnemonic}
@@ -207,15 +227,25 @@
 		{#if isShowDangerzone}
 			<div class="flex justify-between items-center">
 				<div class="col-span-1">
-					<label for="delete-history-button">Delete History</label>
+					<p>Delete History</p>
 				</div>
 				<div class="col-span-4">
 					<ResetHistoryButton />
 				</div>
 			</div>
+			{#if $isEncrypted}
 			<div class="flex justify-between items-center">
 				<div class="col-span-1">
-					<label for="delete-history-button" class="font-bold text-error">Wipe wallet</label>
+					<p class="font-bold text-error">Reset password</p>
+				</div>
+				<div class="col-span-4">
+					<ResetPasswordButton />
+				</div>
+			</div>
+			{/if}
+			<div class="flex justify-between items-center">
+				<div class="col-span-1">
+					<p class="font-bold text-error">Wipe wallet</p>
 				</div>
 				<div class="col-span-4">
 					<WipeWalletButton />

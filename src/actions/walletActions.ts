@@ -281,9 +281,13 @@ export const encrypt = async (payload: string) => {
 		);
 		return encodeUint8toBase64(new Uint8Array(encrypted));
 	}
+	else {
+		throw new Error("tried to use encryption without key ");
+		
+	}
 };
 
-export const decrypt = async (payload: string) => {
+export const decrypt = async (payload: string): Promise<Proof[]> => {
 	const k = get(key);
 	if (browser && k) {
 		const decrypted = await window.crypto.subtle.decrypt(
@@ -293,18 +297,23 @@ export const decrypt = async (payload: string) => {
 		);
 		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
 	}
+	else {
+		throw new Error("tried to use encryption without key");
+	}
 };
-export const encryptSeed = async (payload: string) => {
+export const encryptSeed = async (payload: string): Promise<string> => {
 	const k = get(key);
 	if (browser && k) {
 		seedIv.set(randomBytes(16));
-		console.log(payload);
 		const encrypted = await window.crypto.subtle.encrypt(
 			{ name: 'AES-CBC', iv: get(seedIv) },
 			k,
 			new TextEncoder().encode(payload)
 		);
 		return encodeUint8toBase64(new Uint8Array(encrypted));
+	}
+	else {
+		throw new Error("tried to use encryption without key");
 	}
 };
 
@@ -319,6 +328,9 @@ export const decryptSeed = async (payload: string) => {
 		let decoded = new TextDecoder().decode(decrypted);
 		decoded = decoded.replace(/^"(.*)"$/, '$1');
 		return decoded;
+	}
+	else {
+		throw new Error("tried to use encryption without key");
 	}
 };
 

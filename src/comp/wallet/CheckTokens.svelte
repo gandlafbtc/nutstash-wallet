@@ -84,7 +84,6 @@
 					);
 				}
 			} catch (e) {
-				console.log(e);
 				toast('error', 'Mint: ' + mint.mintURL, 'There was a problem when syncing with a mint.');
 			} finally {
 				isChecking = false;

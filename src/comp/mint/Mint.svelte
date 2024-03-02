@@ -28,6 +28,7 @@
 			isLoading = true;
 			const keysets = await mint.getKeySets();
 			const keys = await mint.getKeys();
+			const info = await mint.getInfo();
 
 			if (!validateMintKeys(keys)) {
 				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
@@ -37,6 +38,7 @@
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
 				keys,
+				info,
 				keysets: keysets.keysets
 			};
 
@@ -58,29 +60,14 @@
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
 		<div class="max-h-72 overflow-auto scrollbar-hide">
-			<table class="table table-auto w-full">
-				<!-- head -->
-				<thead>
-					<tr>
-						<th class="w-full">Mint</th>
-						<th>
-							<p class="hidden lg:flex">Balance</p>
-							<p class="flex lg:hidden">Amt</p>
-						</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
+			
 					{#if $mints.length === 0}
-						<tr class="hover">
-							<td colspan="4"> no mints added so far. </td>
-						</tr>
+							 no mints added so far.
 					{/if}
 					{#each $mints as mint, mintIndex}
 						<MintRow {mint} {mintIndex} bind:activeMint bind:active />
 					{/each}
-				</tbody>
-			</table>
+				
 		</div>
 
 		<form on:submit|preventDefault={addMint}>

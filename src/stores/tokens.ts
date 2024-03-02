@@ -14,14 +14,17 @@ const token = writable<Array<Proof>>(initialValue);
 
 token.subscribe(async (value) => {
 	if (browser) {
-		const stringValue = JSON.stringify(value);
+		let stringValue = JSON.stringify(value);
 		if (get(isEncrypted)) {
-			if (stringValue === '[]' || stringValue == '') {
-				return;
+
+			if (!stringValue) {
+				stringValue = '[]'
 			}
-			encryptedStorage.set((await encrypt(stringValue)) ?? '');
+			encryptedStorage.set(await encrypt(stringValue));
+			window.localStorage.setItem('tokens', '[]');
 		} else {
 			window.localStorage.setItem('tokens', stringValue);
+			window.localStorage.setItem('encrypted', '');
 		}
 	}
 });

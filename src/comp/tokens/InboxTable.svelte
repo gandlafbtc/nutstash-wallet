@@ -51,13 +51,11 @@
 				}
 				totalSpent += getAmountForTokenSet(spentProofs);
 			} catch (error) {
-				console.log(error);
 				hasError++;
 			}
 		}
 
 		if (totalReceived > 0) {
-			console.log();
 			toast('success', `${totalReceived} tokens received`, 'Success!');
 		}
 

@@ -133,7 +133,6 @@
 	};
 
 	const resolveNip05 = async () => {
-		console.log('test for nip-5');
 		if (!sendToNostrKey.includes('.')) {
 			return;
 		}
@@ -163,7 +162,6 @@
 			} else {
 				event.id = nostrTools.getEventHash(event);
 				const signedEvent = nostrTools.finalizeEvent(event, hexToBytes($nostrPrivKey));
-				console.log(event);
 				$nostrPool.publish(
 					signedEvent,
 					$nostrRelays.map((r) => r.url)

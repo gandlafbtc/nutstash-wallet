@@ -9,7 +9,7 @@
 		'https://testnut.cashu.space'
 	];
 
-	export let isRestore = false;
+	export let restore: undefined | (() => void )
 
 	//fetch from server when cors allowed
 	// async function getMints() {
@@ -25,10 +25,12 @@
 
 	const persistMints = () => {
 		mints.set($untrustedMints);
-		if (isRestore) {
-			return;
+		if (restore) {
+			restore()
 		}
-		isOnboarded.set(true);
+		else {
+			isOnboarded.set(true);
+		}
 	};
 </script>
 
@@ -37,7 +39,7 @@
 <div class="card bg-base-100 col-span-2 flex justify-center">
 	<div class="card-body flex flex-col gap-4 w-full items-center justify-start p-3">
 		<div class="py-6">
-			{#if isRestore}
+			{#if restore}
 				<h1 class="text-xl font-bold text-center">Mints to restore</h1>
 				<div class="p-3">Add the mints you want to restore tokens from</div>
 			{:else}
