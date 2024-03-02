@@ -16,10 +16,10 @@ mnemonic.subscribe(async (value) => {
 				return;
 			}
 			encryptedStorageSeed.set(await encryptSeed(JSON.stringify(value)));
-			window.localStorage.setItem('mnemonic', '');
+			window.localStorage.setItem('mnemonic', '[]');
 		} else {
 			window.localStorage.setItem('mnemonic', JSON.stringify(value));
-			window.localStorage.setItem('encrypted-seed', '[]');
+			window.localStorage.setItem('encrypted-seed', '');
 		}
 	}
 });
