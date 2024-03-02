@@ -32,6 +32,7 @@
 				const { URDecoder } = await import('@gandlaf21/bc-ur');
 				decoder = new URDecoder();
 			}
+			scanProcess=chunkProcess
 			decoder.receivePart(decodedText);
 			completion = Math.floor(decoder.estimatedPercentComplete() * 100);
 			if (!decoder.isComplete()) {

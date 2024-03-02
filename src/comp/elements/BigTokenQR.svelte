@@ -50,5 +50,6 @@
 
 
 {#if chunk && size && speed}
-	<QRCodeImage bind:text={chunk}/>
+
+	<QRCodeImage bind:text={chunk} displayClass={'w-full h-full'}/>
 {/if}

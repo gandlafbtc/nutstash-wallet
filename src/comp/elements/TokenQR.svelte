@@ -19,14 +19,14 @@
 		{/if}
 	</div>
 	{#if token.length >= 400}
-	{#if showControls}
 	<div class="p-4 flex gap-5 flex-col">
 		<div class="flex gap-2 items-start text-start text-primary">
 			<p class="w-12">
 				speed
 			</p>
-			<input type="range" min="1" max="5" bind:value={speed} class="range  w-56 range-primary" step="1" />
+			<input type="range" min="1" max="7" bind:value={speed} class="range  w-56 range-primary" step="1" />
 		</div>
+		{#if showControls}
 		<div class="flex gap-1 items-center">
 			<div>
 
@@ -45,12 +45,12 @@
 			</p>
 			<input type="range" min="1" max="4" bind:value={size} class="range range-secondary w-56" step="1" />
 		</div>
-		</div>
 		{:else}
 			<button class="btn btn-sm" on:click={()=> showControls=true}>
 				I can't scan this QR code
 			</button>
-			{/if}
+		{/if}
+	</div>
 		{/if}
 	</div>
 	
