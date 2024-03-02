@@ -70,7 +70,7 @@
 		}
 		isRestoring = false;
 		isRestored = true;
-		mnemonic.set(restoreSeed.join(' '));
+		mnemonic.set(restoreSeed);
 		checkNonPending.set(true);
 	};
 

@@ -22,10 +22,8 @@
 		if (k) {
 			key.set(k);
 			isEncrypted.set(true);
-			const currentMnemonic = `${$mnemonic}`;
-			const currentToken = [...$token];
-			mnemonic.set(currentMnemonic);
-			token.set(currentToken);
+			mnemonic.set($mnemonic);
+			token.set($token);
 		}
 		pass = '';
 		confPass = '';

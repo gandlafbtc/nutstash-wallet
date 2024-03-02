@@ -21,8 +21,8 @@
 
 	onMount(() => {
         setTimeout(()=>
-           { if ($mnemonic) {
-                seed.set(deriveSeedFromMnemonic($mnemonic))
+           { if ($mnemonic.length) {
+                seed.set(deriveSeedFromMnemonic($mnemonic.join(' ')))
             }
            }     , 300
             )

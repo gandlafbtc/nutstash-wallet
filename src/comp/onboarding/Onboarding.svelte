@@ -24,7 +24,7 @@
 
 	const createMnemonic = () => {
 		const m = generateNewMnemonic();
-		mnemonic.set(m);
+		mnemonic.set(m.split(" "));
 	};
 </script>
 
@@ -165,7 +165,7 @@
 						{#if isRestore}
 							<RestoreFromSeed bind:isRestore></RestoreFromSeed>
 						{/if}
-						{#if $mnemonic && !isRestore}
+						{#if $mnemonic.length && !isRestore}
 							<div class="card max-w-xl bg-base-100 shadow-xl">
 								<div class="card-body">
 									<Mnemonic />
@@ -181,7 +181,7 @@
 							</p>
 						{/if}
 						<div class="flex flex-col gap-4">
-							{#if !$mnemonic && !isRestore}
+							{#if !$mnemonic.length && !isRestore}
 								<button class="btn btn-primary" on:click={createMnemonic}> create new seed </button>
 								<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
 									restore from seed

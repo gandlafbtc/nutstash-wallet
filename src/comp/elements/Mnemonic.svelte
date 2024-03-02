@@ -4,7 +4,7 @@
 	import { mnemonic } from '../../stores/mnemonic';
 	import { toast } from '../../stores/toasts';
 	const copyMnemonic = () => {
-		const text = $mnemonic;
+		const text = $mnemonic.join(" ");
 		if (browser) {
 			copyTextToClipboard(text);
 		}
@@ -71,7 +71,7 @@
 		</button>
 	</div>
 	<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-		{#each $mnemonic.split(' ') as word, i}
+		{#each $mnemonic as word, i}
 			<div class="flex gap-1">
 				<p>{i + 1}.</p>
 				<input type="text" readonly class="input input-sm w-24 bg-base-300" value={word} />

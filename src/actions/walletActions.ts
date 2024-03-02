@@ -19,7 +19,7 @@ import { toast } from '../stores/toasts';
 import { counts } from '../stores/counts';
 import { history } from '../stores/history';
 import { token } from '../stores/tokens';
-import { mnemonic, seed } from '../stores/mnemonic';
+import { seed } from '../stores/mnemonic';
 import { HistoryItemType } from '../model/historyItem';
 import { getAmountForTokenSet, getKeysetsOfTokens, getTokenSubset } from '../comp/util/walletUtils';
 import { pendingTokens } from '../stores/pendingtokens';
@@ -327,7 +327,7 @@ export const decryptSeed = async (payload: string) => {
 		);
 		let decoded = new TextDecoder().decode(decrypted);
 		decoded = decoded.replace(/^"(.*)"$/, '$1');
-		return decoded;
+		return JSON.parse(decoded);
 	}
 	else {
 		throw new Error("tried to use encryption without key");

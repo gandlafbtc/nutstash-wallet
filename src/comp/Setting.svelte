@@ -95,7 +95,7 @@
 		{/if}
 		<div class="divider col-span-5">Backup</div>
 
-		{#if $mnemonic}
+		{#if $mnemonic.length}
 			<div class="flex justify-between items-center">
 				<div class="col-span-1">
 					<label for="">show seed</label>
@@ -273,7 +273,7 @@
 					</div>
 				</div>
 			{/if}
-			{#if $mnemonic}
+			{#if $mnemonic.length}
 				<div class="tooltip" data-tip="wallet uses mnemonic backup">
 					<div class="bg-base-200 p-2 rounded-lg">
 						<svg

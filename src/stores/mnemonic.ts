@@ -5,22 +5,21 @@ import { isEncrypted } from './settings';
 import { encryptSeed } from '../actions/walletActions';
 import { encryptedStorageSeed } from './encrypted';
 
-const initialValue: string = browser ? window.localStorage.getItem('mnemonic') ?? '' : '';
+const initialValue: string = browser ? window.localStorage.getItem('mnemonic') ?? '[]' : '[]';
 
-const mnemonic = writable<string>(initialValue);
+const mnemonic = writable<string[]>(JSON.parse(initialValue));
 
 mnemonic.subscribe(async (value) => {
 	if (browser) {
 		if (get(isEncrypted)) {
 			if (!value) {
-				value=''
+				return
 			} 
-				encryptedStorageSeed.set(await encryptSeed(value));
+				encryptedStorageSeed.set(await encryptSeed(JSON.stringify(value)));
 				window.localStorage.setItem('mnemonic', '');
-			
 		} else {
-			window.localStorage.setItem('mnemonic', value);
-			window.localStorage.setItem('encrypted-seed', '');
+			window.localStorage.setItem('mnemonic', JSON.stringify(value));
+			window.localStorage.setItem('encrypted-seed', '[]');
 		}
 	}
 });
