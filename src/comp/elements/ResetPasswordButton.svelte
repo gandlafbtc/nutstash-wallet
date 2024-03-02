@@ -28,10 +28,12 @@
 <div class="modal">
 	<div class="modal-box">
 		<p class="py-4 font-bold text-error">Reset password</p>
+		<p class="py-4">Would you like to remove encryption, or set a new password?</p>
+		
 		<div class="modal-action">
 			<label for="reset-password-modal" class="btn btn-outline">cancel</label>
 			<button on:click={removeEncryption} class="btn btn-error">remove encryption</button>
-			<button on:click={setNewPassword} class="btn btn-error">set new password</button>
+			<button on:click={setNewPassword} class="btn btn-success">set new password</button>
 		</div>
 	</div>
 </div>
