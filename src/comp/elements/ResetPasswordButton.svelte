@@ -1,7 +1,5 @@
 <script>
-	import { toast } from '../../stores/toasts';
 	import { key } from '../../stores/key';
-	import { kdf } from '../../actions/walletActions';
 	import { isEncrypted } from '../../stores/settings';
 	import { token } from '../../stores/tokens';
 	import { mnemonic } from '../../stores/mnemonic';

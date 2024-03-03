@@ -7,8 +7,6 @@
 	import Minting from './Minting.svelte';
 	import MintRow from './MintRow.svelte';
 	import MintSwap from './MintSwap.svelte';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	let mintURL = '';
 	let isLoading = false;
 
@@ -16,7 +14,6 @@
 
 	let active = 'base';
 
-	onMount(() => {});
 
 	const addMint = async () => {
 		const mint = new CashuMint(mintURL);
@@ -59,7 +56,7 @@
 
 {#if active === 'base'}
 	<div class="flex flex-col gap-3">
-		<div class="max-h-72 overflow-auto scrollbar-hide">
+		<div class="flex gap-3 flex-col">
 			{#if $mints.length === 0}
 				no mints added so far.
 			{/if}

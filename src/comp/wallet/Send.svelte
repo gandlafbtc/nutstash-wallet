@@ -32,9 +32,9 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'e' || e.key === 'E') {
+			if (e.key === 'E') {
 				isSend = true;
-			} else if (e.key === 'l' || e.key === 'L') {
+			} else if (e.key === 'L') {
 				isSend = false;
 			}
 		};
@@ -118,7 +118,7 @@
 								<p>send ecash</p>
 								<div class="relative">
 									{#if $showShortCuts}
-										<kbd class="absolute kbd text-neutral-content">e</kbd>
+										<kbd class="absolute kbd text-neutral-content">E</kbd>
 									{/if}
 								</div>
 							</div>
@@ -146,7 +146,7 @@
 								<p>pay invoice</p>
 								<div class="relative">
 									{#if $showShortCuts}
-										<kbd class="absolute kbd text-neutral-content">l</kbd>
+										<kbd class="absolute kbd text-neutral-content">L</kbd>
 									{/if}
 								</div>
 							</div>

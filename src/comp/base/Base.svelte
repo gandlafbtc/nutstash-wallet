@@ -27,11 +27,11 @@
 		}, 300);
 
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'w' || e.key === 'W') {
+			if (e.key === 'W') {
 				$activeTab = 'wallet';
-			} else if (e.key === 'm' || e.key === 'M') {
+			} else if (e.key === 'M') {
 				$activeTab = 'mint';
-			} else if (e.key === 'o' || e.key === 'O') {
+			} else if (e.key === 'O') {
 				$activeTab = 'setting';
 			}
 		};
@@ -77,7 +77,7 @@
 						{/if}
 						<div class="relative">
 							{#if $showShortCuts}
-								<kbd class="absolute kbd text-neutral-content">w</kbd>
+								<kbd class="absolute kbd text-neutral-content">W</kbd>
 							{/if}
 						</div>
 					</button>
@@ -105,7 +105,7 @@
 						<p class="hidden lg:flex">Mints</p>
 						<div class="relative">
 							{#if $showShortCuts}
-								<kbd class="absolute kbd text-neutral-content">m</kbd>
+								<kbd class="absolute kbd text-neutral-content">M</kbd>
 							{/if}
 						</div>
 					</button>
@@ -129,7 +129,7 @@
 						<p class="hidden lg:flex">Settings</p>
 						<div class="relative">
 							{#if $showShortCuts}
-								<kbd class="absolute kbd text-neutral-content">o</kbd>
+								<kbd class="absolute kbd text-neutral-content">O</kbd>
 							{/if}
 						</div>
 					</button>

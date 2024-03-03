@@ -29,11 +29,11 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'r' || e.key === 'R') {
+			if ( e.key === 'R') {
 				active = 'receive';
-			} else if (e.key === 's' || e.key === 'S') {
+			} else if (e.key === 'S') {
 				active = 'send';
-			} else if (e.key === 'b' || e.key === 'B') {
+			} else if (e.key === 'B') {
 				active = 'base';
 			}
 		};
@@ -117,7 +117,7 @@
 						<p>receive</p>
 						<div class="relative">
 							{#if $showShortCuts}
-								<kbd class="absolute kbd text-neutral-content">r</kbd>
+								<kbd class="absolute kbd text-neutral-content">R</kbd>
 							{/if}
 						</div>
 					</button>
@@ -145,7 +145,7 @@
 							<p>send</p>
 							<div class="relative">
 								{#if $showShortCuts}
-									<kbd class="absolute kbd text-neutral-content">s</kbd>
+									<kbd class="absolute kbd text-neutral-content">S</kbd>
 								{/if}
 							</div>
 						</button>

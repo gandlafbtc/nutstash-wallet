@@ -6,7 +6,7 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === 'x' || e.key === 'X') {
+			if (e.key === 'X') {
 				key.set(undefined);
 			}
 		};
@@ -39,7 +39,7 @@
 			</svg>
 			<div class="relative">
 				{#if $showShortCuts}
-					<kbd class="absolute kbd text-neutral-content">x</kbd>
+					<kbd class="absolute kbd text-neutral-content">X</kbd>
 				{/if}
 			</div>
 		</button>
