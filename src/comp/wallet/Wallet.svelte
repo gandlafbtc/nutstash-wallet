@@ -93,7 +93,7 @@
 			</div>
 
 			<div class="flex flex-col gap-4">
-				<div class="flex flex-col gap-2">
+				<div class="flex flex-col gap-5 w-64 py-5">
 					<button
 						class="btn btn-secondary flex gap-1 items-center"
 						on:click={() => {

@@ -52,8 +52,8 @@
 					<button
 						on:click={() => changeTab('wallet')}
 						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'wallet'
-							? 'tab-active'
-							: ''}"
+							? 'tab-active text-base-content'
+							: 'text-base-300'}"
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
@@ -84,8 +84,8 @@
 					<button
 						on:click={() => changeTab('mint')}
 						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'mint'
-							? 'tab-active'
-							: ''}"
+							? 'tab-active text-base-content'
+							: 'text-base-300'}"
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
@@ -112,8 +112,8 @@
 					<button
 						on:click={() => changeTab('setting')}
 						class="gap-1 tab tab-lifted tab-border-none tab-lg flex-1 {$activeTab === 'setting'
-							? 'tab-active'
-							: ''}"
+							? 'tab-active text-base-content'
+							: 'text-base-300'}"
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"

@@ -5,20 +5,18 @@
 	import { mnemonic } from '../../stores/mnemonic';
 	import { generateNewMnemonic } from '@cashu/cashu-ts';
 	import Mnemonic from '../elements/Mnemonic.svelte';
-	import PasswordSetup from '../elements/PasswordSetup.svelte';
 	import RestoreFromSeed from './RestoreFromSeed.svelte';
-	import { isEncrypted } from '../../stores/settings';
 
 	let setUpMint = false;
 
 	let isRestore = false;
 
 	const doSetupMint = async () => {
-		await goto('/', {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
-		});
+		// await goto('/', {
+		// 	replaceState: true,
+		// 	keepFocus: true,
+		// 	noScroll: true
+		// });
 		setUpMint = true;
 	};
 
@@ -31,11 +29,13 @@
 <div />
 {#if !setUpMint}
 	<div class="flex items-center col-span-2 text-white">
-		<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2">
-			<div class="carousel max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl">
-				<div id="1" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
-					<div class="w-32 h-32">
-						<img src="/nutstash_app.svg" alt="" />
+		<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2 h-3/4">
+			<div class="carousel max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl h-full">
+				<div id="1" class="carousel-item w-full flex justify-center h-full">
+					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
+
+						<div class="w-32 h-32">
+							<img src="/nutstash_app.svg" alt="" />
 					</div>
 					<h1 class="text-lg font-bold">Welcome to nutstash</h1>
 					<p>Nutstash is still in beta development. Please use at own risk.</p>
@@ -74,7 +74,10 @@
 						</a>
 					</div>
 				</div>
-				<div id="2" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
+				</div>
+				<div id="2" class="carousel-item w-full flex justify-center">
+					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
+					
 					<img src="/icons/shades.svg" alt="shades" class=" w-32" />
 					<h1 class="text-lg font-bold">Ecash for Privacy</h1>
 					<p>
@@ -115,8 +118,10 @@
 							</span>
 						</a>
 					</div>
+					</div>
 				</div>
-				<div id="3" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
+				<div id="3" class="carousel-item w-full flex justify-center">
+					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
 					<img src="/icons/stache.svg" alt="stache" class="w-32" />
 					<h1 class="text-lg font-bold">Transact Anonymously</h1>
 					<p>
@@ -158,7 +163,9 @@
 						</a>
 					</div>
 				</div>
-				<div id="4" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
+				</div>
+				<div id="4" class="carousel-item w-full flex justify-center">
+					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
 					<img src="/icons/coin.gif" alt="loading" class="h-20" />
 
 					<h1 class="text-lg font-bold">Seed phrase backup</h1>
@@ -166,11 +173,14 @@
 						<RestoreFromSeed bind:isRestore></RestoreFromSeed>
 					{/if}
 					{#if $mnemonic.length && !isRestore}
-						<div class="card max-w-xl bg-base-100 shadow-xl">
+						<div class="max-w-xl bg-base-100 rounded-lg p-3">
 							<div class="card-body">
 								<Mnemonic />
-								<div class="card-actions flex items-center justify-center w-full pt-3">
+								<div class="card-actions gap-5 flex items-center justify-center w-full pt-3 flex-col">
 									<a href="#5" class="btn btn-primary"> i wrote it down </a>
+									<button class="link" on:click={()=>{mnemonic.set([])}}>
+										abort
+									</button>
 								</div>
 							</div>
 						</div>
@@ -220,6 +230,7 @@
 							</a>
 						{/if}
 					</div>
+				</div>
 				</div>
 
 				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
@@ -275,6 +286,8 @@
 		</div>
 	</div>
 {:else}
-	<RecommendedMints />
+<div class="h-full w-full flex items-center justify-center">
+	<RecommendedMints restore={undefined} bind:isSetupMints={setUpMint}/>
+</div>
 {/if}
 <div />

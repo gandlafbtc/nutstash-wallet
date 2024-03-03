@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { isOnboarded } from '../../stores/message';
 	import { mints } from '../../stores/mints';
 	import { untrustedMints } from '../../stores/untrustedMints';
@@ -10,6 +11,7 @@
 	];
 
 	export let restore: undefined | (() => void);
+	export let isSetupMints = false
 
 	//fetch from server when cors allowed
 	// async function getMints() {
@@ -31,13 +33,19 @@
 			isOnboarded.set(true);
 		}
 	};
+
+	const afterAdd =(url:string) => {
+					someMints.push(url);
+					someMints = [...someMints];
+	}
+	
 </script>
 
 <!-- {#await getMints() then mints} -->
 
-<div class="card bg-base-100 col-span-2 flex justify-center">
-	<div class="card-body flex flex-col gap-4 w-full items-center justify-start p-3">
-		<div class="py-6">
+<div class="bg-base-100 rounded-lg col-span-2 flex justify-center lg:h-3/4 scale-90">
+	<div class="flex flex-col gap-4 w-full items-center justify-start p-2">
+		<div class="py-4">
 			{#if restore}
 				<h1 class="text-xl font-bold text-center">Mints to restore</h1>
 				<div class="p-3">Add the mints you want to restore tokens from</div>
@@ -63,10 +71,7 @@
 			<MintRowAdd
 				url={''}
 				isPredefined={false}
-				afterAdd={(url) => {
-					someMints.push(url);
-					someMints = [...someMints];
-				}}
+				{afterAdd}
 			/>
 
 			<button
@@ -75,6 +80,15 @@
 			>
 				confirm
 			</button>
+			<button
+			class="link"
+			on:click={()=>{isSetupMints=false
+				goto("/#4")}}
+			>
+			back
+		</button>
+			
+			
 		</div>
 	</div>
 </div>

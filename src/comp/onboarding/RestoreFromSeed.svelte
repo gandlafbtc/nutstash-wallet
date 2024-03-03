@@ -20,7 +20,7 @@
 
 	let isRestoring = false;
 	let isRestored = false;
-	let showMints = false;
+	let isShowMints = false;
 
 	let restoreSeed: Array<string> = new Array(12);
 	let restoredAmount = 0;
@@ -106,10 +106,17 @@
 		totalCount = 0;
 		restore();
 	}
+
+	function showMints() {
+		if (!validateMnemonic(seedString,wordlist)) {
+							toast('error', 'the seed phrase was invalid','mnemonic is not valid')
+							return
+						}
+
+						isShowMints = true;
+	}
 </script>
 
-<div class="card max-w-xl bg-base-100 shadow-xl">
-	<div class="card-body">
 		{#if isRestored}
 			<div class="flex-col flex gap-4">
 				<p class="text-8xl">
@@ -130,9 +137,9 @@
 					<CheckTokens></CheckTokens>
 				</div>
 				<p>If you couldn't restore tokens, you can try the following options</p>
-				<div class="flex gap-2">
+				<div class="flex gap-2 w-full">
 					<button
-						class="btn btn-md {lookedForMore > 2 || isRestoring ? 'btn-disabled' : ''}"
+						class="btn flex-grow btn-md {lookedForMore > 2 || isRestoring ? 'btn-disabled' : ''}"
 						on:click={lookForMore}
 					>
 						{#if isRestoring}
@@ -142,7 +149,7 @@
 						{/if}
 					</button>
 					<button
-						class="btn btn-md {isRestoring ? 'btn-disabled' : 'btn-secondary'}"
+						class="btn flex-grow  btn-md {isRestoring ? 'btn-disabled' : 'btn-secondary'}"
 						on:click={lookAgain}
 					>
 						{#if isRestoring}
@@ -154,11 +161,13 @@
 				</div>
 				<KeysetModal bind:keysetMap></KeysetModal>
 
-				<div class="flex justify-center gap-2">
-					<button class="btn btn-primary" on:click={finish}>finish</button>
+				<div class="flex justify-center gap-2 w-full">
+					<button class="btn btn-primary w-full" on:click={finish}>finish</button>
 				</div>
 			</div>
-		{:else if !showMints}
+		{:else if !isShowMints}
+		<div class="flex flex-col gap-4">
+			
 			<p>Insert your seed phrase in the correct order</p>
 			<input
 				type="text"
@@ -168,13 +177,13 @@
 				bind:value={seedString}
 				on:keydown={(e) => {
 					if (e.key === 'Enter') {
-						showMints = true;
+						showMints()
 					}
 				}}
 			/>
 			<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
 				{#each restoreSeed as input, i}
-					<div class="flex gap-1">
+					<div class="flex gap-1 items-end justify-end">
 						<p>{i + 1}.</p>
 						<input
 							type="text"
@@ -184,25 +193,22 @@
 					</div>
 				{/each}
 			</div>
-			<div class="card-actions flex items-center justify-center w-full pt-3">
-				<button class="btn" on:click={() => (isRestore = false)}> abort </button>
+			<div class="gap-5 flex flex-col items-center justify-center w-full pt-3">
 				<button
-					class="btn {restoreSeed.includes(undefined) || isRestoring
+				class="btn {restoreSeed.includes(undefined) || isRestoring
 						? 'btn-disabled'
 						: 'btn-primary'}"
-					on:click={() => {
-						showMints = true;
-					}}
-				>
+					on:click={showMints}
+					>
 					{#if isRestoring}
-						<div class="loading"></div>
+					<div class="loading"></div>
 					{:else}
-						restore
+					restore
 					{/if}
 				</button>
+				<button class="link" on:click={() => (isRestore = false)}> abort </button>
 			</div>
-		{:else}
-			<RecommendedMints {restore} />
+		</div>
+			{:else}
+			<RecommendedMints {restore} bind:isSetupMints={isShowMints} />
 		{/if}
-	</div>
-</div>
