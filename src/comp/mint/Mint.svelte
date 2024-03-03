@@ -25,7 +25,6 @@
 			isLoading = true;
 			const keysets = await mint.getKeySets();
 			const keys = await mint.getKeys();
-			const info = await mint.getInfo();
 
 			if (!validateMintKeys(keys)) {
 				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
@@ -35,7 +34,6 @@
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
 				keys,
-				info,
 				keysets: keysets.keysets
 			};
 
@@ -78,12 +76,14 @@
 
 				{#if isLoading}
 					<button
-						class="btn join-item loading-spinner btn-disabled h-full z-20 flex gap-2 items-center"
-					/>
+						class="w-32 btn join-item btn-disabled h-full z-20 flex gap-2 items-center"
+					>
+					<div class="loading"></div>
+					</button>
 				{:else}
 					<input
 						type="submit"
-						class="z-0 btn join-item {mintURL
+						class="w-32 z-0 btn join-item {mintURL
 							? 'btn-primary'
 							: 'btn-disabled'} h-full z-20 flex gap-2 items-center"
 						value="Add mint"
