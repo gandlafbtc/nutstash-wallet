@@ -34,6 +34,7 @@
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import { page } from '$app/stores';
+	import QrCodeImage from 'svelte-qrcode-image/QRCodeImage.svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import { updateMintKeys } from '../../actions/walletActions';
 
@@ -210,9 +211,6 @@
 	<LoadingCenter />
 {:else if encodedToken}
 	<div class="grid grid-cols-1 gap-2">
-		<!-- <div>
-					<QRCodeImage text={encodedToken} scale={3} displayType="canvas" />
-				</div> -->
 		<div class="flex flex-col gap-2">
 			<div class="text-center">
 				<p class="text-xl font-bold text-success">Tokens are ready to be sent!</p>
@@ -248,6 +246,11 @@
 			<span class="label-text">Send as link</span>
 			<input type="checkbox" class="toggle toggle-primary" bind:checked={sendAsLink} />
 		</label>
+		{#if sendAsLink}
+			<div class="flex flex-col items-center">
+				<QrCodeImage text={$page.url.href + '#' + encodedToken} scale={3} displayType="canvas" />
+			</div>
+		{/if}
 		<div class="pt-2 flex flex-col gap-2 items-center w-full">
 			{#if $useNostr}
 				<p class="font-bold">Send via Nostr:</p>
