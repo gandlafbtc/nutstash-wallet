@@ -6,10 +6,11 @@
 	import Toasts from '../comp/Toasts.svelte';
 </script>
 
-{#if $useNostr}
-	<NostrSocket />
-{/if}
-<StorageManager />
-<slot />
 
+<StorageManager>
+	{#if $useNostr}
+	<NostrSocket />
+	{/if}
+	<slot />
 <Toasts />
+</StorageManager>

@@ -27,9 +27,8 @@
 		}
 		try {
 			isLoading = true;
-
-			const encodedProofs = await send(mint, getAmountForTokenSet([token]), [token]);
-			await receive(mint, encodedProofs);
+			await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));
+			await send(mint, token.amount, [token])
 			toast('success', 'Token has been recycled.', 'Success!');
 			isLoading = false;
 		} catch (e) {
@@ -42,6 +41,23 @@
 			}
 		}
 	};
+
+	const reclaim =async () => {
+		const mint = getMintForToken(token, $mints);
+		if (!mint) {
+			toast('warning', 'Add the mint first', 'Cannot recycle token!');
+			return;
+		}
+		try {
+		 //todo implement			
+		} catch (error) {
+			isLoading = true;
+				await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));
+				toast('success', 'Token has been recycled.', 'Success!');
+				isLoading = false;
+		}
+	}
+
 	const deleteToken = () => {
 		tokenStore.update((state) => getTokenSubset(state, [token]));
 		if (browser) {

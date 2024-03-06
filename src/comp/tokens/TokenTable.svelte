@@ -20,7 +20,6 @@
 					<p class="flex lg:hidden">Amt</p></th
 				>
 				<th>Date</th>
-				<th class="w-full">Token</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">

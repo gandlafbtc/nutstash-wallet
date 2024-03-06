@@ -108,107 +108,102 @@
 	}
 
 	function showMints() {
-		if (!validateMnemonic(seedString,wordlist)) {
-							toast('error', 'the seed phrase was invalid','mnemonic is not valid')
-							return
-						}
+		if (!validateMnemonic(seedString, wordlist)) {
+			toast('error', 'the seed phrase was invalid', 'mnemonic is not valid');
+			return;
+		}
 
-						isShowMints = true;
+		isShowMints = true;
 	}
 </script>
 
-		{#if isRestored}
-			<div class="flex-col flex gap-4">
-				<p class="text-8xl">
-					{$token.reduce((count, t) => {
-						return count + t.amount;
-					}, 0) ?? 0}
-				</p>
-				<div class="flex gap-2 items-center justify-center">
-					<p class="text-4xl">sats</p>
-				</div>
-				<p>
-					{totalCount} Tokens have been recreated from this seed. Most likely, most of the tokens have
-					been spent already.
-				</p>
-
-				<p class="text-sm">check now!</p>
-				<div>
-					<CheckTokens></CheckTokens>
-				</div>
-				<p>If you couldn't restore tokens, you can try the following options</p>
-				<div class="flex gap-2 w-full">
-					<button
-						class="btn flex-grow btn-md {lookedForMore > 2 || isRestoring ? 'btn-disabled' : ''}"
-						on:click={lookForMore}
-					>
-						{#if isRestoring}
-							<div class="loading"></div>
-						{:else}
-							look for more
-						{/if}
-					</button>
-					<button
-						class="btn flex-grow  btn-md {isRestoring ? 'btn-disabled' : 'btn-secondary'}"
-						on:click={lookAgain}
-					>
-						{#if isRestoring}
-							<div class="loading"></div>
-						{:else}
-							look again
-						{/if}
-					</button>
-				</div>
-				<KeysetModal bind:keysetMap></KeysetModal>
-
-				<div class="flex justify-center gap-2 w-full">
-					<button class="btn btn-primary w-full" on:click={finish}>finish</button>
-				</div>
-			</div>
-		{:else if !isShowMints}
-		<div class="flex flex-col gap-4">
-			
-			<p>Insert your seed phrase in the correct order</p>
-			<input
-				type="text"
-				class="input input-primary input-sm"
-				placeholder="or paste seed here..."
-				on:paste={populateSeed}
-				bind:value={seedString}
-				on:keydown={(e) => {
-					if (e.key === 'Enter') {
-						showMints()
-					}
-				}}
-			/>
-			<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-				{#each restoreSeed as input, i}
-					<div class="flex gap-1 items-end justify-end">
-						<p>{i + 1}.</p>
-						<input
-							type="text"
-							class="input input-sm w-24 bg-base-300"
-							bind:value={restoreSeed[i]}
-						/>
-					</div>
-				{/each}
-			</div>
-			<div class="gap-5 flex flex-col items-center justify-center w-full pt-3">
-				<button
-				class="btn {restoreSeed.includes(undefined) || isRestoring
-						? 'btn-disabled'
-						: 'btn-primary'}"
-					on:click={showMints}
-					>
-					{#if isRestoring}
-					<div class="loading"></div>
-					{:else}
-					restore
-					{/if}
-				</button>
-				<button class="link" on:click={() => (isRestore = false)}> abort </button>
-			</div>
+{#if isRestored}
+	<div class="flex-col flex gap-4">
+		<p class="text-8xl">
+			{$token.reduce((count, t) => {
+				return count + t.amount;
+			}, 0) ?? 0}
+		</p>
+		<div class="flex gap-2 items-center justify-center">
+			<p class="text-4xl">sats</p>
 		</div>
-			{:else}
-			<RecommendedMints {restore} bind:isSetupMints={isShowMints} />
-		{/if}
+		<p>
+			{totalCount} Tokens have been recreated from this seed. Most likely, most of the tokens have been
+			spent already.
+		</p>
+
+		<p class="text-sm">check now!</p>
+		<div>
+			<CheckTokens></CheckTokens>
+		</div>
+		<p>If you couldn't restore tokens, you can try the following options</p>
+		<div class="flex gap-2 w-full">
+			<button
+				class="btn flex-grow btn-md {lookedForMore > 2 || isRestoring ? 'btn-disabled' : ''}"
+				on:click={lookForMore}
+			>
+				{#if isRestoring}
+					<div class="loading"></div>
+				{:else}
+					look for more
+				{/if}
+			</button>
+			<button
+				class="btn flex-grow btn-md {isRestoring ? 'btn-disabled' : 'btn-secondary'}"
+				on:click={lookAgain}
+			>
+				{#if isRestoring}
+					<div class="loading"></div>
+				{:else}
+					look again
+				{/if}
+			</button>
+		</div>
+		<KeysetModal bind:keysetMap></KeysetModal>
+
+		<div class="flex justify-center gap-2 w-full">
+			<button class="btn btn-primary w-full" on:click={finish}>finish</button>
+		</div>
+	</div>
+{:else if !isShowMints}
+	<div class="flex flex-col gap-4">
+		<p>Insert your seed phrase in the correct order</p>
+		<input
+			type="text"
+			class="input input-primary input-sm"
+			placeholder="or paste seed here..."
+			on:paste={populateSeed}
+			bind:value={seedString}
+			on:keydown={(e) => {
+				if (e.key === 'Enter') {
+					showMints();
+				}
+			}}
+		/>
+		<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+			{#each restoreSeed as input, i}
+				<div class="flex gap-1 items-end justify-end">
+					<p>{i + 1}.</p>
+					<input type="text" class="input input-sm w-24 bg-base-300" bind:value={restoreSeed[i]} />
+				</div>
+			{/each}
+		</div>
+		<div class="gap-5 flex flex-col items-center justify-center w-full pt-3">
+			<button
+				class="btn {restoreSeed.includes(undefined) || isRestoring
+					? 'btn-disabled'
+					: 'btn-primary'}"
+				on:click={showMints}
+			>
+				{#if isRestoring}
+					<div class="loading"></div>
+				{:else}
+					restore
+				{/if}
+			</button>
+			<button class="link" on:click={() => (isRestore = false)}> abort </button>
+		</div>
+	</div>
+{:else}
+	<RecommendedMints {restore} bind:isSetupMints={isShowMints} />
+{/if}

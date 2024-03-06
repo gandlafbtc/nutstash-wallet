@@ -169,8 +169,26 @@
 	{:else if doMint}
 		<div class="flex gap-2">
 			<div
-				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-between"
+				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-start"
 			>
+			<div class="flex flex-col gap-2 items-center">
+				<p class="text-2xl font-bold">
+					Receive 
+				</p>
+				<p class="text-7xl">
+					{mintAmount}
+				</p>
+				<p class="text-2xl font-bold">
+					sats
+				</p>
+				<p class="font-bold">at</p>
+				<div class="flex gap-1">
+					<p class="font-bold">Custodian</p>
+					<p class="break-all">
+						{mint.mintURL}
+					</p>
+				</div>
+			</div>
 				<div class="w-full flex items-center justify-center">
 					<div class="flex items-center justify-center flex-col">
 						<div class="border-warning border rounded-md p-2">
@@ -178,18 +196,6 @@
 								<QRCodeImage text={qrCode} displayHeight={275} displayWidth={275} margin={1} />
 							</a>
 						</div>
-					</div>
-				</div>
-				<div class="flex flex-col items-center">
-					<p class="text-3xl">
-						Receive {mintAmount} sats
-					</p>
-					<p class="font-bold">at</p>
-					<div class="flex gap-1">
-						<p class="font-bold">Custodian</p>
-						<p class="break-all">
-							{mint.mintURL}
-						</p>
 					</div>
 				</div>
 				<div class="flex pt-4 join w-72">
@@ -237,6 +243,9 @@
 	{:else}
 		<div class="flex flex-col gap-2">
 			<div class="flex flex-col gap-2 items-center">
+				<p class="font-bold text-2xl">Receive
+					
+			   </p>
 				{#if qrCode}
 					<p
 						id="mint-req-amt"
@@ -255,12 +264,14 @@
 								mintRequest();
 							}
 						}}
-						class="mt-10 text-7xl focus:outline-none text-center max-w-xs {mintAmount
+						class="text-7xl focus:outline-none text-center max-w-xs {mintAmount
 							? 'bg-base-100'
 							: 'w-10 bg-base-200 rounded-lg'}"
 					/>
 				{/if}
-				<p class="font-bold text-2xl">receive sats</p>
+				<p class="font-bold text-2xl">
+					 sats
+				</p>
 				{#if qrCode}
 					<div class="flex flex-col lg:flex-row gap-1 items-center">
 						<p class="text-warning">Invoice is pending.</p>

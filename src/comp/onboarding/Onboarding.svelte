@@ -29,8 +29,8 @@
 <div />
 {#if !setUpMint}
 	<div class="flex items-center col-span-2 text-white">
-		<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2 h-3/4">
-			<div class="carousel max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl h-full">
+		<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2 h-full lg:h-3/4">
+			<div class="carousel max-w-[25rem] md:max-w-md lg:max-w-lg xl:max-w-xl h-full">
 				<div id="1" class="carousel-item w-full flex justify-center h-full">
 					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
 
@@ -166,7 +166,10 @@
 				</div>
 				<div id="4" class="carousel-item w-full flex justify-center">
 					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
-					<img src="/icons/coin.gif" alt="loading" class="h-20" />
+						<div class="w-20">
+
+							<img src="/icons/coin.gif" alt="loading" class="" />
+						</div>
 
 					<h1 class="text-lg font-bold">Seed phrase backup</h1>
 					{#if isRestore}

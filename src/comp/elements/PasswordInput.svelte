@@ -39,11 +39,13 @@
 	<div
 		class="w-screen h-screen bg-black bg-opacity-80 z-50 fixed top-0 left-0 flex items-center justify-center"
 	>
-		<div class="bg-base-100 max-w-2xl rounded-2xl p-10 flex flex-col gap-3">
-			<div class="flex flex-col gap-2">
+		<div class="bg-base-100 max-w-2xl rounded-2xl p-10 flex flex-col gap-4 items-center">
+			<div class="w-20 h-20">
+
+				<img src="/nutstash_app.svg" alt="">
+			</div>
 				<p class="text-lg font-bold">Wallet is locked.</p>
 				<p>Enter your password to unlock.</p>
-			</div>
 			<form class="flex flex-col gap-2" on:submit|preventDefault={unlockWallet}>
 				<input
 					type="password"
@@ -53,7 +55,7 @@
 					autofocus
 				/>
 				<div class="flex gap-2 justify-end">
-					<input type="submit" class="btn btn-success" value="unlock" />
+					<input type="submit" class="btn btn-success w-full" value="unlock" />
 				</div>
 			</form>
 		</div>

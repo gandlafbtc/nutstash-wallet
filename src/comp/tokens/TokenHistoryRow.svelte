@@ -54,7 +54,4 @@
 			})}
 		</p>
 	</td>
-	<td class="max-w-0 overflow-clip">
-		{$isEncrypted ? '*********' : token}
-	</td>
 </tr>

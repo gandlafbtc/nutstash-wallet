@@ -197,8 +197,11 @@ export const melt = async (
 
 	// remove sent tokens from storage
 	token.update((state) => {
-		return state.filter((token) => !proofs.includes(token));
+		return state.filter((t) => !proofs.includes(t));
 	});
+	
+	pendingTokens.update((state) => [...proofs,...state]);
+	
 	if (returnChange) {
 		token.update((state) => [...returnChange, ...state]);
 	}
