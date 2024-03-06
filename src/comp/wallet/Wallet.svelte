@@ -127,7 +127,7 @@
 				Important!!!
 			</p>
 			<p>
-				The mint <span class="font-bold">https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC</span> is closing on 20th. March 2024.
+				The mint <span class="font-bold">https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC</span> is closing on <span class="font-bold">20th. March 2024.</span>
 			</p>
 			<p>
 				Withdraw all your sats. Either swap the ecash to a different mint, or send it over lightning.
