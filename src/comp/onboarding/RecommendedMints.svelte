@@ -4,9 +4,8 @@
 	import { untrustedMints } from '../../stores/untrustedMints';
 	import MintRowAdd from '../mint/MintRowAdd.svelte';
 	const someMints = [
-		'https://legend.lnbits.com/cashu/api/v1/4gr9Xcmz3XEkUNwiBiQGoC',
 		'https://8333.space:3338',
-		'https://nuts.semisol.dev'
+		'https://mint.minibits.cash/Bitcoin'
 	];
 	//fetch from server when cors allowed
 	// async function getMints() {
