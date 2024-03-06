@@ -16,7 +16,7 @@
 	export let active;
 	const cashuMint = new CashuMint(mint.mintURL + '/v1');
 
-	let isShowDetails = true;
+	let isShowDetails = false;
 
 	// const mintInfo = Promise.resolve({
 	// 	name: 'cashme',
@@ -505,7 +505,6 @@
 				{/if}
 			</div>
 		</div>
-		<div class="divider text-neutral">Currencies & Methods</div>
 		<div class="w-full flex items-center justify-center gap-2">
 			<div class="text-xs flex flex-col gap-1"></div>
 		</div>
