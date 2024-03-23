@@ -48,7 +48,7 @@
 	$: change = input - output;
 
 	export const send = async () => {
-		if (isNaN(parseInt(amount)) || amount <= 0) {
+		if (isNaN(amount) || amount <= 0) {
 			toast('warning', 'Send amount has to be a number larger than 0', 'Could not create token');
 			return;
 		}

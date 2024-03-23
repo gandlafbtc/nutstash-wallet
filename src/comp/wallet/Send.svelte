@@ -15,9 +15,9 @@
 	import { showShortCuts } from '../../stores/showShortCuts';
 
 	export let active: string;
-	let send: Function;
+	let send: ()=>Promise<void>;
 	let mint = $mints[0];
-	let amount = '';
+	let amount: number |undefined = undefined;
 	let isCoinSelection = false;
 	let selectedTokens: Proof[];
 	let isSend = true;
@@ -48,7 +48,7 @@
 
 	$: {
 		if (!/^[0-9]*$/.test(amount)) {
-			amount = '';
+			amount = undefined;
 		}
 	}
 

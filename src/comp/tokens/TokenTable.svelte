@@ -20,6 +20,7 @@
 					<p class="flex lg:hidden">Amt</p></th
 				>
 				<th>Date</th>
+				<th>Mint</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">

@@ -1,10 +1,13 @@
 <script lang="ts">
 	import Mnemonic from './Mnemonic.svelte';
+
+	let seedModal: HTMLDialogElement
+
 </script>
 
-<button class="btn btn-primary" onclick="seed_modal.showModal()">show</button>
+<button class="btn btn-primary" on:click={() => seedModal.showModal()}>show</button>
 
-<dialog id="seed_modal" class="modal">
+<dialog class="modal" bind:this={seedModal}>
 	<div class="modal-box">
 		<Mnemonic />
 		<div class="modal-action">

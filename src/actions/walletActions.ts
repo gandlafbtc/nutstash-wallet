@@ -5,7 +5,9 @@ import {
 	deriveKeysetId,
 	getEncodedToken,
 	type MintKeys,
-	type Proof
+	type Proof,
+	type MeltQuoteResponse,
+	type TokenEntry
 } from '@cashu/cashu-ts';
 import {
 	encodeBase64toUint8,
@@ -21,12 +23,13 @@ import { history } from '../stores/history';
 import { token } from '../stores/tokens';
 import { seed } from '../stores/mnemonic';
 import { HistoryItemType } from '../model/historyItem';
-import { getAmountForTokenSet, getKeysetsOfTokens, getTokenSubset } from '../comp/util/walletUtils';
+import { getAmountForTokenSet, getKeysForUnit, getKeysetsOfTokens, getTokenSubset } from '../comp/util/walletUtils';
 import { pendingTokens } from '../stores/pendingtokens';
 import { browser } from '$app/environment';
 import { iv, key, seedIv } from '../stores/key';
 import { randomBytes } from '@noble/hashes/utils';
 import { isEncrypted } from '../stores/settings';
+import { decode } from '@gandlaf21/bolt11-decode';
 
 export const send = async (
 	mint: Mint,
@@ -35,16 +38,13 @@ export const send = async (
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { returnChange, send, newKeys } = await wallet.send(
+	const { returnChange, send } = await wallet.send(
 		amount,
 		proofsToSend,
 		preference,
 		count
 	);
 
-	if (newKeys) {
-		updateMintKeys(mint, newKeys);
-	}
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + returnChange.length + send.length);
 	}
@@ -78,17 +78,17 @@ export const send = async (
 };
 
 const getWalletStuff = (mint: Mint) => {
+	const keys = getKeysForUnit(mint.keys)
 	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 	const seedPhrase = get(seed);
 	const wallet: CashuWallet = new CashuWallet(
 		cashuMint,
-		mint.keys,
+		keys,
 		seedPhrase ? seedPhrase : undefined
 	);
 	let count = undefined;
-	let keysetId = '';
+	let keysetId = wallet.keys.id;
 	if (seedPhrase) {
-		keysetId = deriveKeysetId(mint.keys);
 		count = get(counts).find((c) => c.keysetId === keysetId)?.count ?? 1;
 	}
 	return { count, keysetId, wallet, seedPhrase };
@@ -97,15 +97,11 @@ const getWalletStuff = (mint: Mint) => {
 export const mint = async (
 	mint: Mint,
 	amount: number,
-	hash: string,
-	invoice: string,
+	quote: string,
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { proofs, newKeys } = await wallet.requestTokens(amount, hash, preference, count);
-	if (newKeys) {
-		updateMintKeys(mint, newKeys);
-	}
+	const { proofs } = await wallet.mintTokens(amount, quote, keysetId, preference, count);
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
 	}
@@ -116,10 +112,9 @@ export const mint = async (
 			amount: amount,
 			date: Date.now(),
 			data: {
-				mintingHash: hash,
-				mint: mint?.mintURL,
+				mintingHash: quote,
+				mint: mint.mintURL,
 				keyset: getKeysetsOfTokens(proofs),
-				invoice: invoice,
 				tokens: get(isEncrypted) ? [] : proofs
 			}
 		},
@@ -137,13 +132,9 @@ export const receive = async (
 	const {
 		token: tokens,
 		tokensWithErrors,
-		newKeys
 	} = await wallet.receive(encodedToken, preference, count);
 
-	if (newKeys) {
-		updateMintKeys(mint, newKeys);
-	}
-	const proofs = tokens.token.map((t) => t.proofs).flat();
+	const proofs = tokens.token.map((t: TokenEntry) => t.proofs).flat();
 
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
@@ -173,24 +164,39 @@ export const receive = async (
 	return { proofs };
 };
 
+export const meltQuote = async (mint: Mint, invoice: string): Promise<MeltQuoteResponse> => {
+	let meltQuote: MeltQuoteResponse
+	try {
+		if (invoice.startsWith('lightning:')) {
+			invoice = invoice.split(':')[1];
+		}
+		let amount = decode(invoice).sections[2].value / 1000;
+		if (!amount) {
+			throw new Error("Invoice must contain amount");
+		}
+			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+			meltQuote = await cashuMint.meltQuote({ unit: 'sat', request: invoice });
+	} catch {
+		throw new Error("Could not fetch melt quote");
+	}
+	return  meltQuote
+}
+
+
 export const melt = async (
 	mint: Mint,
-	amount: number,
-	fees: number,
+	meltQuote: MeltQuoteResponse,
 	proofs: Proof[],
 	invoice: string
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
 	let currentCount = count;
-	const { returnChange, send, newKeys } = await wallet.send(
-		amount + fees,
+	const { returnChange, send } = await wallet.send(
+		meltQuote.amount + meltQuote.fee_reserve,
 		proofs,
 		undefined,
 		currentCount
 	);
-	if (newKeys) {
-		updateMintKeys(mint, newKeys);
-	}
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + returnChange.length + send.length);
 	}
@@ -209,12 +215,9 @@ export const melt = async (
 	const {
 		isPaid,
 		preimage,
-		change,
-		newKeys: newKeys2
-	} = await wallet.payLnInvoice(invoice, send, undefined, currentCount);
-	if (newKeys2) {
-		updateMintKeys(mint, newKeys2);
-	}
+		change
+	} = await wallet.payLnInvoice(invoice, send, meltQuote, undefined, currentCount);
+	
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + change.length);
 	}
@@ -223,7 +226,7 @@ export const melt = async (
 	history.update((state) => [
 		{
 			type: HistoryItemType.MELT,
-			amount: amount + fees - getAmountForTokenSet(change),
+			amount: meltQuote.amount + meltQuote.fee_reserve - getAmountForTokenSet(change),
 			date: Date.now(),
 			data: {
 				preimage,
@@ -241,24 +244,6 @@ export const melt = async (
 		return false;
 	}
 	return true;
-};
-
-export const updateMintKeys = (mint: Mint, newKeys: MintKeys) => {
-	const allMints = [...get(mints)];
-	const toBeUpdated = allMints.find((m) => mint.mintURL === m.mintURL);
-	if (!toBeUpdated) {
-		toast(
-			'error',
-			'the keys of this mint have changed, but could not be updated in the wallet',
-			'Error'
-		);
-		throw new Error('could not update mint keys');
-	}
-	toBeUpdated.keys = newKeys;
-	const newKeyset = deriveKeysetId(newKeys);
-	toBeUpdated.keysets = [newKeyset, ...toBeUpdated.keysets];
-	mints.set(allMints);
-	toast('info', 'the new keyset ID is: ' + newKeyset, 'The keys of this mint have rotated');
 };
 
 export const updateCount = (keysetId: string, newCount: number): number => {

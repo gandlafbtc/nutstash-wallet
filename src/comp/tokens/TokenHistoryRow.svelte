@@ -54,4 +54,9 @@
 			})}
 		</p>
 	</td>
+	<td>
+		<p class="break-all">
+			{historyItem.data.mint}
+		</p>
+	</td>
 </tr>

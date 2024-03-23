@@ -15,7 +15,7 @@
 	$: page = 20;
 	$: tokenSelection = isPending ? $pendingTokens : $token;
 	$: tokenFromMint = mint
-		? tokenSelection.filter((t: Proof) => mint?.keysets.includes(t.id))
+		? tokenSelection.filter((t: Proof) => mint?.keysets.map(k=>k.id).includes(t.id))
 		: tokenSelection;
 	$: tokenSub = tokenFromMint.slice(0, page);
 	$: selectedTokens = tokenSub.filter((t, i) => selectedTokensBool[i]);
@@ -50,7 +50,7 @@
 					<p class="flex lg:hidden">Amt</p>
 				</th>
 				<th>Mint</th>
-				<th class="w-full">Token</th>
+				<th class="hidden lg:block">Keyset</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">

@@ -1,10 +1,10 @@
-import type { GetInfoResponse, MintKeys } from '@cashu/cashu-ts';
+import type { GetInfoResponse, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 
 interface Mint {
 	mintURL: string;
 	info?: GetInfoResponse;
-	keys: MintKeys;
-	keysets: Array<string>;
+	keys: Array<MintKeys>;
+	keysets: Array<MintKeyset>;
 }
 
 export type { Mint };

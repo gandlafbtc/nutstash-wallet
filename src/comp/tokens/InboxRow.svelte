@@ -54,7 +54,7 @@
 
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
-				keys,
+				keys: [],
 				keysets: keysets.keysets
 			};
 

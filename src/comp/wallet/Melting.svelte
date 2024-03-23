@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { CashuMint, type Proof } from '@cashu/cashu-ts';
+	import { type MeltQuoteResponse, type Proof } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
 	import { getAmountForTokenSet, getTokensForMint, getTokensToSend } from '../util/walletUtils';
@@ -23,54 +22,31 @@
 	let isPayable = false;
 	let isLoading = false;
 	let isPaySuccess = false;
+	let meltQuote: MeltQuoteResponse
 
-	$: amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
+	onMount(()=>{
+		if (invoice) {
+			getMeltQuote()
+		}
+	})
 
-	onMount(() => {
-		decodeInvoice();
-	});
-
-	const decodeInvoice = async () => {
+	const getMeltQuote = async () => {
 		try {
-			if (invoice.startsWith('lightning:')) {
-				invoice = invoice.split(':')[1];
-			}
-			amount = decode(invoice).sections[2].value / 1000;
-			if (amount) {
-				const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-				const { fee } = await cashuMint.checkFees({ pr: invoice });
-				fees = fee;
-				//todo check for balance
-				if (amountAvailable < amount + fees) {
-					isPayable = false;
-					toast(
-						'warning',
-						'This Mint does not have enough funds to pay the invoice.',
-						'Not enough funds'
-					);
-				} else {
-					isPayable = true;
-				}
-			} else {
-				isPayable = false;
-				throw new Error('Malformed Invoice');
-			}
-		} catch {
-			amount = 0;
-			fees = 0;
-			isPayable = false;
-			toast('info', 'Paste a Lightning invoice into the input field.', 'Lightning Invoice');
+			meltQuote = await walletActions.meltQuote(mint, invoice)
+			fees = meltQuote.fee_reserve
+			amount = meltQuote.amount
+		} catch (error) {
+			toast('warning', error?.message, 'Oops')
 		}
 	};
 
 	const payInvoice = async () => {
 		isLoading = true;
-		if (!isPayable) {
-			isLoading = false;
-			toast('warning', 'Invoice is not payable', 'Invoice not paid');
-			return;
-		}
 		try {
+			if (!meltQuote) {
+				toast('warning', 'Invoice is not payable', 'Invoice not paid');
+				return;
+			}
 			let tokensToSend: Array<Proof> = [];
 
 			if (isCoinSelection) {
@@ -81,12 +57,10 @@
 
 			if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
 				toast('warning', 'not enough funds', 'Could not Send');
-				isLoading = false;
 				return;
 			}
 			processing = true;
-			const isPaid = await walletActions.melt(mint, amount, fees, tokensToSend, invoice);
-
+			const isPaid = await walletActions.melt(mint, meltQuote, tokensToSend, invoice);
 			isPaySuccess = true;
 			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
 		} catch (error) {
@@ -148,7 +122,7 @@
 				autofocus
 				id="receive-token-input"
 				bind:value={invoice}
-				on:input={decodeInvoice}
+				on:input={getMeltQuote}
 				class="textarea textarea-warning w-full h-40"
 				placeholder="paste a lightning invoice: lnbc10n1pj2l66wpp5qhwv7pwqvrshmqu..."
 				on:keydown={(e) => {

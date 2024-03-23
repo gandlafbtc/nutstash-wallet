@@ -4,6 +4,8 @@
 	import type { Mint } from '../../model/mint';
 	import { onMount } from 'svelte';
 
+	let keysetModal: HTMLDialogElement
+
 	onMount(() => loadKeysets());
 	export let keysetMap: { mint: Mint; keysets: { id: string; isSelected: boolean }[] }[] = [];
 	const loadKeysets = async () => {
@@ -11,7 +13,7 @@
 			const cashuMint = new CashuMint(mint.mintURL);
 			const { keysets: ks } = await cashuMint.getKeySets();
 			const keysets = ks.map((k) => {
-				return { id: k, isSelected: false };
+				return { id: k.id, isSelected: false };
 			});
 			keysetMap.push({ mint, keysets });
 		}
@@ -19,8 +21,8 @@
 	};
 </script>
 
-<button class="btn" onclick="my_modal_1.showModal()">try a different keyset</button>
-<dialog id="my_modal_1" class="modal">
+<button class="btn" on:click={()=>keysetModal.showModal()}>try a different keyset</button>
+<dialog bind:this={keysetModal} class="modal">
 	<div class="modal-box">
 		<h3 class="font-bold text-lg">Select keysets to restore</h3>
 		{#each keysetMap as m}

@@ -14,7 +14,7 @@
 	export let mint: Mint;
 	export let activeMint;
 	export let active;
-	const cashuMint = new CashuMint(mint.mintURL + '/v1');
+	const cashuMint = new CashuMint(mint.mintURL);
 
 	let isShowDetails = false;
 
@@ -81,10 +81,9 @@
 		const cashuMint = new CashuMint(mint.mintURL);
 		try {
 			isReloadingKeys = true;
-
 			const mintsClone = [...$mints];
 			let keys = await cashuMint.getKeys();
-			mintsClone[mintIndex].keys = keys;
+			mintsClone[mintIndex].keys = keys.keysets;
 			let keysets = await cashuMint.getKeySets();
 			mintsClone[mintIndex].keysets = keysets.keysets;
 			mints.set(mintsClone);

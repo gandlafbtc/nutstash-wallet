@@ -33,13 +33,14 @@
 
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
-				keys,
+				keys: keys.keysets,
 				keysets: keysets.keysets
 			};
 
 			mints.update((state) => [...state, storeMint]);
 			toast('success', 'Mint has been added', 'Success');
-		} catch {
+		} catch (e) {
+			console.error(e)
 			toast(
 				'error',
 				'keys could not be loaded from:' + mint.mintUrl + '/keys',

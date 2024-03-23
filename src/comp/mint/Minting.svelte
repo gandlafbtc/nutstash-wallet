@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, type AmountPreference } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
@@ -11,25 +11,27 @@
 	import { mints } from '../../stores/mints';
 	import MintSelector from '../elements/MintSelector.svelte';
 	import * as walletActions from '../../actions/walletActions';
+	import CustomSplits from '../elements/CustomSplits.svelte';
 
 	export let mint: Mint = $mints[0];
 	export let active;
 	export let doMint = false;
 	export let isMinting: boolean;
-	let mintAmount = '';
+	let amount: number | undefined = undefined;
 	let qrCode: string | undefined;
 	let mintingHash: string | undefined;
-	let wallet: CashuWallet | undefined;
 	let isLoading: boolean = false;
 	let isPolling: boolean = false;
 	let isComplete: boolean = false;
+	let preference: AmountPreference[];
+	let useAmountPreference = false;
 
 	$: {
-		mintAmount;
-		if (!/^[0-9]*$/.test(mintAmount)) {
-			mintAmount = '';
+		amount;
+		if (!/^[0-9]*$/.test(amount)) {
+			amount = undefined;
 		}
-		if (mintAmount && mintAmount != '') {
+		if (amount) {
 			isMinting = true;
 		} else {
 			isMinting = false;
@@ -74,19 +76,20 @@
 			mintingHash = mintReq?.paymentHash;
 			qrCode = mintReq?.invoice;
 			if (qrCode) {
-				mintAmount = decode(qrCode).sections[2].value / 1000;
+				amount = decode(qrCode).sections[2].value / 1000;
 			}
-			const cashuMint = new CashuMint(mint.mintURL);
-			wallet = new CashuWallet(cashuMint, mint.keys);
 		} else {
 			qrCode = undefined;
-			mintAmount = '';
+			amount = undefined;
 		}
 	};
 
 	const mintRequest = async () => {
 		try {
-			let amount = parseInt(mintAmount);
+			if (!amount) {
+				toast('warning', 'No amount provided', 'Could not create invoice');
+				return;
+			}
 			if (isNaN(amount) || amount <= 0) {
 				toast('warning', 'amount must be a number greater than 0', 'Could not create invoice');
 				return;
@@ -94,10 +97,9 @@
 			isComplete = false;
 			isLoading = true;
 			const cashuMint = new CashuMint(mint.mintURL);
-			wallet = new CashuWallet(cashuMint, mint.keys);
-			const { pr, hash } = await wallet.requestMint(amount);
-			mintingHash = hash;
-			qrCode = pr;
+			const mintQuote = await cashuMint.mintQuote({ amount: amount ?? 0, unit: 'sat' });
+			mintingHash = mintQuote.quote;
+			qrCode = mintQuote.request;
 			mintRequests.update((state) => [
 				{
 					invoice: qrCode ?? '',
@@ -118,13 +120,19 @@
 
 	const mintTokens = async () => {
 		try {
-			if (wallet && mintingHash) {
+			if (!amount) {
+				toast('warning', 'No amount provided', 'Could not create invoice');
+				return;
+			}
+			if (mintingHash) {
 				isPolling = true;
-				let amount = parseInt(mintAmount);
-
-				const { proofs } = await walletActions.mint(mint, amount, mintingHash, qrCode ?? '');
+				let mintPreference = undefined;
+				if (useAmountPreference) {
+					mintPreference = preference;
+				}
+				const { proofs } = await walletActions.mint(mint, amount, mintingHash, mintPreference);
 				if (proofs.length) {
-					toast('success', `${mintAmount} Tokens have been minted.`, 'Success!');
+					toast('success', `${amount} Tokens have been minted.`, 'Success!');
 					isComplete = true;
 				}
 			} else {
@@ -151,10 +159,9 @@
 	};
 
 	const resetState = () => {
-		mintAmount = '';
+		amount = undefined;
 		qrCode = undefined;
 		mintingHash = undefined;
-		wallet = undefined;
 		isComplete = false;
 		doMint = false;
 	};
@@ -171,24 +178,20 @@
 			<div
 				class="flex gap-2 col-span-2 row-start-1 lg:col-span-1 flex-col items-center justify-start"
 			>
-			<div class="flex flex-col gap-2 items-center">
-				<p class="text-2xl font-bold">
-					Receive 
-				</p>
-				<p class="text-7xl">
-					{mintAmount}
-				</p>
-				<p class="text-2xl font-bold">
-					sats
-				</p>
-				<p class="font-bold">at</p>
-				<div class="flex gap-1">
-					<p class="font-bold">Custodian</p>
-					<p class="break-all">
-						{mint.mintURL}
+				<div class="flex flex-col gap-2 items-center">
+					<p class="text-2xl font-bold">Receive</p>
+					<p class="text-7xl">
+						{amount}
 					</p>
+					<p class="text-2xl font-bold">sats</p>
+					<p class="font-bold">at</p>
+					<div class="flex gap-1">
+						<p class="font-bold">Custodian</p>
+						<p class="break-all">
+							{mint.mintURL}
+						</p>
+					</div>
 				</div>
-			</div>
 				<div class="w-full flex items-center justify-center">
 					<div class="flex items-center justify-center flex-col">
 						<div class="border-warning border rounded-md p-2">
@@ -243,35 +246,31 @@
 	{:else}
 		<div class="flex flex-col gap-2">
 			<div class="flex flex-col gap-2 items-center">
-				<p class="font-bold text-2xl">Receive
-					
-			   </p>
+				<p class="font-bold text-2xl">Receive</p>
 				{#if qrCode}
 					<p
 						id="mint-req-amt"
-						class="text-7xl focus:outline-none {mintAmount ? '' : 'w-10 bg-base-200 rounded-lg'}"
+						class="text-7xl focus:outline-none {amount ? '' : 'w-10 bg-base-200 rounded-lg'}"
 					>
-						{mintAmount}
+						{amount}
 					</p>
 				{:else}
 					<input
 						id="mint-req-amt"
 						placeholder="0"
-						bind:value={mintAmount}
+						bind:value={amount}
 						on:keydown={(e) => {
 							if (e.key === 'Enter') {
 								e.preventDefault();
 								mintRequest();
 							}
 						}}
-						class="text-7xl focus:outline-none text-center max-w-xs {mintAmount
+						class="text-7xl focus:outline-none text-center max-w-xs {amount
 							? 'bg-base-100'
 							: 'w-10 bg-base-200 rounded-lg'}"
 					/>
 				{/if}
-				<p class="font-bold text-2xl">
-					 sats
-				</p>
+				<p class="font-bold text-2xl">sats</p>
 				{#if qrCode}
 					<div class="flex flex-col lg:flex-row gap-1 items-center">
 						<p class="text-warning">Invoice is pending.</p>
@@ -341,6 +340,47 @@
 					<!-- else content here -->
 				{/if}
 			</div>
+			{#if amount}
+				<div class="flex gap-1 justify-center items-center">
+					<label class="label cursor-pointer gap-1 flex justify-center items-center">
+						<input
+							id="use-amount-preference"
+							type="checkbox"
+							bind:checked={useAmountPreference}
+							class="checkbox checkbox-primary"
+						/>
+
+						<span class="label-text">Custom Outputs</span>
+					</label>
+
+					<div
+						class="tooltip"
+						data-tip="Cashu tokens consist of unified coin sizes to increase privacy. Per default, nutstash will try to create the token with the minimal number of coins. With custom outputs you can define the coins that will be created."
+					>
+						<div class="hover:text-primary cursor-help">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-5 h-5"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+								/>
+							</svg>
+						</div>
+					</div>
+				</div>
+				{#if useAmountPreference}
+					<div>
+						<CustomSplits bind:preference amount={amount ?? 0} />
+					</div>
+				{/if}
+			{/if}
 		</div>
 	{/if}
 </div>

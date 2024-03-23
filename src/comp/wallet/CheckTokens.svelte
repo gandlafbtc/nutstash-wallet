@@ -3,7 +3,7 @@
 	import { mints } from '../../stores/mints';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { token } from '../../stores/tokens';
-	import { getTokensForMint } from '../util/walletUtils';
+	import { getKeysForUnit, getTokensForMint } from '../util/walletUtils';
 	import { checkAutomatically, checkNonPending, checkPending } from '../../stores/settings';
 	import { toast } from '../../stores/toasts';
 	import { onMount } from 'svelte';
@@ -28,7 +28,7 @@
 					return;
 				}
 				const cahsuMint = new CashuMint(mint.mintURL);
-				const cashuWallet = new CashuWallet(cahsuMint, mint.keys);
+				const cashuWallet = new CashuWallet(cahsuMint, getKeysForUnit(mint.keys));
 
 				if ($checkNonPending) {
 					const spentProofs = await cashuWallet.checkProofsSpent(mintTokens);

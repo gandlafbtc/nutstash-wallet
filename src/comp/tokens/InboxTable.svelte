@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
+	import { CashuMint, CashuWallet, getEncodedToken, type MintKeys, type MintKeyset } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
 	import { toast } from '../../stores/toasts';
-	import { getAmountForTokenSet } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysForUnit } from '../util/walletUtils';
 	import InboxRow from './InboxRow.svelte';
 	import { receive } from '../../actions/walletActions';
 
@@ -27,20 +27,23 @@
 				return;
 			}
 			const mint: CashuMint = new CashuMint(nM.token.token[0].mint);
-			let keys;
+			let keys: MintKeys[];
+			let keysets: MintKeyset[];
 			try {
 				if ($mints.map((m) => m.mintURL).includes(mint.mintUrl)) {
 					keys = $mints.filter((m) => m.mintURL === mint.mintUrl)[0].keys;
+					keysets = $mints.filter((m) => m.mintURL === mint.mintUrl)[0].keysets;
 				} else {
-					keys = await mint.getKeys();
+					keys = (await mint.getKeys()).keysets;
+					keysets = (await mint.getKeySets()).keysets;
 				}
 				const storeMint: Mint = {
 					mintURL: mint.mintUrl,
-					keys,
-					keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))]
+					keys: keys,
+					keysets: keysets
 				};
 
-				const wallet = new CashuWallet(mint, keys);
+				const wallet = new CashuWallet(mint, getKeysForUnit( keys));
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));

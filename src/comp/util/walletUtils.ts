@@ -1,3 +1,4 @@
+import type { Keys, MintKeys } from '@cashu/cashu-ts';
 import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
 
@@ -7,7 +8,7 @@ import type { Proof } from '@cashu/cashu-ts';
  * @param tokens
  * @returns
  */
-const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
+export const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	let tokenAmount = 0;
 	const tokenSubset = tokens.filter((token) => {
 		if (tokenAmount < amount) {
@@ -18,7 +19,11 @@ const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	return tokenSubset;
 };
 
-const validateMintKeys = (keys: object): boolean => {
+export const getKeysForUnit = (keys: MintKeys[], unit='sat'): MintKeys | undefined => {
+	return keys.find((k)=> {return k.unit===unit})
+}
+
+export const validateMintKeys = (keys: Keys): boolean => {
 	let isValid = true;
 	try {
 		const allKeys = Object.keys(keys);
@@ -27,7 +32,7 @@ const validateMintKeys = (keys: object): boolean => {
 			return false;
 		}
 
-		if (allKeys.length < 1) {
+		if (!allKeys.length) {
 			return false;
 		}
 		allKeys.forEach((k) => {
@@ -45,7 +50,7 @@ const validateMintKeys = (keys: object): boolean => {
 	}
 };
 
-const isPow2 = (number: number) => {
+export const isPow2 = (number: number) => {
 	return Math.log2(number) % 1 === 0;
 };
 
@@ -55,9 +60,9 @@ const isPow2 = (number: number) => {
  * @param tokens
  * @returns
  */
-const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
+export const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
 	const tokenSubset = tokens.filter((token) => {
-		if (mint?.keysets.includes(token.id)) {
+		if (mint?.keysets.map(k=> k.id).includes(token.id)) {
 			return true;
 		} else {
 			return false;
@@ -66,7 +71,7 @@ const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
 	return tokenSubset;
 };
 
-const isValidToken = (obj: any) => {
+export const isValidToken = (obj: any) => {
 	// todo implement
 	return true;
 };
@@ -77,27 +82,27 @@ const isValidToken = (obj: any) => {
  * @param tokensToRemove
  * @returns
  */
-const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof>) => {
+export const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof>) => {
 	return tokens.filter((token) => !tokensToRemove.includes(token));
 };
 
-const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
+export const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
 	let mint: Mint | undefined = undefined;
 	mints.forEach((m) => {
-		if (m.keysets.includes(token.id)) {
+		if (m.keysets.map(k=> k.id).includes(token.id)) {
 			mint = m;
 		}
 	});
 	return mint;
 };
 
-const getAmountForTokenSet = (tokens: Array<Proof>): number => {
+export const getAmountForTokenSet = (tokens: Array<Proof>): number => {
 	return tokens.reduce((acc, t) => {
 		return acc + t.amount;
 	}, 0);
 };
 
-const getKeysetsOfTokens = (tokens: Array<Proof>) => {
+export const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	return removeDuplicatesFromArray(
 		tokens.map((t) => {
 			return t.id;
@@ -105,7 +110,7 @@ const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	);
 };
 
-const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
+export const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 	return array.reduce((acc: Array<Type>, curr: Type) => {
 		if (acc.includes(curr)) {
 			return acc;
@@ -115,14 +120,3 @@ const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 	}, []);
 };
 
-export {
-	getMintForToken,
-	getTokensToSend,
-	getTokensForMint,
-	getTokenSubset,
-	getAmountForTokenSet,
-	getKeysetsOfTokens,
-	removeDuplicatesFromArray,
-	isValidToken,
-	validateMintKeys
-};

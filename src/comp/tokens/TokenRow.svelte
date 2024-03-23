@@ -2,14 +2,14 @@
 	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { Proof } from '@cashu/cashu-ts';
-	import { getAmountForTokenSet, getMintForToken, getTokenSubset } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysForUnit, getMintForToken, getTokenSubset } from '../util/walletUtils';
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { browser } from '$app/environment';
 	import type { Mint } from '../../model/mint';
-	import { receive, send, updateMintKeys } from '../../actions/walletActions';
+	import { receive, send } from '../../actions/walletActions';
 
 	export let mint: Mint | undefined;
 	export let isSelected = false;
@@ -30,15 +30,16 @@
 			await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));
 			await send(mint, token.amount, [token])
 			toast('success', 'Token has been recycled.', 'Success!');
-			isLoading = false;
 		} catch (e) {
-			isLoading = false;
 			console.error(e);
 			toast('error', 'could not recycle token', 'an Error occurred');
 			if (browser) {
 				// @ts-expect-error
 				document.getElementById('token-item-modal-' + i).checked = true;
 			}
+		}
+		finally {
+			isLoading = false;
 		}
 	};
 
@@ -49,11 +50,11 @@
 			return;
 		}
 		try {
-		 //todo implement			
+		 //todo implement
+		 await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));		
+		 toast('success', 'Token has been reclaimed.', 'Success!');	
 		} catch (error) {
 			isLoading = true;
-				await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));
-				toast('success', 'Token has been recycled.', 'Success!');
 				isLoading = false;
 		}
 	}
@@ -75,7 +76,7 @@
 
 		try {
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, getKeysForUnit(mint.keys));
 			const spentProofs = await cashuWallet.checkProofsSpent([token]);
 			let hasBeenReceived = false;
 			if (!$pendingTokens.includes(token)) {
@@ -153,15 +154,15 @@
 		</div>
 	</td>
 	<td>{token.amount}</td>
-	<td>
-		{token.id}
-	</td>
 	<td class="max-w-0 overflow-clip">
 		<div class="overflow-x-clip">
-			{getEncodedToken({
-				token: [{ proofs: [token], mint: getMintForToken(token, $mints)?.mintURL }]
-			})}
+				{getMintForToken(token, $mints)?.mintURL}
 		</div>
+	</td>
+	<td class="hidden lg:block">
+		<p class="break-all">
+			{token.id}
+		</p>
 	</td>
 </tr>
 

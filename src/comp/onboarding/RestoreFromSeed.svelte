@@ -4,17 +4,16 @@
 	import { validateMnemonic } from '@scure/bip39';
 	import { mints } from '../../stores/mints';
 	import { CashuMint, CashuWallet, deriveKeysetId, type Proof } from '@cashu/cashu-ts';
-	import { updateCount, updateMintKeys } from '../../actions/walletActions';
+	import { updateCount } from '../../actions/walletActions';
 	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet } from '../util/walletUtils';
+	import { getAmountForTokenSet, getKeysForUnit } from '../util/walletUtils';
 	import { mnemonic } from '../../stores/mnemonic';
 	import RecommendedMints from './RecommendedMints.svelte';
 	import CheckTokens from '../wallet/CheckTokens.svelte';
-	import { checkNonPending, isEncrypted } from '../../stores/settings';
+	import { checkNonPending } from '../../stores/settings';
 	import { isOnboarded } from '../../stores/message';
 	import type { Mint } from '../../model/mint';
 	import KeysetModal from './KeysetModal.svelte';
-	import PasswordInput from '../elements/PasswordInput.svelte';
 
 	export let isRestore;
 
@@ -46,8 +45,9 @@
 			return;
 		}
 		for (const mint of $mints) {
+			const keys = getKeysForUnit(mint.keys)
 			const cashuMint = new CashuMint(mint.mintURL);
-			const wallet = new CashuWallet(cashuMint, mint.keys, seed);
+			const wallet = new CashuWallet(cashuMint, keys, seed);
 
 			const keysets: string[] = getSelectedKeysetsForMint(mint.mintURL);
 
@@ -56,11 +56,9 @@
 			}
 
 			for (const keyset of keysets) {
-				const { proofs, newKeys, endCount } = await lookForProofs(wallet, 100, totalCount, keyset);
-				if (newKeys) {
-					updateMintKeys(mint, newKeys);
-				}
-				updateCount(deriveKeysetId(mint.keys), endCount);
+				const { proofs, endCount } = await lookForProofs(wallet, 100, totalCount, keyset);
+				
+				updateCount(wallet.keysetId, endCount);
 				token.update((state) => [...proofs, ...state]);
 				restoredAmount += getAmountForTokenSet(proofs);
 				totalCount = endCount;
@@ -79,13 +77,13 @@
 		keysetId?: string,
 		foundProofs?: Proof[]
 	) => {
-		const { proofs, newKeys } = await wallet.restore(start, count, keysetId);
+		const { proofs } = await wallet.restore(start, count, keysetId);
 		foundProofs = foundProofs ?? [];
 		if (proofs.length) {
 			foundProofs.push(...proofs);
 			lookForProofs(wallet, count, start + count, keysetId, foundProofs);
 		}
-		return { proofs: foundProofs, newKeys, endCount: count + start };
+		return { proofs: foundProofs, endCount: count + start };
 	};
 	const lookForMore = () => {
 		lookedForMore++;
