@@ -1,4 +1,4 @@
-import type { Keys, MintKeys } from '@cashu/cashu-ts';
+import type { Keys, MintActiveKeys, MintKeys } from '@cashu/cashu-ts';
 import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
 
@@ -23,19 +23,19 @@ export const getKeysForUnit = (keys: MintKeys[], unit='sat'): MintKeys | undefin
 	return keys.find((k)=> {return k.unit===unit})
 }
 
-export const validateMintKeys = (keys: Keys): boolean => {
+export const validateMintKeys = (keys: MintActiveKeys): boolean => {
 	let isValid = true;
 	try {
-		const allKeys = Object.keys(keys);
-
-		if (!allKeys) {
+		const keysets = keys.keysets.map(ks=>ks.keys)
+		if (!keysets.length) {
 			return false;
 		}
-
-		if (!allKeys.length) {
+		if (!keysets) {
 			return false;
 		}
-		allKeys.forEach((k) => {
+		keysets.forEach((ks)=>{
+			const allKeys = Object.keys(ks);
+			allKeys.forEach((k) => {
 			//try parse int?
 			if (isNaN(k)) {
 				isValid = false;
@@ -44,6 +44,7 @@ export const validateMintKeys = (keys: Keys): boolean => {
 				isValid = false;
 			}
 		});
+	})
 		return isValid;
 	} catch (error) {
 		return false;

@@ -17,7 +17,7 @@
 	export let active: string;
 	let send: ()=>Promise<void>;
 	let mint = $mints[0];
-	let amount: number |undefined = undefined;
+	let amount: number | undefined = undefined;
 	let isCoinSelection = false;
 	let selectedTokens: Proof[];
 	let isSend = true;
@@ -48,7 +48,7 @@
 
 	$: {
 		if (!/^[0-9]*$/.test(amount)) {
-			amount = undefined;
+			amount = "";
 		}
 	}
 
