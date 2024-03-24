@@ -1,28 +1,22 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { token } from '../../stores/tokens';
 	import { mints } from '../../stores/mints';
 	import Tokens from '../tokens/Tokens.svelte';
 	import { onMount } from 'svelte';
 	import { getAmountForTokenSet } from '../util/walletUtils';
 	import { pendingTokens } from '../../stores/pendingtokens';
-	import { goto } from '$app/navigation';
 	import {
 		checkAutomatically,
 		checkNonPending,
 		checkPending,
 		isEncrypted
 	} from '../../stores/settings';
-	import { activeTab } from '../../stores/activeTab';
 	import Minting from '../mint/Minting.svelte';
-	import { isOnboarded } from '../../stores/message';
 	import Receive from './Receive.svelte';
 	import Send from './Send.svelte';
 	import CheckTokens from './CheckTokens.svelte';
-	import { key } from '../../stores/key';
 	import { showShortCuts } from '../../stores/showShortCuts';
 	import WalletLock from '../elements/WalletLock.svelte';
-	import { toast } from '../../stores/toasts';
 
 	let active = 'base';
 	let encodedToken = '';
@@ -169,8 +163,3 @@
 {:else if active === 'minting'}
 	<Minting bind:active bind:mint={selectedMint} isMinting={false} doMint={false} />
 {/if}
-
-<button class="btn" on:click={()=> {toast('success','test','title')}}>success</button>
-<button class="btn" on:click={()=> {toast('info','test','title')}}>info</button>
-<button class="btn" on:click={()=> {toast('warning','test','title')}}>warning</button>
-<button class="btn" on:click={()=> {toast('error','test','title')}}>error</button>
