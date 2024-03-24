@@ -1,17 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { tweened } from 'svelte/motion';
 
 	export let level: string;
 	export let messageTitle: string;
 	export let message: string;
-
-	const countdown = tweened(100);
+	export let timer
 
 	let closed = false
-
-	onMount(() => countdown.set(0, { duration: 8000 }));
-
 
 </script>
 
@@ -39,7 +33,7 @@
 			</div>
 		</div>
 		<div class="w-full bg-neutral-content h-1 bg-opacity-50">
-			<div style="width: {$countdown}%;" class="h-1 bg-neutral-content">
+			<div style="width: {$timer}%;" class="h-1 bg-neutral-content">
 			</div>
 		</div>
 	</div>
