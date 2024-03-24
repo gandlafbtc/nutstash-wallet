@@ -400,7 +400,7 @@
 			</div>
 		</div>
 		<div class="divider text-neutral">Services</div>
-		<div class="w-full flex items-start justify-center gap-2">
+		<div class="w-full flex items-start justify-center gap-2 flex-wrap">
 			<div class="flex gap-2 justify-center py-2 px-3 bg-base-200 rounded-lg flex-col items-start">
 				<div class="flex items-center gap-2 justify-center">
 					<p class="font-bold">Peg-in</p>
