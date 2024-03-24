@@ -5,7 +5,7 @@ export const notifications = writable<Toast[]>([]);
 
 export function toast(level: string, message: string, messageTitle: string) {
 	notifications.update((state) => [{ level, message, messageTitle }, ...state]);
-	setTimeout(removeToast, 4000);
+	setTimeout(removeToast, 8000);
 }
 
 function removeToast() {

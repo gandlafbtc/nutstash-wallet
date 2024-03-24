@@ -22,6 +22,7 @@
 	import { key } from '../../stores/key';
 	import { showShortCuts } from '../../stores/showShortCuts';
 	import WalletLock from '../elements/WalletLock.svelte';
+	import { toast } from '../../stores/toasts';
 
 	let active = 'base';
 	let encodedToken = '';
@@ -168,3 +169,8 @@
 {:else if active === 'minting'}
 	<Minting bind:active bind:mint={selectedMint} isMinting={false} doMint={false} />
 {/if}
+
+<button class="btn" on:click={()=> {toast('success','test','title')}}>success</button>
+<button class="btn" on:click={()=> {toast('info','test','title')}}>info</button>
+<button class="btn" on:click={()=> {toast('warning','test','title')}}>warning</button>
+<button class="btn" on:click={()=> {toast('error','test','title')}}>error</button>
