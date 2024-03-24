@@ -1,5 +1,5 @@
 <script>
-	import { isEncrypted } from '../../stores/settings';
+	import { isEncrypted, isRestoring } from '../../stores/settings';
 	import { key } from '../../stores/key';
 	import { toast } from '../../stores/toasts';
 	import { decrypt, decryptSeed, kdf } from '../../actions/walletActions';
@@ -33,9 +33,9 @@
 	};
 </script>
 
-{#if $isOnboarded && $isEncrypted === undefined}
+{#if !$isRestoring && $isOnboarded && $isEncrypted === undefined}
 	<PasswordSetup></PasswordSetup>
-{:else if $isEncrypted && !$key}
+{:else if !$isRestoring && $isEncrypted && !$key}
 	<div
 		class="w-screen h-screen bg-black bg-opacity-80 z-50 fixed top-0 left-0 flex items-center justify-center"
 	>

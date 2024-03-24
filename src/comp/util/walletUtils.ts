@@ -22,6 +22,9 @@ export const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 export const getKeysForUnit = (keys: MintKeys[], unit='sat'): MintKeys | undefined => {
 	return keys.find((k)=> {return k.unit===unit})
 }
+export const getKeysForKeysetId = (keys: MintKeys[], keysetId:string): MintKeys | undefined => {
+	return keys.find((k)=> {return k.id===keysetId})
+}
 
 export const validateMintKeys = (keys: MintActiveKeys): boolean => {
 	let isValid = true;

@@ -14,6 +14,9 @@ const initialValue3 = browser
 const initialValue4 = browser
 	? window.localStorage.getItem('setting-is-encrypted') ?? 'undefined'
 	: 'undefined';
+const initialValue5 = browser
+	? window.localStorage.getItem('is-restoring') ?? 'false'
+	: 'false';
 
 const checkNonPending = writable<boolean>(JSON.parse(initialValue));
 const checkPending = writable<boolean>(JSON.parse(initialValue2));
@@ -21,6 +24,14 @@ const checkAutomatically = writable<boolean>(JSON.parse(initialValue3));
 const isEncrypted = writable<boolean | undefined>(
 	initialValue4 === 'undefined' ? undefined : initialValue4 === 'true' ? true : false
 );
+const isRestoring = writable<boolean>(JSON.parse(initialValue5));
+
+
+isRestoring.subscribe((value) => {
+	if (browser) {
+		window.localStorage.setItem('is-restoring', JSON.stringify(value));
+	}
+});
 
 checkNonPending.subscribe((value) => {
 	if (browser) {
@@ -46,4 +57,6 @@ isEncrypted.subscribe((value) => {
 	}
 });
 
-export { checkNonPending, checkAutomatically, checkPending, isEncrypted };
+
+
+export { checkNonPending, checkAutomatically, checkPending, isEncrypted, isRestoring };

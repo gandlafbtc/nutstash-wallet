@@ -8,6 +8,8 @@
 	import { showShortCuts } from '../stores/showShortCuts';
 	import { isLoaded } from '../stores/isLoaded';
 	import Loading from '../comp/base/Loading.svelte';
+	import { isRestoring } from '../stores/settings';
+	import RestoreWizard from '../comp/onboarding/RestoreWizard.svelte';
 	onMount(() => {
 		if (!localStorage.getItem('is-loaded')) {
 			localStorage.setItem('is-loaded', 'true');
@@ -47,7 +49,11 @@
 			{#if !$isOnboarded}
 				<Onboarding />
 			{:else}
-				<Base></Base>
+				{#if $isRestoring}
+					 <RestoreWizard></RestoreWizard>
+				{:else}
+					 <Base></Base>
+				{/if}
 			{/if}
 		{:else}
 			<Loading></Loading>
