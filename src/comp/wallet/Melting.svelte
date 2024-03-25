@@ -35,7 +35,11 @@
 			meltQuote = await walletActions.meltQuote(mint, invoice)
 			fees = meltQuote.fee_reserve
 			amount = meltQuote.amount
+			isPayable = true
 		} catch (error) {
+			fees = 0
+			amount = 0
+			isPayable = false
 			toast('warning', error?.message, 'Oops')
 		}
 	};
@@ -61,6 +65,9 @@
 			}
 			processing = true;
 			const isPaid = await walletActions.melt(mint, meltQuote, tokensToSend, invoice);
+			if (!isPaid) {
+				toast('error', 'Could not pay invoice', 'Error');
+			}
 			isPaySuccess = true;
 			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
 		} catch (error) {

@@ -153,8 +153,8 @@
 						</button>
 					</div>
 				</div>
+				<div class="h-52 flex flex-col items-center">
 				{#if isSend || (invoice && amount)}
-					<div class="h-52 flex flex-col items-center">
 						<input
 							autofocus
 							readonly={isSend ? false : true}
@@ -180,8 +180,8 @@
 								<p>fees</p>
 							</div>
 						{/if}
+						{/if}
 					</div>
-				{/if}
 			</div>
 		{/if}
 
