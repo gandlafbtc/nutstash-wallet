@@ -43,7 +43,8 @@
 
 </script>
 
-<div class="flex max-w-5xl w-full h-full bg-base-100 rounded-lg justify-between items-center flex-col gap-2 p-3">
+<div class="max-w-5xl w-full">
+<div class="flex max-w-5xl w-full bg-base-100 rounded-lg justify-between items-center flex-col gap-2 p-3">
 	<div class="flex flex-col gap-2 w-full items-center">
 		<h1 class="font-bold text-2xl">
 			Ecash restore wizard 🪄
@@ -52,12 +53,12 @@
 			<AddMintForm></AddMintForm>
 		</div>
 		{#if $mints.length}
-		<div>
+		<!-- <div>
 			<p class="text-secondary">
 				Search per tap ({countStep})
 			</p>
 			<input type="range" min="10" max="200" bind:value={countStep} class="range range-secondary">
-		</div>
+		</div> -->
 		<div class="flex gap-2 p-2 rounded-lg w-full bg-base-200 justify-between items-center">
 			<button class="btn {isAutosearched?'btn-disabled':'btn-secondary'}" on:click={autoSearch}>
 				Auto search
@@ -92,3 +93,4 @@
 		<button class="link" on:click={abortRestore}> abort </button>
 	</div>
 	</div>
+</div>

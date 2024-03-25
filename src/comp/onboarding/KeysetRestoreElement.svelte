@@ -102,15 +102,21 @@
 
 </script>
 
-<div class="flex gap-1 justify-center flex-col bg-base-300 p-1">
-	<div class="flex gap-1">
-		<button
-			class="btn btn-xs {mint.keys.map((m) => m.id).includes(ks.id) ? 'btn-accent' : ''}"
+<div class="flex gap-1 justify-center flex-col bg-base-300 p-1 rounded-md">
+	<div class="flex gap-1 justify-between">
+		<div class="flex gap-1">
+
+			<button
+			class="btn btn-xs {mint.keys.map((m) => m.id).includes(ks.id) ? 'btn-secondary' : ''}"
 			on:click={search}
-		>
-			{ks.id}
+			>
+			Search
 		</button>
 		<button class="btn btn-xs" on:click={skip}> Skip ahead </button>
+	</div>
+	<p class="italic text-xs {ks.active?'text-secondary':'text-neutral'}">
+		{ks.id}
+	</p>
 	</div>
 	<div class="flex gap-1 min-h-16 flex-wrap pt-2">
 		{#each searches as s}
