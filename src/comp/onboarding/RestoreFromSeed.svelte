@@ -24,7 +24,6 @@
 			return;
 		}
 		mnemonic.set(restoreSeed)
-		seed.set(deriveSeedFromMnemonic($mnemonic.join(' ')))
 		isRestoring.set(true)
 		isOnboarded.set(true)
 		checkNonPending.set(true);

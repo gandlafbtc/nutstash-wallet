@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { isOnboarded } from "../../stores/message";
 	import { mints } from "../../stores/mints";
 	import { mnemonic, seed } from "../../stores/mnemonic";
@@ -8,12 +9,17 @@
 	import { getAmountForTokenSet } from "../util/walletUtils";
 	import CheckTokens from "../wallet/CheckTokens.svelte";
 	import MintRestoreCard from "./MintRestoreCard.svelte";
+	import { deriveSeedFromMnemonic } from "@cashu/cashu-ts";
 
 	let countStep = 50
 
 	let isAutosearched=false
 
 	let mintSearches: (()=>void)[] = []
+	
+	onMount(()=> {
+		seed.set(deriveSeedFromMnemonic($mnemonic.join(' ')))
+	})
 
 	function autoSearch () {
 		isAutosearched = true

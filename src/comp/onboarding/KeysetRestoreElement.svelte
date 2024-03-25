@@ -41,7 +41,7 @@
 
 	let searches: Search[] = [];
 	const cashuMint = new CashuMint(mint.mintURL);
-	const wallet = new CashuWallet(cashuMint, getKeysForKeysetId(mint.keys,ks.id), $seed);
+	let wallet: CashuWallet
 
 
 	onMount(()=> {
@@ -51,6 +51,7 @@
 	})
 
 	async function search(): Promise<boolean> {
+		wallet = wallet?wallet:new CashuWallet(cashuMint, getKeysForKeysetId(mint.keys,ks.id), $seed);
 		const currentCount  = $counts.find((c)=>c.keysetId===ks.id)
 		if (!currentCount) {
 			throw new Error("could not update count");
