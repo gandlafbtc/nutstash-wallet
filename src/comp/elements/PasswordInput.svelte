@@ -26,7 +26,7 @@
 			}
 		} catch (error) {
 			key.set(undefined);
-			toast('error', 'can not unlock', 'wrong password');
+			toast('error', 'Try again', 'Wrong password');
 		} finally {
 			pass = '';
 		}

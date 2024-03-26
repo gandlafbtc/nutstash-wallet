@@ -60,18 +60,17 @@
 			}
 
 			if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
-				toast('warning', 'not enough funds', 'Could not Send');
+				toast('warning', 'Not enough funds', 'Could not pay');
 				return;
 			}
 			processing = true;
 			const isPaid = await walletActions.melt(mint, meltQuote, tokensToSend, invoice);
 			if (!isPaid) {
-				toast('error', 'Could not pay invoice', 'Error');
+				toast('error', 'Could not pay invoice', 'Error when paying invoice');
 			}
 			isPaySuccess = true;
-			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
+			toast('success', `${amount} sats and ${fees} stats fees`, 'Invoice paid');
 		} catch (error) {
-			//re-add tokens that were sent if error
 			toast('error', 'Could not pay invoice', 'Error');
 			console.error(error);
 		} finally {

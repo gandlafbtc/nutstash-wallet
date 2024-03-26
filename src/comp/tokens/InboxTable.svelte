@@ -59,15 +59,15 @@
 		}
 
 		if (totalReceived > 0) {
-			toast('success', `${totalReceived} tokens received`, 'Success!');
+			toast('success', `${totalReceived} sats received`, 'Received');
 		}
 
 		if (totalSpent > 0) {
-			toast('info', `${totalSpent} tokens were already redeemed`, 'Info');
+			toast('info', `${totalSpent} sats were already redeemed`, 'Already redeemed');
 		}
 
 		if (hasError > 0) {
-			toast('warning', `${hasError} errors occurred when trying to redeem tokens`, 'Oops');
+			toast('warning', `${hasError} errors occurred when trying to redeem tokens`, 'Error');
 		}
 		isLoading = false;
 		nostrMessages.set(

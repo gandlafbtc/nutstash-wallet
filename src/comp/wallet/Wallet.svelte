@@ -27,7 +27,9 @@
 			if ( e.key === 'R') {
 				active = 'receive';
 			} else if (e.key === 'S') {
-				active = 'send';
+				if ($mints.length) {
+					active = 'send';
+				}
 			} else if (e.key === 'B') {
 				active = 'base';
 			}
@@ -116,7 +118,7 @@
 							{/if}
 						</div>
 					</button>
-					{#if getAmountForTokenSet($token)}
+					{#if getAmountForTokenSet($token) && $mints.length}
 						<button
 							class="btn btn-primary flex gap-1 items-center"
 							on:click={() => {

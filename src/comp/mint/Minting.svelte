@@ -51,7 +51,7 @@
 			// @ts-expect-error
 			input.select();
 			document.execCommand('copy');
-			toast('info', 'invoice has been copied to clipboard.', 'Copied!');
+			toast('info', 'Invoice copied to clipboard.', 'Copied!');
 		}
 	};
 
@@ -132,11 +132,11 @@
 				}
 				const { proofs } = await walletActions.mint(mint, amount, mintingHash, mintPreference);
 				if (proofs.length) {
-					toast('success', `${amount} Tokens have been minted.`, 'Success!');
+					toast('success', `${amount} sats ecash minted.`, 'Minted!');
 					isComplete = true;
 				}
 			} else {
-				toast('error', 'No minting request was provided.', 'Could not mint Tokens.');
+				toast('error', 'No minting quote was provided.', 'Could not mint Tokens');
 			}
 		} catch (e) {
 			console.error(e);

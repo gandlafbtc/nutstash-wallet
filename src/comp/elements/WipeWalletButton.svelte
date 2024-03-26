@@ -6,10 +6,10 @@
 	const wipeWallet = () => {
 		if (browser) {
 			localStorage.clear();
-			toast('info', 'The site will reload shortly', 'The wallet has been wiped');
+			toast('info', 'Nutstash will now reload...', 'The wallet has been wiped');
 			setTimeout(() => {
 				window.location.reload();
-			}, 1000);
+			}, 2000);
 			// @ts-expect-error
 			document.getElementById('wipe-wallet-modal').checked = false;
 		}

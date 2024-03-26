@@ -39,7 +39,7 @@
 			if (!mint) {
 				toast(
 					'warning',
-					'Receive tokens from this mint by adding the mint',
+					'Add the mint first',
 					'Not connected to this mint'
 				);
 				mintToAdd = getDecodedToken(encodedToken).token[0].mint;
@@ -51,7 +51,7 @@
 				receiveCustomSplits = preference;
 			}
 			const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits);
-			toast('success', `${getAmountForTokenSet(proofs)} tokens received`, 'Tokens received!');
+			toast('success', `${getAmountForTokenSet(proofs)} sats received`, 'Tokens received!');
 			resetState();
 		} catch (error) {
 			console.error(error);
@@ -89,7 +89,7 @@
 		} catch {
 			mintId = '';
 			amount = 0;
-			toast('warning', 'could not decode Token', 'the Token is not valid');
+			toast('warning', 'Could not decode Token', 'The Token is not valid');
 		}
 	};
 
@@ -111,7 +111,7 @@
 			const mintIndex = $mints.findIndex((m) => m.mintURL === mint.mintUrl);
 			if (mintIndex > -1) {
 				if ($mints[mintIndex]) {
-					toast('warning', 'this mint has already been added.', "Didn't add mint!");
+					toast('warning', 'This mint has already been added.', "Mint not added");
 					return;
 				}
 
@@ -126,7 +126,7 @@
 			const keys = await mint.getKeys();
 
 			if (!validateMintKeys(keys)) {
-				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
+				toast('error', 'The keys from that mint are invalid', 'Mint could not be added');
 				return;
 			}
 
@@ -137,12 +137,12 @@
 			};
 
 			mints.update((state) => [storeMint, ...state]);
-			toast('success', 'Mint has been added', 'Success');
+			toast('success', 'Mint is now ready', 'Mint added');
 			mintToAdd = '';
 		} catch {
 			toast(
 				'error',
-				'keys could not be loaded from:' + mint.mintUrl + '/keys',
+				'Keys could not be loaded',
 				'Could not add mint.'
 			);
 			throw new Error('Could not add Mint.');
@@ -226,18 +226,28 @@
 					</div>
 				</div>
 
-				{#if mintToAdd}
-					<div>
-						{mintToAdd}
+				<div class="h-48">
+					{#if mintToAdd}
+					<div class="p-2 flex flex-col gap-2 bg-base-200 items-center rounded-md">
+					<div class="flex flex-col gap-2 items-center">
+						<p class="text-sm">Token is from a mint you haven't trusted yet:</p>
+						<div class="">
+							<p class="w-fit text-sm bg-base-300 rounded-full p-1">
+								{mintToAdd}
+							</p>
+						</div>
+						<p class="text-sm">You can only receive tokens from mints you trust.</p>
 					</div>
 					<div class="grid-cols-2">
 						{#if isLoadingMint}
 							<button class="btn btn-disabled btn-square loading" />
 						{:else}
-							<button class="btn btn-secondary" on:click={trustMint}> trust this Mint </button>
-						{/if}
+							<button class="btn btn-secondary" on:click={trustMint}> Trust this Mint </button>
+							{/if}
+						</div>
 					</div>
-				{/if}
+					{/if}
+				</div>
 				{#if amount && encodedToken}
 					<div class="justify-center w-full flex gap-1 items-center">
 						<label class="label cursor-pointer p-0 flex gap-1 justify-center">

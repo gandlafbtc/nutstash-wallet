@@ -81,7 +81,7 @@
 					<img src="/icons/shades.svg" alt="shades" class=" w-32" />
 					<h1 class="text-lg font-bold">Ecash for Privacy</h1>
 					<p>
-						nutstash is a custodial lightning wallet that uses the Cashu ecash protocol to protect
+						Nutstash is a custodial lightning wallet that uses the Cashu ecash protocol to protect
 						your privacy.
 					</p>
 					<div class="flex gap-2 items-center h-24">
@@ -180,27 +180,26 @@
 							<div class="card-body">
 								<Mnemonic />
 								<div class="card-actions gap-5 flex items-center justify-center w-full pt-3 flex-col">
-									<a href="#5" class="btn btn-primary"> i wrote it down </a>
+									<a href="#5" class="btn btn-primary"> I wrote it down </a>
 									<button class="link" on:click={()=>{mnemonic.set([])}}>
-										abort
+										Abort
 									</button>
 								</div>
 							</div>
 						</div>
 					{:else if !isRestore}
 						<p>
-							By creating a seed phrase token secrets will be generated deterministically, so that
-							in case of loss of wallet data the tokens can be restored with the mints help.
+							Creating a seed phrase will enable restorable ecash. Ecash that was minted using a seed can later be restored with the mints help. You need to remember the seed phrase, as well as the mints you're using.
 						</p>
 					{/if}
 					<div class="flex flex-col gap-4">
 						{#if !$mnemonic.length && !isRestore}
-							<button class="btn btn-primary" on:click={createMnemonic}> create new seed </button>
+							<button class="btn btn-primary" on:click={createMnemonic}> Create new seed </button>
 							<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
-								restore from seed
+								Restore from seed
 							</button>
 							<a href="#5" class="text-xl link flex justify-center items-center">
-								skip <span class="relative flex h-10 w-10">
+								Skip <span class="relative flex h-10 w-10">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -239,7 +238,7 @@
 				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
 					<h1 class="text-lg font-bold">Choose your custodian</h1>
 					<p>
-						nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you connect
+						Nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you connect
 						to.
 					</p>
 					<div class="flex gap-2">

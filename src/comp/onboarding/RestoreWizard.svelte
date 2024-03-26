@@ -43,8 +43,8 @@
 
 </script>
 
-<div class="max-w-5xl w-full">
-<div class="flex max-w-5xl w-full bg-base-100 rounded-lg justify-between items-center flex-col gap-2 p-3">
+<div class="max-w-5xl w-full mi">
+<div class="flex max-w-5xl w-full min-h-full bg-base-100 rounded-lg justify-between items-center flex-col gap-2 p-3">
 	<div class="flex flex-col gap-2 w-full items-center">
 		<h1 class="font-bold text-2xl">
 			Ecash restore wizard 🪄

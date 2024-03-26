@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { mint } from '../../actions/walletActions';
+	import { mints } from '../../stores/mints';
 	import Minting from '../mint/Minting.svelte';
 	import Receiving from './Receiving.svelte';
 
@@ -38,11 +40,11 @@
 		<p class="font-bold text-lg">back</p>
 	</button>
 
-	{#if !isToken}
+	{#if !isToken && $mints.length}
 		<Minting bind:active bind:isMinting bind:doMint />
 	{/if}
 
-	{#if !isMinting && !doMint && !isToken}
+	{#if !isMinting && !doMint && !isToken && $mints.length}
 		<div class="divider">or</div>
 	{/if}
 	{#if !isMinting && !doMint}

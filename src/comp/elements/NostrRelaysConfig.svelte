@@ -6,14 +6,15 @@
 
 	const addRelay = () => {
 		if (!relayUrl.includes('wss://')) {
-			toast('warning', 'not a valid relay', 'Relay not added.');
+			toast('warning', 'Not a valid relay', 'Relay not added');
 			return;
 		}
 		if ($nostrRelays.map((r) => r.url).includes(relayUrl)) {
-			toast('warning', 'this relay is already added', 'Relay not added.');
+			toast('warning', 'This relay is already added', 'Relay not added');
 			return;
 		}
 		nostrRelays.update((state) => [{ url: relayUrl, isActive: true }, ...state]);
+		toast('warning', 'Connecting to relay...', 'Relay added');
 		useNostr.update((state) => !state);
 		setTimeout(() => {
 			useNostr.update((state) => !state);

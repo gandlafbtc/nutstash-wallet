@@ -20,7 +20,7 @@
 
 	function startRestore() {
 		if (!validateMnemonic(seedString, wordlist)) {
-			toast('error', 'the seed phrase was invalid', 'mnemonic is not valid');
+			toast('error', 'The seed phrase was invalid', 'Mnemonic is not valid');
 			return;
 		}
 		mnemonic.set(restoreSeed)

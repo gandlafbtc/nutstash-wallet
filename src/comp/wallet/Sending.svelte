@@ -49,7 +49,7 @@
 
 	export const send = async () => {
 		if (isNaN(amount) || amount <= 0) {
-			toast('warning', 'Send amount has to be a number larger than 0', 'Could not create token');
+			toast('warning', 'Amount must be at least 1', 'Could not create token');
 			return;
 		}
 		tokensForMint = getTokensForMint(mint, $token);
@@ -60,13 +60,8 @@
 		} else {
 			tokensToSend = getTokensToSend(amount, tokensForMint);
 		}
-
-		if (amount <= 0) {
-			toast('warning', 'amount must be larger than 0', 'Could not send');
-			return;
-		}
 		if (amount > getAmountForTokenSet(tokensToSend)) {
-			toast('warning', 'not enough funds', 'Could not Send');
+			toast('warning', 'Not enough funds in selected mint', 'Could not Send');
 			isLoading = false;
 			return;
 		}
@@ -96,19 +91,6 @@
 			input.select();
 			document.execCommand('copy');
 			toast('info', 'Token has been copied to clipboard.', 'Copied!');
-		}
-	};
-
-	const shareLink = () => {
-		if (browser) {
-			navigator.clipboard.writeText('https://wallet.nutstash.app/?token=' + encodedToken).then(
-				function () {
-					toast('info', 'Sharable link has been copied to clipboard.', 'Copied!');
-				},
-				function (err) {
-					toast('warning', 'no permission to copy', 'Oops!');
-				}
-			);
 		}
 	};
 
@@ -221,23 +203,6 @@
 						/>
 					</div>
 					<div class="flex gap-2 w-full justify-center pt-4">
-						<button class="btn btn-secondary" on:click={shareLink}>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"
-								/>
-							</svg>
-							share link
-						</button>
 						<button class="btn btn-primary" on:click={copyToken}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"

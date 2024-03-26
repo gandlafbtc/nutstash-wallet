@@ -12,7 +12,7 @@
 		const mint = new CashuMint(mintURL);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
-				toast('warning', 'This mint has already been added', "Didn't add mint");
+				toast('warning', 'This mint is already added', "Didn't add mint");
 				return;
 			}
 			isLoading = true;
@@ -20,7 +20,7 @@
 			const keys = await mint.getKeys();
 
 			if (!validateMintKeys(keys)) {
-				toast('error', 'The keys from that mint are invalid', 'Mint could not be added');
+				toast('error', 'Invalid keys', 'Mint not added');
 				return;
 			}
 
@@ -31,13 +31,13 @@
 			};
 
 			mints.update((state) => [...state, storeMint]);
-			toast('success', mint.mintUrl , 'Mint added');
+			toast('success', 'Mint is now ready', 'Mint added');
 		} catch (e) {
 			console.error(e)
 			toast(
 				'error',
-				'Could not load keys from:' + mint.mintUrl + '/keys',
-				'Mint not added.'
+				'Could not load keys',
+				'Mint not added'
 			);
 			throw new Error('Could not add Mint.');
 		} finally {

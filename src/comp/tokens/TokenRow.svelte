@@ -19,10 +19,11 @@
 	export let i: number;
 
 	let isLoading = false;
+	let isReclaim = false;
 	const recycleToken = async () => {
 		const mint = getMintForToken(token, $mints);
 		if (!mint) {
-			toast('warning', 'Add the mint first', 'Cannot recycle token!');
+			toast('warning', 'Add the mint first', 'Could not recycle token');
 			return;
 		}
 		try {
@@ -32,7 +33,7 @@
 			toast('success', 'Token has been recycled.', 'Success!');
 		} catch (e) {
 			console.error(e);
-			toast('error', 'could not recycle token', 'an Error occurred');
+			toast('error', 'An unexpected error occurred', 'Could not recycle token');
 			if (browser) {
 				// @ts-expect-error
 				document.getElementById('token-item-modal-' + i).checked = true;
@@ -44,18 +45,21 @@
 	};
 
 	const reclaim =async () => {
+		isReclaim = true
 		const mint = getMintForToken(token, $mints);
 		if (!mint) {
-			toast('warning', 'Add the mint first', 'Cannot recycle token!');
+			toast('warning', 'Add the mint first', 'Could not reclaim token');
 			return;
 		}
 		try {
-		 //todo implement
-		 await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));		
+		 await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));
+		 pendingTokens.update((ctx)=> ctx.filter(p=>p.secret!==token.secret))
 		 toast('success', 'Token has been reclaimed.', 'Success!');	
 		} catch (error) {
-			isLoading = true;
-				isLoading = false;
+			toast('error', 'Token has already been claimed.', 'could not reclaim');	
+		}
+		finally {
+			isReclaim = false
 		}
 	}
 
@@ -115,25 +119,9 @@
 				<input type="checkbox" bind:checked={isSelected} class="checkbox checkbox-primary" />
 			{/if}
 
-			<TokenIcon />
-			{#if $tokenStore.includes(token)}
-				<button on:click={recycleToken}>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-4 h-4 hover:text-primary {isLoading ? 'animate-spin' : ''}"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-						/>
-					</svg>
-				</button>
-			{:else}
+			{#if $pendingTokens.includes(token)}
+			<div class="flex gap-5">
+
 				<button on:click={checkTokenSpent}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -150,19 +138,35 @@
 						/>
 					</svg>
 				</button>
+				{#if isReclaim}
+				<div class="loading loading-xs">
+					
+				</div>
+				{:else}
+				<button on:click={reclaim}>
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+					</svg>					  
+				</button>
+				{/if}
+			</div>
 			{/if}
 		</div>
 	</td>
-	<td>{token.amount}</td>
-	<td class="max-w-0 overflow-clip">
-		<div class="overflow-x-clip">
-				{getMintForToken(token, $mints)?.mintURL}
+	<td>
+		<div class=" flex gap-1 items-center overflow-x-clip">
+
+				<TokenIcon />
+				{token.amount}
 		</div>
 	</td>
 	<td class="hidden lg:block">
 		<p class="break-all">
 			{token.id}
 		</p>
+	</td>
+	<td class=" overflow-clip">
+		{getMintForToken(token, $mints)?.mintURL}
 	</td>
 </tr>
 

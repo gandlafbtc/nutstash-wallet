@@ -25,7 +25,7 @@
 		try {
 			var successful = document.execCommand('copy');
 			if (successful) {
-				toast('info', text, 'copied!');
+				toast('info', 'Copied mnemonic to clipboard', 'copied!');
 			}
 		} catch (err) {
 			console.error('Fallback: Oops, unable to copy', err);
@@ -40,7 +40,7 @@
 		}
 		navigator.clipboard.writeText(text).then(
 			function () {
-				toast('info', text, 'copied!');
+				toast('info', 'Copied mnemonic to clipboard', 'copied!');
 			},
 			function (err) {
 				console.error('Async: Could not copy text: ', err);

@@ -34,8 +34,7 @@
 				<th>
 					<div class="flex justify-start items-center gap-1">
 						{#if !mint}
-							<p class="hidden lg:flex">Pending</p>
-							<p class="flex lg:hidden">Pnd</p>
+							<p class="">Pending</p>
 							<input
 								type="checkbox"
 								bind:checked={isPending}
@@ -49,8 +48,8 @@
 					<p class="hidden lg:flex">Amount</p>
 					<p class="flex lg:hidden">Amt</p>
 				</th>
-				<th>Mint</th>
 				<th class="hidden lg:block">Keyset</th>
+				<th>Mint</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">

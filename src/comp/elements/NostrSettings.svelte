@@ -20,12 +20,12 @@
 		if (!$useExternalNostrKey && !$nostrPubKey) {
 			return;
 		}
-		toast('info', 'restarting nostr shortly...', 'nostr keys changed');
+		toast('info', 'Restarting nostr...', 'Nostr keys changed');
 		setTimeout(() => {
 			useNostr.update((state) => !state);
 			setTimeout(() => {
 				useNostr.update((state) => !state);
-				toast('success', 'nostr has restarted', 'Done!');
+				toast('success', 'Nostr has restarted', 'Done!');
 			}, 500);
 		}, 2000);
 	};
@@ -36,7 +36,7 @@
 			// @ts-expect-error
 			input.select();
 			document.execCommand('copy');
-			toast('info', 'Public Key has been copied to clipboard.', 'Copied!');
+			toast('info', 'Public Key copied to clipboard.', 'Copied!');
 		}
 	};
 </script>

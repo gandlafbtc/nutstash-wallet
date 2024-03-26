@@ -40,7 +40,7 @@
 		const mint = new CashuMint(nostrMessage.token.token[0].mint);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
-				toast('warning', 'this mint has already been added.', "Didn't add mint!");
+				toast('warning', 'Mint already added', "Mint not added");
 				return;
 			}
 			isLoadingMint = true;
@@ -48,7 +48,7 @@
 			const keys = await mint.getKeys();
 
 			if (!validateMintKeys(keys)) {
-				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
+				toast('warning', 'Keys from mint are invalid', 'Mint not added');
 				return;
 			}
 
@@ -59,13 +59,13 @@
 			};
 
 			mints.update((state) => [storeMint, ...state]);
-			toast('success', 'Mint has been added', 'Success');
+			toast('success', 'Mint is ready', 'Mint added');
 			hasMint = true;
 		} catch {
 			toast(
 				'error',
-				'keys could not be loaded from:' + mint.mintUrl + '/keys',
-				'Could not add mint.'
+				'Could not load keys',
+				'Mint not added'
 			);
 			throw new Error('Could not add Mint.');
 		} finally {
@@ -77,12 +77,12 @@
 		try {
 			const mint = getMintForToken(nostrMessage.token.token[0].proofs[0], $mints);
 			if (!mint) {
-				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
+				toast('warning', 'Token is from an unknown mint.', 'Token could not be added');
 				return;
 			}
 			const encodedProofs = getEncodedToken(nostrMessage.token);
 			isLoading = true;
-			await walletActions.receive(mint, encodedProofs);
+			const {proofs}= await walletActions.receive(mint, encodedProofs);
 			nostrMessages.update((state) => {
 				const everythingElse = state.filter((nM) => {
 					return nM.event.id !== nostrMessage.event.id;
@@ -90,10 +90,10 @@
 				nostrMessage.isAccepted = true;
 				return [nostrMessage, ...everythingElse];
 			});
-			toast('success', 'the Tokens have been successfully received', 'Success!');
+			toast('success', `Received ${getAmountForTokenSet(proofs)} sats`, 'Token received');
 		} catch (e) {
 			console.error(e);
-			toast('error', 'The Tokens could not be added to your Wallet.', 'Error!');
+			toast('error', 'Error when receiving token', 'Token not received');
 		}
 		if (browser) {
 			// @ts-expect-error

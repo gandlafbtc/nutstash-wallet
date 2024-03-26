@@ -64,8 +64,8 @@
 								isFirstPending = false;
 								toast(
 									'info',
-									'The tokens you have sent are no longer pending',
-									'Tokens you have sent have been received.'
+									'Some previously sent tokens were received',
+									'Pending tokens were claimed'
 								);
 							}
 							return false;
@@ -84,7 +84,7 @@
 					);
 				}
 			} catch (e) {
-				toast('error', 'Mint: ' + mint.mintURL, 'There was a problem when syncing with a mint.');
+				toast('error', mint.mintURL, 'Problem connecting to a mint');
 			} finally {
 				isChecking = false;
 			}

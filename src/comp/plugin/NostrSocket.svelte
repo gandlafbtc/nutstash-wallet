@@ -54,28 +54,28 @@
 		);
 
 		if (activeRelays.length < 1) {
-			toast('warning', 'You have to add at least one relay to use Nostr.', 'No relay configured');
+			toast('warning', 'Add at least one relay', 'No relay configured');
 			return;
 		}
 
 		if ($useExternalNostrKey && !window.nostr) {
 			toast(
-				'info',
-				'install a nostr signing extension or switch to local keys.',
+				'warning',
+				'Install extension or use local keys',
 				'No nostr Keys present'
 			);
 			return;
 		}
 		if ($useExternalNostrKey && (await !window.nostr.getPublicKey())) {
 			toast(
-				'info',
-				'Add a key pair to the nostr extension or switch to local keys.',
-				'no key in nostr extension'
+				'warning',
+				'Add a key to nostr extension.',
+				'No key in nostr extension'
 			);
 			return;
 		}
 		if (!$useExternalNostrKey && (!$nostrPubKey || !$nostrPrivKey)) {
-			toast('info', 'Use a signing extension or generate a key pair.', 'No nostr Keys found');
+			toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
 			return;
 		}
 

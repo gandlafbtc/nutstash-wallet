@@ -5,7 +5,7 @@
 
 	const resetHistory = () => {
 		history.set([]);
-		toast('info', 'history has been reset', 'Done!');
+		toast('info', 'History has been reset', 'History reset');
 		if (browser) {
 			// @ts-expect-error
 			document.getElementById('reset-history-modal').checked = false;

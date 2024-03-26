@@ -30,7 +30,7 @@
 
 	const prepareSwap = async () => {
 		if (swapAmount < 1) {
-			toast('warning', 'Amount has to be a number larger than 0.', 'Cannot perform swap');
+			toast('warning', 'Amount must be at least 1.', 'Cannot perform swap');
 			return;
 		}
 		const availableTokens = getAmountForTokenSet(getTokensForMint(swapOutMint, $token));
@@ -55,7 +55,7 @@
 				isPrepare = false;
 				toast(
 					'warning',
-					'Swap amount including fee exceed available amount',
+					'Swap amount with fee exceed available amount',
 					'Cannot perform swap'
 				);
 				return;
@@ -80,13 +80,13 @@
 			if (isPaid) {
 				const { proofs } = await walletActions.mint(swapInMint, swapAmount, paymentHash);
 			}
-			toast('success', 'The swap has successfully been completed', 'Swap complete');
+			toast('success', 'The swap was successful', 'Swap complete');
 			isPerform = false;
 			isComplete = true;
 		} catch (e) {
 			isPerform = false;
 			console.error(e);
-			toast('error', 'Swap could not be performed', 'Error occured when performing swap');
+			toast('error', 'Swap could not be performed', 'Error occurred');
 		}
 	};
 

@@ -20,7 +20,7 @@
 			isLoaded = true;
 			afterAdd(url);
 		} catch (error) {
-			toast('error', 'could not load mint', 'mint not added');
+			toast('error', 'Could not load mint', 'Mint not added');
 		} finally {
 			isLoading = false;
 		}
