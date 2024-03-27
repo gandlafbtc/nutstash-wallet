@@ -2,12 +2,10 @@
 	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { Proof } from '@cashu/cashu-ts';
-	import { getAmountForTokenSet, getKeysForUnit, getMintForToken, getTokenSubset } from '../util/walletUtils';
+	import {  getKeysForUnit, getMintForToken } from '../util/walletUtils';
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
-	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
-	import { browser } from '$app/environment';
 	import type { Mint } from '../../model/mint';
 	import { receive, send } from '../../actions/walletActions';
 
@@ -40,13 +38,6 @@
 		}
 	}
 
-	const deleteToken = () => {
-		tokenStore.update((state) => getTokenSubset(state, [token]));
-		if (browser) {
-			// @ts-expect-error
-			document.getElementById('token-item-modal-' + i).checked = false;
-		}
-	};
 	const checkTokenSpent = async () => {
 		const mint = getMintForToken(token, $mints);
 		if (!mint) {
