@@ -36,7 +36,7 @@
 				class="tab tab-bordered {activeTab === 'tokens' ? 'tab-active' : ''}"
 				on:click={() => changeTab('tokens')}
 			>
-				Tokens
+				ECash
 			</div>
 		{/if}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
