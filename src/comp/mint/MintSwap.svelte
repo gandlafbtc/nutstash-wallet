@@ -5,7 +5,6 @@
 	import { getAmountForTokenSet, getKeysForUnit, getTokensForMint, getTokensToSend } from '../util/walletUtils';
 	import { toast } from '../../stores/toasts';
 	import { CashuMint, CashuWallet, type MeltQuoteResponse } from '@cashu/cashu-ts';
-	import LoadingCenter from '../LoadingCenter.svelte';
 	import * as walletActions from '../../actions/walletActions';
 	import MintSelector from '../elements/MintSelector.svelte';
 	import TokenIcon from '../tokens/TokenIcon.svelte';

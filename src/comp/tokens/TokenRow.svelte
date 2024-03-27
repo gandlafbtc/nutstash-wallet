@@ -50,7 +50,7 @@
 	const checkTokenSpent = async () => {
 		const mint = getMintForToken(token, $mints);
 		if (!mint) {
-			toast('warining', 'Add the mint first', 'Cannot check token!');
+			toast('warning', 'Add the mint first', 'Cannot check token!');
 			return;
 		}
 		isLoading = true;
