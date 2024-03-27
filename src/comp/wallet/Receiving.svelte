@@ -21,6 +21,7 @@
 	let isValid = false;
 	let isLoading = false;
 	let amount = 0;
+	let memo = ''
 	let mintToAdd = '';
 	let isLoadingMint = false;
 	let pasteMessage = 'from clipboard';
@@ -78,13 +79,14 @@
 		isToken = true;
 		amount = 0;
 		try {
-			const { token } = getDecodedToken(encodedToken);
-			const proofs = token[0].proofs;
-			const mint = token[0].mint;
+			const token = getDecodedToken(encodedToken);
+			const proofs = token.token[0].proofs;
+			const mint = token.token[0].mint;
 			mintId = mint;
 			proofs.forEach((t) => {
 				amount += t.amount;
 			});
+			memo=token.memo??''
 			isValid = true;
 		} catch {
 			mintId = '';
@@ -98,6 +100,7 @@
 		isLoading = false;
 		isValid = false;
 		mintId = '';
+		memo = '';
 		amount = 0;
 		mint = undefined;
 		active = 'base';
@@ -170,6 +173,9 @@
 						<p class="text-8xl">
 							{amount === 0 ? '' : amount}
 						</p>
+						<p class="text-2xl">
+							sats
+						</p>
 
 						<div class="flex gap-2 items-baseline">
 							<p class="">From</p>
@@ -177,6 +183,13 @@
 								{mintId ? mintId : ''}
 							</p>
 						</div>
+						{#if memo}
+						<div class="flex justify-center w-full pt-2">
+							<p class="text-sm bg-base-200 rounded-md p-1 px-2 w-80 break-all">
+							Memo: {memo}
+						</p>
+					</div>
+						{/if}
 					</div>
 				{/if}
 				<h2 class="font-bold text-2xl">Redeem Token</h2>

@@ -24,7 +24,7 @@
 		setTimeout(() => {
 			useNostr.update((state) => !state);
 		}, 200);
-		toast('info', 'relay has been removed', 'Done!');
+		toast('info', 'Relay has been removed', 'Relay removed');
 	};
 </script>
 

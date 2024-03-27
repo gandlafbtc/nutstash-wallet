@@ -20,29 +20,6 @@
 
 	let isLoading = false;
 	let isReclaim = false;
-	const recycleToken = async () => {
-		const mint = getMintForToken(token, $mints);
-		if (!mint) {
-			toast('warning', 'Add the mint first', 'Could not recycle token');
-			return;
-		}
-		try {
-			isLoading = true;
-			await receive(mint, getEncodedToken({token:[{mint: mint.mintURL, proofs: [token]}]}));
-			await send(mint, token.amount, [token])
-			toast('success', 'Token has been recycled.', 'Success!');
-		} catch (e) {
-			console.error(e);
-			toast('error', 'An unexpected error occurred', 'Could not recycle token');
-			if (browser) {
-				// @ts-expect-error
-				document.getElementById('token-item-modal-' + i).checked = true;
-			}
-		}
-		finally {
-			isLoading = false;
-		}
-	};
 
 	const reclaim =async () => {
 		isReclaim = true
@@ -170,14 +147,3 @@
 	</td>
 </tr>
 
-<input type="checkbox" id="token-item-modal-{i}" class="modal-toggle" />
-<div class="modal">
-	<div class="modal-box">
-		This token couldn't be recycled. It seems like it was spent already. Do you want to delete this
-		token from your Wallet?
-		<div class="modal-action">
-			<label for="token-item-modal-{i}" class="btn">No</label>
-			<button on:click={deleteToken} class="btn btn-error">Delete</button>
-		</div>
-	</div>
-</div>

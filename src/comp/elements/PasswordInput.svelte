@@ -37,7 +37,7 @@
 	<PasswordSetup></PasswordSetup>
 {:else if !$isRestoring && $isEncrypted && !$key}
 	<div
-		class="w-screen h-screen bg-black bg-opacity-80 z-50 fixed top-0 left-0 flex items-center justify-center"
+		class="w-screen h-screen bg-black bg-opacity-40 z-50 fixed top-0 left-0 flex items-center justify-center"
 	>
 		<div class="bg-base-100 max-w-2xl rounded-2xl p-10 flex flex-col gap-4 items-center">
 			<div class="w-20 h-20">

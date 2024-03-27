@@ -35,6 +35,7 @@ export const send = async (
 	mint: Mint,
 	amount: number,
 	proofsToSend: Proof[],
+	memo?: string,
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
@@ -57,7 +58,7 @@ export const send = async (
 	token.update((state) => [...state, ...returnChange]);
 
 	const encodedToken = getEncodedToken({
-		token: [{ proofs: send, mint: mint.mintURL }]
+		token: [{ proofs: send, mint: mint.mintURL }], memo
 	});
 	history.update((state) => [
 		{

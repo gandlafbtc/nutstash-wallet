@@ -38,6 +38,7 @@
 	let nostrSendLoading = false;
 	let preference: AmountPreference[];
 	let useAmountPreference = false;
+	let memo = ''
 
 	$: input = isCoinSelection
 		? getAmountForTokenSet(selectedTokens)
@@ -74,7 +75,7 @@
 				sendPreference = preference;
 			}
 
-			encodedToken = await walletActions.send(mint, amount, tokensToSend, sendPreference);
+			encodedToken = await walletActions.send(mint, amount, tokensToSend, memo?memo:undefined, sendPreference);
 			toast('success', 'The token is ready', `${amount} sats Token created.`);
 			isLoading = false;
 		} catch {
@@ -161,6 +162,7 @@
 
 	const resetState = () => {
 		amount = 0;
+		memo = ''
 		encodedToken = '';
 		isLoading = false;
 		active = 'base';
@@ -188,6 +190,13 @@
 					)}
 				</p>
 				<p class="text-2xl">Sats Cashu token is ready!</p>
+				{#if memo}
+				<div class="flex justify-center w-full">
+					<p class="text-sm bg-base-200 rounded-md p-1 px-2 w-80 break-all">
+					Memo: {memo}
+				</p>
+			</div>
+				{/if}
 				<p class="font-bold">Copy the newly generated token below and send it to someone.</p>
 
 				<div class="flex gap-2 flex-col justify-center w-full">
@@ -308,6 +317,10 @@
 			<button class="btn" on:click={resetState}>close</button>
 		</div>
 	{:else}
+		<div class="flex gap-1 justify-center">
+
+			<input type="text" class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80" placeholder="memo" bind:value={memo}>
+		</div>
 		<CoinSelection {amount} {mint} bind:selectedTokens bind:isCoinSelection />
 		<div class="flex gap-1 justify-center items-center">
 			<label class="label cursor-pointer gap-1 flex justify-center items-center">
