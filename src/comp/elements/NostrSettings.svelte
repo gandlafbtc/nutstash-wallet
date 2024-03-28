@@ -17,6 +17,9 @@
 	};
 
 	const restartNostr = () => {
+		if (!$useNostr) {
+			return
+		}
 		if (!$useExternalNostrKey && !$nostrPubKey) {
 			return;
 		}
@@ -84,12 +87,14 @@
 		</div>
 	</div>
 
+	<NostrRelaysConfig />
+	{/if}
 	{#if !$useExternalNostrKey}
 		<div>Keys</div>
 		<div class="bg-base-200 p-2 gap-2 rounded-md flex flex-col">
 			<div class="flex justify-between items-center">
 				<div class="">
-					<label for="npub">Npub</label>
+					<label for="npub">PubKey</label>
 				</div>
 
 				<div class="flex gap-2">
@@ -120,7 +125,7 @@
 			</div>
 			<div class="flex justify-between items-center">
 				<div class="flex flex-grow">
-					<label> Show nsec </label>
+					<label> PrivKey </label>
 				</div>
 				<div class="flex gap-2">
 					<input
@@ -218,5 +223,3 @@
 			</div>
 		</div>
 	{/if}
-	<NostrRelaysConfig />
-{/if}

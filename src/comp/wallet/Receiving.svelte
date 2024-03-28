@@ -8,6 +8,8 @@
 	import { getAmountForTokenSet, validateMintKeys } from '../util/walletUtils';
 	import ScanToken from '../elements/ScanToken.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
+	import { nostrPubKey, useExternalNostrKey } from '../../stores/nostr';
+	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -26,6 +28,7 @@
 	let isLoadingMint = false;
 	let pasteMessage = 'from clipboard';
 	let isCustomSplits = false;
+	let isShowPubkey = false;
 
 	const receive = async () => {
 		if (!isValid) {
@@ -239,7 +242,7 @@
 					</div>
 				</div>
 
-				<div class="h-48">
+				<div class="">
 					{#if mintToAdd}
 					<div class="p-2 flex flex-col gap-2 bg-base-200 items-center rounded-md">
 					<div class="flex flex-col gap-2 items-center">
@@ -296,6 +299,18 @@
 				{/if}
 				{#if isCustomSplits}
 					<CustomSplits {amount} bind:preference />
+				{/if}
+				{#if isShowPubkey}
+				<div class="gap-2 flex flex-col items-center justify-center">
+					<NostrReceiveQr></NostrReceiveQr>
+					<p class="text-neutral">
+						Let the sender scan this QR code to lock the ecash to your PubKey or send it to you over nostr.
+					</p>
+				</div>
+				{:else}
+				<div>
+					<button class="btn btn-sm" on:click={()=>isShowPubkey = true}>I'm offline</button>
+				</div>
 				{/if}
 				<div class="h-24 text">
 					<div class="flex justify-center gap-2 mt-10">

@@ -318,7 +318,6 @@
 		</div>
 	{:else}
 		<div class="flex gap-1 justify-center">
-
 			<input type="text" class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80" placeholder="memo" bind:value={memo}>
 		</div>
 		<CoinSelection {amount} {mint} bind:selectedTokens bind:isCoinSelection />
