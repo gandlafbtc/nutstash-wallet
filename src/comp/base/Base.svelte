@@ -3,7 +3,7 @@
 	import Setting from '../../comp/Setting.svelte';
 	import Wallet from '../../comp/wallet/Wallet.svelte';
 	import Logo from '../../comp/elements/Logo.svelte';
-	import { nostrMessages } from '../../stores/nostr';
+	import { createNewNostrKeys, nostrMessages, nostrPrivKey, nostrPubKey } from '../../stores/nostr';
 	import Donate from '../../comp/elements/Donate.svelte';
 	import Code from '../../comp/elements/Code.svelte';
 	import { version } from '../../stores/version';
@@ -13,6 +13,7 @@
 	import { mnemonic, seed } from '../../stores/mnemonic';
 	import { deriveSeedFromMnemonic } from '@cashu/cashu-ts';
 
+	
 	$activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
@@ -20,6 +21,9 @@
 	};
 
 	onMount(() => {
+		if (!$nostrPubKey && !$nostrPrivKey) {
+			createNewNostrKeys()
+		}
 		setTimeout(() => {
 			if ($mnemonic.length) {
 				seed.set(deriveSeedFromMnemonic($mnemonic.join(' ')));

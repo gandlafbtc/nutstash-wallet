@@ -23,6 +23,7 @@
 	import CustomSplits from '../elements/CustomSplits.svelte';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import * as walletActions from '../../actions/walletActions';
+	import { schnorr } from "@noble/curves/secp256k1";
 	export let active;
 
 	export let mint: Mint;
@@ -39,6 +40,8 @@
 	let preference: AmountPreference[];
 	let useAmountPreference = false;
 	let memo = ''
+	let isLockToPub = false
+	let isValidPub = false
 
 	$: input = isCoinSelection
 		? getAmountForTokenSet(selectedTokens)
@@ -47,6 +50,8 @@
 		? preference?.reduce((acc, curr) => acc + curr.amount * curr.count, 0) ?? 0
 		: amount;
 	$: change = input - output;
+
+	$:sendToNostrKey, validatePubKey()
 
 	export const send = async () => {
 		if (isNaN(amount) || amount <= 0) {
@@ -70,15 +75,14 @@
 		try {
 			isLoading = true;
 
-			let sendPreference = undefined;
-			if (useAmountPreference) {
-				sendPreference = preference;
-			}
-
-			encodedToken = await walletActions.send(mint, amount, tokensToSend, memo?memo:undefined, sendPreference);
+			let sendPreference = useAmountPreference?preference:undefined;
+			let pubk = isLockToPub?await getConvertedPubKey():undefined
+			
+			encodedToken = await walletActions.send(mint, amount, tokensToSend, memo?memo:undefined, sendPreference, pubk);
 			toast('success', 'The token is ready', `${amount} sats Token created.`);
 			isLoading = false;
-		} catch {
+		} catch (e) {
+			console.error(e)
 			resetState();
 			toast('error', 'Sendable Token could not be created', 'Error when creating Token');
 			throw new Error('Error creating sendable token');
@@ -107,11 +111,29 @@
 			: //@ts-ignore
 				await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
 	};
+
+
+	const validatePubKey = async () => {
+		if (!isLockToPub) {
+			return
+		}
+		const pubk = await getConvertedPubKey()
+		console.log(pubk)
+		if (typeof pubk === 'string' && (pubk.length===64||pubk.length===65||pubk.length===66)) {
+			isValidPub = true
+			toast('success','Ecash can be sent to this pubkey','Valid PubKey')
+		}
+		else {
+			isValidPub = false
+			toast('warning','Cannot lock ecash to the','Invalid PubKey')
+		}
+	}
+
 	const getConvertedPubKey = async () => {
 		await resolveNip05();
 
 		return sendToNostrKey.startsWith('npub')
-			? nostrTools.nip19.decode(sendToNostrKey).data
+			? nostrTools.nip19.decode(sendToNostrKey).data as string
 			: sendToNostrKey;
 	};
 
@@ -170,6 +192,7 @@
 		useAmountPreference = false;
 		isCoinSelection = false;
 		preference = [];
+		isLockToPub = false
 	};
 </script>
 
@@ -317,6 +340,59 @@
 			<button class="btn" on:click={resetState}>close</button>
 		</div>
 	{:else}
+		<div class="flex gap-3 justify-center items-center flex-col">
+			{#if isLockToPub}
+			<button class="btn btn-square btn-sm" on:click={()=>isLockToPub=false}>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-success">
+					<path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd" />
+				  </svg>
+			</button>
+			<p class="text-xs text-success">
+				Token is locked to PubKey
+			</p>
+			<div class="pt-2 flex gap-2 items-center w-full">
+				<div class="flex relative w-full justify-center">
+						<input
+							type="text"
+							class="input input-success input-sm w-80"
+							bind:value={sendToNostrKey}
+							placeholder="PubKey"
+						/>
+					<label for="npub-scan-modal" class="absolute z-10 bottom-1 ml-72">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-5 h-5 text-success"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+							/>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+							/>
+						</svg>
+					</label>
+				</div>
+			</div>
+			{:else}
+				
+			<button class="btn btn-square btn-sm" on:click={()=>isLockToPub=true}>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+					<path d="M18 1.5c2.9 0 5.25 2.35 5.25 5.25v3.75a.75.75 0 0 1-1.5 0V6.75a3.75 3.75 0 1 0-7.5 0v3a3 3 0 0 1 3 3v6.75a3 3 0 0 1-3 3H3.75a3 3 0 0 1-3-3v-6.75a3 3 0 0 1 3-3h9v-3c0-2.9 2.35-5.25 5.25-5.25Z" />
+				</svg>									
+			</button>
+			<p class="text-xs">
+				Token is spendable by anyone
+			</p>
+			{/if}
+		</div>
 		<div class="flex gap-1 justify-center">
 			<input type="text" class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80" placeholder="memo" bind:value={memo}>
 		</div>
@@ -378,7 +454,7 @@
 		</div>
 
 		{#if amount && getAmountForTokenSet(getTokensForMint(mint, $token)) >= amount}
-			{#if !change && !useAmountPreference}
+			{#if !change && !useAmountPreference && !isLockToPub}
 				<div class="flex gap-2 text-success justify-center items-center">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -394,7 +470,7 @@
 							d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 						/>
 					</svg>
-					<p>token will be created offline</p>
+					<p>Token will be created offline</p>
 				</div>
 			{:else}
 				<div class="flex gap-2 text-warning justify-center items-center">
@@ -412,7 +488,7 @@
 							d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 						/>
 					</svg>
-					<p>token will be split before send</p>
+					<p>Token will need mint signature</p>
 				</div>
 			{/if}
 		{/if}
@@ -496,7 +572,7 @@
 		<div class=" flex flex-col gap-2 w-full items-center">
 			<div class="flex gap-2">
 				<button
-					class="btn {!amount ||
+					class="btn {!amount || (isLockToPub && !isValidPub) ||
 					getAmountForTokenSet(getTokensForMint(mint, $token)) < amount ||
 					(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount)
 						? 'btn-disabled'

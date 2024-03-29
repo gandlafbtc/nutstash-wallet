@@ -54,7 +54,7 @@
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
 			{#each tokenSub as token, i}
-				<TokenRow {token} {i} {mint} bind:isSelected={selectedTokensBool[i]} />
+				<TokenRow {isPending} {token} {i} {mint} bind:isSelected={selectedTokensBool[i]} />
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">

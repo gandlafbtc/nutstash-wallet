@@ -10,6 +10,8 @@
 	import CustomSplits from '../elements/CustomSplits.svelte';
 	import { nostrPubKey, useExternalNostrKey } from '../../stores/nostr';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
+	import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
+	import { token } from '../../stores/tokens';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -23,12 +25,13 @@
 	let isValid = false;
 	let isLoading = false;
 	let amount = 0;
-	let memo = ''
+	let memo = '';
 	let mintToAdd = '';
 	let isLoadingMint = false;
 	let pasteMessage = 'from clipboard';
 	let isCustomSplits = false;
-	let isShowPubkey = false;
+	let isOffline = false;
+	let lockPubs: string[] = [];
 
 	const receive = async () => {
 		if (!isValid) {
@@ -41,21 +44,23 @@
 				return m.mintURL === mintId;
 			});
 			if (!mint) {
-				toast(
-					'warning',
-					'Add the mint first',
-					'Not connected to this mint'
-				);
+				toast('warning', 'Add the mint first', 'Not connected to this mint');
 				mintToAdd = getDecodedToken(encodedToken).token[0].mint;
 				return;
 			}
-			isLoading = true;
-			let receiveCustomSplits = undefined;
-			if (isCustomSplits) {
-				receiveCustomSplits = preference;
+			if (isOffline) {
+				const proofs = walletActions.receiveOffline(encodedToken)
+
+				toast('info', `Receive token when you are online`, 'Offline token added!');
+			} else {
+				isLoading = true;
+				let receiveCustomSplits = undefined;
+				if (isCustomSplits) {
+					receiveCustomSplits = preference;
+				}
+				const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits);
+				toast('success', `${getAmountForTokenSet(proofs)} sats received`, 'Tokens received!');
 			}
-			const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits);
-			toast('success', `${getAmountForTokenSet(proofs)} sats received`, 'Tokens received!');
 			resetState();
 		} catch (error) {
 			console.error(error);
@@ -75,11 +80,14 @@
 	}
 
 	const validateToken = () => {
+		lockPubs = []
 		if (!encodedToken) {
 			isToken = false;
+			isValid = false
 			return;
 		}
 		isToken = true;
+		isValid =true
 		amount = 0;
 		try {
 			const token = getDecodedToken(encodedToken);
@@ -88,12 +96,26 @@
 			mintId = mint;
 			proofs.forEach((t) => {
 				amount += t.amount;
+				//check secrets for lock
+				try {
+					const secret = parseSecret(t.secret);
+					if (secret[0] === 'P2PK') {
+						lockPubs.push(secret[1].data);
+					}
+				} catch {
+					// do nothing
+				}
 			});
-			memo=token.memo??''
+
+			lockPubs = [...new Set(lockPubs)];
+
+			memo = token.memo ?? '';
 			isValid = true;
 		} catch {
 			mintId = '';
 			amount = 0;
+			isToken = false;
+			isValid = false
 			toast('warning', 'Could not decode Token', 'The Token is not valid');
 		}
 	};
@@ -110,6 +132,7 @@
 		mintToAdd = '';
 		pasteMessage = 'from clipboard';
 		preference = [];
+		lockPubs = [];
 	};
 	const trustMint = async () => {
 		const mint = new CashuMint(mintToAdd);
@@ -117,7 +140,7 @@
 			const mintIndex = $mints.findIndex((m) => m.mintURL === mint.mintUrl);
 			if (mintIndex > -1) {
 				if ($mints[mintIndex]) {
-					toast('warning', 'This mint has already been added.', "Mint not added");
+					toast('warning', 'This mint has already been added.', 'Mint not added');
 					return;
 				}
 
@@ -146,11 +169,7 @@
 			toast('success', 'Mint is now ready', 'Mint added');
 			mintToAdd = '';
 		} catch {
-			toast(
-				'error',
-				'Keys could not be loaded',
-				'Could not add mint.'
-			);
+			toast('error', 'Keys could not be loaded', 'Could not add mint.');
 			throw new Error('Could not add Mint.');
 		} finally {
 			isLoadingMint = false;
@@ -176,9 +195,7 @@
 						<p class="text-8xl">
 							{amount === 0 ? '' : amount}
 						</p>
-						<p class="text-2xl">
-							sats
-						</p>
+						<p class="text-2xl">sats</p>
 
 						<div class="flex gap-2 items-baseline">
 							<p class="">From</p>
@@ -187,11 +204,11 @@
 							</p>
 						</div>
 						{#if memo}
-						<div class="flex justify-center w-full pt-2">
-							<p class="text-sm bg-base-200 rounded-md p-1 px-2 w-80 break-all">
-							Memo: {memo}
-						</p>
-					</div>
+							<div class="flex justify-center w-full pt-2">
+								<p class="text-sm bg-base-200 rounded-md p-1 px-2 w-80 break-all">
+									Memo: {memo}
+								</p>
+							</div>
 						{/if}
 					</div>
 				{/if}
@@ -208,7 +225,7 @@
 								receive();
 							}
 						}}
-						class="textarea textarea-secondary w-full h-40"
+						class="textarea {isOffline ? 'textarea-accent' : 'textarea-secondary'} w-full h-40"
 						placeholder="Paste a cashu token. It should look like this: cashuAeyJ0b2tlbiI6W3sicHJvb2ZzIjpbeyJpZCI6IjBOSTNUVUFz..."
 					/>
 					<div class="absolute z-10 bottom-4 right-4">
@@ -225,7 +242,7 @@
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								class="text-secondary w-6 h-6"
+								class="{isOffline ? 'text-accent' : 'text-secondary'} w-6 h-6"
 							>
 								<path
 									stroke-linecap="round"
@@ -244,24 +261,24 @@
 
 				<div class="">
 					{#if mintToAdd}
-					<div class="p-2 flex flex-col gap-2 bg-base-200 items-center rounded-md">
-					<div class="flex flex-col gap-2 items-center">
-						<p class="text-sm">Token is from a mint you haven't trusted yet:</p>
-						<div class="">
-							<p class="w-fit text-sm bg-base-300 rounded-full p-1">
-								{mintToAdd}
-							</p>
+						<div class="p-2 flex flex-col gap-2 bg-base-200 items-center rounded-md">
+							<div class="flex flex-col gap-2 items-center">
+								<p class="text-sm">Token is from a mint you haven't trusted yet:</p>
+								<div class="">
+									<p class="w-fit text-sm bg-base-300 rounded-full p-1">
+										{mintToAdd}
+									</p>
+								</div>
+								<p class="text-sm">You can only receive tokens from mints you trust.</p>
+							</div>
+							<div class="grid-cols-2">
+								{#if isLoadingMint}
+									<button class="btn btn-disabled btn-square loading" />
+								{:else}
+									<button class="btn btn-secondary" on:click={trustMint}> Trust this Mint </button>
+								{/if}
+							</div>
 						</div>
-						<p class="text-sm">You can only receive tokens from mints you trust.</p>
-					</div>
-					<div class="grid-cols-2">
-						{#if isLoadingMint}
-							<button class="btn btn-disabled btn-square loading" />
-						{:else}
-							<button class="btn btn-secondary" on:click={trustMint}> Trust this Mint </button>
-							{/if}
-						</div>
-					</div>
 					{/if}
 				</div>
 				{#if amount && encodedToken}
@@ -300,22 +317,54 @@
 				{#if isCustomSplits}
 					<CustomSplits {amount} bind:preference />
 				{/if}
-				{#if isShowPubkey}
-				<div class="gap-2 flex flex-col items-center justify-center">
-					<NostrReceiveQr></NostrReceiveQr>
-					<p class="text-neutral">
-						Let the sender scan this QR code to lock the ecash to your PubKey or send it to you over nostr.
-					</p>
-				</div>
+				{#if isOffline}
+					<div>
+						<button class="btn btn-sm" on:click={() => (isOffline = false)}>I'm online</button>
+					</div>
+					<div class="gap-2 flex flex-col items-center justify-center">
+						<NostrReceiveQr></NostrReceiveQr>
+						<p class="text-neutral">
+							Let the sender scan this QR code to lock the ecash to your PubKey or send it to you
+							over nostr.
+						</p>
+					</div>
 				{:else}
-				<div>
-					<button class="btn btn-sm" on:click={()=>isShowPubkey = true}>I'm offline</button>
-				</div>
+					<div>
+						<button class="btn btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
+					</div>
+				{/if}
+				{#if isOffline && !lockPubs.length && isValid}
+					<p class="text-warning">
+						Token is not locked! Offline receiving unlocked ecash is double-spendable by the sender.
+					</p>
+				{:else if isOffline && lockPubs.length > 1 && isValid}
+					<p class="text-warning">
+						Token is locked to multiple different keys! Nutstash only supports one key at a time.
+					</p>
+				{:else if isOffline && lockPubs.length === 1 && isValid}
+					{#if lockPubs[0] === $nostrPubKey}
+						<p class="text-success">Token is locked to your pubkey and can be received offline.</p>
+					{:else}
+						<p class="text-error">
+							Token is locked to a different pubkey and cannot be claimed by this wallet.
+						</p>
+					{/if}
+				{:else if (!isOffline) && lockPubs.length === 1 && isValid}
+					{#if lockPubs[0] === $nostrPubKey}
+						<p class="text-success">Token is locked to your pubkey.</p>
+					{:else}
+						<p class="text-error">
+							Token is locked to a different pubkey and cannot be claimed by this wallet.
+						</p>
+					{/if}
 				{/if}
 				<div class="h-24 text">
 					<div class="flex justify-center gap-2 mt-10">
-						<button class="btn {isValid ? 'btn-secondary' : 'btn-disabled'}" on:click={receive}>
-							receive</button
+						<button
+							class="btn {isValid ? (isOffline ? 'btn-accent' : 'btn-secondary') : 'btn-disabled'}"
+							on:click={receive}
+						>
+							Receive {isOffline ? 'offline' : ''}</button
 						>
 					</div>
 				</div>
