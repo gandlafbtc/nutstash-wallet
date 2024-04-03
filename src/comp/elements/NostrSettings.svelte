@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { nostrPrivKey, useNostr, nostrPubKey, useExternalNostrKey } from '../../stores/nostr';
+	import { nostrPrivKey, useNostr, nostrPubKey, useExternalNostrKey, createNewNostrKeys } from '../../stores/nostr';
 	import { generateSecretKey, getPublicKey } from 'nostr-tools';
 	import { browser } from '$app/environment';
 	import { toast } from '../../stores/toasts';
@@ -10,13 +10,14 @@
 	let isShowNsec = false;
 
 	const generateNostrPrivKey = () => {
-		const priv = generateSecretKey();
-		nostrPrivKey.set(bytesToHex(priv));
-		nostrPubKey.set(getPublicKey(priv));
+		createNewNostrKeys()
 		restartNostr();
 	};
 
 	const restartNostr = () => {
+		if (!$useNostr) {
+			return
+		}
 		if (!$useExternalNostrKey && !$nostrPubKey) {
 			return;
 		}
@@ -84,12 +85,14 @@
 		</div>
 	</div>
 
+	<NostrRelaysConfig />
+	{/if}
 	{#if !$useExternalNostrKey}
 		<div>Keys</div>
 		<div class="bg-base-200 p-2 gap-2 rounded-md flex flex-col">
 			<div class="flex justify-between items-center">
 				<div class="">
-					<label for="npub">Npub</label>
+					<label for="npub">PubKey</label>
 				</div>
 
 				<div class="flex gap-2">
@@ -120,7 +123,7 @@
 			</div>
 			<div class="flex justify-between items-center">
 				<div class="flex flex-grow">
-					<label> Show nsec </label>
+					<label> PrivKey </label>
 				</div>
 				<div class="flex gap-2">
 					<input
@@ -201,14 +204,14 @@
 				</div>
 				<dialog bind:this={newKeysModal} class="modal">
 					<div class="modal-box">
-						<h3 class="font-bold text-lg">This will remove the current nostr keys!</h3>
+						<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
 						<p class="py-4">
-							Are you sure you want to delete your current nostr keys and create new ones?
+							Are you sure you want to delete your current and create new ones? Ecash locked to this key pair might become un-spendable. Make sure your wallet contains no locked ecash before proceeding
 						</p>
 						<div class="modal-action">
 							<form method="dialog">
 								<button class="btn">abort</button>
-								<button class="btn btn-primary" on:click={generateNostrPrivKey}
+								<button class="btn btn-error" on:click={generateNostrPrivKey}
 									>Create new keys</button
 								>
 							</form>
@@ -218,5 +221,3 @@
 			</div>
 		</div>
 	{/if}
-	<NostrRelaysConfig />
-{/if}

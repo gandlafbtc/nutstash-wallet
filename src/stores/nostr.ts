@@ -4,6 +4,8 @@ import type { NostrMessage } from '../model/nostrMessage';
 
 import { writable } from 'svelte/store';
 import type { NostrRelay } from '../model/relay';
+import { bytesToHex } from '@noble/hashes/utils';
+import { schnorr, secp256k1 } from '@noble/curves/secp256k1';
 
 const initialValueSting: string = browser
 	? window.localStorage.getItem('use-nostr') ?? 'false'
@@ -88,6 +90,11 @@ nostrRelays.subscribe((value) => {
 
 const nostrPool = writable<RelayPool>();
 
+const createNewNostrKeys = () => {
+	const priv = schnorr.utils.randomPrivateKey()
+	nostrPrivKey.set(bytesToHex(priv));
+	nostrPubKey.set(bytesToHex(secp256k1.getPublicKey(priv)));
+}
 export {
 	useNostr,
 	nostrPrivKey,
@@ -95,5 +102,6 @@ export {
 	nostrPubKey,
 	nostrPool,
 	nostrRelays,
-	useExternalNostrKey
+	useExternalNostrKey,
+	createNewNostrKeys
 };

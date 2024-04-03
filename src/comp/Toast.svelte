@@ -105,7 +105,6 @@
 				</span>
 			</div>
 		</div>
-
 	</div>
 
 	<div class="w-full bg-neutral-content h-1 bg-opacity-50">

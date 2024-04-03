@@ -8,6 +8,7 @@
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import * as walletActions from '../../actions/walletActions';
 	import type { Mint } from '../../model/mint';
+	import { decode } from '@gandlaf21/bolt11-decode';
 
 	export let active;
 	export let invoice = '';
@@ -22,6 +23,7 @@
 	let isPayable = false;
 	let isLoading = false;
 	let isPaySuccess = false;
+	let memo = ''
 	let meltQuote: MeltQuoteResponse
 
 	onMount(()=>{
@@ -35,6 +37,7 @@
 			meltQuote = await walletActions.meltQuote(mint, invoice)
 			fees = meltQuote.fee_reserve
 			amount = meltQuote.amount
+			memo = decode(invoice).description
 			isPayable = true
 		} catch (error) {
 			fees = 0
@@ -79,6 +82,7 @@
 	};
 	const resetState = () => {
 		invoice = '';
+		memo=''
 		amount = 0;
 		fees = 0;
 		isPayable = false;
@@ -88,6 +92,7 @@
 		activeS = 'send';
 		processing = false;
 	};
+	
 	function scanPay() {
 		activeS = 'send-scan';
 	}
@@ -162,7 +167,9 @@
 				</button>
 			</div>
 		</div>
-
+		<div class="flex gap-1 justify-center">
+			<input type="text" class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80" placeholder="memo" bind:value={memo}>
+		</div>
 		<CoinSelection amount={amount + fees} {mint} bind:selectedTokens bind:isCoinSelection />
 
 		<div class="flex items-center gap-2 justify-center">

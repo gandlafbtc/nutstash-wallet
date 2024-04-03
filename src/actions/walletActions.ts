@@ -7,7 +7,8 @@ import {
 	type MintKeys,
 	type Proof,
 	type MeltQuoteResponse,
-	type TokenEntry
+	type TokenEntry,
+	getDecodedToken
 } from '@cashu/cashu-ts';
 import {
 	encodeBase64toUint8,
@@ -30,20 +31,25 @@ import { iv, key, seedIv } from '../stores/key';
 import { randomBytes } from '@noble/hashes/utils';
 import { isEncrypted } from '../stores/settings';
 import { decode } from '@gandlaf21/bolt11-decode';
+import { nostrPrivKey } from '../stores/nostr';
 
 export const send = async (
 	mint: Mint,
 	amount: number,
 	proofsToSend: Proof[],
 	memo?: string,
-	preference?: AmountPreference[]
+	preference?: AmountPreference[],
+	pubkey?: string
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
 	const { returnChange, send } = await wallet.send(
 		amount,
 		proofsToSend,
-		preference,
-		count
+		{
+			preference,
+			counter: count,
+			pubkey
+		}
 	);
 
 	if (seedPhrase) {
@@ -102,7 +108,7 @@ export const mint = async (
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { proofs } = await wallet.mintTokens(amount, quote, keysetId, preference, count);
+	const { proofs } = await wallet.mintTokens(amount, quote, {AmountPreference: preference, counter:count, keysetId});
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
 	}
@@ -124,6 +130,30 @@ export const mint = async (
 	return { proofs };
 };
 
+export const receiveOffline = (encodedToken:string)=> {
+
+	const tokn = getDecodedToken(encodedToken)
+
+	const proofs = tokn.token.map((t) => t.proofs)
+	.flat();
+
+	token.update((ctx) => [...proofs, ...ctx]);
+	history.update((state) => [
+		{
+			type: HistoryItemType.RECEIVE_OFFLINE,
+			amount: getAmountForTokenSet(proofs),
+			date: Date.now(),
+			data: {
+				encodedToken: get(isEncrypted) ? '' : encodedToken,
+				mint: tokn.token[0].mint ?? '',
+				keyset: getKeysetsOfTokens(proofs),
+				receivedTokens: get(isEncrypted) ? [] : proofs
+			}
+		},
+		...state
+	]);
+}
+
 export const receive = async (
 	mint: Mint,
 	encodedToken: string,
@@ -133,7 +163,7 @@ export const receive = async (
 	const {
 		token: tokens,
 		tokensWithErrors,
-	} = await wallet.receive(encodedToken, preference, count);
+	} = await wallet.receive(encodedToken, {preference, counter:count, privkey:get(nostrPrivKey)});
 
 	const proofs = tokens.token.map((t: TokenEntry) => t.proofs).flat();
 
@@ -195,8 +225,9 @@ export const melt = async (
 	const { returnChange, send } = await wallet.send(
 		meltQuote.amount + meltQuote.fee_reserve,
 		proofs,
-		undefined,
-		currentCount
+		{
+			counter:currentCount
+		}
 	);
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + returnChange.length + send.length);
@@ -217,7 +248,7 @@ export const melt = async (
 		isPaid,
 		preimage,
 		change
-	} = await wallet.payLnInvoice(invoice, send, meltQuote, undefined, currentCount);
+	} = await wallet.payLnInvoice(invoice, send, meltQuote, {counter:currentCount});
 	
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + change.length);
