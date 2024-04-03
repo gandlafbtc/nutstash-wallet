@@ -227,7 +227,10 @@
 		</p>
 	</td>
 	<td class=" overflow-clip">
-		{getMintForToken(token, $mints)?.mintURL}
+		<p class="break-all">
+
+			{getMintForToken(token, $mints)?.mintURL}
+		</p>
 	</td>
 </tr>
 
