@@ -45,9 +45,11 @@ export const send = async (
 	const { returnChange, send } = await wallet.send(
 		amount,
 		proofsToSend,
-		preference,
-		count,
-		pubkey
+		{
+			preference,
+			counter: count,
+			pubkey
+		}
 	);
 
 	if (seedPhrase) {
@@ -106,7 +108,7 @@ export const mint = async (
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { proofs } = await wallet.mintTokens(amount, quote, keysetId, preference, count);
+	const { proofs } = await wallet.mintTokens(amount, quote, {AmountPreference: preference, counter:count, keysetId});
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
 	}
@@ -161,7 +163,7 @@ export const receive = async (
 	const {
 		token: tokens,
 		tokensWithErrors,
-	} = await wallet.receive(encodedToken, preference, count, undefined, get(nostrPrivKey));
+	} = await wallet.receive(encodedToken, {preference, counter:count, privkey:get(nostrPrivKey)});
 
 	const proofs = tokens.token.map((t: TokenEntry) => t.proofs).flat();
 
@@ -223,8 +225,9 @@ export const melt = async (
 	const { returnChange, send } = await wallet.send(
 		meltQuote.amount + meltQuote.fee_reserve,
 		proofs,
-		undefined,
-		currentCount
+		{
+			counter:currentCount
+		}
 	);
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + returnChange.length + send.length);
@@ -245,7 +248,7 @@ export const melt = async (
 		isPaid,
 		preimage,
 		change
-	} = await wallet.payLnInvoice(invoice, send, meltQuote, undefined, currentCount);
+	} = await wallet.payLnInvoice(invoice, send, meltQuote, {counter:currentCount});
 	
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + change.length);
