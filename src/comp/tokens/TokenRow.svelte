@@ -2,7 +2,7 @@
 	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { Proof } from '@cashu/cashu-ts';
-	import { getKeysForUnit, getMintForToken } from '../util/walletUtils';
+	import { formatAmount, getKeysForUnit, getMintForToken } from '../util/walletUtils';
 	import TokenIcon from './TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
@@ -13,6 +13,7 @@
 	import { nostrPubKey } from '../../stores/nostr';
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
+	import { unit } from '../../stores/settings';
 
 	export let mint: Mint | undefined;
 	export let isSelected = false;
@@ -254,7 +255,7 @@
 				</svg>
 			{/if}
 			<TokenIcon />
-			{token.amount}
+			{formatAmount(token.amount, $unit)}
 		</div>
 	</td>
 	<td class="hidden lg:block">

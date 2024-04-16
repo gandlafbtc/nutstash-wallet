@@ -5,7 +5,12 @@
 	import type { Mint } from '../../model/mint';
 	import { token } from '../../stores/tokens';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import {
+		formatAmount,
+		getAmountForTokenSet,
+		getTokensForMint,
+		getTokensToSend
+	} from '../util/walletUtils';
 	import { browser } from '$app/environment';
 	import {
 		nostrPool,
@@ -24,6 +29,7 @@
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import * as walletActions from '../../actions/walletActions';
 	import { schnorr } from '@noble/curves/secp256k1';
+	import { unit } from '../../stores/settings';
 	export let active;
 
 	export let mint: Mint;
@@ -86,7 +92,7 @@
 				sendPreference,
 				pubk
 			);
-			toast('success', 'The token is ready', `${amount} sats Token created.`);
+			toast('success', 'The token is ready', `${formatAmount(amount, $unit)} Token created.`);
 			isLoading = false;
 		} catch (e) {
 			console.error(e);
@@ -214,13 +220,16 @@
 		<div class="grid grid-cols-1 gap-2">
 			<div class="flex flex-col gap-2 text-center">
 				<p class="text-8xl">
-					{getAmountForTokenSet(
-						getDecodedToken(encodedToken)
-							.token.map((t) => t.proofs)
-							.flat()
+					{formatAmount(
+						getAmountForTokenSet(
+							getDecodedToken(encodedToken)
+								.token.map((t) => t.proofs)
+								.flat()
+						),
+						$unit
 					)}
 				</p>
-				<p class="text-2xl">Sats Cashu token is ready!</p>
+				<p class="text-2xl">Cashu token is ready!</p>
 				{#if memo}
 					<div class="flex justify-center w-full">
 						<p class="text-sm bg-base-200 rounded-md p-1 px-2 w-80 break-all">
@@ -521,7 +530,7 @@
 				<p class="flex gap-1 items-center">
 					<span class="font-bold"> Input </span>
 					<TokenIcon />
-					{input}
+					{formatAmount(input, $unit, false)}
 					<span> sats </span>
 				</p>
 
@@ -579,14 +588,14 @@
 						<p class="flex gap-1 items-center">
 							<span class="font-bold"> Change </span>
 							<TokenIcon />
-							{change}
+							{formatAmount(change, $unit, false)}
 							<span> sats </span>
 						</p>
 					{/if}
 					<p class="flex gap-1 items-center">
 						<span class="font-bold"> Output </span>
 						<TokenIcon />
-						{output}
+						{formatAmount(output, $unit, false)}
 						<span> sats </span>
 					</p>
 				</div>

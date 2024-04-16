@@ -3,12 +3,18 @@
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet, getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import {
+		formatAmount,
+		getAmountForTokenSet,
+		getTokensForMint,
+		getTokensToSend
+	} from '../util/walletUtils';
 	import { onMount } from 'svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import * as walletActions from '../../actions/walletActions';
 	import type { Mint } from '../../model/mint';
 	import { decode } from '@gandlaf21/bolt11-decode';
+	import { unit } from '../../stores/settings';
 
 	export let active;
 	export let invoice = '';
@@ -72,7 +78,7 @@
 				toast('error', 'Could not pay invoice', 'Error when paying invoice');
 			}
 			isPaySuccess = true;
-			toast('success', `${amount} sats and ${fees} stats fees`, 'Invoice paid');
+			toast('success', `${formatAmount(amount, $unit)} with fees`, 'Invoice paid');
 		} catch (error) {
 			toast('error', 'Could not pay invoice', 'Error');
 			console.error(error);

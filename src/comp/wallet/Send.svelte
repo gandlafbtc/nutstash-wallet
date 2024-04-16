@@ -4,7 +4,7 @@
 	import MintSelector from '../elements/MintSelector.svelte';
 	import Sending from './Sending.svelte';
 	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -13,6 +13,7 @@
 	import Melting from './Melting.svelte';
 	import ScanLn from '../elements/ScanLN.svelte';
 	import { showShortCuts } from '../../stores/showShortCuts';
+	import { unit } from '../../stores/settings';
 
 	export let active: string;
 	let send: () => Promise<void>;
@@ -92,7 +93,7 @@
 					<TokenIcon />
 
 					<p class="font-bold">
-						{getAmountForTokenSet(getTokensForMint(mint, $token))} sats
+						{formatAmount(getAmountForTokenSet(getTokensForMint(mint, $token)), $unit)}
 					</p>
 					<p>available</p>
 				</div>
@@ -175,7 +176,7 @@
 						{#if !isSend && fees}
 							<div class="text-sm flex gap-2">
 								<p class="font-bold">
-									{fees} sats
+									{formatAmount(fees, $unit)}
 								</p>
 								<p>fees</p>
 							</div>

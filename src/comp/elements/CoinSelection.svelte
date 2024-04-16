@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { Mint } from '../../model/mint';
+	import { unit } from '../../stores/settings';
 	import AvailableTokensTable from '../tokens/AvailableTokensTable.svelte';
-	import { getAmountForTokenSet } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet } from '../util/walletUtils';
 	import type { Proof } from '@cashu/cashu-ts';
 
 	export let mint: Mint;
@@ -56,11 +57,11 @@
 				/>
 			</div>
 			<span class="">
-				{selectedAmount} / {amount ?? 0} sats
+				{formatAmount(selectedAmount, $unit)} / {formatAmount(amount ?? 0, $unit)}
 				{#if selectedAmount - amount > 0}
 					<span class="font-bold"> | </span>
 					<span class="">
-						{selectedAmount - amount} sats
+						{formatAmount(selectedAmount - amount, $unit)}
 					</span>
 					<span> change </span>
 				{/if}

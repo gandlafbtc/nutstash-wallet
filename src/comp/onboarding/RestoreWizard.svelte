@@ -3,10 +3,10 @@
 	import { isOnboarded } from '../../stores/message';
 	import { mints } from '../../stores/mints';
 	import { mnemonic, seed } from '../../stores/mnemonic';
-	import { checkNonPending, isRestoring } from '../../stores/settings';
+	import { checkNonPending, isRestoring, unit } from '../../stores/settings';
 	import { token } from '../../stores/tokens';
 	import AddMintForm from '../elements/AddMintForm.svelte';
-	import { getAmountForTokenSet } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet } from '../util/walletUtils';
 	import CheckTokens from '../wallet/CheckTokens.svelte';
 	import MintRestoreCard from './MintRestoreCard.svelte';
 	import { deriveSeedFromMnemonic } from '@cashu/cashu-ts';
@@ -72,7 +72,7 @@
 								{$token.length}
 							</p>
 							<p class="text-sm">
-								({getAmountForTokenSet($token)} sats)
+								({formatAmount(getAmountForTokenSet($token), $unit)})
 							</p>
 						</div>
 						<svg

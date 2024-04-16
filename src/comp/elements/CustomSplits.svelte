@@ -2,6 +2,8 @@
 	import type { AmountPreference } from '@cashu/cashu-ts';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import { onMount } from 'svelte';
+	import { unit } from '../../stores/settings';
+	import { formatAmount } from '../util/walletUtils';
 
 	export let preference: AmountPreference[];
 	export let amount: number;
@@ -155,11 +157,11 @@
 		</div>
 		<div class="flex items-center justify-center gap-2">
 			{#if amount}
-				{preferenceAmount} / {amount ?? 0} sats
+				{formatAmount(preferenceAmount ?? 0, $unit)} / {formatAmount(amount ?? 0, $unit)}
 				{#if amount - preferenceAmount > 0}
 					<div class="flex gap-1 items-center">
 						<p class="font-bold">|</p>
-						<p class="">{amount - preferenceAmount} sats</p>
+						<p class="">{formatAmount(amount - preferenceAmount, $unit)}</p>
 						<p>change</p>
 					</div>
 				{/if}

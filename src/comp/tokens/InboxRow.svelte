@@ -5,13 +5,19 @@
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { getAmountForTokenSet, getMintForToken, validateMintKeys } from '../util/walletUtils';
+	import {
+		formatAmount,
+		getAmountForTokenSet,
+		getMintForToken,
+		validateMintKeys
+	} from '../util/walletUtils';
 	import { toast } from '../../stores/toasts';
 	import { contacts } from '../../stores/contacts';
 	import type { Contact } from '../../model/contact';
 	import type { Mint } from '../../model/mint';
 	import { onMount } from 'svelte';
 	import * as walletActions from '../../actions/walletActions';
+	import { unit } from '../../stores/settings';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
@@ -86,7 +92,11 @@
 				nostrMessage.isAccepted = true;
 				return [nostrMessage, ...everythingElse];
 			});
-			toast('success', `Received ${getAmountForTokenSet(proofs)} sats`, 'Token received');
+			toast(
+				'success',
+				`Received ${formatAmount(getAmountForTokenSet(proofs), $unit)}`,
+				'Token received'
+			);
 		} catch (e) {
 			console.error(e);
 			toast('error', 'Error when receiving token', 'Token not received');
@@ -158,7 +168,7 @@
 			</div>
 		{/if}
 	</td>
-	<td>{getAmountForTokenSet(nostrMessage?.token?.token[0].proofs)}</td>
+	<td>{formatAmount(getAmountForTokenSet(nostrMessage?.token?.token[0].proofs), $unit)}</td>
 	<td>
 		<p class="hidden lg:flex">
 			{date.toLocaleString('en-us', {
@@ -190,7 +200,7 @@
 			<div class="grid grid-cols-5">
 				<p class="font-bold">Amount:</p>
 				<p class="col-span-4">
-					{getAmountForTokenSet(nostrMessage?.token?.token[0]?.proofs) ?? ''}
+					{formatAmount(getAmountForTokenSet(nostrMessage?.token?.token[0]?.proofs) ?? 0, $unit)}
 				</p>
 				<p class="font-bold">Mint:</p>
 				<p class="col-span-4">

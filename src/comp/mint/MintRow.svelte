@@ -2,13 +2,14 @@
 	import { mints } from '../../stores/mints';
 	import type { Mint } from '../../model/mint';
 	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import { toast } from '../../stores/toasts';
 	import { CashuMint } from '@cashu/cashu-ts';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import Pinger from '../elements/Pinger.svelte';
+	import { unit } from '../../stores/settings';
 
 	export let mintIndex: number;
 	export let mint: Mint;
@@ -323,7 +324,7 @@
 			</div>
 			<p class="flex-grow">
 				<span class="font-bold">
-					{getAmountForTokenSet(getTokensForMint(mint, $token))}
+					{formatAmount(getAmountForTokenSet(getTokensForMint(mint, $token)), $unit)}
 				</span>
 			</p>
 		</div>

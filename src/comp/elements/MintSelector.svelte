@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
+	import { unit } from '../../stores/settings';
 	import { token } from '../../stores/tokens';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
-	import { getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 
 	export let mint: Mint;
 	const formatMintText = (url: string) => {
@@ -77,7 +78,7 @@
 					{/if}
 					<div class="flex gap-1 items-center">
 						<p class="font-bold">
-							{getAmountForTokenSet(getTokensForMint(m, $token))}
+							{formatAmount(getAmountForTokenSet(getTokensForMint(m, $token)), $unit)}
 						</p>
 						<div>
 							<TokenIcon />

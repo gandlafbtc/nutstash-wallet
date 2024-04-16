@@ -12,9 +12,14 @@
 	} from '@cashu/cashu-ts';
 	import { updateCount } from '../../actions/walletActions';
 	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet, getKeysForKeysetId, getKeysForUnit } from '../util/walletUtils';
+	import {
+		formatAmount,
+		getAmountForTokenSet,
+		getKeysForKeysetId,
+		getKeysForUnit
+	} from '../util/walletUtils';
 	import { mnemonic, seed } from '../../stores/mnemonic';
-	import { checkNonPending, isRestoring } from '../../stores/settings';
+	import { checkNonPending, isRestoring, unit } from '../../stores/settings';
 	import { isOnboarded } from '../../stores/message';
 	import type { Mint } from '../../model/mint';
 	import { counts } from '../../stores/counts';
@@ -155,7 +160,7 @@
 									/>
 								</svg>
 								<span>
-									{s.found} ({s.amount} sats)
+									{s.found} ({formatAmount(s.amount ?? 0, $unit)})
 								</span>
 							</p>
 						{/if}

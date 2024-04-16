@@ -3,6 +3,7 @@
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import {
+		formatAmount,
 		getAmountForTokenSet,
 		getKeysForUnit,
 		getTokensForMint,
@@ -13,6 +14,7 @@
 	import * as walletActions from '../../actions/walletActions';
 	import MintSelector from '../elements/MintSelector.svelte';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
+	import { unit } from '../../stores/settings';
 
 	export let active;
 	let swapOutMint: Mint = $mints[1];
@@ -165,8 +167,7 @@
 				<div class="flex gap-1 items-center">
 					<TokenIcon />
 					<p class="font-bold">
-						{getAmountForTokenSet(getTokensForMint(swapOutMint, $token))}
-						sats
+						{formatAmount(getAmountForTokenSet(getTokensForMint(swapOutMint, $token)), $unit)}
 					</p>
 
 					<p class="">Available</p>
@@ -176,9 +177,9 @@
 					<div class="join flex items-center">
 						{#if fees !== undefined}
 							<div class="flex flex-col gap-1 items-start justify-start">
-								<p class="font-bold">{swapAmount} sats</p>
+								<p class="font-bold">{formatAmount(swapAmount, $unit)}</p>
 								<div class="flex gap-1 text-sm">
-									<p class="font-bold">-{fees} sats</p>
+									<p class="font-bold">-{formatAmount(fees, $unit)}</p>
 									<p>fee</p>
 								</div>
 							</div>

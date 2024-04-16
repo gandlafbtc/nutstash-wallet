@@ -127,3 +127,19 @@ export const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 		}
 	}, []);
 };
+
+export const formatAmount = (amount: number, unit: string, withSuffix = true): string => {
+	if (unit === 'sat') {
+		return formatSats(amount, withSuffix);
+	} else {
+		console.log(amount);
+		return formatSats(amount, withSuffix);
+	}
+};
+
+const formatSats = (amount: number, withSuffix: boolean): string => {
+	return (
+		new Intl.NumberFormat('en-US').format(amount) +
+		(withSuffix ? ' ' + (amount > 1 ? 'sats' : 'sat') : '')
+	);
+};

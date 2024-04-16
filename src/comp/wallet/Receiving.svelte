@@ -5,13 +5,14 @@
 	import { mints } from '../../stores/mints';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import type { Mint } from '../../model/mint';
-	import { getAmountForTokenSet, validateMintKeys } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, validateMintKeys } from '../util/walletUtils';
 	import ScanToken from '../elements/ScanToken.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
 	import { nostrPubKey, useExternalNostrKey } from '../../stores/nostr';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
 	import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
 	import { token } from '../../stores/tokens';
+	import { unit } from '../../stores/settings';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -59,7 +60,11 @@
 					receiveCustomSplits = preference;
 				}
 				const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits);
-				toast('success', `${getAmountForTokenSet(proofs)} sats received`, 'Tokens received!');
+				toast(
+					'success',
+					`${formatAmount(getAmountForTokenSet(proofs), $unit)} received`,
+					'Tokens received!'
+				);
 			}
 			resetState();
 		} catch (error) {
@@ -193,7 +198,7 @@
 				{#if mintId}
 					<div class="flex flex-col justify-center items-center">
 						<p class="text-8xl">
-							{amount === 0 ? '' : amount}
+							{formatAmount(amount === 0 ? 0 : amount, $unit, false)}
 						</p>
 						<p class="text-2xl">sats</p>
 

@@ -10,9 +10,10 @@
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
 	import { toast } from '../../stores/toasts';
-	import { getAmountForTokenSet, getKeysForUnit } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, getKeysForUnit } from '../util/walletUtils';
 	import InboxRow from './InboxRow.svelte';
 	import { receive } from '../../actions/walletActions';
+	import { unit } from '../../stores/settings';
 
 	$: page = 20;
 	$: nostrMessagesSub = $nostrMessages.slice(0, page);
@@ -65,11 +66,11 @@
 		}
 
 		if (totalReceived > 0) {
-			toast('success', `${totalReceived} sats received`, 'Received');
+			toast('success', `${formatAmount(totalReceived, $unit)} received`, 'Received');
 		}
 
 		if (totalSpent > 0) {
-			toast('info', `${totalSpent} sats were already redeemed`, 'Already redeemed');
+			toast('info', `${formatAmount(totalSpent, $unit)} were already redeemed`, 'Already redeemed');
 		}
 
 		if (hasError > 0) {

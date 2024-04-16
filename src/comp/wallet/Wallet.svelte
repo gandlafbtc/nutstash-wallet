@@ -3,13 +3,14 @@
 	import { mints } from '../../stores/mints';
 	import Tokens from '../tokens/Tokens.svelte';
 	import { onMount } from 'svelte';
-	import { getAmountForTokenSet } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet } from '../util/walletUtils';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import {
 		checkAutomatically,
 		checkNonPending,
 		checkPending,
-		isEncrypted
+		isEncrypted,
+		unit
 	} from '../../stores/settings';
 	import Minting from '../mint/Minting.svelte';
 	import Receive from './Receive.svelte';
@@ -71,22 +72,18 @@
 		<div class="flex items-center justify-center flex-col gap-5 w-full">
 			<div class="flex flex-col justify-center items-center">
 				<p class="text-8xl">
-					{$token.reduce((count, t) => {
-						return count + t.amount;
-					}, 0) ?? 0}
+					{formatAmount(getAmountForTokenSet($token), $unit, false)}
 				</p>
 				<div class="flex gap-2 items-center justify-center">
-					{#if !$checkAutomatically && ($checkNonPending || $checkPending)}
-						<CheckTokens></CheckTokens>
-					{/if}
 					<p class="text-4xl">sats</p>
 				</div>
-				<p class="text-md">
+				<p class="text-md pb-2">
 					(Pending
-					{$pendingTokens.reduce((count, t) => {
-						return count + t.amount;
-					}, 0) ?? 0})
+					{formatAmount(getAmountForTokenSet($pendingTokens), $unit, false)})
 				</p>
+				{#if !$checkAutomatically && ($checkNonPending || $checkPending)}
+					<CheckTokens></CheckTokens>
+				{/if}
 			</div>
 
 			<div class="flex flex-col gap-4">

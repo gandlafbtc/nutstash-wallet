@@ -12,6 +12,8 @@
 	import MintSelector from '../elements/MintSelector.svelte';
 	import * as walletActions from '../../actions/walletActions';
 	import CustomSplits from '../elements/CustomSplits.svelte';
+	import { formatAmount } from '../util/walletUtils';
+	import { unit } from '../../stores/settings';
 
 	export let mint: Mint = $mints[0];
 	export let active;
@@ -133,7 +135,7 @@
 				}
 				const { proofs } = await walletActions.mint(mint, amount, mintingHash, mintPreference);
 				if (proofs.length) {
-					toast('success', `${amount} sats ecash minted.`, 'Minted!');
+					toast('success', `${formatAmount(amount, $unit)} ecash minted.`, 'Minted!');
 					isComplete = true;
 				}
 			} else {
@@ -183,7 +185,7 @@
 				<div class="flex flex-col gap-2 items-center">
 					<p class="text-2xl font-bold">Receive</p>
 					<p class="text-7xl">
-						{amount}
+						{formatAmount(amount ?? 0, $unit, false)}
 					</p>
 					<p class="text-2xl font-bold">sats</p>
 					<p class="font-bold">at</p>
