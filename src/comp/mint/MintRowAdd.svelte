@@ -31,8 +31,8 @@
 	};
 </script>
 
-<div class="flex gap-2 rounded-xl justify-center items-center bg-base-300 p-2 lg:p-4">
-	<div class=" overflow-scroll scrollbar-hide w-48 sm:w-64 md:w-80 lg:w-96">
+<div class=" w-full flex gap-2 rounded-xl justify-center items-center bg-base-300 p-2 lg:p-4">
+	<div class=" overflow-scroll scrollbar-hide w-full">
 		{#if isPredefined}
 			<div class="flex flex-col lg:flex-row lg:items-center gap-2">
 				{url}

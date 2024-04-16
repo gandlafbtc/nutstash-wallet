@@ -3,6 +3,9 @@
 	import { nip19 } from 'nostr-tools';
 	import { QRCodeImage } from 'svelte-qrcode-image';
 	import { nostrPubKey, useExternalNostrKey, useNostr } from '../../stores/nostr';
+
+	export let isOffline: boolean = false
+
 	const getEncodedNpub = async () => {
 		if ($useExternalNostrKey) {
 			if (browser) {
@@ -27,10 +30,10 @@
 		<div class="flex items-center justify-center w-full">
 			<div class="flex flex-col gap-2 items-center">
 				<div class="flex items-center justify-center flex-col">
-					<div class="text-sm bg-accent text-accent-content rounded-t-lg p-1 px-2">
+					<div class="text-sm {isOffline?'bg-accent text-accent-content':'bg-secondary text-secondary-content'} rounded-t-lg p-1 px-2">
 						PubKey
 					</div>
-					<div class="border-accent border-2 rounded-md p-2">
+					<div class="{isOffline?'border-accent':'border-secondary'} border-2 rounded-md p-2">
 						<QRCodeImage text={npub} displayHeight={250} displayWidth={250} margin={2} />
 					</div>
 				</div>

@@ -30,8 +30,7 @@
 	};
 </script>
 
-<div class="flex flex-col justify-center items-center gap-5">
-	<div class="flex flex-col gap-3 bg-base-100 h-min p-5 lg:p-10 rounded-lg">
+	<div class="w-full h-full flex flex-col gap-3 bg-base-100 max-w-4xl text-center p-5 lg:p-10 rounded-lg">
 		<div class="flex flex-col gap-5">
 			<p class="text-lg font-bold">Encrypt wallet storage</p>
 			<p>Set up wallet encryption to keep your nuts safe.</p>
@@ -69,4 +68,3 @@
 			don't encrypt
 		</button>
 	</div>
-</div>

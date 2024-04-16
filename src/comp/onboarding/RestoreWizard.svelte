@@ -11,6 +11,7 @@
 	import MintRestoreCard from "./MintRestoreCard.svelte";
 	import { deriveSeedFromMnemonic } from "@cashu/cashu-ts";
 
+
 	let countStep = 50
 
 	let isAutosearched=false
@@ -81,6 +82,10 @@
 				</svg>
 			</div>
 		</div>
+		{:else}
+			<p class="pt-10">
+				Looking for mints? Visit  <a href="https://bitcoinmints.com/" target="_blank" rel="noopener noreferrer" class="link link-secondary">https://bitcoinmints.com/</a> to find your mints
+			</p>
 		{/if}
 		{#each $mints as mint, i}
 			 <MintRestoreCard {mint} {countStep} bind:mintAutoSearch={mintSearches[i]}>

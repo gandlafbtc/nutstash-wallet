@@ -321,18 +321,20 @@
 					<div>
 						<button class="btn btn-sm" on:click={() => (isOffline = false)}>I'm online</button>
 					</div>
-					<div class="gap-2 flex flex-col items-center justify-center">
-						<NostrReceiveQr></NostrReceiveQr>
+					{:else}
+					<div>
+						<button class="btn btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
+					</div>
+					{/if}
+					<div class="gap-2 flex flex-col items-center justify-center w-full">
+						<div class="{isOffline?'w-80':'w-40'} transition-transform">
+							<NostrReceiveQr {isOffline}></NostrReceiveQr>
+						</div>
 						<p class="text-neutral">
 							Let the sender scan this QR code to lock the ecash to your PubKey or send it to you
 							over nostr.
 						</p>
 					</div>
-				{:else}
-					<div>
-						<button class="btn btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
-					</div>
-				{/if}
 				{#if isOffline && !lockPubs.length && isValid}
 					<p class="text-warning">
 						Token is not locked! Offline receiving unlocked ecash is double-spendable by the sender.

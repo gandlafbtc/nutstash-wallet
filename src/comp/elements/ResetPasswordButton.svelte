@@ -30,8 +30,8 @@
 		
 		<div class="modal-action">
 			<label for="reset-password-modal" class="btn btn-outline">cancel</label>
-			<button on:click={removeEncryption} class="btn btn-error">remove encryption</button>
-			<button on:click={setNewPassword} class="btn btn-success">set new password</button>
+			<button on:click={removeEncryption} class="btn btn-error">Decrypt</button>
+			<button on:click={setNewPassword} class="btn btn-success">New password</button>
 		</div>
 	</div>
 </div>

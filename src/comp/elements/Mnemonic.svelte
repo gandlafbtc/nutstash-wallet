@@ -70,7 +70,7 @@
 			Or copy it
 		</button>
 	</div>
-	<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+	<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-4xl">
 		{#each $mnemonic as word, i}
 			<div class="flex gap-1">
 				<p>{i + 1}.</p>

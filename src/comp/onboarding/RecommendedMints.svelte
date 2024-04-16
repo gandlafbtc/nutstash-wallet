@@ -11,7 +11,6 @@
 		'https://testnut.cashu.space'
 	];
 
-	export let restore: undefined | (() => void);
 	export let isSetupMints = false
 
 	let isLoading = false
@@ -34,12 +33,7 @@
 
 	const persistMints = () => {
 		mints.set($untrustedMints);
-		if (restore) {
-			isLoading = true
-			restore();
-		} else {
 			isOnboarded.set(true);
-		}
 	};
 
 	const afterAdd =(url:string) => {
@@ -51,24 +45,19 @@
 
 <!-- {#await getMints() then mints} -->
 
-<div class="bg-base-100 rounded-lg flex justify-center lg:h-3/4 scale-90">
+<div class="">
 	<div class="flex flex-col gap-4 w-full items-center justify-start p-2">
 		<div class="py-4 flex flex-col items-center gap-3">
-			{#if restore}
-				<h1 class="text-xl  font-bold text-center">Mints to restore</h1>
-				<div class="p-3 lg:w-[50%]">Add the mints you want to restore tokens from</div>
-			{:else}
 				<h1 class="text-xl font-bold text-center">Add some mints</h1>
 				<div class="p-3 lg:w-[50%] flex flex-col gap-3">
 					<p>Remember, the mint you select will have custody over your satoshis.</p>
 					<p>
 						You will also need to remember from which mints you hold ecash, in order to be able to
-						restore them from seed.
+						restore them from your seed phrase.
 					</p>
 				</div>
-			{/if}
 		</div>
-		<div class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4 w-full">
 			{#each someMints as url}
 				<MintRowAdd {url} isPredefined={true} afterAdd={() => {}}>
 					{#if url === 'https://testnut.cashu.space'}
@@ -93,16 +82,12 @@
 			{:else}
 				 confirm
 			{/if}
-			</button>
-			<button
-			class="link"
-			on:click={()=>{isSetupMints=false
-				goto("/#4")}}
-			>
-			back
 		</button>
-			
-			
+		{#if !$untrustedMints.length}
+			<button class="link" on:click={persistMints}>
+				skip
+			</button>
+		{/if}
 		</div>
 	</div>
 </div>
