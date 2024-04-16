@@ -24,7 +24,7 @@
 
 	onMount(() => {
 		const keyDown = (e: KeyboardEvent) => {
-			if ( e.key === 'R') {
+			if (e.key === 'R') {
 				active = 'receive';
 			} else if (e.key === 'S') {
 				if ($mints.length) {

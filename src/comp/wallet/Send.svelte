@@ -15,7 +15,7 @@
 	import { showShortCuts } from '../../stores/showShortCuts';
 
 	export let active: string;
-	let send: ()=>Promise<void>;
+	let send: () => Promise<void>;
 	let mint = $mints[0];
 	let amount: number | undefined = undefined;
 	let isCoinSelection = false;
@@ -48,7 +48,7 @@
 
 	$: {
 		if (!/^[0-9]*$/.test(amount)) {
-			amount = "";
+			amount = '';
 		}
 	}
 
@@ -154,7 +154,7 @@
 					</div>
 				</div>
 				<div class="h-52 flex flex-col items-center">
-				{#if isSend || (invoice && amount)}
+					{#if isSend || (invoice && amount)}
 						<input
 							autofocus
 							readonly={isSend ? false : true}
@@ -180,8 +180,8 @@
 								<p>fees</p>
 							</div>
 						{/if}
-						{/if}
-					</div>
+					{/if}
+				</div>
 			</div>
 		{/if}
 

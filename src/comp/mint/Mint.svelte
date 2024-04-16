@@ -4,11 +4,10 @@
 	import MintRow from './MintRow.svelte';
 	import MintSwap from './MintSwap.svelte';
 	import AddMintForm from '../elements/AddMintForm.svelte';
-	
+
 	let activeMint = $mints[0];
 
 	let active = 'base';
-
 </script>
 
 {#if active === 'base'}

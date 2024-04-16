@@ -48,12 +48,10 @@
 		{#if $isLoaded}
 			{#if !$isOnboarded}
 				<Onboarding />
+			{:else if $isRestoring}
+				<RestoreWizard></RestoreWizard>
 			{:else}
-				{#if $isRestoring}
-					 <RestoreWizard></RestoreWizard>
-				{:else}
-					 <Base></Base>
-				{/if}
+				<Base></Base>
 			{/if}
 		{:else}
 			<Loading></Loading>

@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getEncodedToken, type MintKeys, type MintKeyset } from '@cashu/cashu-ts';
+	import {
+		CashuMint,
+		CashuWallet,
+		getEncodedToken,
+		type MintKeys,
+		type MintKeyset
+	} from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
@@ -43,7 +49,7 @@
 					keysets: keysets
 				};
 
-				const wallet = new CashuWallet(mint, getKeysForUnit( keys));
+				const wallet = new CashuWallet(mint, getKeysForUnit(keys));
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));

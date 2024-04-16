@@ -52,19 +52,11 @@
 		}
 
 		if ($useExternalNostrKey && !window.nostr) {
-			toast(
-				'warning',
-				'Install extension or use local keys',
-				'No nostr Keys present'
-			);
+			toast('warning', 'Install extension or use local keys', 'No nostr Keys present');
 			return;
 		}
 		if ($useExternalNostrKey && (await !window.nostr.getPublicKey())) {
-			toast(
-				'warning',
-				'Add a key to nostr extension.',
-				'No key in nostr extension'
-			);
+			toast('warning', 'Add a key to nostr extension.', 'No key in nostr extension');
 			return;
 		}
 		if (!$useExternalNostrKey && (!$nostrPubKey || !$nostrPrivKey)) {

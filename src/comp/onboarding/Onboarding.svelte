@@ -1,11 +1,12 @@
 <script>
-	import OnboardingCreate from "./OnboardingCreate.svelte";
-import OnboardingInfo from "./OnboardingInfo.svelte";
-	import OnboardingSelect from "./OnboardingSelect.svelte";
-	import RecommendedMints from "./RecommendedMints.svelte";
-	import RestoreFromSeed from "./RestoreFromSeed.svelte";
-	let step = 'info'
+	import OnboardingCreate from './OnboardingCreate.svelte';
+	import OnboardingInfo from './OnboardingInfo.svelte';
+	import OnboardingSelect from './OnboardingSelect.svelte';
+	import RecommendedMints from './RecommendedMints.svelte';
+	import RestoreFromSeed from './RestoreFromSeed.svelte';
+	let step = 'info';
 </script>
+
 <div class="flex p-2 items-center flex-col gap-2 w-full h-full bg-base-100 rounded-lg max-w-5xl">
 	{#if step === 'info'}
 		<OnboardingInfo bind:step></OnboardingInfo>
@@ -14,12 +15,12 @@ import OnboardingInfo from "./OnboardingInfo.svelte";
 		<OnboardingSelect bind:step></OnboardingSelect>
 	{/if}
 	{#if step === 'create'}
-		 <OnboardingCreate bind:step></OnboardingCreate>
+		<OnboardingCreate bind:step></OnboardingCreate>
 	{/if}
 	{#if step === 'mints'}
-		 <RecommendedMints></RecommendedMints>
+		<RecommendedMints></RecommendedMints>
 	{/if}
 	{#if step === 'restore'}
-		 <RestoreFromSeed bind:step></RestoreFromSeed>
+		<RestoreFromSeed bind:step></RestoreFromSeed>
 	{/if}
 </div>

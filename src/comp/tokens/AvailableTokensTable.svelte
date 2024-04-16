@@ -15,7 +15,7 @@
 	$: page = 20;
 	$: tokenSelection = isPending ? $pendingTokens : $token;
 	$: tokenFromMint = mint
-		? tokenSelection.filter((t: Proof) => mint?.keysets.map(k=>k.id).includes(t.id))
+		? tokenSelection.filter((t: Proof) => mint?.keysets.map((k) => k.id).includes(t.id))
 		: tokenSelection;
 	$: tokenSub = tokenFromMint.slice(0, page);
 	$: selectedTokens = tokenSub.filter((t, i) => selectedTokensBool[i]);

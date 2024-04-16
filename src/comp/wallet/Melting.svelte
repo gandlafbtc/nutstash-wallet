@@ -23,27 +23,27 @@
 	let isPayable = false;
 	let isLoading = false;
 	let isPaySuccess = false;
-	let memo = ''
-	let meltQuote: MeltQuoteResponse
+	let memo = '';
+	let meltQuote: MeltQuoteResponse;
 
-	onMount(()=>{
+	onMount(() => {
 		if (invoice) {
-			getMeltQuote()
+			getMeltQuote();
 		}
-	})
+	});
 
 	const getMeltQuote = async () => {
 		try {
-			meltQuote = await walletActions.meltQuote(mint, invoice)
-			fees = meltQuote.fee_reserve
-			amount = meltQuote.amount
-			memo = decode(invoice).description
-			isPayable = true
+			meltQuote = await walletActions.meltQuote(mint, invoice);
+			fees = meltQuote.fee_reserve;
+			amount = meltQuote.amount;
+			memo = decode(invoice).description;
+			isPayable = true;
 		} catch (error) {
-			fees = 0
-			amount = 0
-			isPayable = false
-			toast('warning', error?.message, 'Oops')
+			fees = 0;
+			amount = 0;
+			isPayable = false;
+			toast('warning', error?.message, 'Oops');
 		}
 	};
 
@@ -82,7 +82,7 @@
 	};
 	const resetState = () => {
 		invoice = '';
-		memo=''
+		memo = '';
 		amount = 0;
 		fees = 0;
 		isPayable = false;
@@ -92,7 +92,7 @@
 		activeS = 'send';
 		processing = false;
 	};
-	
+
 	function scanPay() {
 		activeS = 'send-scan';
 	}
@@ -168,7 +168,12 @@
 			</div>
 		</div>
 		<div class="flex gap-1 justify-center">
-			<input type="text" class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80" placeholder="memo" bind:value={memo}>
+			<input
+				type="text"
+				class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80"
+				placeholder="memo"
+				bind:value={memo}
+			/>
 		</div>
 		<CoinSelection amount={amount + fees} {mint} bind:selectedTokens bind:isCoinSelection />
 

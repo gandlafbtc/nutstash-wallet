@@ -4,7 +4,7 @@
 	export let message: string;
 	export let timer;
 
-	let element: HTMLDivElement
+	let element: HTMLDivElement;
 
 	let closed = false;
 </script>
@@ -23,7 +23,7 @@
 >
 	<div class="flex w-full justify-between">
 		<div class="flex mt-1 gap-1 flex-col">
-			<button class="btn btn-ghost btn-circle btn-xs" on:click={() => (element.remove())}>
+			<button class="btn btn-ghost btn-circle btn-xs" on:click={() => element.remove()}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"
@@ -99,7 +99,10 @@
 			<div class="break-words font-bold text-sm w-64">
 				{messageTitle}
 			</div>
-			<div class="inline-block h-auto break-all text-xs w-64 leading-tight" style="overflow-wrap: break-all;">
+			<div
+				class="inline-block h-auto break-all text-xs w-64 leading-tight"
+				style="overflow-wrap: break-all;"
+			>
 				<span class="min-w-0 max-w-64 flex overflow-clip">
 					{message}
 				</span>
@@ -108,6 +111,6 @@
 	</div>
 
 	<div class="w-full bg-neutral-content h-1 bg-opacity-50">
-		<div style="width: {$timer}%;" class="h-1 bg-neutral-content "></div>
+		<div style="width: {$timer}%;" class="h-1 bg-neutral-content"></div>
 	</div>
 </div>

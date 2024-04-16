@@ -13,7 +13,6 @@
 	import { mnemonic, seed } from '../../stores/mnemonic';
 	import { deriveSeedFromMnemonic } from '@cashu/cashu-ts';
 
-	
 	$activeTab = 'wallet';
 
 	const changeTab = (tabName: string) => {
@@ -22,7 +21,7 @@
 
 	onMount(() => {
 		if (!$nostrPubKey && !$nostrPrivKey) {
-			createNewNostrKeys()
+			createNewNostrKeys();
 		}
 		setTimeout(() => {
 			if ($mnemonic.length) {

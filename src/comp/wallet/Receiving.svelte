@@ -49,7 +49,7 @@
 				return;
 			}
 			if (isOffline) {
-				const proofs = walletActions.receiveOffline(encodedToken)
+				const proofs = walletActions.receiveOffline(encodedToken);
 
 				toast('info', `Receive token when you are online`, 'Offline token added!');
 			} else {
@@ -80,14 +80,14 @@
 	}
 
 	const validateToken = () => {
-		lockPubs = []
+		lockPubs = [];
 		if (!encodedToken) {
 			isToken = false;
-			isValid = false
+			isValid = false;
 			return;
 		}
 		isToken = true;
-		isValid =true
+		isValid = true;
 		amount = 0;
 		try {
 			const token = getDecodedToken(encodedToken);
@@ -115,7 +115,7 @@
 			mintId = '';
 			amount = 0;
 			isToken = false;
-			isValid = false
+			isValid = false;
 			toast('warning', 'Could not decode Token', 'The Token is not valid');
 		}
 	};
@@ -321,20 +321,20 @@
 					<div>
 						<button class="btn btn-sm" on:click={() => (isOffline = false)}>I'm online</button>
 					</div>
-					{:else}
+				{:else}
 					<div>
 						<button class="btn btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
 					</div>
-					{/if}
-					<div class="gap-2 flex flex-col items-center justify-center w-full">
-						<div class="{isOffline?'w-80':'w-40'} transition-transform">
-							<NostrReceiveQr {isOffline}></NostrReceiveQr>
-						</div>
-						<p class="text-neutral">
-							Let the sender scan this QR code to lock the ecash to your PubKey or send it to you
-							over nostr.
-						</p>
+				{/if}
+				<div class="gap-2 flex flex-col items-center justify-center w-full">
+					<div class="{isOffline ? 'w-80' : 'w-40'} transition-transform">
+						<NostrReceiveQr {isOffline}></NostrReceiveQr>
 					</div>
+					<p class="text-neutral">
+						Let the sender scan this QR code to lock the ecash to your PubKey or send it to you over
+						nostr.
+					</p>
+				</div>
 				{#if isOffline && !lockPubs.length && isValid}
 					<p class="text-warning">
 						Token is not locked! Offline receiving unlocked ecash is double-spendable by the sender.
@@ -351,7 +351,7 @@
 							Token is locked to a different pubkey and cannot be claimed by this wallet.
 						</p>
 					{/if}
-				{:else if (!isOffline) && lockPubs.length === 1 && isValid}
+				{:else if !isOffline && lockPubs.length === 1 && isValid}
 					{#if lockPubs[0] === $nostrPubKey}
 						<p class="text-success">Token is locked to your pubkey.</p>
 					{:else}

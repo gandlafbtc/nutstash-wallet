@@ -351,14 +351,14 @@
 			<div class="flex gap-2 justify-center py-2 px-3 bg-base-200 rounded-lg flex-col items-start">
 				<div class="flex items-center gap-2 justify-center">
 					<p class="font-bold">Peg-in</p>
-					{#if !mint.info?.nuts["4"]?.disabled}
+					{#if !mint.info?.nuts['4']?.disabled}
 						<Pinger colorClass="success"></Pinger>
 					{:else}
 						<Pinger colorClass="error"></Pinger>
 					{/if}
 				</div>
-				{#if !mint.info?.nuts["4"]?.disabled}
-					{#each mint.info?.nuts["4"].methods ?? [] as method}
+				{#if !mint.info?.nuts['4']?.disabled}
+					{#each mint.info?.nuts['4'].methods ?? [] as method}
 						<div class="text-xs flex gap-1 join">
 							<p class="flex items-center gap-1 join-item bg-primary p-1 bg-opacity-35">
 								<svg
@@ -401,14 +401,14 @@
 			<div class="flex flex-col gap-2 justify-center items-start py-2 px-3 bg-base-200 rounded-lg">
 				<div class="flex items-center gap-2 justify-center">
 					<p class="font-bold">Peg-out</p>
-					{#if !mint.info?.nuts["5"]?.disabled}
+					{#if !mint.info?.nuts['5']?.disabled}
 						<Pinger colorClass="success"></Pinger>
 					{:else}
 						<Pinger colorClass="error"></Pinger>
 					{/if}
 				</div>
-				{#if !mint.info?.nuts["5"]?.disabled}
-					{#each mint.info?.nuts["5"].methods ?? [] as method}
+				{#if !mint.info?.nuts['5']?.disabled}
+					{#each mint.info?.nuts['5'].methods ?? [] as method}
 						<div class="text-xs flex gap-1 join">
 							<p class="flex items-center gap-1 join-item bg-primary p-1 bg-opacity-35">
 								<svg
@@ -461,7 +461,7 @@
 				class="flex gap-2 justify-center items-center text-sm py-1 px-2 rounded-full bg-base-200"
 			>
 				<p>Check-state</p>
-				{#if mint.info?.nuts["7"]?.supported}
+				{#if mint.info?.nuts['7']?.supported}
 					<Pinger colorClass="success"></Pinger>
 				{:else}
 					<Pinger colorClass="error"></Pinger>
@@ -471,7 +471,7 @@
 				class="flex gap-2 justify-center items-center text-sm py-1 px-2 rounded-full bg-base-200"
 			>
 				<p>Fee-return</p>
-				{#if mint.info?.nuts["8"]?.supported}
+				{#if mint.info?.nuts['8']?.supported}
 					<Pinger colorClass="success"></Pinger>
 				{:else}
 					<Pinger colorClass="error"></Pinger>
@@ -481,7 +481,7 @@
 				class="flex gap-2 justify-center items-center text-sm py-1 px-2 rounded-full bg-base-200"
 			>
 				<p>Restore</p>
-				{#if mint.info?.nuts["9"]?.supported}
+				{#if mint.info?.nuts['9']?.supported}
 					<Pinger colorClass="success"></Pinger>
 				{:else}
 					<Pinger colorClass="error"></Pinger>
@@ -491,7 +491,7 @@
 				class="flex gap-2 justify-center items-center text-sm py-1 px-2 rounded-full bg-base-200"
 			>
 				<p>Script</p>
-				{#if mint.info?.nuts["10"]?.supported}
+				{#if mint.info?.nuts['10']?.supported}
 					<Pinger colorClass="success"></Pinger>
 				{:else}
 					<Pinger colorClass="error"></Pinger>
@@ -501,7 +501,7 @@
 				class="flex gap-2 justify-center items-center text-sm py-1 px-2 rounded-full bg-base-200"
 			>
 				<p>P2PK</p>
-				{#if mint.info?.nuts["11"]?.supported}
+				{#if mint.info?.nuts['11']?.supported}
 					<Pinger colorClass="success"></Pinger>
 				{:else}
 					<Pinger colorClass="error"></Pinger>
@@ -511,7 +511,7 @@
 				class="flex gap-2 justify-center items-center text-sm py-1 px-2 rounded-full bg-base-200"
 			>
 				<p>DLEQ</p>
-				{#if mint.info?.nuts["12"]?.supported}
+				{#if mint.info?.nuts['12']?.supported}
 					<Pinger colorClass="success"></Pinger>
 				{:else}
 					<Pinger colorClass="error"></Pinger>

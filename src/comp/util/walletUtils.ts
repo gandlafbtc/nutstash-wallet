@@ -19,35 +19,39 @@ export const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	return tokenSubset;
 };
 
-export const getKeysForUnit = (keys: MintKeys[], unit='sat'): MintKeys | undefined => {
-	return keys.find((k)=> {return k.unit===unit})
-}
-export const getKeysForKeysetId = (keys: MintKeys[], keysetId:string): MintKeys | undefined => {
-	return keys.find((k)=> {return k.id===keysetId})
-}
+export const getKeysForUnit = (keys: MintKeys[], unit = 'sat'): MintKeys | undefined => {
+	return keys.find((k) => {
+		return k.unit === unit;
+	});
+};
+export const getKeysForKeysetId = (keys: MintKeys[], keysetId: string): MintKeys | undefined => {
+	return keys.find((k) => {
+		return k.id === keysetId;
+	});
+};
 
 export const validateMintKeys = (keys: MintActiveKeys): boolean => {
 	let isValid = true;
 	try {
-		const keysets = keys.keysets.map(ks=>ks.keys)
+		const keysets = keys.keysets.map((ks) => ks.keys);
 		if (!keysets.length) {
 			return false;
 		}
 		if (!keysets) {
 			return false;
 		}
-		keysets.forEach((ks)=>{
+		keysets.forEach((ks) => {
 			const allKeys = Object.keys(ks);
 			allKeys.forEach((k) => {
-			//try parse int?
-			if (isNaN(k)) {
-				isValid = false;
-			}
-			if (!isPow2(k)) {
-				isValid = false;
-			}
+				//try parse int?
+				if (isNaN(k)) {
+					isValid = false;
+				}
+				if (!isPow2(k)) {
+					isValid = false;
+				}
+			});
 		});
-	})
 		return isValid;
 	} catch (error) {
 		return false;
@@ -66,7 +70,7 @@ export const isPow2 = (number: number) => {
  */
 export const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
 	const tokenSubset = tokens.filter((token) => {
-		if (mint?.keysets.map(k=> k.id).includes(token.id)) {
+		if (mint?.keysets.map((k) => k.id).includes(token.id)) {
 			return true;
 		} else {
 			return false;
@@ -93,7 +97,7 @@ export const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof
 export const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
 	let mint: Mint | undefined = undefined;
 	mints.forEach((m) => {
-		if (m.keysets.map(k=> k.id).includes(token.id)) {
+		if (m.keysets.map((k) => k.id).includes(token.id)) {
 			mint = m;
 		}
 	});
@@ -123,4 +127,3 @@ export const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 		}
 	}, []);
 };
-

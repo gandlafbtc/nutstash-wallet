@@ -2,15 +2,15 @@
 	import type { Mint } from '../../model/mint';
 	import KeysetRestoreElement from './KeysetRestoreElement.svelte';
 
-	let ksSearches: (()=>Promise<void>)[] = []
+	let ksSearches: (() => Promise<void>)[] = [];
 
-	export let mint: Mint
-	export let countStep: number
+	export let mint: Mint;
+	export let countStep: number;
 	export const mintAutoSearch = () => {
 		for (const f of ksSearches) {
-			f()
+			f();
 		}
-	}
+	};
 </script>
 
 <div class="m-2 bg-base-200 w-full rounded-lg p-2 flex gap-2 flex-col">
@@ -19,9 +19,10 @@
 			{mint.mintURL}
 		</p>
 	</div>
-	<div class="flex flex-col gap-2 ">
-		{#each mint.keysets.sort((a,b)=> (a.active?0:1) - (b.active?0:1) ) as ks, i}
-			<KeysetRestoreElement ks={ks} {mint} {countStep} bind:ksAutoSearch={ksSearches[i]}></KeysetRestoreElement>
+	<div class="flex flex-col gap-2">
+		{#each mint.keysets.sort((a, b) => (a.active ? 0 : 1) - (b.active ? 0 : 1)) as ks, i}
+			<KeysetRestoreElement {ks} {mint} {countStep} bind:ksAutoSearch={ksSearches[i]}
+			></KeysetRestoreElement>
 		{/each}
 	</div>
 </div>

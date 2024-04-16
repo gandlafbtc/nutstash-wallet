@@ -29,6 +29,6 @@
 			<button class="pt-3 text-center h-full link link-primary" on:click={reload}> reload </button>
 		</div>
 	</div>
-	{:else}
-	<slot></slot>
+{:else}
+	<slot />
 {/if}

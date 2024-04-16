@@ -1,8 +1,7 @@
 <script lang="ts">
 	import Mnemonic from './Mnemonic.svelte';
 
-	let seedModal: HTMLDialogElement
-
+	let seedModal: HTMLDialogElement;
 </script>
 
 <button class="btn btn-primary" on:click={() => seedModal.showModal()}>show</button>

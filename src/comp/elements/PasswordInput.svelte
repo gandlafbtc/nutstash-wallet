@@ -41,11 +41,10 @@
 	>
 		<div class="bg-base-100 max-w-2xl rounded-2xl p-10 flex flex-col gap-4 items-center">
 			<div class="w-20 h-20">
-
-				<img src="/nutstash_app.svg" alt="">
+				<img src="/nutstash_app.svg" alt="" />
 			</div>
-				<p class="text-lg font-bold">Wallet is locked.</p>
-				<p>Enter your password to unlock.</p>
+			<p class="text-lg font-bold">Wallet is locked.</p>
+			<p>Enter your password to unlock.</p>
 			<form class="flex flex-col gap-2" on:submit|preventDefault={unlockWallet}>
 				<input
 					type="password"

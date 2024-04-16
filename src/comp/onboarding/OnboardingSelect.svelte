@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { generateNewMnemonic } from "@cashu/cashu-ts";
-	import { isOnboarded } from "../../stores/message";
-	import { isEncrypted } from "../../stores/settings";
-	import { mnemonic } from "../../stores/mnemonic";
+	import { generateNewMnemonic } from '@cashu/cashu-ts';
+	import { isOnboarded } from '../../stores/message';
+	import { isEncrypted } from '../../stores/settings';
+	import { mnemonic } from '../../stores/mnemonic';
 
 	export let step;
 	const skip = () => {
-		isEncrypted.set(false)
-		isOnboarded.set(true)
+		isEncrypted.set(false);
+		isOnboarded.set(true);
 	};
 	const create = () => {
 		const m = generateNewMnemonic();
 		mnemonic.set(m.split(' '));
-		step = 'create'
-	}
+		step = 'create';
+	};
 </script>
 
 <img src="/ns-naked.svg" class="w-52 mt-32" alt="" />
@@ -44,7 +44,8 @@
 	</div>
 </button>
 
-<button on:click={create}
+<button
+	on:click={create}
 	class="items-center gap-3 flex rounded-lg border border-primary p-3 w-full max-w-4xl m-4 hover:bg-primary text-primary hover:text-neutral-content transition-colors duration-300 cursor-pointer"
 >
 	<svg class="w-10 h-10" viewBox="0 0 25 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +62,8 @@
 	</div>
 </button>
 
-<button on:click={()=> step = "restore"}
+<button
+	on:click={() => (step = 'restore')}
 	class="items-center gap-3 flex rounded-lg border border-success p-3 w-full max-w-4xl m-4 hover:bg-success text-success hover:text-neutral-content transition-colors duration-300 cursor-pointer"
 >
 	<svg class="w-10 h-10" viewBox="0 0 25 23" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

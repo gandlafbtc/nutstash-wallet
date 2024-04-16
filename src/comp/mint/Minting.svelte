@@ -25,7 +25,7 @@
 	let isComplete: boolean = false;
 	let preference: AmountPreference[];
 	let useAmountPreference = false;
-	let memo = ''
+	let memo = '';
 
 	$: {
 		amount;
@@ -165,7 +165,7 @@
 		mintingHash = undefined;
 		isComplete = false;
 		doMint = false;
-		memo=''
+		memo = '';
 	};
 </script>
 
@@ -229,7 +229,12 @@
 					</button>
 				</div>
 				<div class="flex gap-1 justify-center pt-3">
-					<input type="text" class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80" placeholder="memo (internal)" bind:value={memo}>
+					<input
+						type="text"
+						class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80"
+						placeholder="memo (internal)"
+						bind:value={memo}
+					/>
 				</div>
 				<div class="h-8">
 					{#if isPolling}

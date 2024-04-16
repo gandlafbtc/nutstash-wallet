@@ -91,10 +91,10 @@ nostrRelays.subscribe((value) => {
 const nostrPool = writable<RelayPool>();
 
 const createNewNostrKeys = () => {
-	const priv = schnorr.utils.randomPrivateKey()
+	const priv = schnorr.utils.randomPrivateKey();
 	nostrPrivKey.set(bytesToHex(priv));
 	nostrPubKey.set(bytesToHex(secp256k1.getPublicKey(priv)));
-}
+};
 export {
 	useNostr,
 	nostrPrivKey,

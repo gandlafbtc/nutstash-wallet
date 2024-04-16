@@ -40,7 +40,7 @@
 		const mint = new CashuMint(nostrMessage.token.token[0].mint);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
-				toast('warning', 'Mint already added', "Mint not added");
+				toast('warning', 'Mint already added', 'Mint not added');
 				return;
 			}
 			isLoadingMint = true;
@@ -62,11 +62,7 @@
 			toast('success', 'Mint is ready', 'Mint added');
 			hasMint = true;
 		} catch {
-			toast(
-				'error',
-				'Could not load keys',
-				'Mint not added'
-			);
+			toast('error', 'Could not load keys', 'Mint not added');
 			throw new Error('Could not add Mint.');
 		} finally {
 			isLoadingMint = false;
@@ -82,7 +78,7 @@
 			}
 			const encodedProofs = getEncodedToken(nostrMessage.token);
 			isLoading = true;
-			const {proofs}= await walletActions.receive(mint, encodedProofs);
+			const { proofs } = await walletActions.receive(mint, encodedProofs);
 			nostrMessages.update((state) => {
 				const everythingElse = state.filter((nM) => {
 					return nM.event.id !== nostrMessage.event.id;

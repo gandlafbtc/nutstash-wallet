@@ -2,7 +2,12 @@
 	import { token } from '../../stores/tokens';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
-	import { getAmountForTokenSet, getKeysForUnit, getTokensForMint, getTokensToSend } from '../util/walletUtils';
+	import {
+		getAmountForTokenSet,
+		getKeysForUnit,
+		getTokensForMint,
+		getTokensToSend
+	} from '../util/walletUtils';
 	import { toast } from '../../stores/toasts';
 	import { CashuMint, CashuWallet, type MeltQuoteResponse } from '@cashu/cashu-ts';
 	import * as walletActions from '../../actions/walletActions';
@@ -19,7 +24,7 @@
 	let isPrepare: boolean;
 	let isPerform: boolean;
 	let isComplete: boolean;
-	let meltQuote: MeltQuoteResponse
+	let meltQuote: MeltQuoteResponse;
 
 	const inverseMints = () => {
 		const c = swapInMint;
@@ -49,14 +54,10 @@
 			const cashuSwapOutWallet = new CashuWallet(cashuSwapOutMint, getKeysForUnit(swapInMint.keys));
 
 			meltQuote = await cashuSwapOutWallet.getMeltQuote(invoice);
-			
+
 			if (meltQuote.fee_reserve + swapAmount > availableTokens) {
 				isPrepare = false;
-				toast(
-					'warning',
-					'Swap amount with fee exceed available amount',
-					'Cannot perform swap'
-				);
+				toast('warning', 'Swap amount with fee exceed available amount', 'Cannot perform swap');
 				return;
 			}
 			fees = meltQuote.fee_reserve;
@@ -75,7 +76,7 @@
 				swapAmount + fees,
 				getTokensForMint(swapOutMint, $token)
 			);
-			const isPaid = await walletActions.melt(swapOutMint, meltQuote, proofsToSend,invoice);
+			const isPaid = await walletActions.melt(swapOutMint, meltQuote, proofsToSend, invoice);
 			if (isPaid) {
 				const { proofs } = await walletActions.mint(swapInMint, swapAmount, paymentHash);
 			}
@@ -94,7 +95,7 @@
 		fees = undefined;
 		paymentHash = undefined;
 		invoice = undefined;
-		meltQuote = undefined
+		meltQuote = undefined;
 		isPrepare = false;
 		isPerform = false;
 		isComplete = false;

@@ -29,177 +29,22 @@
 <div />
 {#if !setUpMint}
 	<div class="flex items-center col-span-2 text-white">
-		<div class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2 h-full lg:h-3/4">
+		<div
+			class="flex flex-col w-full items-center justify-center text-center col-span-2 gap-2 h-full lg:h-3/4"
+		>
 			<div class="carousel max-w-[25rem] md:max-w-md lg:max-w-lg xl:max-w-xl h-full">
 				<div id="1" class="carousel-item w-full flex justify-center h-full">
-					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
-
+					<div
+						class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]"
+					>
 						<div class="w-32 h-32">
 							<img src="/nutstash_app.svg" alt="" />
-					</div>
-					<h1 class="text-lg font-bold">Welcome to nutstash</h1>
-					<p>Nutstash is still in beta development. Please use at own risk.</p>
-					<div class="flex gap-2 items-center h-24">
-						<a href="#2" class="">
-							<span class="relative flex h-10 w-10">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-									/>
-								</svg>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="w-10 h-10 relative inline-flex rounded-full"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-									/>
-								</svg>
-							</span>
-						</a>
-					</div>
-				</div>
-				</div>
-				<div id="2" class="carousel-item w-full flex justify-center">
-					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
-					
-					<img src="/icons/shades.svg" alt="shades" class=" w-32" />
-					<h1 class="text-lg font-bold">Ecash for Privacy</h1>
-					<p>
-						Nutstash is a custodial lightning wallet that uses the Cashu ecash protocol to protect
-						your privacy.
-					</p>
-					<div class="flex gap-2 items-center h-24">
-						<a href="#3" class="">
-							<span class="relative flex h-10 w-10">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-									/>
-								</svg>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="w-10 h-10 relative inline-flex rounded-full"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-									/>
-								</svg>
-							</span>
-						</a>
-					</div>
-					</div>
-				</div>
-				<div id="3" class="carousel-item w-full flex justify-center">
-					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
-					<img src="/icons/stache.svg" alt="stache" class="w-32" />
-					<h1 class="text-lg font-bold">Transact Anonymously</h1>
-					<p>
-						Ecash works without accounts. Cashu tokens are bearer assets, that are stored locally on
-						your nutstash wallet.
-					</p>
-					<div class="flex gap-2 items-center h-24">
-						<a href="#4" class="">
-							<span class="relative flex h-10 w-10">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-									/>
-								</svg>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="w-10 h-10 relative inline-flex rounded-full"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-									/>
-								</svg>
-							</span>
-						</a>
-					</div>
-				</div>
-				</div>
-				<div id="4" class="carousel-item w-full flex justify-center">
-					<div class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]">
-						<div class="w-20">
-
-							<img src="/icons/coin.gif" alt="loading" class="" />
 						</div>
-
-					<h1 class="text-lg font-bold">Seed phrase backup</h1>
-					{#if isRestore}
-						<RestoreFromSeed bind:isRestore></RestoreFromSeed>
-					{/if}
-					{#if $mnemonic.length && !isRestore}
-						<div class="max-w-xl bg-base-100 rounded-lg p-3">
-							<div class="card-body">
-								<Mnemonic />
-								<div class="card-actions gap-5 flex items-center justify-center w-full pt-3 flex-col">
-									<a href="#5" class="btn btn-primary"> I wrote it down </a>
-									<button class="link" on:click={()=>{mnemonic.set([])}}>
-										Abort
-									</button>
-								</div>
-							</div>
-						</div>
-					{:else if !isRestore}
-						<p>
-							Creating a seed phrase will enable restorable ecash. Ecash that was minted using a seed can later be restored with the mints help. You need to remember the seed phrase, as well as the mints you're using.
-						</p>
-					{/if}
-					<div class="flex flex-col gap-4">
-						{#if !$mnemonic.length && !isRestore}
-							<button class="btn btn-primary" on:click={createMnemonic}> Create new seed </button>
-							<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
-								Restore from seed
-							</button>
-							<a href="#5" class="text-xl link flex justify-center items-center">
-								Skip <span class="relative flex h-10 w-10">
+						<h1 class="text-lg font-bold">Welcome to nutstash</h1>
+						<p>Nutstash is still in beta development. Please use at own risk.</p>
+						<div class="flex gap-2 items-center h-24">
+							<a href="#2" class="">
+								<span class="relative flex h-10 w-10">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -230,9 +75,180 @@
 									</svg>
 								</span>
 							</a>
-						{/if}
+						</div>
 					</div>
 				</div>
+				<div id="2" class="carousel-item w-full flex justify-center">
+					<div
+						class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]"
+					>
+						<img src="/icons/shades.svg" alt="shades" class=" w-32" />
+						<h1 class="text-lg font-bold">Ecash for Privacy</h1>
+						<p>
+							Nutstash is a custodial lightning wallet that uses the Cashu ecash protocol to protect
+							your privacy.
+						</p>
+						<div class="flex gap-2 items-center h-24">
+							<a href="#3" class="">
+								<span class="relative flex h-10 w-10">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+										/>
+									</svg>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-10 h-10 relative inline-flex rounded-full"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+										/>
+									</svg>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div id="3" class="carousel-item w-full flex justify-center">
+					<div
+						class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]"
+					>
+						<img src="/icons/stache.svg" alt="stache" class="w-32" />
+						<h1 class="text-lg font-bold">Transact Anonymously</h1>
+						<p>
+							Ecash works without accounts. Cashu tokens are bearer assets, that are stored locally
+							on your nutstash wallet.
+						</p>
+						<div class="flex gap-2 items-center h-24">
+							<a href="#4" class="">
+								<span class="relative flex h-10 w-10">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+										/>
+									</svg>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-10 h-10 relative inline-flex rounded-full"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+										/>
+									</svg>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div id="4" class="carousel-item w-full flex justify-center">
+					<div
+						class="flex flex-col items-center justify-center gap-2 bg-base-100 m-2 p-2 rounded-lg h-full lg:h-[50rem] w-[95%]"
+					>
+						<div class="w-20">
+							<img src="/icons/coin.gif" alt="loading" class="" />
+						</div>
+
+						<h1 class="text-lg font-bold">Seed phrase backup</h1>
+						{#if isRestore}
+							<RestoreFromSeed bind:isRestore></RestoreFromSeed>
+						{/if}
+						{#if $mnemonic.length && !isRestore}
+							<div class="max-w-xl bg-base-100 rounded-lg p-3">
+								<div class="card-body">
+									<Mnemonic />
+									<div
+										class="card-actions gap-5 flex items-center justify-center w-full pt-3 flex-col"
+									>
+										<a href="#5" class="btn btn-primary"> I wrote it down </a>
+										<button
+											class="link"
+											on:click={() => {
+												mnemonic.set([]);
+											}}
+										>
+											Abort
+										</button>
+									</div>
+								</div>
+							</div>
+						{:else if !isRestore}
+							<p>
+								Creating a seed phrase will enable restorable ecash. Ecash that was minted using a
+								seed can later be restored with the mints help. You need to remember the seed
+								phrase, as well as the mints you're using.
+							</p>
+						{/if}
+						<div class="flex flex-col gap-4">
+							{#if !$mnemonic.length && !isRestore}
+								<button class="btn btn-primary" on:click={createMnemonic}> Create new seed </button>
+								<button class="btn btn-secondary" on:click={() => (isRestore = true)}>
+									Restore from seed
+								</button>
+								<a href="#5" class="text-xl link flex justify-center items-center">
+									Skip <span class="relative flex h-10 w-10">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke-width="1.5"
+											stroke="currentColor"
+											class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+											/>
+										</svg>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke-width="1.5"
+											stroke="currentColor"
+											class="w-10 h-10 relative inline-flex rounded-full"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+											/>
+										</svg>
+									</span>
+								</a>
+							{/if}
+						</div>
+					</div>
 				</div>
 
 				<div id="5" class="carousel-item w-full flex flex-col items-center justify-center gap-2">
@@ -288,8 +304,8 @@
 		</div>
 	</div>
 {:else}
-<div class="h-full w-full flex items-center justify-center">
-	<RecommendedMints restore={undefined} bind:isSetupMints={setUpMint}/>
-</div>
+	<div class="h-full w-full flex items-center justify-center">
+		<RecommendedMints restore={undefined} bind:isSetupMints={setUpMint} />
+	</div>
 {/if}
 <div />

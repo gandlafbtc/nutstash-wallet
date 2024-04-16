@@ -24,7 +24,12 @@ import { history } from '../stores/history';
 import { token } from '../stores/tokens';
 import { seed } from '../stores/mnemonic';
 import { HistoryItemType } from '../model/historyItem';
-import { getAmountForTokenSet, getKeysForUnit, getKeysetsOfTokens, getTokenSubset } from '../comp/util/walletUtils';
+import {
+	getAmountForTokenSet,
+	getKeysForUnit,
+	getKeysetsOfTokens,
+	getTokenSubset
+} from '../comp/util/walletUtils';
 import { pendingTokens } from '../stores/pendingtokens';
 import { browser } from '$app/environment';
 import { iv, key, seedIv } from '../stores/key';
@@ -42,15 +47,11 @@ export const send = async (
 	pubkey?: string
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { returnChange, send } = await wallet.send(
-		amount,
-		proofsToSend,
-		{
-			preference,
-			counter: count,
-			pubkey
-		}
-	);
+	const { returnChange, send } = await wallet.send(amount, proofsToSend, {
+		preference,
+		counter: count,
+		pubkey
+	});
 
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + returnChange.length + send.length);
@@ -64,7 +65,8 @@ export const send = async (
 	token.update((state) => [...state, ...returnChange]);
 
 	const encodedToken = getEncodedToken({
-		token: [{ proofs: send, mint: mint.mintURL }], memo
+		token: [{ proofs: send, mint: mint.mintURL }],
+		memo
 	});
 	history.update((state) => [
 		{
@@ -85,14 +87,10 @@ export const send = async (
 };
 
 const getWalletStuff = (mint: Mint) => {
-	const keys = getKeysForUnit(mint.keys)
+	const keys = getKeysForUnit(mint.keys);
 	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 	const seedPhrase = get(seed);
-	const wallet: CashuWallet = new CashuWallet(
-		cashuMint,
-		keys,
-		seedPhrase ? seedPhrase : undefined
-	);
+	const wallet: CashuWallet = new CashuWallet(cashuMint, keys, seedPhrase ? seedPhrase : undefined);
 	let count = undefined;
 	let keysetId = wallet.keys.id;
 	if (seedPhrase) {
@@ -108,7 +106,11 @@ export const mint = async (
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const { proofs } = await wallet.mintTokens(amount, quote, {AmountPreference: preference, counter:count, keysetId});
+	const { proofs } = await wallet.mintTokens(amount, quote, {
+		AmountPreference: preference,
+		counter: count,
+		keysetId
+	});
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
 	}
@@ -130,12 +132,10 @@ export const mint = async (
 	return { proofs };
 };
 
-export const receiveOffline = (encodedToken:string)=> {
+export const receiveOffline = (encodedToken: string) => {
+	const tokn = getDecodedToken(encodedToken);
 
-	const tokn = getDecodedToken(encodedToken)
-
-	const proofs = tokn.token.map((t) => t.proofs)
-	.flat();
+	const proofs = tokn.token.map((t) => t.proofs).flat();
 
 	token.update((ctx) => [...proofs, ...ctx]);
 	history.update((state) => [
@@ -152,7 +152,7 @@ export const receiveOffline = (encodedToken:string)=> {
 		},
 		...state
 	]);
-}
+};
 
 export const receive = async (
 	mint: Mint,
@@ -160,10 +160,11 @@ export const receive = async (
 	preference?: AmountPreference[]
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
-	const {
-		token: tokens,
-		tokensWithErrors,
-	} = await wallet.receive(encodedToken, {preference, counter:count, privkey:get(nostrPrivKey)});
+	const { token: tokens, tokensWithErrors } = await wallet.receive(encodedToken, {
+		preference,
+		counter: count,
+		privkey: get(nostrPrivKey)
+	});
 
 	const proofs = tokens.token.map((t: TokenEntry) => t.proofs).flat();
 
@@ -196,23 +197,22 @@ export const receive = async (
 };
 
 export const meltQuote = async (mint: Mint, invoice: string): Promise<MeltQuoteResponse> => {
-	let meltQuote: MeltQuoteResponse
+	let meltQuote: MeltQuoteResponse;
 	try {
 		if (invoice.startsWith('lightning:')) {
 			invoice = invoice.split(':')[1];
 		}
 		let amount = decode(invoice).sections[2].value / 1000;
 		if (!amount) {
-			throw new Error("Invoice must contain amount");
+			throw new Error('Invoice must contain amount');
 		}
-			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			meltQuote = await cashuMint.meltQuote({ unit: 'sat', request: invoice });
+		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
+		meltQuote = await cashuMint.meltQuote({ unit: 'sat', request: invoice });
 	} catch {
-		throw new Error("Could not fetch melt quote");
+		throw new Error('Could not fetch melt quote');
 	}
-	return  meltQuote
-}
-
+	return meltQuote;
+};
 
 export const melt = async (
 	mint: Mint,
@@ -226,7 +226,7 @@ export const melt = async (
 		meltQuote.amount + meltQuote.fee_reserve,
 		proofs,
 		{
-			counter:currentCount
+			counter: currentCount
 		}
 	);
 	if (seedPhrase) {
@@ -237,19 +237,17 @@ export const melt = async (
 	token.update((state) => {
 		return state.filter((t) => !proofs.includes(t));
 	});
-	
-	pendingTokens.update((state) => [...proofs,...state]);
-	
+
+	pendingTokens.update((state) => [...proofs, ...state]);
+
 	if (returnChange) {
 		token.update((state) => [...returnChange, ...state]);
 	}
 
-	const {
-		isPaid,
-		preimage,
-		change
-	} = await wallet.payLnInvoice(invoice, send, meltQuote, {counter:currentCount});
-	
+	const { isPaid, preimage, change } = await wallet.payLnInvoice(invoice, send, meltQuote, {
+		counter: currentCount
+	});
+
 	if (seedPhrase) {
 		currentCount = updateCount(keysetId, (currentCount ?? 1) + change.length);
 	}
