@@ -1,7 +1,8 @@
 import type { Keys, MintActiveKeys, MintKeys } from '@cashu/cashu-ts';
 import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
-
+import { bech32 } from "bech32";
+import { Buffer } from "buffer";
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
  * @param amount
@@ -143,3 +144,28 @@ const formatSats = (amount: number, withSuffix: boolean): string => {
 		(withSuffix ? ' ' + (amount > 1 ? 'sats' : 'sat') : '')
 	);
 };
+
+export const getInvoiceFromAddress = async (address: string, amount: number):Promise<{pr:string, maxSendable: number, minSendable:number}> => {
+	const addressParts = address.split("@")
+	const endpoint = `https://${addressParts[1]}/.well-known/lnurlp/${addressParts[0]}`
+	return await LNURLLookup(endpoint, amount)
+}
+
+export const getInvoiceFromLNURL = async (LNURL: string, amount: number):Promise<{pr:string, maxSendable: number, minSendable:number}> => {
+	
+	const { prefix: hrp, words: dataPart } = bech32.decode(LNURL, 2000)
+	const requestByteArray = bech32.fromWords(dataPart)
+
+	const endpoint = Buffer.from(requestByteArray).toString()
+	return await LNURLLookup(endpoint, amount)
+}
+
+const LNURLLookup = async (endpoint:string, amount: number) => {
+	const { callback, maxSendable, minSendable } = await (await fetch(endpoint)).json() as { callback: string, maxSendable: number, minSendable: number }
+	if (!callback) {
+		throw new Error("No callback url found.");
+	}
+	const cb = callback + (callback.includes('?') ? `&` : `?`) + `amount=${amount * 1000}`
+	const { pr } = await (await fetch(cb)).json() as { pr: string }
+	return {pr, maxSendable, minSendable}
+}

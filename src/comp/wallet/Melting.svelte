@@ -6,6 +6,7 @@
 	import {
 		formatAmount,
 		getAmountForTokenSet,
+		getInvoiceFromAddress,
 		getTokensForMint,
 		getTokensToSend
 	} from '../util/walletUtils';
@@ -38,8 +39,28 @@
 		}
 	});
 
-	const getMeltQuote = async () => {
+	export const getMeltQuote = async () => {
 		try {
+			if (invoice.includes('@')) {
+				if (!amount) {
+					toast('info','Enter amount to send to address','Amount needed')
+					return
+				}
+				toast('info','One moment please','Loading invoice...')
+				const {pr,maxSendable, minSendable} = await getInvoiceFromAddress(invoice, amount)
+				invoice = pr
+			}
+			else if (invoice.toLowerCase().startsWith('lnurl')) {
+				toast('info','One moment please','Loading invoice...')
+				const {pr,maxSendable, minSendable} = await getInvoiceFromAddress(invoice, amount)
+				invoice = pr
+			}
+			else if (!invoice.toLocaleLowerCase().startsWith('ln')) {
+				fees = 0;
+				amount = 0;
+				isPayable = false;
+				return
+			}
 			meltQuote = await walletActions.meltQuote(mint, invoice);
 			fees = meltQuote.fee_reserve;
 			amount = meltQuote.amount;
@@ -145,7 +166,13 @@
 				on:keydown={(e) => {
 					if (e.key === 'Enter') {
 						e.preventDefault();
-						payInvoice();
+						if (isPayable) {
+							payInvoice();
+						}
+						else {
+							getMeltQuote();
+						}
+							
 					}
 				}}
 			/>
