@@ -60,7 +60,7 @@
 			return;
 		}
 		if (!$useExternalNostrKey && (!$nostrPubKey || !$nostrPrivKey)) {
-			toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
+			// toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
 			return;
 		}
 
