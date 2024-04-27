@@ -17,9 +17,7 @@ import {
 	encodeBase64ToJson
 } from '@cashu/cashu-ts/src/base64';
 import type { Mint } from '../model/mint';
-import { mints } from '../stores/mints';
 import { get } from 'svelte/store';
-import { toast } from '../stores/toasts';
 import { counts } from '../stores/counts';
 import { history } from '../stores/history';
 import { token } from '../stores/tokens';

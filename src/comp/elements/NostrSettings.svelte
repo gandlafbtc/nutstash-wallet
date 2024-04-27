@@ -11,14 +11,33 @@
 	import { toast } from '../../stores/toasts';
 	import NostrRelaysConfig from './NostrRelaysConfig.svelte';
 	import { bytesToHex } from '@noble/hashes/utils';
+	import { decode, nsecEncode } from 'nostr-tools/nip19';
 
 	let newKeysModal: HTMLDialogElement;
+	let importKeyModal: HTMLDialogElement;
 	let isShowNsec = false;
+
+	let privateKeyImport = '' 
 
 	const generateNostrPrivKey = () => {
 		createNewNostrKeys();
 		restartNostr();
 	};
+
+	const importKey = () => {
+		if (privateKeyImport.startsWith('nsec')) {
+			const decoded = decode(privateKeyImport).data
+			if (decoded instanceof Uint8Array) {
+				privateKeyImport=bytesToHex(decoded)
+			}
+		}
+		if (privateKeyImport.length != 64) {
+			toast('error', 'Not a valid private key','Could not import Key')
+			return
+		}
+		createNewNostrKeys(privateKeyImport);
+		restartNostr();
+	}
 
 	const restartNostr = () => {
 		if (!$useNostr) {
@@ -184,9 +203,20 @@
 		</div>
 		<div class="flex justify-between items-center">
 			<div class="">
-				<label>Generate new keys</label>
+				<label>Import/Generate new keys</label>
 			</div>
-			<div class="tooltip" data-tip="Generate new Nostr Keypair">
+			<div class="tooltip">
+				<button
+					class="btn btn-square btn-outline"
+					on:click={() => {
+						importKeyModal.showModal();
+					}}
+					>
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+					  </svg>
+					  
+				</button>
 				<button
 					class="btn btn-square btn-outline"
 					on:click={() => {
@@ -213,13 +243,30 @@
 					<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
 					<p class="py-4">
 						Are you sure you want to delete your current and create new ones? Ecash locked to this
-						key pair might become un-spendable. Make sure your wallet contains no locked ecash
+						key pair might become un-spendable. Make sure you have no locked ecash
 						before proceeding
 					</p>
 					<div class="modal-action">
 						<form method="dialog">
 							<button class="btn">abort</button>
 							<button class="btn btn-error" on:click={generateNostrPrivKey}>Create new keys</button>
+						</form>
+					</div>
+				</div>
+			</dialog>
+			<dialog bind:this={importKeyModal} class="modal">
+				<div class="modal-box">
+					<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
+					<p class="py-4">
+						Are you sure you want to delete your current and import new ones? Ecash locked to your current
+						key pair might become un-spendable. Make sure you have no locked ecash
+						before proceeding
+					</p>
+					<input type="text" class="input input-primary input-sm w-full" bind:value={privateKeyImport}>
+					<div class="modal-action">
+						<form method="dialog">
+							<button class="btn">abort</button>
+							<button class="btn btn-error" on:click={importKey}>Import keys</button>
 						</form>
 					</div>
 				</div>

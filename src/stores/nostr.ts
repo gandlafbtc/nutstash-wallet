@@ -4,7 +4,7 @@ import type { NostrMessage } from '../model/nostrMessage';
 
 import { writable } from 'svelte/store';
 import type { NostrRelay } from '../model/relay';
-import { bytesToHex } from '@noble/hashes/utils';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { schnorr, secp256k1 } from '@noble/curves/secp256k1';
 
 const initialValueSting: string = browser
@@ -90,8 +90,8 @@ nostrRelays.subscribe((value) => {
 
 const nostrPool = writable<RelayPool>();
 
-const createNewNostrKeys = () => {
-	const priv = schnorr.utils.randomPrivateKey();
+const createNewNostrKeys = (privateKey?: string) => {
+	const priv = privateKey?hexToBytes(privateKey):schnorr.utils.randomPrivateKey();
 	nostrPrivKey.set(bytesToHex(priv));
 	nostrPubKey.set(bytesToHex(schnorr.getPublicKey(priv)));
 };

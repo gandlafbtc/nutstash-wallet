@@ -6,7 +6,7 @@
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import { formatAmount, getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 
-	export let mint: Mint;
+	export let mint: Mint|undefined;
 	const formatMintText = (url: string) => {
 		if (url.length <= 20) {
 			return url;
@@ -35,7 +35,7 @@
 				</svg>
 			</div>
 			<p class="truncate max-w-xs text-xs">
-				{formatMintText(mint.mintURL)}
+				{formatMintText(mint?.mintURL??'')}
 			</p>
 			<div>
 				<svg
@@ -62,7 +62,7 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<li on:click={() => (mint = m)} class="rounded-xl">
 				<div class="flex gap-1 items-center">
-					{#if m.mintURL === mint.mintURL}
+					{#if m.mintURL === mint?.mintURL}
 						<div class="rounded-full bg-success w-4 h-4 p-0.5">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
