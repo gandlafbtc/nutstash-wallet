@@ -4,7 +4,10 @@
 		useNostr,
 		nostrPubKey,
 		useExternalNostrKey,
-		createNewNostrKeys
+		createNewNostrKeys,
+
+		restartNostr
+
 	} from '../../stores/nostr';
 	import { generateSecretKey, getPublicKey } from 'nostr-tools';
 	import { browser } from '$app/environment';
@@ -21,7 +24,6 @@
 
 	const generateNostrPrivKey = () => {
 		createNewNostrKeys();
-		restartNostr();
 	};
 
 	const importKey = () => {
@@ -36,25 +38,9 @@
 			return
 		}
 		createNewNostrKeys(privateKeyImport);
-		restartNostr();
 	}
 
-	const restartNostr = () => {
-		if (!$useNostr) {
-			return;
-		}
-		if (!$useExternalNostrKey && !$nostrPubKey) {
-			return;
-		}
-		toast('info', 'Restarting nostr...', 'Nostr keys changed');
-		setTimeout(() => {
-			useNostr.update((state) => !state);
-			setTimeout(() => {
-				useNostr.update((state) => !state);
-				toast('success', 'Nostr has restarted', 'Done!');
-			}, 500);
-		}, 2000);
-	};
+
 
 	const copyToken = () => {
 		if (browser) {
