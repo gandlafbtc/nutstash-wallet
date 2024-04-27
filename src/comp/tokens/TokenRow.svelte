@@ -48,7 +48,7 @@
 		try {
 			const secret = parseSecret(token.secret);
 			if (secret[0] === 'P2PK') {
-				return secret[1].data === $nostrPubKey ? 'unlock' : 'lock';
+				return secret[1].data === $nostrPubKey || secret[1].data === "02"+$nostrPubKey ? 'unlock' : 'lock';
 			}
 		} catch {
 			return '';
@@ -170,6 +170,8 @@
 					<div class="modal-box">
 						<h3 class="font-bold text-lg">Cashu proof</h3>
 						<code class="break-all">{JSON.stringify(token)}</code>
+						<div></div>
+						<code class="break-all text-neutral">{getEncodedToken({token:[{mint: mint?.mintURL??'', proofs:[token]}]})}</code>
 						<div class="modal-action">
 							<form method="dialog">
 								<button class="btn">Close</button>

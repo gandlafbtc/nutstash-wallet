@@ -82,7 +82,12 @@
 			isLoading = true;
 
 			let sendPreference = useAmountPreference ? preference : undefined;
-			let pubk = isLockToPub ? await getConvertedPubKey() : undefined;
+			let pubk = isLockToPub ? await walletActions.getConvertedPubKey(sendToNostrKey) : undefined;
+
+			//TODO check for keysize
+			if (pubk?.length === 64) {
+				pubk = '02'+pubk
+			}
 
 			encodedToken = await walletActions.send(
 				mint,
@@ -112,80 +117,29 @@
 		}
 	};
 
-	const getPubKey = async (): Promise<string> => {
-		return $useExternalNostrKey
-			? await window.nostr.getPublicKey()
-			: await Promise.resolve($nostrPubKey);
-	};
-
-	const getEncryptedContent = async (): Promise<string> => {
-		return $useExternalNostrKey
-			? await window.nostr.nip04.encrypt(await getConvertedPubKey(), encodedToken)
-			: //@ts-ignore
-				await nostrTools.nip04.encrypt($nostrPrivKey, await getConvertedPubKey(), encodedToken);
-	};
-
 	const validatePubKey = async () => {
 		if (!isLockToPub) {
 			return;
 		}
-		const pubk = await getConvertedPubKey();
-		console.log(pubk);
+		sendToNostrKey = await walletActions.getConvertedPubKey(sendToNostrKey);
 		if (
-			typeof pubk === 'string' &&
-			(pubk.length === 64 || pubk.length === 65 || pubk.length === 66)
+			typeof sendToNostrKey === 'string' &&
+			(sendToNostrKey.length === 64 || sendToNostrKey.length === 66)
 		) {
 			isValidPub = true;
-			toast('success', 'Ecash can be sent to this pubkey', 'Valid PubKey');
+			toast('success', 'Ecash can be locked to this pubkey', 'Valid PubKey');
 		} else {
 			isValidPub = false;
 			toast('warning', 'Cannot lock ecash to the', 'Invalid PubKey');
 		}
 	};
 
-	const getConvertedPubKey = async () => {
-		await resolveNip05();
-
-		return sendToNostrKey.startsWith('npub')
-			? (nostrTools.nip19.decode(sendToNostrKey).data as string)
-			: sendToNostrKey;
-	};
-
-	const resolveNip05 = async () => {
-		if (!sendToNostrKey.includes('.')) {
-			return;
-		}
-		const profile = await nostrTools.nip05.queryProfile(sendToNostrKey);
-		if (profile?.pubkey) {
-			sendToNostrKey = profile?.pubkey;
-		}
-	};
+	
 
 	const sendWithNostr = async () => {
 		try {
 			nostrSendLoading = true;
-			const event: Event = {
-				kind: nostrTools.kinds.EncryptedDirectMessage,
-				//@ts-ignore
-				tags: [['p', await getConvertedPubKey()]],
-				content: await getEncryptedContent(),
-				created_at: Math.floor(Date.now() / 1000),
-				pubkey: await getPubKey()
-			};
-			if ($useExternalNostrKey) {
-				const signedEvent = await window.nostr.signEvent(event);
-				$nostrPool.publish(
-					signedEvent,
-					$nostrRelays.map((r) => r.url)
-				);
-			} else {
-				event.id = nostrTools.getEventHash(event);
-				const signedEvent = nostrTools.finalizeEvent(event, hexToBytes($nostrPrivKey));
-				$nostrPool.publish(
-					signedEvent,
-					$nostrRelays.map((r) => r.url)
-				);
-			}
+			await walletActions.sendViaNostr(sendToNostrKey,encodedToken)
 			toast('info', 'The Token is being sent over nostr', 'Sent!');
 			resetState();
 		} catch (e) {
@@ -378,11 +332,11 @@
 					<div class="flex relative w-full justify-center">
 						<input
 							type="text"
-							class="input input-success input-sm w-80"
+							class="input input-success input-sm w-full"
 							bind:value={sendToNostrKey}
 							placeholder="PubKey"
 						/>
-						<label for="npub-scan-modal" class="absolute z-10 bottom-1 ml-72">
+						<label for="npub-scan-modal" class="absolute z-10 bottom-2 right-4">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
@@ -424,7 +378,7 @@
 		<div class="flex gap-1 justify-center">
 			<input
 				type="text"
-				class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80"
+				class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-full"
 				placeholder="memo"
 				bind:value={memo}
 			/>
@@ -603,17 +557,15 @@
 		{/if}
 
 		<div class=" flex flex-col gap-2 w-full items-center">
-			<div class="flex gap-2">
 				<button
-					class="btn {!amount ||
+					class="btn w-full {!amount ||
 					(isLockToPub && !isValidPub) ||
 					getAmountForTokenSet(getTokensForMint(mint, $token)) < amount ||
 					(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount)
 						? 'btn-disabled'
 						: 'btn-primary'}"
-					on:click={send}>send</button
+					on:click={send}>Send</button
 				>
-			</div>
 		</div>
 	{/if}
 	<ScanNpub bind:scannedNpub={sendToNostrKey} />

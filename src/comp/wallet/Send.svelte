@@ -83,7 +83,11 @@
 			<p class="font-bold text-lg">back</p>
 		</button>
 	</div>
-
+	<div class="p-2 items-center justify-center flex w-full">
+		<p class="font-bold text-2xl">
+			Send
+		</p>
+	</div>
 	{#if activeS === 'send'}
 		{#if !processing}
 			<div class="flex flex-col w-full items-center gap-3">
@@ -99,7 +103,7 @@
 					<p>available</p>
 				</div>
 
-				<div class="">
+				<div class="w-full">
 					<div class="tabs tabs-boxed">
 						<button class="tab {isSend ? 'tab-active' : ''}" on:click={() => (isSend = true)}>
 							<div class="flex gap-1 items-center">

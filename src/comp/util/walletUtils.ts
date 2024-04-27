@@ -3,6 +3,7 @@ import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
 import { bech32 } from "bech32";
 import { Buffer } from "buffer";
+import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
  * @param amount
@@ -19,6 +20,15 @@ export const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	});
 	return tokenSubset;
 };
+
+export const getLockedTokens = (proofs: Proof[])=> {
+	return proofs.filter(p=>{ try {
+		parseSecret(p.secret)
+		return true	
+	} catch (error) {
+		return false
+	}})
+} 
 
 export const getKeysForUnit = (keys: MintKeys[], unit = 'sat'): MintKeys | undefined => {
 	return keys.find((k) => {

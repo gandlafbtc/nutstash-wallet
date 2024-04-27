@@ -3,7 +3,7 @@
 	import { mints } from '../../stores/mints';
 	import Tokens from '../tokens/Tokens.svelte';
 	import { onMount } from 'svelte';
-	import { formatAmount, getAmountForTokenSet } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, getLockedTokens } from '../util/walletUtils';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import {
 		checkAutomatically,
@@ -18,6 +18,7 @@
 	import CheckTokens from './CheckTokens.svelte';
 	import { showShortCuts } from '../../stores/showShortCuts';
 	import WalletLock from '../elements/WalletLock.svelte';
+	import ClaimOfflineTokens from '../elements/ClaimOfflineTokens.svelte';
 
 	let active = 'base';
 	let encodedToken = '';
@@ -65,6 +66,8 @@
 		// 	}
 		// }
 	});
+
+	
 </script>
 
 {#if active === 'base'}
@@ -143,6 +146,10 @@
 								{/if}
 							</div>
 						</button>
+					{/if}
+					
+					{#if getLockedTokens($token).length}
+						 <ClaimOfflineTokens></ClaimOfflineTokens>
 					{/if}
 				</div>
 			</div>

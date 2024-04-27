@@ -7,6 +7,7 @@
 		formatAmount,
 		getAmountForTokenSet,
 		getInvoiceFromAddress,
+		getInvoiceFromLNURL,
 		getTokensForMint,
 		getTokensToSend
 	} from '../util/walletUtils';
@@ -31,6 +32,8 @@
 	let isLoading = false;
 	let isPaySuccess = false;
 	let memo = '';
+	let maxSend: number | undefined = undefined 
+	let minSend: number | undefined = undefined
 	let meltQuote: MeltQuoteResponse;
 
 	onMount(() => {
@@ -48,17 +51,48 @@
 				}
 				toast('info','One moment please','Loading invoice...')
 				const {pr,maxSendable, minSendable} = await getInvoiceFromAddress(invoice, amount)
+				if (amount*1000<minSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} minimum`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
+				if (amount*1000> maxSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} max`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
 				invoice = pr
 			}
 			else if (invoice.toLowerCase().startsWith('lnurl')) {
+				if (!amount) {
+					toast('info','Enter amount to send to address','Amount needed')
+					return
+				}
 				toast('info','One moment please','Loading invoice...')
-				const {pr,maxSendable, minSendable} = await getInvoiceFromAddress(invoice, amount)
+				const {pr,maxSendable, minSendable} = await getInvoiceFromLNURL(invoice, amount)
+				if (amount*1000<minSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} minimum`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
+				if (amount*1000> maxSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} max`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
 				invoice = pr
 			}
 			else if (!invoice.toLocaleLowerCase().startsWith('ln')) {
 				fees = 0;
 				amount = 0;
 				isPayable = false;
+				maxSend = undefined
+				minSend = undefined
+					
 				return
 			}
 			meltQuote = await walletActions.meltQuote(mint, invoice);
@@ -75,12 +109,18 @@
 	};
 
 	const payInvoice = async () => {
-		isLoading = true;
 		try {
 			if (!meltQuote) {
 				toast('warning', 'Invoice is not payable', 'Invoice not paid');
 				return;
 			}
+
+			if (amount+fees> getAmountForTokenSet(getTokensForMint(mint, $token))) {
+				toast('warning', 'Not enough funds in this mint', 'Cannot pay invoice');
+				return
+			}
+			isLoading = true;
+
 			let tokensToSend: Array<Proof> = [];
 
 			if (isCoinSelection) {
@@ -155,6 +195,13 @@
 			<label for="melt-modal" class="btn btn-outline" on:mouseup={resetState}>Ok</label>
 		</div>
 	{:else}
+		<div class="h-10 w-full items-center justify-center flex">
+			{#if maxSend}
+			<p class=" bg-base-200 rounded-lg p-3 text-sm">
+				{formatAmount(maxSend, $unit, false)} - {formatAmount(maxSend, $unit)}
+			</p>
+			{/if}
+		</div>
 		<div class="inline-block relative w-full">
 			<textarea
 				autofocus
@@ -203,7 +250,7 @@
 		<div class="flex gap-1 justify-center">
 			<input
 				type="text"
-				class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-80"
+				class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-full"
 				placeholder="memo"
 				bind:value={memo}
 			/>
@@ -212,7 +259,7 @@
 
 		<div class="flex items-center gap-2 justify-center">
 			<button
-				class="btn {isPayable &&
+				class="btn w-full {isPayable &&
 				!(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount + fees)
 					? 'btn-warning'
 					: 'btn-disabled'}"

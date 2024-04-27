@@ -13,6 +13,8 @@
 	class="flex flex-col rounded-t-sm gap-1 w-80"
 	class:bg-success={level === 'success'}
 	class:text-success-content={level === 'success'}
+	class:bg-secondary={level === 'secondary'}
+	class:text-secondary-content={level === 'secondary'}
 	class:bg-info={level === 'info'}
 	class:text-info-content={level === 'info'}
 	class:bg-warning={level === 'warning'}
@@ -62,6 +64,17 @@
 							fill-rule="evenodd"
 							d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
 							clip-rule="evenodd"
+						/>
+					</svg>
+				{:else if level === 'secondary'}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="currentColor"
+						class="w-6 h-6 text-secondary-content"
+					>
+						<path
+							d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
 						/>
 					</svg>
 				{:else if level === 'warning'}

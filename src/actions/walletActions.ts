@@ -8,7 +8,8 @@ import {
 	type Proof,
 	type MeltQuoteResponse,
 	type TokenEntry,
-	getDecodedToken
+	getDecodedToken,
+	type Token
 } from '@cashu/cashu-ts';
 import {
 	encodeBase64toUint8,
@@ -33,10 +34,14 @@ import {
 import { pendingTokens } from '../stores/pendingtokens';
 import { browser } from '$app/environment';
 import { iv, key, seedIv } from '../stores/key';
-import { randomBytes } from '@noble/hashes/utils';
+import { randomBytes, hexToBytes } from '@noble/hashes/utils';
 import { isEncrypted } from '../stores/settings';
 import { decode } from '@gandlaf21/bolt11-decode';
-import { nostrPrivKey } from '../stores/nostr';
+import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useExternalNostrKey } from '../stores/nostr';
+import type { Event } from 'nostr-tools';
+import * as nostrTools from 'nostr-tools';
+import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
+
 
 export const send = async (
 	mint: Mint,
@@ -85,6 +90,68 @@ export const send = async (
 	]);
 	return encodedToken;
 };
+
+
+export const getMyPubKey = async (): Promise<string> => {
+	return get(useExternalNostrKey)
+		? await window.nostr.getPublicKey()
+		: await Promise.resolve(get(nostrPubKey));
+};
+
+const getEncryptedContent = async (toPub: string, message: string): Promise<string> => {
+	return get(useExternalNostrKey)
+		? await window.nostr.nip04.encrypt(await toPub, message)
+		: //@ts-ignore
+		await nostrTools.nip04.encrypt(get(nostrPrivKey), toPub, message);
+};
+
+export const getConvertedPubKey = async (key: string) => {
+	key = await resolveNip05(key);
+	let nostrPubKey = key.startsWith('npub')
+		? (nostrTools.nip19.decode(key).data as string)
+		: key
+	return nostrPubKey;
+};
+
+const resolveNip05 = async (nostrAddr: string) => {
+	if (!nostrAddr.includes('.')) {
+		return nostrAddr;
+	}
+	const profile = await nostrTools.nip05.queryProfile(nostrAddr);
+	if (profile?.pubkey) {
+		return profile?.pubkey;
+	}
+	else {
+		throw new Error('could not fetch nip-05')
+	}
+};
+
+export const sendViaNostr = async (toPub: string, message: string) => {
+	const event: Event = {
+		kind: nostrTools.kinds.EncryptedDirectMessage,
+		//@ts-ignore
+		tags: [['p', await getConvertedPubKey(toPub)]],
+		content: await getEncryptedContent(toPub, message),
+		created_at: Math.floor(Date.now() / 1000),
+		pubkey: await getMyPubKey()
+	};
+	if (get(useExternalNostrKey)) {
+		const signedEvent = await window.nostr.signEvent(event);
+		get(nostrPool).publish(
+			signedEvent,
+			get(nostrRelays).filter(r => r.isActive).map((r) => r.url)
+		);
+		return signedEvent
+	} else {
+		event.id = nostrTools.getEventHash(event);
+		const signedEvent = nostrTools.finalizeEvent(event, hexToBytes(get(nostrPrivKey)));
+		get(nostrPool).publish(
+			signedEvent,
+			get(nostrRelays).filter(r => r.isActive).map((r) => r.url)
+		);
+		return signedEvent
+	}
+}
 
 const getWalletStuff = (mint: Mint) => {
 	const keys = getKeysForUnit(mint.keys);
@@ -154,16 +221,34 @@ export const receiveOffline = (encodedToken: string) => {
 	]);
 };
 
+// const addSigsToToken = async (tkn: Token) => {
+// 	for (const [i,token] of tkn.token.entries()) {
+// 		for (const [j,p] of token.proofs.entries()) {
+// 			try {
+// 				parseSecret(p.secret)
+// 				const sig = await window.nostr.signSchnorr(p.secret)
+// 				console.log(sig)
+// 				tkn.token[i].proofs[j].witness = { signatures: [sig] }
+// 			} catch (error) {
+// 				console.log(error)
+// 			}
+// 		}
+// 	}
+// 	return tkn
+// }
+
 export const receive = async (
 	mint: Mint,
 	encodedToken: string,
-	preference?: AmountPreference[]
+	preference?: AmountPreference[],
+	privKey?: string
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
+
 	const { token: tokens, tokensWithErrors } = await wallet.receive(encodedToken, {
 		preference,
 		counter: count,
-		privkey: get(nostrPrivKey)
+		privkey: privKey ? privKey : get(nostrPrivKey)
 	});
 
 	const proofs = tokens.token.map((t: TokenEntry) => t.proofs).flat();

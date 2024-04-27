@@ -8,8 +8,8 @@ import { bytesToHex } from '@noble/hashes/utils';
 import { schnorr, secp256k1 } from '@noble/curves/secp256k1';
 
 const initialValueSting: string = browser
-	? window.localStorage.getItem('use-nostr') ?? 'false'
-	: 'false';
+	? window.localStorage.getItem('use-nostr') ?? 'true'
+	: 'true';
 
 const initialValue: boolean = JSON.parse(initialValueSting);
 
@@ -93,7 +93,7 @@ const nostrPool = writable<RelayPool>();
 const createNewNostrKeys = () => {
 	const priv = schnorr.utils.randomPrivateKey();
 	nostrPrivKey.set(bytesToHex(priv));
-	nostrPubKey.set(bytesToHex(secp256k1.getPublicKey(priv)));
+	nostrPubKey.set(bytesToHex(schnorr.getPublicKey(priv)));
 };
 export {
 	useNostr,

@@ -10,6 +10,7 @@
 
 	import { theme } from '../stores/theme';
 	import BackupButton from './elements/BackupButton.svelte';
+	import DonateButton from './elements/DonateButton.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import ResetPasswordButton from './elements/ResetPasswordButton.svelte';
@@ -35,6 +36,9 @@
 {:else}
 	<div class="flex flex-col justify-start gap-3">
 		<p class="text-xl font-bold">Settings</p>
+		<div class="w-full flex justify-end">
+			<DonateButton></DonateButton>
+		</div>
 		<div class="flex justify-between items-center">
 			<div>
 				<label for="theme-dropdown">Theme:</label>

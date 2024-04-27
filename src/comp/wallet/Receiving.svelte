@@ -8,10 +8,9 @@
 	import { formatAmount, getAmountForTokenSet, validateMintKeys } from '../util/walletUtils';
 	import ScanToken from '../elements/ScanToken.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
-	import { nostrPubKey, useExternalNostrKey } from '../../stores/nostr';
+	import { nostrPubKey } from '../../stores/nostr';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
 	import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
-	import { token } from '../../stores/tokens';
 	import { unit } from '../../stores/settings';
 
 	export let active: string;
@@ -33,6 +32,9 @@
 	let isCustomSplits = false;
 	let isOffline = false;
 	let lockPubs: string[] = [];
+	let customPriv = ''
+
+	let myPub = $nostrPubKey
 
 	const receive = async () => {
 		if (!isValid) {
@@ -59,7 +61,8 @@
 				if (isCustomSplits) {
 					receiveCustomSplits = preference;
 				}
-				const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits);
+				
+				const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits, customPriv?customPriv:undefined);
 				toast(
 					'success',
 					`${formatAmount(getAmountForTokenSet(proofs), $unit)} received`,
@@ -67,6 +70,7 @@
 				);
 			}
 			resetState();
+			active = 'base';
 		} catch (error) {
 			console.error(error);
 			toast(
@@ -87,8 +91,7 @@
 	const validateToken = () => {
 		lockPubs = [];
 		if (!encodedToken) {
-			isToken = false;
-			isValid = false;
+			resetState()
 			return;
 		}
 		isToken = true;
@@ -133,11 +136,11 @@
 		memo = '';
 		amount = 0;
 		mint = undefined;
-		active = 'base';
 		mintToAdd = '';
 		pasteMessage = 'from clipboard';
 		preference = [];
 		lockPubs = [];
+		customPriv = ''
 	};
 	const trustMint = async () => {
 		const mint = new CashuMint(mintToAdd);
@@ -324,11 +327,11 @@
 				{/if}
 				{#if isOffline}
 					<div>
-						<button class="btn btn-sm" on:click={() => (isOffline = false)}>I'm online</button>
+						<button class="btn btn-secondary btn-sm" on:click={() => (isOffline = false)}>I'm online</button>
 					</div>
 				{:else}
 					<div>
-						<button class="btn btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
+						<button class="btn btn-accent btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
 					</div>
 				{/if}
 				<div class="gap-2 flex flex-col items-center justify-center w-full">
@@ -349,7 +352,7 @@
 						Token is locked to multiple different keys! Nutstash only supports one key at a time.
 					</p>
 				{:else if isOffline && lockPubs.length === 1 && isValid}
-					{#if lockPubs[0] === $nostrPubKey}
+					{#if lockPubs[0] === myPub || lockPubs[0] === "02"+myPub}
 						<p class="text-success">Token is locked to your pubkey and can be received offline.</p>
 					{:else}
 						<p class="text-error">
@@ -357,23 +360,35 @@
 						</p>
 					{/if}
 				{:else if !isOffline && lockPubs.length === 1 && isValid}
-					{#if lockPubs[0] === $nostrPubKey}
+					{#if lockPubs[0] === myPub || lockPubs[0] === "02"+myPub}
 						<p class="text-success">Token is locked to your pubkey.</p>
 					{:else}
 						<p class="text-error">
 							Token is locked to a different pubkey and cannot be claimed by this wallet.
 						</p>
+						<p>
+							Try to unlock with different key
+						</p>
+						<input class="input input-sm input-secondary w-full" type="text" bind:value={customPriv}>
 					{/if}
 				{/if}
 				<div class="h-24 text">
+					{#if isOffline && lockPubs.length && !(lockPubs[0] === myPub || lockPubs[0] === "02"+myPub)}
+					<button
+						class="btn w-full btn-disabled">
+					 Cannot receive this token
+					</button>
+					{:else}
 					<div class="flex justify-center gap-2 mt-10">
 						<button
-							class="btn {isValid ? (isOffline ? 'btn-accent' : 'btn-secondary') : 'btn-disabled'}"
-							on:click={receive}
+						class="btn w-full {isValid ? (isOffline ? 'btn-accent' : 'btn-secondary') : 'btn-disabled'}"
+						on:click={receive}
 						>
-							Receive {isOffline ? 'offline' : ''}</button
+						Receive {isOffline ? 'offline' : ''}</button
 						>
 					</div>
+						
+					{/if}
 				</div>
 			</div>
 		{/if}
