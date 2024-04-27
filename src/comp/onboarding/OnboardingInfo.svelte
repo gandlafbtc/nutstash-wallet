@@ -27,8 +27,7 @@
 </p>
 <p class=" mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-8 w-full max-w-4xl">
 	<span>
-		Nutstash is a custodial lightning wallet that uses the Cashu ecash protocol to protect your
-		privacy.
+		Nutstash is a cashu ecash wallet that uses the Cashu protocol.
 	</span>
 </p>
 <p class=" mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-8 w-full max-w-4xl">

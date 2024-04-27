@@ -14,7 +14,7 @@
 	let amount =getAmountForTokenSet(getTokensForMint(mint,$token))<100?getAmountForTokenSet(getTokensForMint(mint,$token)):100;
 	let inputField: HTMLInputElement
 
-	let walletDevNostrKey = 'c4b5369a9db27a2e1bc97b25faa4862d9fcfa747506b1f272f8f4b36b812dbd6'
+	let walletDevNostrKey = 'ca1d8486abd03d6e91aa042cb856a7da0da95e7b68180b22337aea2cd2ed0469'
 
 	let donationName = 'Anon'
 
