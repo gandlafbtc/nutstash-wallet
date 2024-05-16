@@ -1,6 +1,6 @@
 {
 	"name": "svelte-cashu-wallet",
-	"version": "0.2.6",
+	"version": "0.2.7",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -16,8 +16,9 @@
 	},
 	"devDependencies": {
 		"@capacitor/android": "^6.0.0",
-		"@capacitor/cli": "^6.0.0",
-		"@capacitor/core": "^6.0.0",
+		"@capacitor/assets": "^3.0.5",
+		"@capacitor/cli": "6.0.0",
+		"@capacitor/core": "6.0.0",
 		"@capacitor/ios": "^6.0.0",
 		"@gandlaf21/bolt11-decode": "^3.0.6",
 		"@sveltejs/adapter-auto": "^3.1.0",
@@ -47,6 +48,10 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@capacitor/app": "6.0.0",
+		"@capacitor/haptics": "6.0.0",
+		"@capacitor/keyboard": "6.0.0",
+		"@capacitor/status-bar": "6.0.0",
 		"@cashu/cashu-ts": "1.0.0-rc.2",
 		"@gandlaf21/bc-ur": "^1.1.12",
 		"@gandlaf21/bolt11-decode": "^3.1.1",
