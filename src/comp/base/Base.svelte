@@ -47,7 +47,7 @@
 	});
 </script>
 
-<div class="flex flex-col w-full max-w-5xl">
+<div class="flex flex-col w-full max-w-5xl p-[4px]">
 	<div class="grow flex flex-col">
 		<div class="dropdown">
 			<div class="bg-opacity-100">
@@ -140,7 +140,7 @@
 			</div>
 		</div>
 		<div
-			class="bg-base-100 grid w-full h-full flex-grow gap-3 rounded-xl p-6 shadow-xl {$activeTab ===
+			class="bg-base-100 grid w-full h-full flex-grow gap-3 rounded-xl p-3 shadow-xl {$activeTab ===
 			'wallet'
 				? 'rounded-tl-none'
 				: ''} {$activeTab === 'setting' ? 'rounded-tr-none' : ''}"
