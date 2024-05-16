@@ -28,5 +28,5 @@ jobs:
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
-      - name: Build images with release version ${{ inputs.version }}
+      - name: Build images with release version ${{ steps.package-version.outputs.current-version}}
         run: cd main && docker buildx build --platform linux/amd64,linux/arm64 -t "ghcr.io/${{ github.actor }}/nutstash-wallet:${{ steps.package-version.outputs.current-version}}" --push .

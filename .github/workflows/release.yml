@@ -5,7 +5,65 @@ on:
       - main
 
 jobs:
-  publish-tauri:
+  build-apk:
+      permissions:
+        contents: write 
+      name: Build APK
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout source
+          uses: actions/checkout@v3
+
+        - name: Setup java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'zulu'
+            java-version: '17'
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 20.x
+
+        - name: Install app dependencies
+          run: npm install
+
+        - name: Build Svelte app
+          run: npm run build
+
+        - name: Capacitor update
+          run: npx cap sync android
+
+        - name: Capacitor copy
+          run: npx cap copy
+
+        - name: Build app bundle
+          run: cd android && ./gradlew bundle && ./gradlew assemble
+
+        - name: Extract Android signing key from env
+          run: |
+            echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
+            base64 -d android/release.jks.base64 > android/release.decrypted.jks
+        - name: get-npm-version
+          id: package-version
+          uses: martinbeentjes/npm-get-version-action@v1.3.1
+        - name: Sign dev build
+          run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
+        - name: Release with Notes
+          run: |
+            mv ./android/app/build/outputs/apk/release/app-release-unsigned.apk ./android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+        - name: create-release
+          uses: softprops/action-gh-release@v1
+          with:
+            name: ${{ steps.package-version.outputs.current-version}}
+            tag_name: ${{ steps.package-version.outputs.current-version}}
+            files: |
+              android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+              android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab
+      outputs:
+        releaseId: ${{ steps.create-release.outputs.id }}
+  build-native:  
+    needs: build-apk
     permissions:
       contents: write
     strategy:
@@ -47,65 +105,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
+          releaseId: ${{ needs.build-apk.outputs.releaseId }}
           args: ${{ matrix.settings.args }}
-  build-apk:
-    permissions:
-      contents: write 
-    name: Build APK
+  checksum:
+    needs: build-native
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Setup java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-
-      - name: Install app dependencies
-        run: npm install
-
-      - name: Build Svelte app
-        run: npm run build
-
-      - name: Capacitor update
-        run: npx cap sync android
-
-      - name: Capacitor copy
-        run: npx cap copy
-
-      - name: Build app bundle
-        run: cd android && ./gradlew bundle && ./gradlew assemble
-
-      - name: Extract Android signing key from env
-        run: |
-          echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
-          base64 -d android/release.jks.base64 > android/release.decrypted.jks
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-      - name: Sign dev build
-        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
-      - name: Release with Notes
-        run: |
-          mv ./android/app/build/outputs/apk/release/app-release-unsigned.apk ./android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
-      - name: Release with Notes
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ steps.package-version.outputs.current-version}}
-          tag_name: ${{ steps.package-version.outputs.current-version}}
-          files: |
-            android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
-            android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab
-
+    - uses: MCJack123/ghaction-generate-release-hashes@v3
+      with:
+        file-name: checksum.txt
+    - uses: softprops/action-gh-release@v1
+      with:
+        files: checksum.txt
