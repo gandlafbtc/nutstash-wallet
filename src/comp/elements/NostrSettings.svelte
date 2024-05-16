@@ -14,7 +14,7 @@
 	import { toast } from '../../stores/toasts';
 	import NostrRelaysConfig from './NostrRelaysConfig.svelte';
 	import { bytesToHex } from '@noble/hashes/utils';
-	import { decode, nsecEncode } from 'nostr-tools/nip19';
+	import { decode } from 'nostr-tools/nip19';
 
 	let newKeysModal: HTMLDialogElement;
 	let importKeyModal: HTMLDialogElement;

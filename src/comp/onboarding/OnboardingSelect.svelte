@@ -16,9 +16,28 @@
 	};
 </script>
 
-<img src="/ns-naked.svg" class="w-52 mt-32" alt="" />
+<img src="/ns-naked.svg" class="w-32 lg:w-52 lg:mt-32" alt="" />
 <h1 class="font-bold text-xl">Select your way to start!</h1>
 
+
+
+<button
+	on:click={create}
+	class="items-center gap-3 flex rounded-lg border-4 border-primary p-3 w-full max-w-4xl m-4 hover:bg-primary text-primary hover:text-neutral-content transition-colors duration-300 cursor-pointer"
+>
+	<svg class="w-10 h-10" viewBox="0 0 25 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+		<path
+			d="M22.7783 4.08667L13.4033 0.180423C13.1177 0.0619557 12.8116 0.000976563 12.5024 0.000976562C12.1933 0.000976563 11.8871 0.0619557 11.6016 0.180423L2.22656 4.08667C1.35254 4.448 0.78125 5.30249 0.78125 6.24976C0.78125 15.9421 6.37207 22.6414 11.5967 24.8191C12.1729 25.0584 12.8223 25.0584 13.3984 24.8191C17.583 23.0759 24.2188 17.0554 24.2188 6.24976C24.2188 5.30249 23.6475 4.448 22.7783 4.08667ZM12.5049 21.7917L12.5 3.18824L21.0889 6.76734C20.9277 14.1599 17.0801 19.5164 12.5049 21.7917Z"
+		/>
+	</svg>
+	<div class="flex-col gap-2 text-start">
+		<h2 class="font-bold">Secure nuts (recommended)</h2>
+		<p class="text-neutral-content">
+			Create a seed phrase backup for this wallet, and encrypt your nutstash with a passphrase
+		</p>
+		<p class="text-neutral">Select this option to prevent losing your nuts</p>
+	</div>
+</button>
 <button
 	on:click={skip}
 	class="items-center gap-3 flex rounded-lg border border-info p-3 w-full max-w-4xl m-4 hover:bg-info text-info hover:text-neutral-content transition-colors duration-300 cursor-pointer"
@@ -35,7 +54,7 @@
 		/>
 	</svg>
 	<div class="flex-col gap-2 text-start">
-		<h2 class="font-bold">Ephemeral nuts</h2>
+		<h2 class="font-bold">Quick nuts</h2>
 		<p class="text-neutral-content">
 			Go straight to the wallet. You can encrypt it later. Nuts will <b>not</b> be backed up by a seed
 			phrase!
@@ -43,25 +62,6 @@
 		<p class="text-neutral">This option is best used for a one-time wallet or throw-away wallet</p>
 	</div>
 </button>
-
-<button
-	on:click={create}
-	class="items-center gap-3 flex rounded-lg border border-primary p-3 w-full max-w-4xl m-4 hover:bg-primary text-primary hover:text-neutral-content transition-colors duration-300 cursor-pointer"
->
-	<svg class="w-10 h-10" viewBox="0 0 25 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-		<path
-			d="M22.7783 4.08667L13.4033 0.180423C13.1177 0.0619557 12.8116 0.000976563 12.5024 0.000976562C12.1933 0.000976563 11.8871 0.0619557 11.6016 0.180423L2.22656 4.08667C1.35254 4.448 0.78125 5.30249 0.78125 6.24976C0.78125 15.9421 6.37207 22.6414 11.5967 24.8191C12.1729 25.0584 12.8223 25.0584 13.3984 24.8191C17.583 23.0759 24.2188 17.0554 24.2188 6.24976C24.2188 5.30249 23.6475 4.448 22.7783 4.08667ZM12.5049 21.7917L12.5 3.18824L21.0889 6.76734C20.9277 14.1599 17.0801 19.5164 12.5049 21.7917Z"
-		/>
-	</svg>
-	<div class="flex-col gap-2 text-start">
-		<h2 class="font-bold">Secure nuts</h2>
-		<p class="text-neutral-content">
-			Create a seed phrase backup for this wallet, and encrypt your nutstash with a passphrase
-		</p>
-		<p class="text-neutral">Select this option to prevent losing your nuts</p>
-	</div>
-</button>
-
 <button
 	on:click={() => (step = 'restore')}
 	class="items-center gap-3 flex rounded-lg border border-success p-3 w-full max-w-4xl m-4 hover:bg-success text-success hover:text-neutral-content transition-colors duration-300 cursor-pointer"

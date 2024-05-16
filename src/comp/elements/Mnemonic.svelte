@@ -70,12 +70,15 @@
 			Or copy it
 		</button>
 	</div>
-	<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-4xl">
-		{#each $mnemonic as word, i}
+	<div class="w-full flex justify-center">
+
+		<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl">
+			{#each $mnemonic as word, i}
 			<div class="flex gap-1">
 				<p>{i + 1}.</p>
 				<input type="text" readonly class="input input-sm w-24 bg-base-300" value={word} />
 			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 </div>

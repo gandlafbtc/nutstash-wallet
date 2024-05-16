@@ -106,7 +106,7 @@ const restartNostr = () => {
 	if (!get(useExternalNostrKey) && !get(nostrPubKey)) {
 		return;
 	}
-	toast('info', 'Restarting nostr...', 'Nostr keys changed');
+	toast('info', 'Restarting nostr...', 'Setting new nostr keys');
 	setTimeout(() => {
 		useNostr.update((state) => !state);
 		setTimeout(() => {

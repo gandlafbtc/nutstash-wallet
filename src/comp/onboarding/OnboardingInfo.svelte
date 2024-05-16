@@ -5,7 +5,7 @@
 	};
 </script>
 
-<img src="/nutstash_app.svg" alt="" class="mt-20" />
+<img src="/nutstash_app.svg" alt="" class="lg:mt-20" />
 
 <h1 class="font-bold text-xl">Welcome to Nutstash!</h1>
 <p class="flex gap-1 items-center text-warning opacity-30">
@@ -25,24 +25,24 @@
 	</svg>
 	Nutstash is still in beta development. Please use at own risk.
 </p>
-<p class=" mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-8 w-full max-w-4xl">
+<p class=" mx-2 lg:mx-4 py-2 lg:p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-2 lg:px-8 w-full max-w-4xl">
 	<span>
 		Nutstash is a cashu ecash wallet that uses the Cashu protocol.
 	</span>
 </p>
-<p class=" mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-8 w-full max-w-4xl">
+<p class=" mx-2 lg:mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-2 lg:px-8 w-full max-w-4xl">
 	<span>
 		Ecash works without accounts. Cashu tokens are bearer assets, that are stored locally on your
 		nutstash wallet.
 	</span>
 </p>
-<p class=" mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-8 w-full max-w-4xl">
+<p class=" mx-2 lg:mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-2 lg:px-8 w-full max-w-4xl">
 	<span>
 		Nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you choose to connect
 		to.
 	</span>
 </p>
-<p class=" mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-8 w-full max-w-4xl">
+<p class=" mx-2 lg:mx-4 p-5 rounded-lg bg-base-200 mt-4 flex gap-2 items-center px-2 lg:px-8 w-full max-w-4xl">
 	<span>
 		for more information, please visit nutstashs <a
 			href="https://nutstash.app/#faq"
