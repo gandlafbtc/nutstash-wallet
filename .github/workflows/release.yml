@@ -97,12 +97,12 @@ jobs:
         run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
       - name: Release with Notes
         run: |
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+          mv app/release/app-release.apk app/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+            app/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
       - name: Upload release bundle
         uses: actions/upload-artifact@v4
         with:
