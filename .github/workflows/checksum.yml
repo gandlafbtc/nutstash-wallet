@@ -1,0 +1,17 @@
+on:
+  workflow_run:
+    workflows: ["release"]
+    types:
+      - completed
+
+jobs:
+  checksum:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: MCJack123/ghaction-generate-release-hashes@v3
+      with:
+        file-name: checksum.txt
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Asset Hashes
+        path: checksum.txt

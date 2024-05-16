@@ -1,3 +1,4 @@
+name: release
 on:
    push:
     branches:
@@ -77,7 +78,7 @@ jobs:
         run: npm run build
 
       - name: Capacitor update
-        run: npx cap update
+        run: npx cap sync android
 
       - name: Capacitor copy
         run: npx cap copy
