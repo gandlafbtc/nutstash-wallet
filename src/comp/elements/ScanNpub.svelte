@@ -64,7 +64,7 @@
 				<div class="btn-square invisible" />
 			</div>
 			<div class="w-full">
-				<div id="npub-qr-reader" class="w-full h-full" style="/qr-styles.css" />
+				<div id="npub-qr-reader" class="w-full h-full qr-reader-box" style="/qr-styles.css" />
 			</div>
 		</div>
 	</div>

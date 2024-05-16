@@ -7,6 +7,8 @@
 	import type { SendData } from '../../model/data/SendData';
 	import { HistoryItemType, type HistoryItem } from '../../model/historyItem';
 	import HistoryIcon from '../history/HistoryIcon.svelte';
+	import { isEncrypted, unit } from '../../stores/settings';
+	import { formatAmount } from '../util/walletUtils';
 
 	export let historyItem: HistoryItem<any>;
 
@@ -39,21 +41,23 @@
 
 <tr>
 	<td><HistoryIcon type={historyItem.type} /> </td>
-	<td>{historyItem.amount}</td>
+	<td>{formatAmount(historyItem.amount, $unit)}</td>
 	<td>
 		<p class="hidden lg:flex">
-			{date.toLocaleString('en-us', {
-				dateStyle: 'medium',
-				timeStyle: 'medium'
+			{date.toLocaleString('en-uk', {
+				dateStyle: 'short',
+				timeStyle: 'short'
 			})}
 		</p>
 		<p class="flex lg:hidden">
-			{date.toLocaleString('en-us', {
+			{date.toLocaleString('en-uk', {
 				dateStyle: 'short'
 			})}
 		</p>
 	</td>
-	<td class="max-w-0 overflow-clip">
-		{token}
+	<td>
+		<p class="break-all">
+			{historyItem.data.mint}
+		</p>
 	</td>
 </tr>

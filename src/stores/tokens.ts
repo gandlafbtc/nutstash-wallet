@@ -1,9 +1,10 @@
 import { browser } from '$app/environment';
-import { PUBLIC_SELFHOSTED } from '$env/static/public';
 import type { Proof } from '@cashu/cashu-ts';
 
 import { get, writable } from 'svelte/store';
-import { isSyncTokens, selfhostedSyncTokens } from './selfhosted';
+import { isEncrypted } from './settings';
+import { encrypt } from '../actions/walletActions';
+import { encryptedStorage } from './encrypted';
 
 const initialValueSting: string = browser ? window.localStorage.getItem('tokens') ?? '[]' : '[]';
 
@@ -13,19 +14,16 @@ const token = writable<Array<Proof>>(initialValue);
 
 token.subscribe(async (value) => {
 	if (browser) {
-		const stringValue = JSON.stringify(value);
-		window.localStorage.setItem('tokens', stringValue);
-		if (PUBLIC_SELFHOSTED && get(selfhostedSyncTokens)) {
-			isSyncTokens.set(true);
-			await fetch('/api/backup/tokens', {
-				method: 'post',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json'
-				},
-				body: stringValue
-			});
-			isSyncTokens.set(false);
+		let stringValue = JSON.stringify(value);
+		if (get(isEncrypted)) {
+			if (!stringValue) {
+				stringValue = '[]';
+			}
+			encryptedStorage.set(await encrypt(stringValue));
+			window.localStorage.setItem('tokens', '[]');
+		} else {
+			window.localStorage.setItem('tokens', stringValue);
+			window.localStorage.setItem('encrypted', '');
 		}
 	}
 });

@@ -2,12 +2,15 @@ import { browser } from '$app/environment';
 import type { RelayPool } from 'nostr-relaypool';
 import type { NostrMessage } from '../model/nostrMessage';
 
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import type { NostrRelay } from '../model/relay';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { schnorr, secp256k1 } from '@noble/curves/secp256k1';
+import { toast } from './toasts';
 
 const initialValueSting: string = browser
-	? window.localStorage.getItem('use-nostr') ?? 'false'
-	: 'false';
+	? window.localStorage.getItem('use-nostr') ?? 'true'
+	: 'true';
 
 const initialValue: boolean = JSON.parse(initialValueSting);
 
@@ -20,8 +23,8 @@ useNostr.subscribe((value) => {
 });
 
 const initialValueExternalKeySting: string = browser
-	? window.localStorage.getItem('use-external-nostr') ?? 'true'
-	: 'true';
+	? window.localStorage.getItem('use-external-nostr') ?? 'false'
+	: 'false';
 
 const initialValueExternalKey: boolean = JSON.parse(initialValueExternalKeySting);
 
@@ -73,8 +76,8 @@ nostrMessages.subscribe((value) => {
 
 const initialValueStingNostrRelays: string = browser
 	? window.localStorage.getItem('nostr-relays') ??
-	  '[{"url": "wss://nostr-pub.wellorder.net","isActive":"true"}]'
-	: '[{"url": "wss://nostr-pub.wellorder.net","isActive":"true"}]';
+	'[{"url": "wss://relay.damus.io","isActive":"true"}, {"url": "wss://nostr.einundzwanzig.space/","isActive":"true"}, {"url": "wss://relay.primal.net","isActive":"true"}]'
+	: '[{"url": "wss://relay.damus.io","isActive":"true"}, {"url": "wss://nostr.einundzwanzig.space/","isActive":"true"}, {"url": "wss://relay.primal.net","isActive":"true"}]';
 
 const initialValueNostrRelays: Array<NostrRelay> = JSON.parse(initialValueStingNostrRelays);
 
@@ -88,6 +91,31 @@ nostrRelays.subscribe((value) => {
 
 const nostrPool = writable<RelayPool>();
 
+const createNewNostrKeys = (privateKey?: string) => {
+	const priv = privateKey ? hexToBytes(privateKey) : schnorr.utils.randomPrivateKey();
+	nostrPrivKey.set(bytesToHex(priv));
+	nostrPubKey.set(bytesToHex(schnorr.getPublicKey(priv)));
+	restartNostr()
+};
+
+const restartNostr = () => {
+
+	if (!get(useNostr)) {
+		return;
+	}
+	if (!get(useExternalNostrKey) && !get(nostrPubKey)) {
+		return;
+	}
+	toast('info', 'Restarting nostr...', 'Setting new nostr keys');
+	setTimeout(() => {
+		useNostr.update((state) => !state);
+		setTimeout(() => {
+			useNostr.update((state) => !state);
+			toast('success', 'Nostr has restarted', 'Done!');
+		}, 500);
+	}, 2000);
+}
+
 export {
 	useNostr,
 	nostrPrivKey,
@@ -95,5 +123,7 @@ export {
 	nostrPubKey,
 	nostrPool,
 	nostrRelays,
-	useExternalNostrKey
+	useExternalNostrKey,
+	createNewNostrKeys,
+	restartNostr
 };

@@ -5,7 +5,7 @@
 
 	const resetHistory = () => {
 		history.set([]);
-		toast('info', 'history has been reset', 'Done!');
+		toast('info', 'History has been reset', 'History reset');
 		if (browser) {
 			// @ts-expect-error
 			document.getElementById('reset-history-modal').checked = false;
@@ -23,7 +23,7 @@
 			Are you sure you want to delete your history? You will keep your Tokens and Mints.
 		</p>
 		<div class="modal-action">
-			<label for="reset-history-modal" class="btn btn-outline">cancel</label>
+			<label for="reset-history-modal" class="btn btn-outline">Cancel</label>
 			<button on:click={resetHistory} class="btn btn-error">Delete</button>
 		</div>
 	</div>

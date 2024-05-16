@@ -1,308 +1,285 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, type Proof } from '@cashu/cashu-ts';
+	import { type MeltQuoteResponse, type Proof } from '@cashu/cashu-ts';
 	import LoadingCenter from '../LoadingCenter.svelte';
-	import { decode } from '@gandlaf21/bolt11-decode';
 	import { toast } from '../../stores/toasts';
 	import { token } from '../../stores/tokens';
-	import { mints } from '../../stores/mints';
 	import {
+		formatAmount,
 		getAmountForTokenSet,
-		getKeysetsOfTokens,
+		getInvoiceFromAddress,
+		getInvoiceFromLNURL,
 		getTokensForMint,
 		getTokensToSend
 	} from '../util/walletUtils';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
 	import { onMount } from 'svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import * as walletActions from '../../actions/walletActions';
+	import type { Mint } from '../../model/mint';
+	import { decode } from '@gandlaf21/bolt11-decode';
+	import { unit } from '../../stores/settings';
 
 	export let active;
-
 	export let invoice = '';
-	let fees: number = 0;
-	let amount: number = 0;
+	export let selectedTokens: Proof[];
+	export let isCoinSelection: boolean;
+	export let mint: Mint;
+	export let fees: number = 0;
+	export let amount: number;
+	export let activeS = 'send';
+	export let processing: boolean;
+
 	let isPayable = false;
 	let isLoading = false;
 	let isPaySuccess = false;
-
-	$: mint = $mints[0];
-	$: amountAvailable = getAmountForTokenSet(getTokensForMint(mint, $token));
-
-	$: selectedTokens = [];
-	$: isCoinSelection = false;
+	let memo = '';
+	let maxSend: number | undefined = undefined 
+	let minSend: number | undefined = undefined
+	let meltQuote: MeltQuoteResponse;
 
 	onMount(() => {
-		decodeInvoice();
+		if (invoice) {
+			getMeltQuote();
+		}
 	});
 
-	const decodeInvoice = async () => {
+	export const getMeltQuote = async () => {
 		try {
-			if (invoice.startsWith('lightning:')) {
-				invoice = invoice.split(':')[1];
-			}
-			amount = decode(invoice).sections[2].value / 1000;
-			if (amount) {
-				const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-				const { fee } = await cashuMint.checkFees({ pr: invoice });
-				fees = fee;
-				//todo check for balance
-				if (amountAvailable < amount + fees) {
-					isPayable = false;
-					toast(
-						'warning',
-						'This Mint does not have enough funds to pay the invoice.',
-						'Not enough funds'
-					);
-				} else {
-					isPayable = true;
+			if (invoice.includes('@')) {
+				if (!amount) {
+					toast('info','Enter amount to send to address','Amount needed')
+					return
 				}
-			} else {
-				isPayable = false;
-				throw new Error('Malformed Invoice');
+				toast('info','One moment please','Loading invoice...')
+				const {pr,maxSendable, minSendable} = await getInvoiceFromAddress(invoice, amount)
+				if (amount*1000<minSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} minimum`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
+				if (amount*1000> maxSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} max`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
+				invoice = pr
 			}
-		} catch {
-			amount = 0;
+			else if (invoice.toLowerCase().startsWith('lnurl')) {
+				if (!amount) {
+					toast('info','Enter amount to send to address','Amount needed')
+					return
+				}
+				toast('info','One moment please','Loading invoice...')
+				const {pr,maxSendable, minSendable} = await getInvoiceFromLNURL(invoice, amount)
+				if (amount*1000<minSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} minimum`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
+				if (amount*1000> maxSendable) {
+					toast('error',`Amount ${formatAmount(Math.floor(minSendable/1000), $unit)} max`,'Unable to fetch invoice')
+					maxSend = Math.floor(maxSendable/1000)
+					minSend = Math.floor(minSendable/1000)
+					return
+				}
+				invoice = pr
+			}
+			else if (!invoice.toLocaleLowerCase().startsWith('ln')) {
+				fees = 0;
+				amount = 0;
+				isPayable = false;
+				maxSend = undefined
+				minSend = undefined
+					
+				return
+			}
+			meltQuote = await walletActions.meltQuote(mint, invoice);
+			fees = meltQuote.fee_reserve;
+			amount = meltQuote.amount;
+			memo = decode(invoice).description;
+			isPayable = true;
+		} catch (error) {
 			fees = 0;
+			amount = 0;
 			isPayable = false;
-			toast('info', 'Paste a Lightning invoice into the input field.', 'Lightning Invoice');
+			toast('warning', error?.message, 'Oops');
 		}
 	};
 
 	const payInvoice = async () => {
-		isLoading = true;
-		if (!isPayable) {
-			isLoading = false;
-			toast('warning', 'Invoice is not payable', 'Invoice not paid');
-			return;
-		}
-		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-
-		const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
-
-		let tokensToSend: Array<Proof> = [];
-
-		if (isCoinSelection) {
-			tokensToSend = selectedTokens;
-		} else {
-			tokensToSend = getTokensToSend(amount + fees, getTokensForMint(mint, $token));
-		}
-		if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
-			toast('warning', 'not enough funds', 'Could not Send');
-			isLoading = false;
-			return;
-		}
-
-		const { returnChange, send, newKeys } = await cashuWallet.send(amount + fees, tokensToSend);
-		if (newKeys) {
-			updateMintKeys(mint, newKeys);
-		}
-		console.log(send);
-		// remove sent tokens from storage
-		token.update((state) => {
-			return state.filter((token) => !tokensToSend.includes(token));
-		});
-		if (returnChange) {
-			token.update((state) => [...returnChange, ...state]);
-		}
-
 		try {
-			const { isPaid, preimage, change } = await cashuWallet.payLnInvoice(invoice, send);
-			token.update((state) => [...change, ...state]);
-			history.update((state) => [
-				{
-					type: HistoryItemType.MELT,
-					amount: amount + fees - getAmountForTokenSet(change),
-					date: Date.now(),
-					data: {
-						preimage,
-						mint: mint?.mintURL,
-						keyset: getKeysetsOfTokens(tokensToSend),
-						invoice,
-						change: returnChange
-					}
-				},
-				...state
-			]);
-			if (!isPaid) {
-				isLoading = false;
-				//re-add tokens that were sent if invoice is not paid
-				token.update((state) => [...send, ...state]);
-				toast('warning', 'Try again later', 'Invoice could not be paid!');
+			if (!meltQuote) {
+				toast('warning', 'Invoice is not payable', 'Invoice not paid');
 				return;
 			}
+
+			if (amount+fees> getAmountForTokenSet(getTokensForMint(mint, $token))) {
+				toast('warning', 'Not enough funds in this mint', 'Cannot pay invoice');
+				return
+			}
+			isLoading = true;
+
+			let tokensToSend: Array<Proof> = [];
+
+			if (isCoinSelection) {
+				tokensToSend = selectedTokens;
+			} else {
+				tokensToSend = getTokensToSend(amount + fees, getTokensForMint(mint, $token));
+			}
+
+			if (isCoinSelection && amount + fees > getAmountForTokenSet(tokensToSend)) {
+				toast('warning', 'Not enough funds', 'Could not pay');
+				return;
+			}
+			processing = true;
+			const isPaid = await walletActions.melt(mint, meltQuote, tokensToSend, invoice);
+			if (!isPaid) {
+				toast('error', 'Could not pay invoice', 'Error when paying invoice');
+			}
 			isPaySuccess = true;
-			isLoading = false;
-			toast('success', 'Lightning Invoice has been paid successfully', 'Done!');
+			toast('success', `${formatAmount(amount, $unit)} with fees`, 'Invoice paid');
 		} catch (error) {
-			//re-add tokens that were sent if error
-			isLoading = false;
-			token.update((state) => [...send, ...state]);
+			toast('error', 'Could not pay invoice', 'Error');
 			console.error(error);
+		} finally {
+			isLoading = false;
 		}
 	};
 	const resetState = () => {
 		invoice = '';
+		memo = '';
 		amount = 0;
 		fees = 0;
 		isPayable = false;
 		isLoading = false;
 		isPaySuccess = false;
 		active = 'base';
+		activeS = 'send';
+		processing = false;
 	};
+
 	function scanPay() {
-		active = 'scan';
+		activeS = 'send-scan';
 	}
 </script>
 
-{#if isLoading}
-	<LoadingCenter />
-{:else if isPaySuccess}
-	<div class="flex w-full h-full flex-col items-center justify-center gap-5">
-		<p class="text-lg font-bold text-success">Lightning invoice has been paid.</p>
-		<button class="btn btn-success">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
-				class="w-6 h-6"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-				/>
-			</svg>
-		</button>
-	</div>
-	<div class="modal-action">
-		<label for="melt-modal" class="btn btn-outline" on:mouseup={resetState}>ok</label>
-	</div>
-{:else}
-	<div class="flex flex-col gap-2">
-		<p class="text-xl font-bold">Pay Lightning Invoice</p>
-		<div class="grid grid-cols-5 gap-2 items-center">
-			<p class="font-bold col-span-2">Invoice:</p>
-			<div class="flex gap-1 w-full col-span-3">
-				<input
-					id="melt-invoice-input"
-					type="text"
-					class="input input-primary w-full "
-					bind:value={invoice}
-					on:input={decodeInvoice}
-				/>
-				<button class="btn btn-square btn-warning" on:click={scanPay}>
+<div class="w-full flex-col flex gap-10 py-9">
+	{#if isLoading}
+		<div class=" h-full flex items-center justify-center gap-5 flex-col">
+			<p>Paying lightning invoice...</p>
+			<LoadingCenter />
+		</div>
+	{:else if isPaySuccess}
+		<div class="flex w-full h-full flex-col items-center justify-center gap-5">
+			<p class="text-lg font-bold text-success">Lightning invoice has been paid.</p>
+			<button class="btn btn-success">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+			</button>
+		</div>
+		<div class="modal-action">
+			<label for="melt-modal" class="btn btn-outline" on:mouseup={resetState}>Ok</label>
+		</div>
+	{:else}
+		<div class="h-10 w-full items-center justify-center flex">
+			{#if maxSend}
+			<p class=" bg-base-200 rounded-lg p-3 text-sm">
+				{formatAmount(maxSend, $unit, false)} - {formatAmount(maxSend, $unit)}
+			</p>
+			{/if}
+		</div>
+		<div class="inline-block relative w-full">
+			<textarea
+				autofocus
+				id="receive-token-input"
+				bind:value={invoice}
+				on:input={getMeltQuote}
+				class="textarea textarea-warning w-full h-40"
+				placeholder="paste a lightning invoice: lnbc10n1pj2l66wpp5qhwv7pwqvrshmqu..."
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						e.preventDefault();
+						if (isPayable) {
+							payInvoice();
+						}
+						else {
+							getMeltQuote();
+						}
+							
+					}
+				}}
+			/>
+			<div class="absolute z-10 bottom-4 right-4">
+				<button class="" on:click={scanPay}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke-width="1.5"
 						stroke="currentColor"
-						class="w-6 h-6"
+						class="text-warning w-6 h-6"
 					>
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
-							d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+							d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
 						/>
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
-							d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+							d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z"
 						/>
 					</svg>
 				</button>
 			</div>
 		</div>
-		{#if mint}
-			<div class="flex items-center gap-2">
-				<div class="grid grid-cols-5 items-center">
-					<div class="col-span-2">
-						<label for="mint-send-dropdown">
-							<p class="font-bold">Mint:</p>
-						</label>
-					</div>
-					<div class="dropdown" id="mint-send-dropdown">
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<!-- svelte-ignore a11y-label-has-associated-control -->
-						<label
-							tabindex="0"
-							class="btn max-w-[12em] md:max-w-[20em] lg:max-w-[14em] xl:max-w-[20em] overflow-clip"
-						>
-							<p class=" truncate max-w-xs text-xs">
-								{mint.mintURL}
-							</p>
-						</label>
-
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<ul
-							tabindex="0"
-							class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48 md:w-72 max-h-56 overflow-scroll flex-row scrollbar-hide"
-						>
-							{#each $mints.filter((m) => m.isAdded) as m}
-								<!-- svelte-ignore a11y-missing-attribute -->
-								<!-- svelte-ignore a11y-click-events-have-key-events -->
-								<li
-									on:click={() => {
-										mint = m;
-										decodeInvoice();
-									}}
-									class="rounded-xl {m.mintURL === mint.mintURL ? 'bg-primary' : ''}"
-								>
-									<a>{m.mintURL}</a>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="grid grid-cols-5 gap-2">
-				<p class="font-bold col-span-2">Available:</p>
-				<p class="col-span-3">{amountAvailable} sats</p>
-			</div>
-		{/if}
-
-		<div class="divider" />
-
-		<div class="grid grid-cols-4 items-start pt-5">
-			<p>Amount:</p>
-			<p class="col-span-3">{amount} sats</p>
-			<p>Fees:</p>
-			<p class="col-span-3">{fees} sats</p>
-			<div class="divider col-span-2 my-0.5" />
-			<div class="col-span-2" />
-			<p class="font-bold">Total:</p>
-			<p class="col-span-3 font-bold">{fees + amount} sats</p>
+		<div class="flex gap-1 justify-center">
+			<input
+				type="text"
+				class="bg-base-200 rounded-lg p-1 px-3 focus:outline-none w-full"
+				placeholder="memo"
+				bind:value={memo}
+			/>
 		</div>
-	</div>
+		<CoinSelection amount={amount + fees} {mint} bind:selectedTokens bind:isCoinSelection />
 
-	<CoinSelection amount={amount + fees} {mint} bind:selectedTokens bind:isCoinSelection />
-
-	<div class="flex items-center gap-2">
-		<button class="btn btn-outline" on:click={resetState}>cancel</button>
-		<button
-			class="btn {isPayable &&
-			!(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount + fees)
-				? 'btn-warning'
-				: 'btn-disabled'}"
-			on:click={() => payInvoice()}
-		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
-				class="w-6 h-6"
+		<div class="flex items-center gap-2 justify-center">
+			<button
+				class="btn w-full {isPayable &&
+				!(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount + fees)
+					? 'btn-warning'
+					: 'btn-disabled'}"
+				on:click={() => payInvoice()}
 			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-				/>
-			</svg>Pay</button
-		>
-	</div>
-{/if}
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+					/>
+				</svg>Pay</button
+			>
+		</div>
+	{/if}
+</div>

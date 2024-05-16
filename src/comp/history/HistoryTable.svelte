@@ -27,14 +27,14 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
 				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
-					load more
+					Load more
 				</td>
 				<td
 					colspan="2"
 					class="cursor-pointer w-full hover:bg-base-200"
 					on:click={() => (page = 999999)}
 				>
-					load all
+					Load all
 				</td>
 			</tr>
 		</tbody>

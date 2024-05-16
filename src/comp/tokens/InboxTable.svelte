@@ -1,13 +1,19 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
+	import {
+		CashuMint,
+		CashuWallet,
+		getEncodedToken,
+		type MintKeys,
+		type MintKeyset
+	} from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import { mints } from '../../stores/mints';
 	import { nostrMessages } from '../../stores/nostr';
 	import { toast } from '../../stores/toasts';
-	import { token } from '../../stores/tokens';
-	import { getAmountForTokenSet } from '../util/walletUtils';
+	import { formatAmount, getAmountForTokenSet, getKeysForUnit } from '../util/walletUtils';
 	import InboxRow from './InboxRow.svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import { receive } from '../../actions/walletActions';
+	import { unit } from '../../stores/settings';
 
 	$: page = 20;
 	$: nostrMessagesSub = $nostrMessages.slice(0, page);
@@ -28,60 +34,47 @@
 				return;
 			}
 			const mint: CashuMint = new CashuMint(nM.token.token[0].mint);
-			let keys;
+			let keys: MintKeys[];
+			let keysets: MintKeyset[];
 			try {
 				if ($mints.map((m) => m.mintURL).includes(mint.mintUrl)) {
 					keys = $mints.filter((m) => m.mintURL === mint.mintUrl)[0].keys;
+					keysets = $mints.filter((m) => m.mintURL === mint.mintUrl)[0].keysets;
 				} else {
-					keys = await mint.getKeys();
-					const storeMint: Mint = {
-						mintURL: mint.mintUrl,
-						keys,
-						keysets: [...new Set(nM.token.token[0].proofs.map((p) => p.id))],
-						isAdded: false
-					};
+					keys = (await mint.getKeys()).keysets;
+					keysets = (await mint.getKeySets()).keysets;
 				}
+				const storeMint: Mint = {
+					mintURL: mint.mintUrl,
+					keys: keys,
+					keysets: keysets
+				};
 
-				const wallet = new CashuWallet(mint, keys);
+				const wallet = new CashuWallet(mint, getKeysForUnit(keys));
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
 
 				if (proofsToReceive.length > 0) {
-					const {
-						token: tokens,
-						tokensWithErrors,
-						newKeys
-					} = await wallet.receive(getEncodedToken(nM.token));
-					const storedMint = $mints.find((m) => mint.mintUrl === m.mintURL);
-					if (newKeys && storedMint) {
-						updateMintKeys(storedMint, newKeys);
-					}
-					const proofs = tokens.token.map((t) => t.proofs).flat();
-					token.update((state) => [...proofs, ...state]);
+					const { proofs } = await receive(storeMint, getEncodedToken(nM.token));
 					totalReceived += getAmountForTokenSet(proofs);
-					if (tokensWithErrors) {
-						throw new Error('Could not redeem all tokens');
-					}
 				}
 				totalSpent += getAmountForTokenSet(spentProofs);
 			} catch (error) {
-				console.log(error);
 				hasError++;
 			}
 		}
 
 		if (totalReceived > 0) {
-			console.log();
-			toast('success', `${totalReceived} tokens received`, 'Success!');
+			toast('success', `${formatAmount(totalReceived, $unit)} received`, 'Received');
 		}
 
 		if (totalSpent > 0) {
-			toast('info', `${totalSpent} tokens were already redeemed`, 'Info');
+			toast('info', `${formatAmount(totalSpent, $unit)} were already redeemed`, 'Already redeemed');
 		}
 
 		if (hasError > 0) {
-			toast('warning', `${hasError} errors occurred when trying to redeem tokens`, 'Oops');
+			toast('warning', `${hasError} errors occurred when trying to redeem tokens`, 'Error');
 		}
 		isLoading = false;
 		nostrMessages.set(
@@ -93,7 +86,7 @@
 	};
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll  max-h-40 scrollbar-hide">
+<div class="overflow-x-scroll overflow-y-scroll scrollbar-hide">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
@@ -136,14 +129,14 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
 				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
-					load more
+					Load more
 				</td>
 				<td
 					colspan="2"
 					class="cursor-pointer w-full hover:bg-base-200"
 					on:click={() => (page = 999999)}
 				>
-					load all
+					Load all
 				</td>
 			</tr>
 		</tbody>

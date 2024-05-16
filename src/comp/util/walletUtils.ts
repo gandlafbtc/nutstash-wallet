@@ -1,13 +1,16 @@
+import type { Keys, MintActiveKeys, MintKeys } from '@cashu/cashu-ts';
 import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
-
+import { bech32 } from "bech32";
+import { Buffer } from "buffer";
+import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
  * @param amount
  * @param tokens
  * @returns
  */
-const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
+export const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	let tokenAmount = 0;
 	const tokenSubset = tokens.filter((token) => {
 		if (tokenAmount < amount) {
@@ -18,26 +21,47 @@ const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	return tokenSubset;
 };
 
-const validateMintKeys = (keys: object): boolean => {
+export const getLockedTokens = (proofs: Proof[])=> {
+	return proofs.filter(p=>{ try {
+		parseSecret(p.secret)
+		return true	
+	} catch (error) {
+		return false
+	}})
+} 
+
+export const getKeysForUnit = (keys: MintKeys[], unit = 'sat'): MintKeys | undefined => {
+	return keys.find((k) => {
+		return k.unit === unit;
+	});
+};
+export const getKeysForKeysetId = (keys: MintKeys[], keysetId: string): MintKeys | undefined => {
+	return keys.find((k) => {
+		return k.id === keysetId;
+	});
+};
+
+export const validateMintKeys = (keys: MintActiveKeys): boolean => {
 	let isValid = true;
 	try {
-		const allKeys = Object.keys(keys);
-
-		if (!allKeys) {
+		const keysets = keys.keysets.map((ks) => ks.keys);
+		if (!keysets.length) {
 			return false;
 		}
-
-		if (allKeys.length < 1) {
+		if (!keysets) {
 			return false;
 		}
-		allKeys.forEach((k) => {
-			//try parse int?
-			if (isNaN(k)) {
-				isValid = false;
-			}
-			if (!isPow2(k)) {
-				isValid = false;
-			}
+		keysets.forEach((ks) => {
+			const allKeys = Object.keys(ks);
+			allKeys.forEach((k) => {
+				//try parse int?
+				if (isNaN(k)) {
+					isValid = false;
+				}
+				if (!isPow2(k)) {
+					isValid = false;
+				}
+			});
 		});
 		return isValid;
 	} catch (error) {
@@ -45,7 +69,7 @@ const validateMintKeys = (keys: object): boolean => {
 	}
 };
 
-const isPow2 = (number: number) => {
+export const isPow2 = (number: number) => {
 	return Math.log2(number) % 1 === 0;
 };
 
@@ -55,9 +79,9 @@ const isPow2 = (number: number) => {
  * @param tokens
  * @returns
  */
-const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
+export const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
 	const tokenSubset = tokens.filter((token) => {
-		if (mint?.keysets.includes(token.id)) {
+		if (mint?.keysets.map((k) => k.id).includes(token.id)) {
 			return true;
 		} else {
 			return false;
@@ -66,7 +90,7 @@ const getTokensForMint = (mint: Mint, tokens: Array<Proof>) => {
 	return tokenSubset;
 };
 
-const isValidToken = (obj: any) => {
+export const isValidToken = (obj: any) => {
 	// todo implement
 	return true;
 };
@@ -77,27 +101,27 @@ const isValidToken = (obj: any) => {
  * @param tokensToRemove
  * @returns
  */
-const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof>) => {
+export const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof>) => {
 	return tokens.filter((token) => !tokensToRemove.includes(token));
 };
 
-const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
+export const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
 	let mint: Mint | undefined = undefined;
 	mints.forEach((m) => {
-		if (m.keysets.includes(token.id)) {
+		if (m.keysets.map((k) => k.id).includes(token.id)) {
 			mint = m;
 		}
 	});
 	return mint;
 };
 
-const getAmountForTokenSet = (tokens: Array<Proof>): number => {
+export const getAmountForTokenSet = (tokens: Array<Proof>): number => {
 	return tokens.reduce((acc, t) => {
 		return acc + t.amount;
 	}, 0);
 };
 
-const getKeysetsOfTokens = (tokens: Array<Proof>) => {
+export const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	return removeDuplicatesFromArray(
 		tokens.map((t) => {
 			return t.id;
@@ -105,7 +129,7 @@ const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	);
 };
 
-const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
+export const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 	return array.reduce((acc: Array<Type>, curr: Type) => {
 		if (acc.includes(curr)) {
 			return acc;
@@ -115,14 +139,43 @@ const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 	}, []);
 };
 
-export {
-	getMintForToken,
-	getTokensToSend,
-	getTokensForMint,
-	getTokenSubset,
-	getAmountForTokenSet,
-	getKeysetsOfTokens,
-	removeDuplicatesFromArray,
-	isValidToken,
-	validateMintKeys
+export const formatAmount = (amount: number, unit: string, withSuffix = true): string => {
+	if (unit === 'sat') {
+		return formatSats(amount, withSuffix);
+	} else {
+		console.log(amount);
+		return formatSats(amount, withSuffix);
+	}
 };
+
+const formatSats = (amount: number, withSuffix: boolean): string => {
+	return (
+		new Intl.NumberFormat('en-US').format(amount) +
+		(withSuffix ? ' ' + (amount > 1 ? 'sats' : 'sat') : '')
+	);
+};
+
+export const getInvoiceFromAddress = async (address: string, amount: number):Promise<{pr:string, maxSendable: number, minSendable:number}> => {
+	const addressParts = address.split("@")
+	const endpoint = `https://${addressParts[1]}/.well-known/lnurlp/${addressParts[0]}`
+	return await LNURLLookup(endpoint, amount)
+}
+
+export const getInvoiceFromLNURL = async (LNURL: string, amount: number):Promise<{pr:string, maxSendable: number, minSendable:number}> => {
+	
+	const { prefix: hrp, words: dataPart } = bech32.decode(LNURL, 2000)
+	const requestByteArray = bech32.fromWords(dataPart)
+
+	const endpoint = Buffer.from(requestByteArray).toString()
+	return await LNURLLookup(endpoint, amount)
+}
+
+const LNURLLookup = async (endpoint:string, amount: number) => {
+	const { callback, maxSendable, minSendable } = await (await fetch(endpoint)).json() as { callback: string, maxSendable: number, minSendable: number }
+	if (!callback) {
+		throw new Error("No callback url found.");
+	}
+	const cb = callback + (callback.includes('?') ? `&` : `?`) + `amount=${amount * 1000}`
+	const { pr } = await (await fetch(cb)).json() as { pr: string }
+	return {pr, maxSendable, minSendable}
+}

@@ -1,12 +1,12 @@
 <div class="w-6 h-6">
-	<a href="https://github.com/gandlafbtc/nutstash-wallet" class="link link-primary">
+	<a href="https://github.com/gandlafbtc/nutstash-wallet" class="link link-primary" target="_blank">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke-width="1.5"
 			stroke="currentColor"
-			class="w-6 h-6 text-primary hover:text-success transition-all"
+			class="w-6 h-6 text-base-300 hover:text-success transition-all"
 		>
 			<path
 				stroke-linecap="round"

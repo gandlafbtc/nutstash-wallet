@@ -4,9 +4,14 @@
 </script>
 
 {#if $notifications}
-	<div class="toast toast-end">
+	<div class="mb-5 toast toast-center">
 		{#each $notifications as toast}
-			<Toast level={toast.level} message={toast.message} messageTitle={toast.messageTitle} />
+			<Toast
+				level={toast.toast.level}
+				message={toast.toast.message}
+				messageTitle={toast.toast.messageTitle}
+				timer={toast.timer}
+			/>
 		{/each}
 	</div>
 {/if}

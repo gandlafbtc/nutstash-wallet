@@ -10,7 +10,7 @@
 	};
 </script>
 
-<div class="overflow-x-scroll overflow-y-scroll max-h-40 scrollbar-hide">
+<div class="overflow-x-scroll overflow-y-scroll scrollbar-hide w-full">
 	<table class="table table-compact table-zebra w-full">
 		<thead>
 			<tr>
@@ -20,7 +20,7 @@
 					<p class="flex lg:hidden">Amt</p></th
 				>
 				<th>Date</th>
-				<th class="w-full">Token</th>
+				<th>Mint</th>
 			</tr>
 		</thead>
 		<tbody class="max-h-1 overflow-y-scroll scrollbar-hide">
@@ -30,14 +30,14 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<tr class="">
 				<td colspan="2" class="cursor-pointer w-5 hover:bg-base-200" on:click={loadMore}>
-					load more
+					Load more
 				</td>
 				<td
 					colspan="2"
 					class="cursor-pointer w-full hover:bg-base-200"
 					on:click={() => (page = 999999)}
 				>
-					load all
+					Load all
 				</td>
 			</tr>
 		</tbody>

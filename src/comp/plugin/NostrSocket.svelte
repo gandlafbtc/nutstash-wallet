@@ -28,13 +28,11 @@
 	onDestroy(() => {
 		if ($nostrPool) {
 			$nostrPool.close();
-			console.log('close connections');
 		}
 	});
 
 	onMount(async () => {
 		if (!$useNostr) {
-			console.log('nostr is disabled');
 			return;
 		}
 
@@ -49,36 +47,43 @@
 		);
 
 		if (activeRelays.length < 1) {
-			toast('warning', 'You have to add at least one relay to use Nostr.', 'No relay configured');
+			toast('warning', 'Add at least one relay', 'No relay configured');
 			return;
 		}
 
 		if ($useExternalNostrKey && !window.nostr) {
-			toast(
-				'info',
-				'install a nostr signing extension or switch to local keys.',
-				'No nostr Keys present'
-			);
+			toast('warning', 'Install extension or use local keys', 'No nostr Keys present');
 			return;
 		}
 		if ($useExternalNostrKey && (await !window.nostr.getPublicKey())) {
-			toast(
-				'info',
-				'Add a key pair to the nostr extension or switch to local keys.',
-				'no key in nostr extension'
-			);
+			toast('warning', 'Add a key to nostr extension.', 'No key in nostr extension');
 			return;
 		}
 		if (!$useExternalNostrKey && (!$nostrPubKey || !$nostrPrivKey)) {
-			toast('info', 'Use a signing extension or generate a key pair.', 'No nostr Keys found');
+			// toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
 			return;
 		}
 
 		console.log('connecting to nostr relays...', activeRelays);
 		nostrPool.set(new rp.RelayPool(activeRelays));
 		const nostrPubK: string = await getPubKey();
+
+		const filter: { kinds: number[]; limit: number; '#p': string[]; since?: number } = {
+			kinds: [nostrTools.kinds.EncryptedDirectMessage],
+			limit: 10,
+			'#p': [nostrPubK]
+		};
+
+		if ($nostrMessages.length) {
+			filter.since = $nostrMessages
+				.map((m) => m.event.created_at)
+				.reduce((prev, curr) => {
+					return prev >= curr ? prev : curr;
+				});
+		}
+
 		$nostrPool?.subscribe(
-			[{ kinds: [nostrTools.Kind.EncryptedDirectMessage], limit: 10, '#p': [nostrPubK] }],
+			[filter],
 			activeRelays,
 			async (event, isAfterEose, relayURL) => {
 				console.log(event);

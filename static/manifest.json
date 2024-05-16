@@ -4,9 +4,9 @@
 	"start_url": "/",
 	"icons": [
 		{
-			"src": "maskable_icon_logo_x512.png",
+			"src": "maskable_icon_logo_x384.png",
 			"type": "image/png",
-			"sizes": "512x512"
+			"sizes": "384x384"
 		},
 		{
 			"src": "maskable_icon_x192.png",
@@ -18,6 +18,5 @@
 	"background_color": "#212121",
 	"display": "standalone",
 	"scope": "/",
-	"theme_color": "#212121",
 	"description": "Cashu Wallet"
 }

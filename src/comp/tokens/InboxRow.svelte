@@ -1,25 +1,23 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
+	import { CashuMint, getEncodedToken } from '@cashu/cashu-ts';
 	import { mints } from '../../stores/mints';
 	import type { NostrMessage } from '../../model/nostrMessage';
 	import { nostrMessages } from '../../stores/nostr';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import {
+		formatAmount,
 		getAmountForTokenSet,
-		getKeysetsOfTokens,
 		getMintForToken,
 		validateMintKeys
 	} from '../util/walletUtils';
-	import { token } from '../../stores/tokens';
 	import { toast } from '../../stores/toasts';
-	import { history } from '../../stores/history';
-	import { HistoryItemType } from '../../model/historyItem';
 	import { contacts } from '../../stores/contacts';
 	import type { Contact } from '../../model/contact';
 	import type { Mint } from '../../model/mint';
 	import { onMount } from 'svelte';
-	import { updateMintKeys } from '../../actions/walletActions';
+	import * as walletActions from '../../actions/walletActions';
+	import { unit } from '../../stores/settings';
 
 	export let nostrMessage: NostrMessage;
 	export let i: number;
@@ -48,7 +46,7 @@
 		const mint = new CashuMint(nostrMessage.token.token[0].mint);
 		try {
 			if ($mints.filter((m) => m.mintURL === mint.mintUrl).length > 0) {
-				toast('warning', 'this mint has already been added.', "Didn't add mint!");
+				toast('warning', 'Mint already added', 'Mint not added');
 				return;
 			}
 			isLoadingMint = true;
@@ -56,26 +54,21 @@
 			const keys = await mint.getKeys();
 
 			if (!validateMintKeys(keys)) {
-				toast('error', 'the keys from that mint are invalid', 'mint could not be added');
+				toast('warning', 'Keys from mint are invalid', 'Mint not added');
 				return;
 			}
 
 			const storeMint: Mint = {
 				mintURL: mint.mintUrl,
-				keys,
-				keysets: keysets.keysets,
-				isAdded: true
+				keys: [],
+				keysets: keysets.keysets
 			};
 
 			mints.update((state) => [storeMint, ...state]);
-			toast('success', 'Mint has been added', 'Success');
+			toast('success', 'Mint is ready', 'Mint added');
 			hasMint = true;
 		} catch {
-			toast(
-				'error',
-				'keys could not be loaded from:' + mint.mintUrl + '/keys',
-				'Could not add mint.'
-			);
+			toast('error', 'Could not load keys', 'Mint not added');
 			throw new Error('Could not add Mint.');
 		} finally {
 			isLoadingMint = false;
@@ -86,31 +79,12 @@
 		try {
 			const mint = getMintForToken(nostrMessage.token.token[0].proofs[0], $mints);
 			if (!mint) {
-				toast('warning', 'This token is from an unknown mint.', 'Token could not be added');
+				toast('warning', 'Token is from an unknown mint.', 'Token could not be added');
 				return;
 			}
-			if (!mint.isAdded) {
-				toast(
-					'warning',
-					'This token is from a mint you have not added yet.',
-					'Token could not be added'
-				);
-				return;
-			}
-
-			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, mint.keys);
 			const encodedProofs = getEncodedToken(nostrMessage.token);
-
 			isLoading = true;
-			//todo tokens with errors are not handled
-			const { token: tokens, tokensWithErrors, newKeys } = await cashuWallet.receive(encodedProofs);
-			if (newKeys) {
-				updateMintKeys(mint, newKeys);
-			}
-			const proofs = tokens.token.map((t) => t.proofs).flat();
-			token.update((state) => [...proofs, ...state]);
-
+			const { proofs } = await walletActions.receive(mint, encodedProofs);
 			nostrMessages.update((state) => {
 				const everythingElse = state.filter((nM) => {
 					return nM.event.id !== nostrMessage.event.id;
@@ -118,30 +92,14 @@
 				nostrMessage.isAccepted = true;
 				return [nostrMessage, ...everythingElse];
 			});
-
-			history.update((state) => [
-				{
-					type: HistoryItemType.RECEIVE_NOSTR,
-					amount: getAmountForTokenSet(nostrMessage.token.token[0].proofs),
-					date: Date.now(),
-					data: {
-						encodedToken: encodedProofs,
-						mint: mint?.mintURL ?? '',
-						keyset: getKeysetsOfTokens(proofs),
-						receivedTokens: proofs,
-						sender: nostrMessage.event.pubkey,
-						eventId: nostrMessage.event.id
-					}
-				},
-				...state
-			]);
-			if (tokensWithErrors) {
-				throw new Error('Not all tokens could be redeemed');
-			}
-			toast('success', 'the Tokens have been successfully received', 'Success!');
+			toast(
+				'success',
+				`Received ${formatAmount(getAmountForTokenSet(proofs), $unit)}`,
+				'Token received'
+			);
 		} catch (e) {
 			console.error(e);
-			toast('error', 'The Tokens could not be added to your Wallet.', 'Error!');
+			toast('error', 'Error when receiving token', 'Token not received');
 		}
 		if (browser) {
 			// @ts-expect-error
@@ -201,7 +159,7 @@
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"
 					fill="currentColor"
-					class="w-4 h-4 text-info relative inline-flex rounded-full "
+					class="w-4 h-4 text-info relative inline-flex rounded-full"
 				>
 					<path
 						d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"
@@ -210,7 +168,7 @@
 			</div>
 		{/if}
 	</td>
-	<td>{getAmountForTokenSet(nostrMessage?.token?.token[0].proofs)}</td>
+	<td>{formatAmount(getAmountForTokenSet(nostrMessage?.token?.token[0].proofs), $unit)}</td>
 	<td>
 		<p class="hidden lg:flex">
 			{date.toLocaleString('en-us', {
@@ -242,7 +200,7 @@
 			<div class="grid grid-cols-5">
 				<p class="font-bold">Amount:</p>
 				<p class="col-span-4">
-					{getAmountForTokenSet(nostrMessage?.token?.token[0]?.proofs) ?? ''}
+					{formatAmount(getAmountForTokenSet(nostrMessage?.token?.token[0]?.proofs) ?? 0, $unit)}
 				</p>
 				<p class="font-bold">Mint:</p>
 				<p class="col-span-4">
@@ -269,10 +227,19 @@
 						</button>
 					{/if}
 					{#if showAdd}
-						<input type="text" class="input-xs input input-primary" bind:value={contactName} />
+						<input
+							type="text"
+							class="input-xs input input-primary"
+							bind:value={contactName}
+							on:keydown={(e) => {
+								if (e.key === 'Enter') {
+									addContact();
+								}
+							}}
+						/>
 						<button class="btn-xs btn-success rounded-md text-xs" on:click={addContact}>add</button>
 						<button class="btn-xs btn-square rounded-md text-xs" on:click={() => (showAdd = false)}
-							>cancel</button
+							>Cancel</button
 						>
 					{:else}
 						<div class="badge badge-info gap-2">

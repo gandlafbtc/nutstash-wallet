@@ -13,8 +13,3 @@ services:
     restart: on-failure
     ports:
       - '3000:3000'
-    volumes:
-      - /tmp/nutstash/nutstash-data:/app/data
-
-volumes:
-  nutstash-data:
