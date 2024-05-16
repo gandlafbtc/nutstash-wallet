@@ -52,7 +52,6 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.settings.args }}
-
   build-apk:
     name: Build APK
     runs-on: ubuntu-latest
