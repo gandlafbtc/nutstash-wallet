@@ -1,8 +1,7 @@
 on:
-  workflow_run:
-    workflows: ["release"]
+  release:
     types:
-      - completed
+      - released
 
 jobs:
   checksum:

@@ -49,9 +49,8 @@ jobs:
           uses: martinbeentjes/npm-get-version-action@v1.3.1
         - name: Sign dev build
           run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
-        - name: Release with Notes
-          run: |
-            mv ./android/app/build/outputs/apk/release/app-release-unsigned.apk ./android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+        - name: Sign dev build
+          run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk ./android/app/build/outputs/apk/release/app-release-unsigned.apk app.nutstash.key
         - name: create-release
           uses: softprops/action-gh-release@v1
           with:
@@ -62,6 +61,7 @@ jobs:
               android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab
       outputs:
         releaseId: ${{ steps.create-release.outputs.id }}
+        tagName: ${{ steps.package-version.outputs.current-version}}
   build-native:  
     needs: build-apk
     permissions:
@@ -106,4 +106,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ needs.build-apk.outputs.releaseId }}
+          tagName: ${{ needs.build-apk.outputs.tagName }}
           args: ${{ matrix.settings.args }}
