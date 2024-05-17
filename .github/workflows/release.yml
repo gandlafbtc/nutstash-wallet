@@ -44,7 +44,7 @@ jobs:
           id: package-version
           uses: martinbeentjes/npm-get-version-action@v1.3.1
         - name: Capacitor build
-          run: npx cap build --androidreleasetype APK --keystorepath android/release.jks --keystorepass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealiaspass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealias app.nutstash.key android
+          run: npx cap build --androidreleasetype APK --keystorepath release.jks --keystorepass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealiaspass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealias app.nutstash.key android
         - name: mv apk
           run: mv android/app/build/outputs/apk/release/app-release-signed.apk android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
         - name: create-release
