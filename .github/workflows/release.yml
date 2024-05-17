@@ -5,60 +5,70 @@ on:
       - main
 
 jobs:
-  build-apk:
-      permissions:
-        contents: write 
-      name: Build APK
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout source
-          uses: actions/checkout@v3
+  # build-apk:
+  #     permissions:
+  #       contents: write 
+  #     name: Build APK
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - name: Checkout source
+  #         uses: actions/checkout@v3
 
-        - name: Setup java
-          uses: actions/setup-java@v3
-          with:
-            distribution: 'zulu'
-            java-version: '17'
-        - name: Setup Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: 20.x
+  #       - name: Setup java
+  #         uses: actions/setup-java@v3
+  #         with:
+  #           distribution: 'zulu'
+  #           java-version: '17'
+  #       - name: Setup Android SDK
+  #         uses: android-actions/setup-android@v3
+  #       - name: Setup Node.js
+  #         uses: actions/setup-node@v3
+  #         with:
+  #           node-version: 20.x
 
-        - name: Install app dependencies
-          run: npm install
+  #       - name: Install app dependencies
+  #         run: npm install
 
-        - name: Build Svelte app
-          run: npm run build
+  #       - name: Build Svelte app
+  #         run: npm run build
 
-        - name: Capacitor update
-          run: npx cap sync android
+  #       - name: Capacitor update
+  #         run: npx cap sync android
 
-        - name: Capacitor copy
-          run: npx cap copy
+  #       - name: Capacitor copy
+  #         run: npx cap copy
 
-        - name: Extract Android signing key from env
-          run: |
-            echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
-            base64 -d android/release.jks.base64 > android/release.jks
-        - name: get-npm-version
-          id: package-version
-          uses: martinbeentjes/npm-get-version-action@v1.3.1
-        - name: Capacitor build
-          run: npx cap build --androidreleasetype APK --keystorepath release.jks --keystorepass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealiaspass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealias app.nutstash.key android
-        - name: mv apk
-          run: mv android/app/build/outputs/apk/release/app-release-signed.apk android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
-        - name: create-release
-          uses: softprops/action-gh-release@v1
-          with:
-            name: ${{ steps.package-version.outputs.current-version}}
-            tag_name: ${{ steps.package-version.outputs.current-version}}
-            files: |
-              android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
-      outputs:
-        releaseId: ${{ steps.create-release.outputs.id }}
-        tagName: ${{ steps.package-version.outputs.current-version}}
+  #       - name: Build app bundle
+  #         run: cd android && ./gradlew bundle && ./gradlew assemble
+
+  #       - name: Extract Android signing key from env
+  #         run: |
+  #           echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
+  #           base64 -d android/release.jks.base64 > android/release.decrypted.jks
+  #       - name: get-npm-version
+  #         id: package-version
+  #         uses: martinbeentjes/npm-get-version-action@v1.3.1
+  #       - name: Sign build and apk
+  #         run: | 
+  #           jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
+  #           jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/apk/release/app-release.apk ./android/app/build/outputs/apk/release/app-release-unsigned.apk app.nutstash.key
+  #       - name: align apk
+  #         run: |
+  #           sudo apt-get -y install zipalign
+  #           zipalign 4 ./android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+  #       - name: create-release
+  #         uses: softprops/action-gh-release@v1
+  #         with:
+  #           name: ${{ steps.package-version.outputs.current-version}}
+  #           tag_name: ${{ steps.package-version.outputs.current-version}}
+  #           files: |
+  #             android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
+  #             android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab
+  #     outputs:
+  #       releaseId: ${{ steps.create-release.outputs.id }}
+  #       tagName: ${{ steps.package-version.outputs.current-version}}
   build-native:  
-    needs: build-apk
+    # needs: build-apk
     permissions:
       contents: write
     strategy:
@@ -100,6 +110,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ needs.build-apk.outputs.releaseId }}
-          tagName: ${{ needs.build-apk.outputs.tagName }}
+          tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: '__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
           args: ${{ matrix.settings.args }}
