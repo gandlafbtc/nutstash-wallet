@@ -22,7 +22,7 @@ jobs:
         - name: Setup Android SDK
           uses: android-actions/setup-android@v3
           with:
-            packages: 'apksigner'
+            packages: 'build-tools'
         - name: Setup Node.js
           uses: actions/setup-node@v3
           with:
@@ -40,24 +40,17 @@ jobs:
         - name: Capacitor copy
           run: npx cap copy
 
-        - name: Build app bundle
-          run: cd android && ./gradlew bundle && ./gradlew assemble
-
         - name: Extract Android signing key from env
           run: |
             echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
-            base64 -d android/release.jks.base64 > android/release.decrypted.jks
+            base64 -d android/release.jks.base64 > android/release.jks
         - name: get-npm-version
           id: package-version
           uses: martinbeentjes/npm-get-version-action@v1.3.1
-        - name: Sign dev build
-          run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
-        - name: align apk
-          run: |
-            sudo apt-get -y install zipalign
-            zipalign -v -p 4 android/app/build/outputs/apk/release/app-release-unsigned.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
-        - name: sign apk
-          run: apksigner sign --ks android/release.decrypted.jks --out android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
+        - name: Capacitor build
+          run: npx cap build --androidreleasetype APK --keystorepath android/release.jks --keystorepass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealiaspass ${{ secrets.RELEASE_KEYSTORE_PASSWORD }} --keystorealias app.nutstash.key android
+        - name: mv apk
+          run: mv android/app/build/outputs/apk/release/app-release-signed.apk android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
         - name: create-release
           uses: softprops/action-gh-release@v1
           with:
@@ -65,7 +58,6 @@ jobs:
             tag_name: ${{ steps.package-version.outputs.current-version}}
             files: |
               android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk
-              android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab
       outputs:
         releaseId: ${{ steps.create-release.outputs.id }}
         tagName: ${{ steps.package-version.outputs.current-version}}
