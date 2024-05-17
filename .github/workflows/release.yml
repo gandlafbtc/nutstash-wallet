@@ -51,7 +51,9 @@ jobs:
         - name: Sign dev build
           run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
         - name: align apk
-          run: zipalign -v -p 4 android/app/build/outputs/apk/release/app-release-unsigned.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
+          run: |
+            sudo apt-get -y install zipalign
+            zipalign -v -p 4 android/app/build/outputs/apk/release/app-release-unsigned.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
         - name: sign apk
           run: apksigner sign --ks android/release.decrypted.jks --out android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
         - name: create-release
