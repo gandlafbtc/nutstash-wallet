@@ -19,7 +19,8 @@ jobs:
           with:
             distribution: 'zulu'
             java-version: '17'
-
+        - name: Setup Android SDK
+          uses: android-actions/setup-android@v3
         - name: Setup Node.js
           uses: actions/setup-node@v3
           with:
@@ -49,8 +50,10 @@ jobs:
           uses: martinbeentjes/npm-get-version-action@v1.3.1
         - name: Sign dev build
           run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/nutstash-${{ steps.package-version.outputs.current-version}}.aab ./android/app/build/outputs/bundle/release/app-release.aab app.nutstash.key
-        - name: Sign dev build
-          run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk ./android/app/build/outputs/apk/release/app-release-unsigned.apk app.nutstash.key
+        - name: align apk
+          run: zipalign -v -p 4 android/app/build/outputs/apk/release/app-release-unsigned.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
+        - name: sign apk
+          run: apksigner sign --ks android/release.decrypted.jks --out android/app/build/outputs/apk/release/nutstash-${{ steps.package-version.outputs.current-version}}.apk android/app/build/outputs/apk/release/my-app-unsigned-aligned.apk
         - name: create-release
           uses: softprops/action-gh-release@v1
           with:
