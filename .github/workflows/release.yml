@@ -21,6 +21,8 @@ jobs:
             java-version: '17'
         - name: Setup Android SDK
           uses: android-actions/setup-android@v3
+          with:
+            packages: 'apksigner'
         - name: Setup Node.js
           uses: actions/setup-node@v3
           with:
