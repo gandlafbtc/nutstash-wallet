@@ -19,10 +19,6 @@ jobs:
           with:
             distribution: 'zulu'
             java-version: '17'
-        - name: Setup Android SDK
-          uses: android-actions/setup-android@v3
-          with:
-            packages: 'build-tools'
         - name: Setup Node.js
           uses: actions/setup-node@v3
           with:
