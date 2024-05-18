@@ -57,14 +57,14 @@
 	async function search(): Promise<boolean> {
 		wallet = wallet
 			? wallet
-			: new CashuWallet(cashuMint, getKeysForKeysetId(mint.keys, ks.id), $seed);
+			: new CashuWallet(cashuMint, {keys: getKeysForKeysetId(mint.keys, ks.id),mnemonicOrSeed: $seed});
 		const currentCount = $counts.find((c) => c.keysetId === ks.id);
 		if (!currentCount) {
 			throw new Error('could not update count');
 		}
 		const count = currentCount.count;
 		incrCount(currentCount);
-		const { proofs } = await wallet.restore(count, countStep, ks.id);
+		const { proofs } = await wallet.restore(count, countStep, {keysetId:ks.id});
 		if (proofs) {
 			token.update((ctx) => [...proofs, ...ctx]);
 		}

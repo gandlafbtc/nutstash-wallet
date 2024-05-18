@@ -52,7 +52,7 @@
 		"@capacitor/haptics": "6.0.0",
 		"@capacitor/keyboard": "6.0.0",
 		"@capacitor/status-bar": "6.0.0",
-		"@cashu/cashu-ts": "1.0.0-rc.2",
+		"@cashu/cashu-ts": "1.0.0-legacy-restore-patch",
 		"@gandlaf21/bc-ur": "^1.1.12",
 		"@gandlaf21/bolt11-decode": "^3.1.1",
 		"@gandlaf21/cashu-crypto": "^0.2.6",

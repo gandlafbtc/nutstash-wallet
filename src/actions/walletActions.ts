@@ -155,7 +155,7 @@ const getWalletStuff = (mint: Mint) => {
 	const keys = getKeysForUnit(mint.keys);
 	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 	const seedPhrase = get(seed);
-	const wallet: CashuWallet = new CashuWallet(cashuMint, keys, seedPhrase ? seedPhrase : undefined);
+	const wallet: CashuWallet = new CashuWallet(cashuMint, {keys, mnemonicOrSeed: seedPhrase ? seedPhrase : undefined});
 	let count = undefined;
 	let keysetId = wallet.keys.id;
 	if (seedPhrase) {
@@ -172,7 +172,7 @@ export const mint = async (
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
 	const { proofs } = await wallet.mintTokens(amount, quote, {
-		AmountPreference: preference,
+		amountPreference: preference,
 		counter: count,
 		keysetId
 	});
