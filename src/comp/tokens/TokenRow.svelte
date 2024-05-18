@@ -108,7 +108,7 @@
 
 		try {
 			const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, getKeysForUnit(mint.keys));
+			const cashuWallet: CashuWallet = new CashuWallet(cashuMint, {keys: getKeysForUnit(mint.keys)});
 			const spentProofs = await cashuWallet.checkProofsSpent([token]);
 			let hasBeenReceived = false;
 			if (!$pendingTokens.includes(token)) {

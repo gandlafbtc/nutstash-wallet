@@ -47,13 +47,13 @@
 		try {
 			isPrepare = true;
 			const cashuSwapInMint = new CashuMint(swapInMint.mintURL);
-			const cashuSwapInWallet = new CashuWallet(cashuSwapInMint, getKeysForUnit(swapInMint.keys));
+			const cashuSwapInWallet = new CashuWallet(cashuSwapInMint, {keys:getKeysForUnit(swapInMint.keys)});
 
 			const { quote, request } = await cashuSwapInWallet.getMintQuote(swapAmount);
 			paymentHash = quote;
 			invoice = request;
 			const cashuSwapOutMint = new CashuMint(swapOutMint.mintURL);
-			const cashuSwapOutWallet = new CashuWallet(cashuSwapOutMint, getKeysForUnit(swapInMint.keys));
+			const cashuSwapOutWallet = new CashuWallet(cashuSwapOutMint, {keys: getKeysForUnit(swapInMint.keys)});
 
 			meltQuote = await cashuSwapOutWallet.getMeltQuote(invoice);
 

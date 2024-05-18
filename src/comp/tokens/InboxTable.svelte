@@ -50,7 +50,7 @@
 					keysets: keysets
 				};
 
-				const wallet = new CashuWallet(mint, getKeysForUnit(keys));
+				const wallet = new CashuWallet(mint, {keys: getKeysForUnit(keys)});
 				//todo: does not handle multiple tokens correctly
 				const spentProofs = await wallet.checkProofsSpent(nM.token.token[0].proofs);
 				const proofsToReceive = nM.token.token[0].proofs.filter((p) => !spentProofs.includes(p));
