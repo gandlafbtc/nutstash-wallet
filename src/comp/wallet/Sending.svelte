@@ -30,6 +30,10 @@
 	import * as walletActions from '../../actions/walletActions';
 	import { schnorr } from '@noble/curves/secp256k1';
 	import { unit } from '../../stores/settings';
+	import { BleClient } from '@capacitor-community/bluetooth-le';
+	import { Capacitor } from '@capacitor/core';
+	import SendViaBt from '../elements/SendViaBT.svelte';
+
 	export let active;
 
 	export let mint: Mint;
@@ -58,6 +62,9 @@
 	$: change = input - output;
 
 	$: sendToNostrKey, validatePubKey();
+
+	
+	
 
 	export const send = async () => {
 		if (isNaN(amount) || amount <= 0) {
@@ -106,6 +113,7 @@
 			throw new Error('Error creating sendable token');
 		}
 	};
+
 
 	const copyToken = () => {
 		if (browser) {
@@ -226,6 +234,7 @@
 					</div>
 				</div>
 			</div>
+			<!-- <SendViaBt data={encodedToken} /> -->
 			{#if $useNostr}
 				<div class="divider">OR</div>
 				<p class="font-bold text-center">Send via Nostr:</p>

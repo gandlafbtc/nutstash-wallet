@@ -3,6 +3,7 @@
 	import OnboardingInfo from './OnboardingInfo.svelte';
 	import OnboardingSelect from './OnboardingSelect.svelte';
 	import RecommendedMints from './RecommendedMints.svelte';
+	import RestoreFromFile from './RestoreFromFile.svelte';
 	import RestoreFromSeed from './RestoreFromSeed.svelte';
 	let step = 'info';
 </script>
@@ -22,5 +23,8 @@
 	{/if}
 	{#if step === 'restore'}
 		<RestoreFromSeed bind:step></RestoreFromSeed>
+	{/if}
+	{#if step === 'import'}
+		<RestoreFromFile bind:step></RestoreFromFile>
 	{/if}
 </div>

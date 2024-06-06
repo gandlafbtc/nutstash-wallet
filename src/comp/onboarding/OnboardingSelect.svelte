@@ -16,14 +16,13 @@
 	};
 </script>
 
-<img src="/ns-naked.svg" class="w-32 lg:w-52 lg:mt-32" alt="" />
+<div class="flex w-full flex-col items-center">
 <h1 class="font-bold text-xl">Select your way to start!</h1>
-
 
 
 <button
 	on:click={create}
-	class="items-center gap-3 flex rounded-lg border-4 border-primary p-3 w-full max-w-4xl m-4 hover:bg-primary text-primary hover:text-neutral-content transition-colors duration-300 cursor-pointer"
+	class="items-center gap-3 flex rounded-lg border-4 border-primary p-2 w-full max-w-4xl m-2 hover:bg-primary text-primary hover:text-neutral-content transition-colors duration-300 cursor-pointer"
 >
 	<svg class="w-10 h-10" viewBox="0 0 25 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		<path
@@ -40,7 +39,7 @@
 </button>
 <button
 	on:click={skip}
-	class="items-center gap-3 flex rounded-lg border border-info p-3 w-full max-w-4xl m-4 hover:bg-info text-info hover:text-neutral-content transition-colors duration-300 cursor-pointer"
+	class="items-center gap-3 flex rounded-lg border border-info p-2 w-full max-w-4xl m-2 hover:bg-info text-info hover:text-neutral-content transition-colors duration-300 cursor-pointer"
 >
 	<svg class="w-10 h-10" viewBox="0 0 18 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		<path
@@ -64,7 +63,7 @@
 </button>
 <button
 	on:click={() => (step = 'restore')}
-	class="items-center gap-3 flex rounded-lg border border-success p-3 w-full max-w-4xl m-4 hover:bg-success text-success hover:text-neutral-content transition-colors duration-300 cursor-pointer"
+	class="items-center gap-3 flex rounded-lg border border-success p-2 w-full max-w-4xl m-2 hover:bg-success text-success hover:text-neutral-content transition-colors duration-300 cursor-pointer"
 >
 	<svg class="w-10 h-10" viewBox="0 0 25 23" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		<path
@@ -78,3 +77,20 @@
 		<p class="text-neutral">Select this option to recreate a lost wallet</p>
 	</div>
 </button>
+
+<button
+	on:click={() => (step = 'import')}
+	class="items-center gap-3 flex rounded-lg border border-warning p-2 w-full max-w-4xl m-2 hover:bg-warning text-warning hover:text-neutral transition-colors duration-300 cursor-pointer"
+>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+	<path stroke-linecap="round" stroke-linejoin="round" d="m9 13.5 3 3m0 0 3-3m-3 3v-6m1.06-4.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+  </svg>
+  
+
+	<div class="flex-col gap-2 text-start">
+		<h2 class="font-bold">Import wallet file</h2>
+		<p class="text-neutral-content">Load a wallet from a backup file</p>
+		<p class="text-neutral">Select this option if you have exported a nutstash wallet and want to import it</p>
+	</div>
+</button>
+</div>

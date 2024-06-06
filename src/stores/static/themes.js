@@ -1,6 +1,7 @@
 export const THEMES = [
 	'light',
 	'dark',
+	'matrix',
 	'emerald',
 	'synthwave',
 	'cyberpunk',

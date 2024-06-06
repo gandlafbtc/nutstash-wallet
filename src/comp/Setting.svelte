@@ -110,7 +110,7 @@
 		{/if}
 		<div class="flex justify-between items-center">
 			<div>
-				<label for="">Export ecash</label>
+				<label for="">Export wallet</label>
 			</div>
 			<div>
 				<BackupButton />

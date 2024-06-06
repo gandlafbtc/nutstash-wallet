@@ -15,7 +15,6 @@ const initialValue4 = browser
 	? window.localStorage.getItem('setting-is-encrypted') ?? 'undefined'
 	: 'undefined';
 const initialValue5 = browser ? window.localStorage.getItem('is-restoring') ?? 'false' : 'false';
-const initialValue6 = browser ? window.localStorage.getItem('unit') ?? 'sat' : 'sat';
 
 const checkNonPending = writable<boolean>(JSON.parse(initialValue));
 const checkPending = writable<boolean>(JSON.parse(initialValue2));
