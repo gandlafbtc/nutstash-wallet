@@ -11,6 +11,7 @@
 	import { theme } from '../stores/theme';
 	import BackupButton from './elements/BackupButton.svelte';
 	import DonateButton from './elements/DonateButton.svelte';
+	import IncreaseCounters from './elements/IncreaseCounters.svelte';
 	import NostrSettings from './elements/NostrSettings.svelte';
 	import ResetHistoryButton from './elements/ResetHistoryButton.svelte';
 	import ResetPasswordButton from './elements/ResetPasswordButton.svelte';
@@ -99,14 +100,22 @@
 		<div class="divider col-span-5">Backup</div>
 
 		{#if $mnemonic.length}
-			<div class="flex justify-between items-center">
-				<div class="col-span-1">
-					<label for="">show seed</label>
-				</div>
-				<div class="col-span-4">
-					<ShowSeed />
-				</div>
+		<div class="flex justify-between items-center">
+			<div class="col-span-1">
+				<label for="">Show seed</label>
 			</div>
+			<div class="col-span-4">
+				<ShowSeed />
+			</div>
+		</div>
+		<div class="flex justify-between items-center">
+			<div class="col-span-1">
+				<label for="">Keyset counters</label>
+			</div>
+			<div class="col-span-4">
+				<IncreaseCounters></IncreaseCounters>
+			</div>
+		</div>
 		{/if}
 		<div class="flex justify-between items-center">
 			<div>
