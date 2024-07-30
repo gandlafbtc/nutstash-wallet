@@ -49,8 +49,8 @@
 	let wallet: CashuWallet;
 
 	onMount(() => {
-		if (!$counts.find((c) => c.keysetId === ks.id)?.count) {
-			counts.update((cts) => [{ count: 1, keysetId: ks.id }, ...cts]);
+		if ($counts.find((c) => c.keysetId === ks.id)?.count === undefined) {
+			counts.update((cts) => [{ count: 0, keysetId: ks.id }, ...cts]);
 		}
 	});
 
