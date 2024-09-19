@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { getDecodedToken, type AmountPreference, type Proof } from '@cashu/cashu-ts';
+	import {
+		getDecodedToken,
+		getEncodedToken,
+		getEncodedTokenV4,
+		type AmountPreference,
+		type Proof
+	} from '@cashu/cashu-ts';
 	import { hexToBytes } from '@noble/hashes/utils';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
@@ -52,6 +58,8 @@
 	let memo = '';
 	let isLockToPub = false;
 	let isValidPub = false;
+	let isUseV4TokenFormat = false;
+	let isChaningingTokenFormat = false;
 
 	$: input = isCoinSelection
 		? getAmountForTokenSet(selectedTokens)
@@ -62,9 +70,6 @@
 	$: change = input - output;
 
 	$: sendToNostrKey, validatePubKey();
-
-	
-	
 
 	export const send = async () => {
 		if (isNaN(amount) || amount <= 0) {
@@ -93,7 +98,7 @@
 
 			//TODO check for keysize
 			if (pubk?.length === 64) {
-				pubk = '02'+pubk
+				pubk = '02' + pubk;
 			}
 
 			encodedToken = await walletActions.send(
@@ -113,7 +118,6 @@
 			throw new Error('Error creating sendable token');
 		}
 	};
-
 
 	const copyToken = () => {
 		if (browser) {
@@ -142,12 +146,28 @@
 		}
 	};
 
-	
+	const switchTokenFormat = () => {
+		isUseV4TokenFormat = !isUseV4TokenFormat;
+		const encodedTokenCopy = encodedToken;
+		isChaningingTokenFormat = true;
+		encodedToken = '';
+		if (isUseV4TokenFormat) {
+			setTimeout(() => {
+				encodedToken = getEncodedTokenV4(getDecodedToken(encodedTokenCopy));
+				isChaningingTokenFormat = false;
+			}, 200);
+		} else {
+			setTimeout(() => {
+				encodedToken = getEncodedToken(getDecodedToken(encodedTokenCopy));
+				isChaningingTokenFormat = false;
+			}, 200);
+		}
+	};
 
 	const sendWithNostr = async () => {
 		try {
 			nostrSendLoading = true;
-			await walletActions.sendViaNostr(sendToNostrKey,encodedToken)
+			await walletActions.sendViaNostr(sendToNostrKey, encodedToken);
 			toast('info', 'The Token is being sent over nostr', 'Sent!');
 			resetState();
 		} catch (e) {
@@ -178,6 +198,11 @@
 			<p>Creating sendable token...</p>
 			<LoadingCenter />
 		</div>
+	{:else if isChaningingTokenFormat}
+		<div class=" h-full flex items-center justify-center gap-5 flex-col">
+			<p>Changing format...</p>
+			<LoadingCenter />
+		</div>
 	{:else if encodedToken}
 		<div class="grid grid-cols-1 gap-2">
 			<div class="flex flex-col gap-2 text-center">
@@ -192,6 +217,16 @@
 					)}
 				</p>
 				<p class="text-2xl">Cashu token is ready!</p>
+				<div class="w-full flex flex-col gap-2 items-center">
+					<button class="btn btn-primary btn-sm w-36" on:click={switchTokenFormat}>
+						{#if isUseV4TokenFormat}
+							<span class="text-sm">Use V3 Token</span>
+						{:else}
+							<span class="text-sm">Use V4 Token</span>
+						{/if}
+					</button>
+					<p>V4 Tokens have a smaller data size, but may not yet be supported by all wallets.</p>
+				</div>
 				{#if memo}
 					<div class="flex justify-center w-full">
 						<p class="text-sm bg-base-200 rounded-md p-1 px-2 w-80 break-all">
@@ -566,15 +601,15 @@
 		{/if}
 
 		<div class=" flex flex-col gap-2 w-full items-center">
-				<button
-					class="btn w-full {!amount ||
-					(isLockToPub && !isValidPub) ||
-					getAmountForTokenSet(getTokensForMint(mint, $token)) < amount ||
-					(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount)
-						? 'btn-disabled'
-						: 'btn-primary'}"
-					on:click={send}>Send</button
-				>
+			<button
+				class="btn w-full {!amount ||
+				(isLockToPub && !isValidPub) ||
+				getAmountForTokenSet(getTokensForMint(mint, $token)) < amount ||
+				(isCoinSelection && getAmountForTokenSet(selectedTokens) < amount)
+					? 'btn-disabled'
+					: 'btn-primary'}"
+				on:click={send}>Send</button
+			>
 		</div>
 	{/if}
 	<ScanNpub bind:scannedNpub={sendToNostrKey} />

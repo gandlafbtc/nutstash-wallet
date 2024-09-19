@@ -2,14 +2,10 @@ import {
 	type AmountPreference,
 	CashuMint,
 	CashuWallet,
-	deriveKeysetId,
 	getEncodedToken,
-	type MintKeys,
 	type Proof,
 	type MeltQuoteResponse,
-	type TokenEntry,
-	getDecodedToken,
-	type Token
+	getDecodedToken
 } from '@cashu/cashu-ts';
 import {
 	encodeBase64toUint8,
@@ -35,11 +31,15 @@ import { iv, key, seedIv } from '../stores/key';
 import { randomBytes, hexToBytes } from '@noble/hashes/utils';
 import { isEncrypted } from '../stores/settings';
 import { decode } from '@gandlaf21/bolt11-decode';
-import { nostrPool, nostrPrivKey, nostrPubKey, nostrRelays, useExternalNostrKey } from '../stores/nostr';
+import {
+	nostrPool,
+	nostrPrivKey,
+	nostrPubKey,
+	nostrRelays,
+	useExternalNostrKey
+} from '../stores/nostr';
 import type { Event } from 'nostr-tools';
 import * as nostrTools from 'nostr-tools';
-import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
-
 
 export const send = async (
 	mint: Mint,
@@ -89,7 +89,6 @@ export const send = async (
 	return encodedToken;
 };
 
-
 export const getMyPubKey = async (): Promise<string> => {
 	return get(useExternalNostrKey)
 		? await window.nostr.getPublicKey()
@@ -100,14 +99,12 @@ const getEncryptedContent = async (toPub: string, message: string): Promise<stri
 	return get(useExternalNostrKey)
 		? await window.nostr.nip04.encrypt(await toPub, message)
 		: //@ts-ignore
-		await nostrTools.nip04.encrypt(get(nostrPrivKey), toPub, message);
+			await nostrTools.nip04.encrypt(get(nostrPrivKey), toPub, message);
 };
 
 export const getConvertedPubKey = async (key: string) => {
 	key = await resolveNip05(key);
-	let nostrPubKey = key.startsWith('npub')
-		? (nostrTools.nip19.decode(key).data as string)
-		: key
+	let nostrPubKey = key.startsWith('npub') ? (nostrTools.nip19.decode(key).data as string) : key;
 	return nostrPubKey;
 };
 
@@ -118,9 +115,8 @@ const resolveNip05 = async (nostrAddr: string) => {
 	const profile = await nostrTools.nip05.queryProfile(nostrAddr);
 	if (profile?.pubkey) {
 		return profile?.pubkey;
-	}
-	else {
-		throw new Error('could not fetch nip-05')
+	} else {
+		throw new Error('could not fetch nip-05');
 	}
 };
 
@@ -137,25 +133,32 @@ export const sendViaNostr = async (toPub: string, message: string) => {
 		const signedEvent = await window.nostr.signEvent(event);
 		get(nostrPool).publish(
 			signedEvent,
-			get(nostrRelays).filter(r => r.isActive).map((r) => r.url)
+			get(nostrRelays)
+				.filter((r) => r.isActive)
+				.map((r) => r.url)
 		);
-		return signedEvent
+		return signedEvent;
 	} else {
 		event.id = nostrTools.getEventHash(event);
 		const signedEvent = nostrTools.finalizeEvent(event, hexToBytes(get(nostrPrivKey)));
 		get(nostrPool).publish(
 			signedEvent,
-			get(nostrRelays).filter(r => r.isActive).map((r) => r.url)
+			get(nostrRelays)
+				.filter((r) => r.isActive)
+				.map((r) => r.url)
 		);
-		return signedEvent
+		return signedEvent;
 	}
-}
+};
 
 const getWalletStuff = (mint: Mint) => {
 	const keys = getKeysForUnit(mint.keys);
 	const cashuMint: CashuMint = new CashuMint(mint.mintURL);
 	const seedPhrase = get(seed);
-	const wallet: CashuWallet = new CashuWallet(cashuMint, keys, seedPhrase ? seedPhrase : undefined);
+	const wallet: CashuWallet = new CashuWallet(cashuMint, {
+		keys,
+		mnemonicOrSeed: seedPhrase ? seedPhrase : undefined
+	});
 	let count = undefined;
 	let keysetId = wallet.keys.id;
 	if (seedPhrase) {
@@ -172,7 +175,7 @@ export const mint = async (
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
 	const { proofs } = await wallet.mintTokens(amount, quote, {
-		AmountPreference: preference,
+		preference: preference,
 		counter: count,
 		keysetId
 	});
@@ -243,23 +246,17 @@ export const receive = async (
 ) => {
 	const { count, keysetId, seedPhrase, wallet } = getWalletStuff(mint);
 
-	const { token: tokens, tokensWithErrors } = await wallet.receive(encodedToken, {
+	const proofs = await wallet.receive(encodedToken, {
 		preference,
 		counter: count,
 		privkey: privKey ? privKey : get(nostrPrivKey)
 	});
-
-	const proofs = tokens.token.map((t: TokenEntry) => t.proofs).flat();
 
 	if (seedPhrase) {
 		updateCount(keysetId, (count ?? 1) + proofs.length);
 	}
 
 	token.update((state) => [...state, ...proofs]);
-
-	if (tokensWithErrors) {
-		throw new Error('Not all tokens could be redeemed');
-	}
 
 	history.update((state) => [
 		{
@@ -290,7 +287,7 @@ export const meltQuote = async (mint: Mint, invoice: string): Promise<MeltQuoteR
 			throw new Error('Invoice must contain amount');
 		}
 		const cashuMint: CashuMint = new CashuMint(mint.mintURL);
-		meltQuote = await cashuMint.meltQuote({ unit: 'sat', request: invoice });
+		meltQuote = await cashuMint.createMeltQuote({ unit: 'sat', request: invoice });
 	} catch {
 		throw new Error('Could not fetch melt quote');
 	}

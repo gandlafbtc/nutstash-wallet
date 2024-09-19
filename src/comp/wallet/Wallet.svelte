@@ -66,8 +66,6 @@
 		// 	}
 		// }
 	});
-
-	
 </script>
 
 {#if active === 'base'}
@@ -147,9 +145,9 @@
 							</div>
 						</button>
 					{/if}
-					
+
 					{#if getLockedTokens($token).length}
-						 <ClaimOfflineTokens></ClaimOfflineTokens>
+						<ClaimOfflineTokens></ClaimOfflineTokens>
 					{/if}
 				</div>
 			</div>

@@ -84,9 +84,7 @@
 		</button>
 	</div>
 	<div class="p-2 items-center justify-center flex w-full">
-		<p class="font-bold text-2xl">
-			Send
-		</p>
+		<p class="font-bold text-2xl">Send</p>
 	</div>
 	{#if activeS === 'send'}
 		{#if !processing}
@@ -160,42 +158,41 @@
 					</div>
 				</div>
 				<div class="h-52 flex flex-col items-center">
-						<input
-							autofocus
-							readonly={isSend || (!invoice?.startsWith('lnb')) ? false : true}
-							id="send-amt"
-							placeholder="0"
-							bind:value={amount}
-							class="mt-10 text-7xl focus:outline-none text-center max-w-xs {amount
-								? 'bg-base-100'
-								: 'w-10 bg-base-200 rounded-lg'}"
-							on:keydown={(e) => {
-								if (e.key === 'Enter') {
-									if (isSend) {
-										send();
-									}
-									else {
-										getMeltQuote()
-									}
+					<input
+						autofocus
+						readonly={isSend || !invoice?.startsWith('lnb') ? false : true}
+						id="send-amt"
+						placeholder="0"
+						bind:value={amount}
+						class="mt-10 text-7xl focus:outline-none text-center max-w-xs {amount
+							? 'bg-base-100'
+							: 'w-10 bg-base-200 rounded-lg'}"
+						on:keydown={(e) => {
+							if (e.key === 'Enter') {
+								if (isSend) {
+									send();
+								} else {
+									getMeltQuote();
 								}
-							}}
-						/>
-						<p />
-						<p class="font-bold text-xl">Sats</p>
-						{#if !isSend && fees}
-							<div class="text-sm flex gap-2">
-								<p class="font-bold">
-									{formatAmount(fees, $unit)}
-								</p>
-								<p>fees</p>
-							</div>
-						{/if}
+							}
+						}}
+					/>
+					<p />
+					<p class="font-bold text-xl">Sats</p>
+					{#if !isSend && fees}
+						<div class="text-sm flex gap-2">
+							<p class="font-bold">
+								{formatAmount(fees, $unit)}
+							</p>
+							<p>fees</p>
+						</div>
+					{/if}
 				</div>
 			</div>
-			{/if}
-			
-			<div class=" flex items-center justify-center w-full">
-				{#if !isSend}
+		{/if}
+
+		<div class=" flex items-center justify-center w-full">
+			{#if !isSend}
 				<Melting
 					bind:getMeltQuote
 					bind:active

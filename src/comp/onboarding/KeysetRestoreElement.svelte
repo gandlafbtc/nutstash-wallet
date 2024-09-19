@@ -1,30 +1,12 @@
 <script lang="ts">
-	import { toast } from '../../stores/toasts';
-	import { wordlist } from '@scure/bip39/wordlists/english';
-	import { validateMnemonic } from '@scure/bip39';
-	import { mints } from '../../stores/mints';
-	import {
-		CashuMint,
-		CashuWallet,
-		deriveKeysetId,
-		type MintKeyset,
-		type Proof
-	} from '@cashu/cashu-ts';
-	import { updateCount } from '../../actions/walletActions';
+	import { CashuMint, CashuWallet, type MintKeyset } from '@cashu/cashu-ts';
 	import { token } from '../../stores/tokens';
-	import {
-		formatAmount,
-		getAmountForTokenSet,
-		getKeysForKeysetId,
-		getKeysForUnit
-	} from '../util/walletUtils';
-	import { mnemonic, seed } from '../../stores/mnemonic';
-	import { checkNonPending, isRestoring, unit } from '../../stores/settings';
-	import { isOnboarded } from '../../stores/message';
+	import { formatAmount, getAmountForTokenSet, getKeysForKeysetId } from '../util/walletUtils';
+	import { unit } from '../../stores/settings';
 	import type { Mint } from '../../model/mint';
 	import { counts } from '../../stores/counts';
 	import { onMount } from 'svelte';
-	import { channelMessageEvent } from 'nostr-tools/nip28';
+	import { seed } from '../../stores/mnemonic';
 
 	export let ks: MintKeyset;
 	export let mint: Mint;
@@ -57,14 +39,17 @@
 	async function search(): Promise<boolean> {
 		wallet = wallet
 			? wallet
-			: new CashuWallet(cashuMint, getKeysForKeysetId(mint.keys, ks.id), $seed);
+			: new CashuWallet(cashuMint, {
+					keys: await getKeysForKeysetId(mint.keys, ks.id),
+					mnemonicOrSeed: $seed
+				});
 		const currentCount = $counts.find((c) => c.keysetId === ks.id);
 		if (!currentCount) {
 			throw new Error('could not update count');
 		}
 		const count = currentCount.count;
 		incrCount(currentCount);
-		const { proofs } = await wallet.restore(count, countStep, ks.id);
+		const { proofs } = await wallet.restore(count, countStep, { keysetId: ks.id });
 		if (proofs) {
 			token.update((ctx) => [...proofs, ...ctx]);
 		}

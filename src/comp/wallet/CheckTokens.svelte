@@ -28,7 +28,7 @@
 					return;
 				}
 				const cahsuMint = new CashuMint(mint.mintURL);
-				const cashuWallet = new CashuWallet(cahsuMint, getKeysForUnit(mint.keys));
+				const cashuWallet = new CashuWallet(cahsuMint, { keys: getKeysForUnit(mint.keys) });
 
 				if ($checkNonPending) {
 					const spentProofs = await cashuWallet.checkProofsSpent(mintTokens);

@@ -43,12 +43,12 @@
 						<input
 							type="text"
 							placeholder="wss://some-relay"
-							class="input input-bordered"
+							class="input input-bordered w-52"
 							bind:value={relayUrl}
 						/>
 					</label>
 				</div>
-				<input type="submit" class="btn-square btn-primary btn" value="Add" />
+				<input type="submit" class=" btn-square btn-primary btn" value="Add" />
 			</form>
 		</div>
 	</div>

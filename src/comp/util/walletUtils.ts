@@ -1,8 +1,8 @@
 import type { Keys, MintActiveKeys, MintKeys } from '@cashu/cashu-ts';
 import type { Mint } from '../../../src/model/mint';
 import type { Proof } from '@cashu/cashu-ts';
-import { bech32 } from "bech32";
-import { Buffer } from "buffer";
+import { bech32 } from 'bech32';
+import { Buffer } from 'buffer';
 import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -21,14 +21,16 @@ export const getTokensToSend = (amount: number, tokens: Array<Proof>) => {
 	return tokenSubset;
 };
 
-export const getLockedTokens = (proofs: Proof[])=> {
-	return proofs.filter(p=>{ try {
-		parseSecret(p.secret)
-		return true	
-	} catch (error) {
-		return false
-	}})
-} 
+export const getLockedTokens = (proofs: Proof[]) => {
+	return proofs.filter((p) => {
+		try {
+			parseSecret(p.secret);
+			return true;
+		} catch (error) {
+			return false;
+		}
+	});
+};
 
 export const getKeysForUnit = (keys: MintKeys[], unit = 'sat'): MintKeys | undefined => {
 	return keys.find((k) => {
@@ -155,27 +157,36 @@ const formatSats = (amount: number, withSuffix: boolean): string => {
 	);
 };
 
-export const getInvoiceFromAddress = async (address: string, amount: number):Promise<{pr:string, maxSendable: number, minSendable:number}> => {
-	const addressParts = address.split("@")
-	const endpoint = `https://${addressParts[1]}/.well-known/lnurlp/${addressParts[0]}`
-	return await LNURLLookup(endpoint, amount)
-}
+export const getInvoiceFromAddress = async (
+	address: string,
+	amount: number
+): Promise<{ pr: string; maxSendable: number; minSendable: number }> => {
+	const addressParts = address.split('@');
+	const endpoint = `https://${addressParts[1]}/.well-known/lnurlp/${addressParts[0]}`;
+	return await LNURLLookup(endpoint, amount);
+};
 
-export const getInvoiceFromLNURL = async (LNURL: string, amount: number):Promise<{pr:string, maxSendable: number, minSendable:number}> => {
-	
-	const { prefix: hrp, words: dataPart } = bech32.decode(LNURL, 2000)
-	const requestByteArray = bech32.fromWords(dataPart)
+export const getInvoiceFromLNURL = async (
+	LNURL: string,
+	amount: number
+): Promise<{ pr: string; maxSendable: number; minSendable: number }> => {
+	const { prefix: hrp, words: dataPart } = bech32.decode(LNURL, 2000);
+	const requestByteArray = bech32.fromWords(dataPart);
 
-	const endpoint = Buffer.from(requestByteArray).toString()
-	return await LNURLLookup(endpoint, amount)
-}
+	const endpoint = Buffer.from(requestByteArray).toString();
+	return await LNURLLookup(endpoint, amount);
+};
 
-const LNURLLookup = async (endpoint:string, amount: number) => {
-	const { callback, maxSendable, minSendable } = await (await fetch(endpoint)).json() as { callback: string, maxSendable: number, minSendable: number }
+const LNURLLookup = async (endpoint: string, amount: number) => {
+	const { callback, maxSendable, minSendable } = (await (await fetch(endpoint)).json()) as {
+		callback: string;
+		maxSendable: number;
+		minSendable: number;
+	};
 	if (!callback) {
-		throw new Error("No callback url found.");
+		throw new Error('No callback url found.');
 	}
-	const cb = callback + (callback.includes('?') ? `&` : `?`) + `amount=${amount * 1000}`
-	const { pr } = await (await fetch(cb)).json() as { pr: string }
-	return {pr, maxSendable, minSendable}
-}
+	const cb = callback + (callback.includes('?') ? `&` : `?`) + `amount=${amount * 1000}`;
+	const { pr } = (await (await fetch(cb)).json()) as { pr: string };
+	return { pr, maxSendable, minSendable };
+};

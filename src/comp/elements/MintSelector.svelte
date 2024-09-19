@@ -6,7 +6,7 @@
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import { formatAmount, getAmountForTokenSet, getTokensForMint } from '../util/walletUtils';
 
-	export let mint: Mint|undefined;
+	export let mint: Mint | undefined;
 	const formatMintText = (url: string) => {
 		if (url.length <= 20) {
 			return url;
@@ -35,7 +35,7 @@
 				</svg>
 			</div>
 			<p class="truncate max-w-xs text-xs">
-				{formatMintText(mint?.mintURL??'')}
+				{formatMintText(mint?.mintURL ?? '')}
 			</p>
 			<div>
 				<svg

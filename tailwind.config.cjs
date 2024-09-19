@@ -24,8 +24,8 @@ module.exports = {
 					success: '#00a96e',
 					warning: '#ffbe00',
 					error: '#ff5861',
-					'fontFamily': 'm6x'
-				},
+					fontFamily: 'm6x'
+				}
 			},
 
 			'emerald',

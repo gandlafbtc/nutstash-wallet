@@ -4,7 +4,12 @@
 	let dialog: HTMLDialogElement;
 </script>
 
-<btn class="w-6 h-6" on:click={()=> {dialog.showModal()}}>
+<btn
+	class="w-6 h-6"
+	on:click={() => {
+		dialog.showModal();
+	}}
+>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		fill="none"

@@ -19,7 +19,13 @@
 {navigator.bluetooth}
 {#if (Capacitor.getPlatform() === 'web' && navigator.bluetooth) || Capacitor.getPlatform() !== 'web'}
 	<button class="btn btn-info btn-square" on:click={scanBT}>
-		<svg viewBox="0 0 24 24" fill='none' stroke="currenColor" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
+		<svg
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currenColor"
+			xmlns="http://www.w3.org/2000/svg"
+			class="w-6 h-6"
+		>
 			<path
 				d="M7 17L17 7L12 2V22L17 17L7 7"
 				stroke="#000000"

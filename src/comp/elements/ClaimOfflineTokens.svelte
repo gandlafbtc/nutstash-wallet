@@ -22,22 +22,21 @@
 					return [...prev];
 				}
 				const currentProofsToken = prev.find((t) => t.token[0].mint === minturl);
-                if (!currentProofsToken) {
-                    const newToken: Token = { token: [{ mint: minturl, proofs: [curr] }] };
-                    return [newToken, ...prev];
-                }
-                else currentProofsToken.token[0].proofs.push(curr)
+				if (!currentProofsToken) {
+					const newToken: Token = { token: [{ mint: minturl, proofs: [curr] }] };
+					return [newToken, ...prev];
+				} else currentProofsToken.token[0].proofs.push(curr);
 				return [...prev];
 			}, [] as Token[]);
-            const receiveToken = async (t:Token) => {
-                const mint = getMintForToken(t.token[0].proofs[0], $mints)
-                if (!mint) {
-                    return
-                }
-                await receive(mint, getEncodedToken(t))
-            }
-            await Promise.all(lockedTokens.map(t=>receiveToken(t)))
-            console.log(lockedTokens)
+			const receiveToken = async (t: Token) => {
+				const mint = getMintForToken(t.token[0].proofs[0], $mints);
+				if (!mint) {
+					return;
+				}
+				await receive(mint, getEncodedToken(t));
+			};
+			await Promise.all(lockedTokens.map((t) => receiveToken(t)));
+			console.log(lockedTokens);
 		} catch (error) {
 		} finally {
 			isClaiming = false;

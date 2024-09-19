@@ -6,16 +6,23 @@
 	import { history } from '../../stores/history';
 	import { mintRequests } from '../../stores/mintReqs';
 	import { mnemonic } from '../../stores/mnemonic';
-	import { nostrMessages, nostrPrivKey, nostrPubKey, nostrRelays, useExternalNostrKey, useNostr } from '../../stores/nostr';
+	import {
+		nostrMessages,
+		nostrPrivKey,
+		nostrPubKey,
+		nostrRelays,
+		useExternalNostrKey,
+		useNostr
+	} from '../../stores/nostr';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { spentTokens } from '../../stores/spenttokens';
 	import { theme } from '../../stores/theme';
 
-
 	function backupTokens() {
 		var dataStr =
-			'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(
-				{
+			'data:text/json;charset=utf-8,' +
+			encodeURIComponent(
+				JSON.stringify({
 					backupVersion: 'nutstash-2',
 					contacts: $contacts,
 					counts: $counts,
@@ -30,11 +37,12 @@
 					nostrMessages: $nostrMessages,
 					nostrRelays: $nostrRelays,
 					pendingTokens: $pendingTokens,
-					spentTokens, $spentTokens,
+					spentTokens,
+					$spentTokens,
 					theme: $theme,
-					token: $token,
-				}
-			));
+					token: $token
+				})
+			);
 		var downloadAnchorNode = document.createElement('a');
 		downloadAnchorNode.setAttribute('href', dataStr);
 		downloadAnchorNode.setAttribute('download', 'nutstash_backup.json');

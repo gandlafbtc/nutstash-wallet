@@ -100,22 +100,22 @@
 		<div class="divider col-span-5">Backup</div>
 
 		{#if $mnemonic.length}
-		<div class="flex justify-between items-center">
-			<div class="col-span-1">
-				<label for="">Show seed</label>
+			<div class="flex justify-between items-center">
+				<div class="col-span-1">
+					<label for="">Show seed</label>
+				</div>
+				<div class="col-span-4">
+					<ShowSeed />
+				</div>
 			</div>
-			<div class="col-span-4">
-				<ShowSeed />
+			<div class="flex justify-between items-center">
+				<div class="col-span-1">
+					<label for="">Keyset counters</label>
+				</div>
+				<div class="col-span-4">
+					<IncreaseCounters></IncreaseCounters>
+				</div>
 			</div>
-		</div>
-		<div class="flex justify-between items-center">
-			<div class="col-span-1">
-				<label for="">Keyset counters</label>
-			</div>
-			<div class="col-span-4">
-				<IncreaseCounters></IncreaseCounters>
-			</div>
-		</div>
 		{/if}
 		<div class="flex justify-between items-center">
 			<div>
@@ -130,7 +130,6 @@
 			<div class="col-span-2">
 				<div class="inline-flex gap-1">
 					<label for="">Check pending tokens</label>
-					
 				</div>
 			</div>
 			<div class="col-span-3 flex gap-2">
@@ -141,7 +140,6 @@
 			<div class="col-span-2">
 				<div class="inline-flex gap-1">
 					<label for="">Check non-pending tokens</label>
-					
 				</div>
 			</div>
 			<div class="col-span-3 flex gap-2">

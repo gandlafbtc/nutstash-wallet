@@ -11,42 +11,55 @@
 
 	export let dialog: HTMLDialogElement;
 	let mint = $mints[0];
-	let amount =getAmountForTokenSet(getTokensForMint(mint,$token))<100?getAmountForTokenSet(getTokensForMint(mint,$token)):100;
-	let inputField: HTMLInputElement
+	let amount =
+		getAmountForTokenSet(getTokensForMint(mint, $token)) < 100
+			? getAmountForTokenSet(getTokensForMint(mint, $token))
+			: 100;
+	let inputField: HTMLInputElement;
 
-	let walletDevNostrKey = 'ca1d8486abd03d6e91aa042cb856a7da0da95e7b68180b22337aea2cd2ed0469'
+	let walletDevNostrKey = 'ca1d8486abd03d6e91aa042cb856a7da0da95e7b68180b22337aea2cd2ed0469';
 
-	let donationName = 'Anon'
+	let donationName = 'Anon';
 
-	let message = ''
+	let message = '';
 
-	let isLoading= false
+	let isLoading = false;
 
-	onMount(()=> {
-		dialog.addEventListener('open', ()=> {
-			inputField.focus()
-		})
-	})
-	const donate =async () => {
-		let turnOffNostrAfter = false
+	onMount(() => {
+		dialog.addEventListener('open', () => {
+			inputField.focus();
+		});
+	});
+	const donate = async () => {
+		let turnOffNostrAfter = false;
 		if (!$useNostr) {
-			useNostr.set(true)
-			turnOffNostrAfter = true
+			useNostr.set(true);
+			turnOffNostrAfter = true;
 		}
 		try {
-			isLoading = true 
-			
-			const encodedToken = await send(mint,amount, getTokensForMint(mint, $token), `From ${donationName}: ${message}`, undefined, '02'+walletDevNostrKey)
-			await sendViaNostr(walletDevNostrKey,encodedToken)
-			toast('secondary','Thank you for supporting nutstash',`${formatAmount(amount, $unit)} donated!`)
-			dialog.close()
+			isLoading = true;
+
+			const encodedToken = await send(
+				mint,
+				amount,
+				getTokensForMint(mint, $token),
+				`From ${donationName}: ${message}`,
+				undefined,
+				'02' + walletDevNostrKey
+			);
+			await sendViaNostr(walletDevNostrKey, encodedToken);
+			toast(
+				'secondary',
+				'Thank you for supporting nutstash',
+				`${formatAmount(amount, $unit)} donated!`
+			);
+			dialog.close();
 		} catch (error) {
-			toast('error','Error occurred when sending',`Could not donate!`)
-		}finally
-		{
-			isLoading = false
+			toast('error', 'Error occurred when sending', `Could not donate!`);
+		} finally {
+			isLoading = false;
 		}
-	}
+	};
 </script>
 
 <dialog bind:this={dialog} class="modal">
@@ -54,7 +67,20 @@
 		<h3 class="font-bold text-lg">Donate to the wallet devs!</h3>
 		<p class="py-4">
 			Donations from the community are greatly appreciated and help us keep open source projects
-			like <a href="https://nutstash.app" target="_blank" rel="noopener noreferrer" class="link link-secondary">Nutstash</a> and <a href="https://cashu.space" target="_blank" rel="noopener noreferrer" class="link link-secondary">Cashu</a> thriving. <span class="font-bold">We're counting on you, anon!</span>
+			like <a
+				href="https://nutstash.app"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="link link-secondary">Nutstash</a
+			>
+			and
+			<a
+				href="https://cashu.space"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="link link-secondary">Cashu</a
+			>
+			thriving. <span class="font-bold">We're counting on you, anon!</span>
 		</p>
 		<div class="flex gap-2 justify-center">
 			<MintSelector bind:mint></MintSelector>
@@ -87,9 +113,7 @@
 						</span>
 					</p>
 				</div>
-				<div class="text-center text-sm text-neutral">
-					Available
-				</div>
+				<div class="text-center text-sm text-neutral">Available</div>
 			</div>
 		</div>
 		<div class="flex flex-wrap gap-3 pt-2 w-full justify-center">
@@ -128,7 +152,7 @@
 		</div>
 		<div class="flex justify-center">
 			<input
-			bind:this={inputField}
+				bind:this={inputField}
 				tabindex="0"
 				type="text"
 				placeholder="custom"
@@ -138,32 +162,33 @@
 		</div>
 		<div class="flex flex-col gap-2 justify-center py-3 w-full items-center">
 			<div class="join">
-				<button class="w-32 btn btn-xs join-item btn-disabled">
-					From
-				</button>
+				<button class="w-32 btn btn-xs join-item btn-disabled"> From </button>
 				<input
-				type="text"
-				placeholder="custom"
-				class="w-52 input join-item input-xs input-warning rounded-full border-warning p-1 px-3 text-sm border bg-base-300 outline-warning outline-offset-1"
-				bind:value={donationName}
+					type="text"
+					placeholder="custom"
+					class="w-52 input join-item input-xs input-warning rounded-full border-warning p-1 px-3 text-sm border bg-base-300 outline-warning outline-offset-1"
+					bind:value={donationName}
 				/>
 			</div>
 			<div class="join">
-				<button class="w-32 btn-xs btn btn-disabled join-item">
-					Message
-				</button>
+				<button class="w-32 btn-xs btn btn-disabled join-item"> Message </button>
 				<input
-				type="text"
-				placeholder="Message..."
-				class="w-52 input join-item input-xs input-warning rounded-full border-warning p-1 px-3 text-sm border bg-base-300 outline-warning outline-offset-1"
-				bind:value={message}
+					type="text"
+					placeholder="Message..."
+					class="w-52 input join-item input-xs input-warning rounded-full border-warning p-1 px-3 text-sm border bg-base-300 outline-warning outline-offset-1"
+					bind:value={message}
 				/>
 			</div>
 		</div>
 		<div class="modal-action">
 			<form method="dialog" class="items-end flex gap-2">
 				<button class="btn">Close</button>
-				<button class="btn {amount>getAmountForTokenSet(getTokensForMint(mint, $token))||isLoading?'btn-disabled':'btn-secondary'}" on:click|preventDefault={donate}>
+				<button
+					class="btn {amount > getAmountForTokenSet(getTokensForMint(mint, $token)) || isLoading
+						? 'btn-disabled'
+						: 'btn-secondary'}"
+					on:click|preventDefault={donate}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -175,11 +200,9 @@
 						/>
 					</svg>
 					{#if isLoading}
-					<div class="loading">
-
-					</div>
+						<div class="loading"></div>
 					{:else}
-					Donate {formatAmount(amount, $unit)}
+						Donate {formatAmount(amount, $unit)}
 					{/if}
 				</button>
 			</form>

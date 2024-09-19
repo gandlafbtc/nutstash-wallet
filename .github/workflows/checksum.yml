@@ -7,9 +7,9 @@ jobs:
   checksum:
     runs-on: ubuntu-latest
     steps:
-    - uses: MCJack123/ghaction-generate-release-hashes@v3
-      with:
-        file-name: checksum.txt
-    - uses: softprops/action-gh-release@v1
-      with:
-        files: checksum.txt
+      - uses: MCJack123/ghaction-generate-release-hashes@v3
+        with:
+          file-name: checksum.txt
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: checksum.txt

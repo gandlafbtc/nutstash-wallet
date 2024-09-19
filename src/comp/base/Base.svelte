@@ -47,7 +47,7 @@
 	});
 </script>
 
-<div class="flex flex-col w-full max-w-5xl p-[4px]">
+<div class="flex flex-col w-full max-w-5xl">
 	<div class="grow flex flex-col">
 		<div class="dropdown">
 			<div class="bg-opacity-100">

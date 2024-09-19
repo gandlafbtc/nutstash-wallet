@@ -32,9 +32,9 @@
 	let isCustomSplits = false;
 	let isOffline = false;
 	let lockPubs: string[] = [];
-	let customPriv = ''
+	let customPriv = '';
 
-	let myPub = $nostrPubKey
+	let myPub = $nostrPubKey;
 
 	const receive = async () => {
 		if (!isValid) {
@@ -61,8 +61,13 @@
 				if (isCustomSplits) {
 					receiveCustomSplits = preference;
 				}
-				
-				const { proofs } = await walletActions.receive(mint, encodedToken, receiveCustomSplits, customPriv?customPriv:undefined);
+
+				const { proofs } = await walletActions.receive(
+					mint,
+					encodedToken,
+					receiveCustomSplits,
+					customPriv ? customPriv : undefined
+				);
 				toast(
 					'success',
 					`${formatAmount(getAmountForTokenSet(proofs), $unit)} received`,
@@ -91,7 +96,7 @@
 	const validateToken = () => {
 		lockPubs = [];
 		if (!encodedToken) {
-			resetState()
+			resetState();
 			return;
 		}
 		isToken = true;
@@ -140,7 +145,7 @@
 		pasteMessage = 'from clipboard';
 		preference = [];
 		lockPubs = [];
-		customPriv = ''
+		customPriv = '';
 	};
 	const trustMint = async () => {
 		const mint = new CashuMint(mintToAdd);
@@ -327,11 +332,15 @@
 				{/if}
 				{#if isOffline}
 					<div>
-						<button class="btn btn-secondary btn-sm" on:click={() => (isOffline = false)}>I'm online</button>
+						<button class="btn btn-secondary btn-sm" on:click={() => (isOffline = false)}
+							>I'm online</button
+						>
 					</div>
 				{:else}
 					<div>
-						<button class="btn btn-accent btn-sm" on:click={() => (isOffline = true)}>I'm offline</button>
+						<button class="btn btn-accent btn-sm" on:click={() => (isOffline = true)}
+							>I'm offline</button
+						>
 					</div>
 				{/if}
 				<div class="gap-2 flex flex-col items-center justify-center w-full">
@@ -352,7 +361,7 @@
 						Token is locked to multiple different keys! Nutstash only supports one key at a time.
 					</p>
 				{:else if isOffline && lockPubs.length === 1 && isValid}
-					{#if lockPubs[0] === myPub || lockPubs[0] === "02"+myPub}
+					{#if lockPubs[0] === myPub || lockPubs[0] === '02' + myPub}
 						<p class="text-success">Token is locked to your pubkey and can be received offline.</p>
 					{:else}
 						<p class="text-error">
@@ -360,34 +369,36 @@
 						</p>
 					{/if}
 				{:else if !isOffline && lockPubs.length === 1 && isValid}
-					{#if lockPubs[0] === myPub || lockPubs[0] === "02"+myPub}
+					{#if lockPubs[0] === myPub || lockPubs[0] === '02' + myPub}
 						<p class="text-success">Token is locked to your pubkey.</p>
 					{:else}
 						<p class="text-error">
 							Token is locked to a different pubkey and cannot be claimed by this wallet.
 						</p>
-						<p>
-							Try to unlock with different key
-						</p>
-						<input class="input input-sm input-secondary w-full" type="text" bind:value={customPriv}>
+						<p>Try to unlock with different key</p>
+						<input
+							class="input input-sm input-secondary w-full"
+							type="text"
+							bind:value={customPriv}
+						/>
 					{/if}
 				{/if}
 				<div class="h-24 text">
-					{#if isOffline && lockPubs.length && !(lockPubs[0] === myPub || lockPubs[0] === "02"+myPub)}
-					<button
-						class="btn w-full btn-disabled">
-					 Cannot receive this token
-					</button>
+					{#if isOffline && lockPubs.length && !(lockPubs[0] === myPub || lockPubs[0] === '02' + myPub)}
+						<button class="btn w-full btn-disabled"> Cannot receive this token </button>
 					{:else}
-					<div class="flex justify-center gap-2 mt-10">
-						<button
-						class="btn w-full {isValid ? (isOffline ? 'btn-accent' : 'btn-secondary') : 'btn-disabled'}"
-						on:click={receive}
-						>
-						Receive {isOffline ? 'offline' : ''}</button
-						>
-					</div>
-						
+						<div class="flex justify-center gap-2 mt-10">
+							<button
+								class="btn w-full {isValid
+									? isOffline
+										? 'btn-accent'
+										: 'btn-secondary'
+									: 'btn-disabled'}"
+								on:click={receive}
+							>
+								Receive {isOffline ? 'offline' : ''}</button
+							>
+						</div>
 					{/if}
 				</div>
 			</div>

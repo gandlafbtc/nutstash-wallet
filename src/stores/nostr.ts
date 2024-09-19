@@ -76,7 +76,7 @@ nostrMessages.subscribe((value) => {
 
 const initialValueStingNostrRelays: string = browser
 	? window.localStorage.getItem('nostr-relays') ??
-	'[{"url": "wss://relay.damus.io","isActive":"true"}, {"url": "wss://nostr.einundzwanzig.space/","isActive":"true"}, {"url": "wss://relay.primal.net","isActive":"true"}]'
+		'[{"url": "wss://relay.damus.io","isActive":"true"}, {"url": "wss://nostr.einundzwanzig.space/","isActive":"true"}, {"url": "wss://relay.primal.net","isActive":"true"}]'
 	: '[{"url": "wss://relay.damus.io","isActive":"true"}, {"url": "wss://nostr.einundzwanzig.space/","isActive":"true"}, {"url": "wss://relay.primal.net","isActive":"true"}]';
 
 const initialValueNostrRelays: Array<NostrRelay> = JSON.parse(initialValueStingNostrRelays);
@@ -95,11 +95,10 @@ const createNewNostrKeys = (privateKey?: string) => {
 	const priv = privateKey ? hexToBytes(privateKey) : schnorr.utils.randomPrivateKey();
 	nostrPrivKey.set(bytesToHex(priv));
 	nostrPubKey.set(bytesToHex(schnorr.getPublicKey(priv)));
-	restartNostr()
+	restartNostr();
 };
 
 const restartNostr = () => {
-
 	if (!get(useNostr)) {
 		return;
 	}
@@ -114,7 +113,7 @@ const restartNostr = () => {
 			toast('success', 'Nostr has restarted', 'Done!');
 		}, 500);
 	}, 2000);
-}
+};
 
 export {
 	useNostr,

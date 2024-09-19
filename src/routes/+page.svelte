@@ -40,7 +40,7 @@
 </script>
 
 <div
-	class="w-full h-screen max-h-screen p-1 bg-gradient-to-br from-primary to-secondary overflow-auto flex justify-center"
+	class="w-full h-screen max-h-screen bg-gradient-to-br from-primary to-secondary overflow-auto flex justify-center"
 	data-theme={$theme}
 >
 	<PasswordInput>

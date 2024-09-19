@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CashuMint, CashuWallet, type AmountPreference } from '@cashu/cashu-ts';
+	import { CashuMint, type AmountPreference } from '@cashu/cashu-ts';
 	import type { Mint } from '../../model/mint';
 	import LoadingCenter from '../LoadingCenter.svelte';
 	import { QRCodeImage } from 'svelte-qrcode-image';
@@ -100,7 +100,7 @@
 			isComplete = false;
 			isLoading = true;
 			const cashuMint = new CashuMint(mint.mintURL);
-			const mintQuote = await cashuMint.mintQuote({ amount: amount ?? 0, unit: 'sat' });
+			const mintQuote = await cashuMint.createMintQuote({ amount: amount ?? 0, unit: 'sat' });
 			mintingHash = mintQuote.quote;
 			qrCode = mintQuote.request;
 			mintRequests.update((state) => [
@@ -129,6 +129,13 @@
 			}
 			if (mintingHash) {
 				isPolling = true;
+				const cashuMint = new CashuMint(mint.mintURL);
+				const { state } = await cashuMint.checkMintQuote(mintingHash);
+				if (state !== 'PAID') {
+					console.log('not paid yet');
+					setTimeout(mintTokens, 5000);
+					return;
+				}
 				let mintPreference = undefined;
 				if (useAmountPreference) {
 					mintPreference = preference;
@@ -136,7 +143,9 @@
 				const { proofs } = await walletActions.mint(mint, amount, mintingHash, mintPreference);
 				if (proofs.length) {
 					toast('success', `${formatAmount(amount, $unit)} ecash minted.`, 'Minted!');
+					abortMint();
 					isComplete = true;
+					active = 'base';
 				}
 			} else {
 				toast('error', 'No minting quote was provided.', 'Could not mint Tokens');
@@ -145,15 +154,6 @@
 			console.error(e);
 		} finally {
 			isPolling = false;
-			if (!isComplete) {
-				if (doMint) {
-					setTimeout(mintTokens, 5000);
-				}
-			} else {
-				abortMint();
-				resetState();
-				active = 'base';
-			}
 		}
 	};
 
