@@ -2,7 +2,9 @@ import { browser } from '$app/environment';
 
 import { writable } from 'svelte/store';
 
-const initialValueString: string = browser ? window.localStorage.getItem('encrypted-tokens') ?? '' : '';
+const initialValueString: string = browser
+	? window.localStorage.getItem('encrypted-tokens') ?? ''
+	: '';
 
 const encryptedTokensStore = writable<string>(initialValueString);
 
@@ -12,7 +14,9 @@ encryptedTokensStore.subscribe((value) => {
 	}
 });
 
-const initialValueStringSpent: string = browser ? window.localStorage.getItem('encrypted-spent-tokens') ?? '' : '';
+const initialValueStringSpent: string = browser
+	? window.localStorage.getItem('encrypted-spent-tokens') ?? ''
+	: '';
 
 const encryptedSpentTokensStore = writable<string>(initialValueStringSpent);
 
@@ -22,7 +26,9 @@ encryptedSpentTokensStore.subscribe((value) => {
 	}
 });
 
-const initialValueStringOffline: string = browser ? window.localStorage.getItem('encrypted-offline-tokens') ?? '' : '';
+const initialValueStringOffline: string = browser
+	? window.localStorage.getItem('encrypted-offline-tokens') ?? ''
+	: '';
 
 const encryptedOfflineTokensStore = writable<string>(initialValueStringOffline);
 
@@ -32,7 +38,9 @@ encryptedOfflineTokensStore.subscribe((value) => {
 	}
 });
 
-const initialValuePendng: string = browser ? window.localStorage.getItem('encrypted-pending-tokens') ?? '' : '';
+const initialValuePendng: string = browser
+	? window.localStorage.getItem('encrypted-pending-tokens') ?? ''
+	: '';
 
 const encryptedPendingTokensStore = writable<string>(initialValuePendng);
 
@@ -42,7 +50,9 @@ encryptedPendingTokensStore.subscribe((value) => {
 	}
 });
 
-const initialValueNostr: string = browser ? window.localStorage.getItem('encrypted-nostr-keys') ?? '' : '';
+const initialValueNostr: string = browser
+	? window.localStorage.getItem('encrypted-nostr-keys') ?? ''
+	: '';
 
 const encryptedNostrKeysStore = writable<string>(initialValueNostr);
 
@@ -52,11 +62,9 @@ encryptedNostrKeysStore.subscribe((value) => {
 	}
 });
 
-
 const initialValueStringSeed: string = browser
 	? window.localStorage.getItem('encrypted-seed') ?? ''
 	: '';
-
 
 const encryptedSeedStore = writable<string>(initialValueStringSeed);
 
@@ -66,4 +74,11 @@ encryptedSeedStore.subscribe((value) => {
 	}
 });
 
-export { encryptedTokensStore, encryptedSeedStore, encryptedSpentTokensStore, encryptedOfflineTokensStore, encryptedPendingTokensStore, encryptedNostrKeysStore};
+export {
+	encryptedTokensStore,
+	encryptedSeedStore,
+	encryptedSpentTokensStore,
+	encryptedOfflineTokensStore,
+	encryptedPendingTokensStore,
+	encryptedNostrKeysStore
+};

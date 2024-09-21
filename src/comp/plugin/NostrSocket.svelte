@@ -12,7 +12,6 @@
 		nostrMessages,
 		useExternalNostrKey,
 		nostrKeys
-
 	} from '../../stores/nostr';
 	import { isValidToken } from '../util/walletUtils';
 	import { onMount, onDestroy } from 'svelte';
@@ -22,7 +21,7 @@
 	const getPubKey = async (): Promise<string[]> => {
 		return $useExternalNostrKey
 			? await [window.nostr.getPublicKey()]
-			: await Promise.resolve($nostrKeys.map(k=>k.pub));
+			: await Promise.resolve($nostrKeys.map((k) => k.pub));
 	};
 
 	onDestroy(() => {
@@ -59,7 +58,7 @@
 			toast('warning', 'Add a key to nostr extension.', 'No key in nostr extension');
 			return;
 		}
-		if (!$useExternalNostrKey && (!$nostrKeys.length)) {
+		if (!$useExternalNostrKey && !$nostrKeys.length) {
 			// toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
 			return;
 		}
@@ -95,10 +94,9 @@
 					//if an event is invalid, ignore it
 					return;
 				}
-				const privForEvent = $nostrKeys.find((key) => key.pub === event.pubkey)?.priv
-				if (!privForEvent)
-				{
-					return
+				const privForEvent = $nostrKeys.find((key) => key.pub === event.pubkey)?.priv;
+				if (!privForEvent) {
+					return;
 				}
 				const decodedMessage = $useExternalNostrKey
 					? await window.nostr.nip04.decrypt(event.pubkey, event.content)

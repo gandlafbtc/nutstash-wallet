@@ -32,5 +32,3 @@ spentTokens.subscribe(async (value) => {
 });
 
 export { spentTokens };
-
-

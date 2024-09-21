@@ -2,9 +2,24 @@
 	import { isEncrypted, isRestoring } from '../../stores/settings';
 	import { key } from '../../stores/key';
 	import { toast } from '../../stores/toasts';
-	import { decrypt, decryptNostrKeys, decryptOfflineTokens, decryptPendingTokens, decryptSeed, decryptSpentTokens, kdf } from '../../actions/walletActions';
+	import {
+		decrypt,
+		decryptNostrKeys,
+		decryptOfflineTokens,
+		decryptPendingTokens,
+		decryptSeed,
+		decryptSpentTokens,
+		kdf
+	} from '../../actions/walletActions';
 	import { token } from '../../stores/tokens';
-	import { encryptedTokensStore, encryptedSeedStore, encryptedOfflineTokensStore, encryptedPendingTokensStore, encryptedSpentTokensStore, encryptedNostrKeysStore } from '../../stores/encrypted';
+	import {
+		encryptedTokensStore,
+		encryptedSeedStore,
+		encryptedOfflineTokensStore,
+		encryptedPendingTokensStore,
+		encryptedSpentTokensStore,
+		encryptedNostrKeysStore
+	} from '../../stores/encrypted';
 	import { mnemonic } from '../../stores/mnemonic';
 	import PasswordSetup from './PasswordSetup.svelte';
 	import { isOnboarded } from '../../stores/message';
@@ -31,30 +46,26 @@
 			}
 			if ($encryptedOfflineTokensStore) {
 				const decryptedOfflineTokens = await decryptOfflineTokens($encryptedOfflineTokensStore);
-				offlineTokens.set(decryptedOfflineTokens);	
-			}
-			else {
+				offlineTokens.set(decryptedOfflineTokens);
+			} else {
 				offlineTokens.set([]);
 			}
 			if ($encryptedPendingTokensStore) {
 				const decryptedPendingTokens = await decryptPendingTokens($encryptedPendingTokensStore);
 				pendingTokens.set(decryptedPendingTokens);
-			}
-			else {
-				 pendingTokens.set([]);
+			} else {
+				pendingTokens.set([]);
 			}
 			if ($encryptedSpentTokensStore) {
 				const decryptedSpentTokens = await decryptSpentTokens($encryptedSpentTokensStore);
 				spentTokens.set(decryptedSpentTokens);
-			}
-			else  {
+			} else {
 				spentTokens.set([]);
 			}
 			if ($nostrKeys) {
 				const decryptedNostrKeys = await decryptNostrKeys($encryptedNostrKeysStore);
 				nostrKeys.set(decryptedNostrKeys);
-			}
-			else {
+			} else {
 				nostrKeys.set([]);
 			}
 		} catch (error) {

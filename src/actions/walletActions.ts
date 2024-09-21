@@ -91,7 +91,7 @@ export const send = async (
 export const getMyPubKey = async (): Promise<string> => {
 	return get(useExternalNostrKey)
 		? await window.nostr.getPublicKey()
-		: await Promise.resolve(get(nostrKeys).length? get(nostrKeys)[0] : '');
+		: await Promise.resolve(get(nostrKeys).length ? get(nostrKeys)[0] : '');
 };
 
 const getEncryptedContent = async (toPub: string, message: string): Promise<string> => {
@@ -121,7 +121,7 @@ const resolveNip05 = async (nostrAddr: string) => {
 
 export const sendViaNostr = async (toPub: string, message: string) => {
 	if (!get(nostrKeys).length) {
-		throw new Error("no nostr keys found");
+		throw new Error('no nostr keys found');
 	}
 	const event: nostrTools.UnsignedEvent = {
 		kind: nostrTools.kinds.EncryptedDirectMessage,
@@ -143,7 +143,7 @@ export const sendViaNostr = async (toPub: string, message: string) => {
 	} else {
 		event.id = nostrTools.getEventHash(event);
 		const signedEvent = nostrTools.finalizeEvent(event, hexToBytes(get(nostrKeys)[0]?.priv));
-		
+
 		get(nostrPool).publish(
 			signedEvent,
 			get(nostrRelays)
@@ -371,7 +371,6 @@ export const updateCount = (keysetId: string, newCount: number): number => {
 	return newCount;
 };
 
-
 export const encrypt = async (payload: string) => {
 	const k = get(key);
 	if (browser && k) {
@@ -488,7 +487,6 @@ export const decryptOfflineTokens = async (payload: string): Promise<Proof[]> =>
 	}
 };
 
-
 export const encryptNostrKeys = async (payload: string) => {
 	const k = get(key);
 	if (browser && k) {
@@ -517,7 +515,6 @@ export const decryptNostrKeys = async (payload: string): Promise<NostrKeys[]> =>
 		throw new Error('tried to use encryption without key');
 	}
 };
-
 
 export const encryptSeed = async (payload: string): Promise<string> => {
 	const k = get(key);

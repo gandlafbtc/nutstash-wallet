@@ -67,15 +67,14 @@ useExternalNostrKey.subscribe((value) => {
 // 	}
 // });
 
-
 const initialValueNostrKeysString: string = browser
 	? window.localStorage.getItem('nostr-keys') ?? '[]'
 	: '[]';
 
 export type NostrKeys = {
-	pub: string
-	priv: string
-}
+	pub: string;
+	priv: string;
+};
 
 const initialValueNostrKeys: NostrKeys[] = JSON.parse(initialValueNostrKeysString);
 
@@ -129,22 +128,23 @@ nostrRelays.subscribe((value) => {
 const nostrPool = writable<RelayPool>();
 
 const createNewNostrKeys = (privateKey?: string) => {
-	let priv
+	let priv;
 	if (get(seed)) {
-		priv = deriveBlindingFactor
+		priv = deriveBlindingFactor;
 		const hdkey = HDKey.fromMasterSeed(get(seed));
 		const derivationPath = `m/129372'/0'/0'/${get(nostrKeys).length}/2`;
 		const derived = hdkey.derive(derivationPath);
-	if (derived.privateKey === null) {
-		throw new Error('Could not derive private key');
-	}
+		if (derived.privateKey === null) {
+			throw new Error('Could not derive private key');
+		}
 		priv = derived.privateKey;
-	}
-	else {
+	} else {
 		priv = privateKey ? hexToBytes(privateKey) : schnorr.utils.randomPrivateKey();
-
 	}
-	nostrKeys.update((keys) => [ {priv:bytesToHex(priv),  pub: bytesToHex(schnorr.getPublicKey(priv))}, ...keys]);
+	nostrKeys.update((keys) => [
+		{ priv: bytesToHex(priv), pub: bytesToHex(schnorr.getPublicKey(priv)) },
+		...keys
+	]);
 	restartNostr();
 };
 

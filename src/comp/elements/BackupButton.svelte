@@ -7,7 +7,7 @@
 	import { mintRequests } from '../../stores/mintReqs';
 	import { mnemonic } from '../../stores/mnemonic';
 	import {
-	nostrKeys,
+		nostrKeys,
 		nostrMessages,
 		nostrRelays,
 		useExternalNostrKey,

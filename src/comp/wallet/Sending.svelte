@@ -17,10 +17,7 @@
 		getTokensToSend
 	} from '../util/walletUtils';
 	import { browser } from '$app/environment';
-	import {
-		nostrRelays,
-		useNostr
-	} from '../../stores/nostr';
+	import { nostrRelays, useNostr } from '../../stores/nostr';
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import TokenQr from '../elements/TokenQR.svelte';
@@ -345,9 +342,7 @@
 		</div>
 	{:else}
 		<div class="flex gap-3 justify-center items-center flex-col">
-			<div class="divider text-xs">
-				Spend lock
-			</div>
+			<div class="divider text-xs">Spend lock</div>
 			{#if isLockToPub}
 				<button class="btn btn-square btn-sm" on:click={() => (isLockToPub = false)}>
 					<svg
@@ -364,7 +359,9 @@
 					</svg>
 				</button>
 				<p class="text-xs text-success">Token will be locked to PubKey</p>
-				<p class="text-xs text-warning">Warning! Only the corresponding private key will be able to spend the token.</p>
+				<p class="text-xs text-warning">
+					Warning! Only the corresponding private key will be able to spend the token.
+				</p>
 				<div class="pt-2 flex gap-2 items-center w-full">
 					<div class="flex relative w-full justify-center">
 						<input
@@ -412,9 +409,7 @@
 				<p class="text-xs">Token is spendable by anyone</p>
 			{/if}
 		</div>
-		<div class="divider text-xs">
-			Memo
-		</div>
+		<div class="divider text-xs">Memo</div>
 		<div class="flex gap-1 justify-center">
 			<input
 				type="text"
@@ -423,9 +418,7 @@
 				bind:value={memo}
 			/>
 		</div>
-		<div class="divider text-xs">
-			Custom inputs & outputs
-		</div>
+		<div class="divider text-xs">Custom inputs & outputs</div>
 		<CoinSelection {amount} {mint} bind:selectedTokens bind:isCoinSelection />
 		<div class="flex gap-1 justify-center items-center">
 			<label class="label cursor-pointer gap-1 flex justify-center items-center">

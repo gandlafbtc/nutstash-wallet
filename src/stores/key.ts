@@ -56,7 +56,6 @@ const seedIVinitialValue: string = browser
 	? window.localStorage.getItem('seed-key-iv') ?? bytesToHex(randomBytes(16))
 	: bytesToHex(randomBytes(16));
 
-
 const seedIv = writable<Uint8Array>(hexToBytes(seedIVinitialValue));
 
 seedIv.subscribe((value) => {

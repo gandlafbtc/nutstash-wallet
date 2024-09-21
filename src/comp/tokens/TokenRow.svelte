@@ -48,7 +48,8 @@
 		try {
 			const secret = parseSecret(token.secret);
 			if (secret[0] === 'P2PK') {
-				return $nostrKeys.map(k=> k.pub).includes(secret[1].data) || $nostrKeys.map(k=> "02" + k.pub).includes(secret[1].data)
+				return $nostrKeys.map((k) => k.pub).includes(secret[1].data) ||
+					$nostrKeys.map((k) => '02' + k.pub).includes(secret[1].data)
 					? 'unlock'
 					: 'lock';
 			}

@@ -8,7 +8,7 @@
 	import { mints } from '../../stores/mints';
 	import { mnemonic } from '../../stores/mnemonic';
 	import {
-	nostrKeys,
+		nostrKeys,
 		nostrMessages,
 		nostrRelays,
 		useExternalNostrKey,
