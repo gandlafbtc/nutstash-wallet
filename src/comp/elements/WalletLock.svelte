@@ -25,6 +25,7 @@
 			class="btn btn-square hover:text-info"
 			on:click={() => {
 				key.set(undefined);
+				// todo, empty decryptoed stores
 			}}
 		>
 			<svg

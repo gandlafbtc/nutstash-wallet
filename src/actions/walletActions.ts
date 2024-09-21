@@ -27,18 +27,17 @@ import {
 } from '../comp/util/walletUtils';
 import { pendingTokens } from '../stores/pendingtokens';
 import { browser } from '$app/environment';
-import { iv, key, seedIv } from '../stores/key';
+import { iv, ivOffline, ivPending, ivSpent, key, nostrKeysIv, seedIv } from '../stores/key';
 import { randomBytes, hexToBytes } from '@noble/hashes/utils';
 import { isEncrypted } from '../stores/settings';
 import { decode } from '@gandlaf21/bolt11-decode';
 import {
 	nostrPool,
-	nostrPrivKey,
-	nostrPubKey,
+	nostrKeys,
 	nostrRelays,
-	useExternalNostrKey
+	useExternalNostrKey,
+	type NostrKeys
 } from '../stores/nostr';
-import type { Event } from 'nostr-tools';
 import * as nostrTools from 'nostr-tools';
 
 export const send = async (
@@ -92,7 +91,7 @@ export const send = async (
 export const getMyPubKey = async (): Promise<string> => {
 	return get(useExternalNostrKey)
 		? await window.nostr.getPublicKey()
-		: await Promise.resolve(get(nostrPubKey));
+		: await Promise.resolve(get(nostrKeys).length? get(nostrKeys)[0] : '');
 };
 
 const getEncryptedContent = async (toPub: string, message: string): Promise<string> => {
@@ -121,7 +120,10 @@ const resolveNip05 = async (nostrAddr: string) => {
 };
 
 export const sendViaNostr = async (toPub: string, message: string) => {
-	const event: Event = {
+	if (!get(nostrKeys).length) {
+		throw new Error("no nostr keys found");
+	}
+	const event: nostrTools.UnsignedEvent = {
 		kind: nostrTools.kinds.EncryptedDirectMessage,
 		//@ts-ignore
 		tags: [['p', await getConvertedPubKey(toPub)]],
@@ -140,7 +142,8 @@ export const sendViaNostr = async (toPub: string, message: string) => {
 		return signedEvent;
 	} else {
 		event.id = nostrTools.getEventHash(event);
-		const signedEvent = nostrTools.finalizeEvent(event, hexToBytes(get(nostrPrivKey)));
+		const signedEvent = nostrTools.finalizeEvent(event, hexToBytes(get(nostrKeys)[0]?.priv));
+		
 		get(nostrPool).publish(
 			signedEvent,
 			get(nostrRelays)
@@ -249,7 +252,7 @@ export const receive = async (
 	const proofs = await wallet.receive(encodedToken, {
 		preference,
 		counter: count,
-		privkey: privKey ? privKey : get(nostrPrivKey)
+		privkey: privKey ? privKey : undefined
 	});
 
 	if (seedPhrase) {
@@ -368,6 +371,7 @@ export const updateCount = (keysetId: string, newCount: number): number => {
 	return newCount;
 };
 
+
 export const encrypt = async (payload: string) => {
 	const k = get(key);
 	if (browser && k) {
@@ -396,6 +400,125 @@ export const decrypt = async (payload: string): Promise<Proof[]> => {
 		throw new Error('tried to use encryption without key');
 	}
 };
+
+export const encryptSpentTokens = async (payload: string) => {
+	const k = get(key);
+	if (browser && k) {
+		ivSpent.set(randomBytes(16));
+		const encrypted = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv: get(ivSpent) },
+			k,
+			new TextEncoder().encode(payload)
+		);
+		return encodeUint8toBase64(new Uint8Array(encrypted));
+	} else {
+		throw new Error('tried to use encryption without key ');
+	}
+};
+
+export const decryptSpentTokens = async (payload: string): Promise<Proof[]> => {
+	const k = get(key);
+	if (browser && k) {
+		const decrypted = await window.crypto.subtle.decrypt(
+			{ name: 'AES-CBC', iv: get(ivSpent) },
+			k,
+			encodeBase64toUint8(payload)
+		);
+		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
+	} else {
+		throw new Error('tried to use encryption without key');
+	}
+};
+
+export const encryptPendingTokens = async (payload: string) => {
+	const k = get(key);
+	if (browser && k) {
+		ivPending.set(randomBytes(16));
+		const encrypted = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv: get(ivPending) },
+			k,
+			new TextEncoder().encode(payload)
+		);
+		return encodeUint8toBase64(new Uint8Array(encrypted));
+	} else {
+		throw new Error('tried to use encryption without key ');
+	}
+};
+
+export const decryptPendingTokens = async (payload: string): Promise<Proof[]> => {
+	const k = get(key);
+	if (browser && k) {
+		const decrypted = await window.crypto.subtle.decrypt(
+			{ name: 'AES-CBC', iv: get(ivPending) },
+			k,
+			encodeBase64toUint8(payload)
+		);
+		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
+	} else {
+		throw new Error('tried to use encryption without key');
+	}
+};
+
+export const encryptOfflineTokens = async (payload: string) => {
+	const k = get(key);
+	if (browser && k) {
+		ivOffline.set(randomBytes(16));
+		const encrypted = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv: get(ivOffline) },
+			k,
+			new TextEncoder().encode(payload)
+		);
+		return encodeUint8toBase64(new Uint8Array(encrypted));
+	} else {
+		throw new Error('tried to use encryption without key ');
+	}
+};
+
+export const decryptOfflineTokens = async (payload: string): Promise<Proof[]> => {
+	const k = get(key);
+	if (browser && k) {
+		const decrypted = await window.crypto.subtle.decrypt(
+			{ name: 'AES-CBC', iv: get(ivOffline) },
+			k,
+			encodeBase64toUint8(payload)
+		);
+		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
+	} else {
+		throw new Error('tried to use encryption without key');
+	}
+};
+
+
+export const encryptNostrKeys = async (payload: string) => {
+	const k = get(key);
+	if (browser && k) {
+		nostrKeysIv.set(randomBytes(16));
+		const encrypted = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv: get(nostrKeysIv) },
+			k,
+			new TextEncoder().encode(payload)
+		);
+		return encodeUint8toBase64(new Uint8Array(encrypted));
+	} else {
+		throw new Error('tried to use encryption without key ');
+	}
+};
+
+export const decryptNostrKeys = async (payload: string): Promise<NostrKeys[]> => {
+	const k = get(key);
+	if (browser && k) {
+		const decrypted = await window.crypto.subtle.decrypt(
+			{ name: 'AES-CBC', iv: get(nostrKeysIv) },
+			k,
+			encodeBase64toUint8(payload)
+		);
+		return encodeBase64ToJson(encodeUint8toBase64(new Uint8Array(decrypted)));
+	} else {
+		throw new Error('tried to use encryption without key');
+	}
+};
+
+
 export const encryptSeed = async (payload: string): Promise<string> => {
 	const k = get(key);
 	if (browser && k) {

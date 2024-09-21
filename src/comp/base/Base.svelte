@@ -3,7 +3,7 @@
 	import Setting from '../../comp/Setting.svelte';
 	import Wallet from '../../comp/wallet/Wallet.svelte';
 	import Logo from '../../comp/elements/Logo.svelte';
-	import { createNewNostrKeys, nostrMessages, nostrPrivKey, nostrPubKey } from '../../stores/nostr';
+	import { createNewNostrKeys, nostrMessages, nostrKeys } from '../../stores/nostr';
 	import Donate from '../../comp/elements/Donate.svelte';
 	import Code from '../../comp/elements/Code.svelte';
 	import { version } from '../../stores/version';
@@ -20,10 +20,10 @@
 	};
 
 	onMount(() => {
-		if (!$nostrPubKey && !$nostrPrivKey) {
-			createNewNostrKeys();
-		}
 		setTimeout(() => {
+			if (!$nostrKeys.length) {
+				createNewNostrKeys();
+			}
 			if ($mnemonic.length) {
 				seed.set(deriveSeedFromMnemonic($mnemonic.join(' ')));
 			}

@@ -10,10 +10,10 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
-	import { nostrPubKey } from '../../stores/nostr';
 	import { token as tokenStore } from '../../stores/tokens';
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { unit } from '../../stores/settings';
+	import { nostrKeys } from '../../stores/nostr';
 
 	export let mint: Mint | undefined;
 	export let isSelected = false;
@@ -48,7 +48,7 @@
 		try {
 			const secret = parseSecret(token.secret);
 			if (secret[0] === 'P2PK') {
-				return secret[1].data === $nostrPubKey || secret[1].data === '02' + $nostrPubKey
+				return $nostrKeys.map(k=> k.pub).includes(secret[1].data) || $nostrKeys.map(k=> "02" + k.pub).includes(secret[1].data)
 					? 'unlock'
 					: 'lock';
 			}

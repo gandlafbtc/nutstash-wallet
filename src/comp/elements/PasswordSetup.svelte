@@ -5,6 +5,10 @@
 	import { kdf } from '../../actions/walletActions';
 	import { mnemonic } from '../../stores/mnemonic';
 	import { token } from '../../stores/tokens';
+	import { pendingTokens } from '../../stores/pendingtokens';
+	import { offlineTokens } from '../../stores/offlinetokens';
+	import { spentTokens } from '../../stores/spenttokens';
+	import { nostrKeys } from '../../stores/nostr';
 
 	let pass = '';
 	let confPass = '';
@@ -24,6 +28,10 @@
 			isEncrypted.set(true);
 			mnemonic.set($mnemonic);
 			token.set($token);
+			pendingTokens.set($pendingTokens);
+			offlineTokens.set($offlineTokens);
+			spentTokens.set($spentTokens);
+			nostrKeys.set($nostrKeys);
 		}
 		pass = '';
 		confPass = '';

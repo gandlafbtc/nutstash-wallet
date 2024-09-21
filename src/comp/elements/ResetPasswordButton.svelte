@@ -3,18 +3,30 @@
 	import { isEncrypted } from '../../stores/settings';
 	import { token } from '../../stores/tokens';
 	import { mnemonic } from '../../stores/mnemonic';
+	import { offlineTokens } from '../../stores/offlinetokens';
+	import { pendingTokens } from '../../stores/pendingtokens';
+	import { spentTokens } from '../../stores/spenttokens';
+	import { nostrKeys } from '../../stores/nostr';
 
 	let currentPass = '';
 	const removeEncryption = async () => {
 		key.set(undefined);
 		isEncrypted.set(false);
 		token.set($token);
+		offlineTokens.set($offlineTokens);
+		pendingTokens.set($pendingTokens);
+		spentTokens.set($spentTokens);
+		nostrKeys.set($nostrKeys);
 		mnemonic.set($mnemonic);
 	};
 	const setNewPassword = async () => {
 		key.set(undefined);
 		isEncrypted.set(undefined);
 		token.set($token);
+		offlineTokens.set($offlineTokens);
+		pendingTokens.set($pendingTokens);
+		spentTokens.set($spentTokens);
+		nostrKeys.set($nostrKeys);
 		mnemonic.set($mnemonic);
 	};
 </script>

@@ -8,9 +8,8 @@
 	import { mints } from '../../stores/mints';
 	import { mnemonic } from '../../stores/mnemonic';
 	import {
+	nostrKeys,
 		nostrMessages,
-		nostrPrivKey,
-		nostrPubKey,
 		nostrRelays,
 		useExternalNostrKey,
 		useNostr
@@ -21,6 +20,7 @@
 	import { token } from '../../stores/tokens';
 	import { history } from '../../stores/history';
 	import { isOnboarded } from '../../stores/message';
+	import { offlineTokens } from '../../stores/offlinetokens';
 
 	export let step;
 
@@ -68,12 +68,12 @@
 		mnemonic.set(backupObject.mnemonic);
 		useNostr.set(backupObject.useNostr);
 		useExternalNostrKey.set(backupObject.useExternalNostrKey);
-		nostrPrivKey.set(backupObject.nostrPrivKey);
-		nostrPubKey.set(backupObject.nostrPubKey);
+		nostrKeys.set(backupObject.nostrKeys);
 		nostrMessages.set(backupObject.nostrMessages);
 		nostrRelays.set(backupObject.nostrRelays);
 		pendingTokens.set(backupObject.pendingTokens);
 		spentTokens.set(backupObject.spentTokens);
+		offlineTokens.set(backupObject.offlineTokens);
 		theme.set(backupObject.theme);
 		token.set(backupObject.token);
 

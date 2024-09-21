@@ -3,7 +3,7 @@ import { browser } from '$app/environment';
 import { get, writable } from 'svelte/store';
 import { isEncrypted } from './settings';
 import { encryptSeed } from '../actions/walletActions';
-import { encryptedStorageSeed } from './encrypted';
+import { encryptedSeedStore } from './encrypted';
 
 const initialValue: string = browser ? window.localStorage.getItem('mnemonic') ?? '[]' : '[]';
 
@@ -15,7 +15,7 @@ mnemonic.subscribe(async (value) => {
 			if (!value) {
 				return;
 			}
-			encryptedStorageSeed.set(await encryptSeed(JSON.stringify(value)));
+			encryptedSeedStore.set(await encryptSeed(JSON.stringify(value)));
 			window.localStorage.setItem('mnemonic', '[]');
 		} else {
 			window.localStorage.setItem('mnemonic', JSON.stringify(value));

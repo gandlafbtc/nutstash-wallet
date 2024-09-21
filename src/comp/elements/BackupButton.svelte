@@ -7,9 +7,8 @@
 	import { mintRequests } from '../../stores/mintReqs';
 	import { mnemonic } from '../../stores/mnemonic';
 	import {
+	nostrKeys,
 		nostrMessages,
-		nostrPrivKey,
-		nostrPubKey,
 		nostrRelays,
 		useExternalNostrKey,
 		useNostr
@@ -17,6 +16,7 @@
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { spentTokens } from '../../stores/spenttokens';
 	import { theme } from '../../stores/theme';
+	import { offlineTokens } from '../../stores/offlinetokens';
 
 	function backupTokens() {
 		var dataStr =
@@ -32,13 +32,13 @@
 					mnemonic: $mnemonic,
 					useNostr: $useNostr,
 					useExternalNostrKey: $useExternalNostrKey,
-					nostrPrivKey: $nostrPrivKey,
-					nostrPubKey: $nostrPubKey,
+					nostrKeys: $nostrKeys,
 					nostrMessages: $nostrMessages,
 					nostrRelays: $nostrRelays,
 					pendingTokens: $pendingTokens,
 					spentTokens,
 					$spentTokens,
+					offlineTokens: $offlineTokens,
 					theme: $theme,
 					token: $token
 				})

@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { nip19 } from 'nostr-tools';
 	import { QRCodeImage } from 'svelte-qrcode-image';
-	import { nostrPubKey, useExternalNostrKey, useNostr } from '../../stores/nostr';
+	import { nostrKeys, useExternalNostrKey, useNostr } from '../../stores/nostr';
 
 	export let isOffline: boolean = false;
 
@@ -17,10 +17,10 @@
 			}
 			return '';
 		} else {
-			if (!$nostrPubKey) {
+			if (!$nostrKeys.length) {
 				return '';
 			}
-			return Promise.resolve($nostrPubKey);
+			return Promise.resolve($nostrKeys[0].pub);
 		}
 	};
 </script>

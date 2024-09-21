@@ -6,7 +6,6 @@
 		type AmountPreference,
 		type Proof
 	} from '@cashu/cashu-ts';
-	import { hexToBytes } from '@noble/hashes/utils';
 	import { toast } from '../../stores/toasts';
 	import type { Mint } from '../../model/mint';
 	import { token } from '../../stores/tokens';
@@ -19,26 +18,16 @@
 	} from '../util/walletUtils';
 	import { browser } from '$app/environment';
 	import {
-		nostrPool,
-		nostrPrivKey,
-		nostrPubKey,
 		nostrRelays,
-		useExternalNostrKey,
 		useNostr
 	} from '../../stores/nostr';
-	import type { Event } from 'nostr-tools';
-	import * as nostrTools from 'nostr-tools';
 	import ScanNpub from '../elements/ScanNpub.svelte';
 	import CoinSelection from '../elements/CoinSelection.svelte';
 	import TokenQr from '../elements/TokenQR.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
 	import TokenIcon from '../tokens/TokenIcon.svelte';
 	import * as walletActions from '../../actions/walletActions';
-	import { schnorr } from '@noble/curves/secp256k1';
 	import { unit } from '../../stores/settings';
-	import { BleClient } from '@capacitor-community/bluetooth-le';
-	import { Capacitor } from '@capacitor/core';
-	import SendViaBt from '../elements/SendViaBT.svelte';
 
 	export let active;
 

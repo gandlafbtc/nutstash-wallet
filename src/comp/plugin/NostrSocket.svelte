@@ -9,20 +9,20 @@
 		nostrPool,
 		useNostr,
 		nostrRelays as relays,
-		nostrPubKey,
-		nostrPrivKey,
 		nostrMessages,
-		useExternalNostrKey
+		useExternalNostrKey,
+		nostrKeys
+
 	} from '../../stores/nostr';
 	import { isValidToken } from '../util/walletUtils';
 	import { onMount, onDestroy } from 'svelte';
 	import { toast } from '../../stores/toasts';
 	import { browser } from '$app/environment';
 
-	const getPubKey = async (): Promise<string> => {
+	const getPubKey = async (): Promise<string[]> => {
 		return $useExternalNostrKey
-			? await window.nostr.getPublicKey()
-			: await Promise.resolve($nostrPubKey);
+			? await [window.nostr.getPublicKey()]
+			: await Promise.resolve($nostrKeys.map(k=>k.pub));
 	};
 
 	onDestroy(() => {
@@ -59,19 +59,19 @@
 			toast('warning', 'Add a key to nostr extension.', 'No key in nostr extension');
 			return;
 		}
-		if (!$useExternalNostrKey && (!$nostrPubKey || !$nostrPrivKey)) {
+		if (!$useExternalNostrKey && (!$nostrKeys.length)) {
 			// toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
 			return;
 		}
 
 		console.log('connecting to nostr relays...', activeRelays);
 		nostrPool.set(new rp.RelayPool(activeRelays));
-		const nostrPubK: string = await getPubKey();
+		const nostrPubK: string[] = await getPubKey();
 
 		const filter: { kinds: number[]; limit: number; '#p': string[]; since?: number } = {
 			kinds: [nostrTools.kinds.EncryptedDirectMessage],
 			limit: 10,
-			'#p': [nostrPubK]
+			'#p': nostrPubK
 		};
 
 		if ($nostrMessages.length) {
@@ -95,9 +95,14 @@
 					//if an event is invalid, ignore it
 					return;
 				}
+				const privForEvent = $nostrKeys.find((key) => key.pub === event.pubkey)?.priv
+				if (!privForEvent)
+				{
+					return
+				}
 				const decodedMessage = $useExternalNostrKey
 					? await window.nostr.nip04.decrypt(event.pubkey, event.content)
-					: await nostrTools.nip04.decrypt($nostrPrivKey, event.pubkey, event.content);
+					: await nostrTools.nip04.decrypt(privForEvent, event.pubkey, event.content);
 
 				let token;
 				try {

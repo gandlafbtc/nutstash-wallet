@@ -1,11 +1,12 @@
 <script lang="ts">
 	import {
-		nostrPrivKey,
 		useNostr,
-		nostrPubKey,
 		useExternalNostrKey,
 		createNewNostrKeys,
-		restartNostr
+		restartNostr,
+
+		nostrKeys
+
 	} from '../../stores/nostr';
 	import { generateSecretKey, getPublicKey } from 'nostr-tools';
 	import { browser } from '$app/environment';
@@ -16,12 +17,13 @@
 
 	let newKeysModal: HTMLDialogElement;
 	let importKeyModal: HTMLDialogElement;
-	let isShowNsec = false;
+	let isShowNsec: boolean[] = [];
 
 	let privateKeyImport = '';
 
 	const generateNostrPrivKey = () => {
 		createNewNostrKeys();
+		isShowNsec = [false,...isShowNsec]
 	};
 
 	const importKey = () => {
@@ -36,6 +38,7 @@
 			return;
 		}
 		createNewNostrKeys(privateKeyImport);
+		isShowNsec = [false,...isShowNsec]
 	};
 
 	const copyToken = () => {
@@ -96,6 +99,8 @@
 {/if}
 {#if !$useExternalNostrKey}
 	<div>Keys</div>
+	{#each $nostrKeys as k, i}
+		 <!-- content here -->
 	<div class="bg-base-200 p-2 gap-2 rounded-md flex flex-col">
 		<div class="flex justify-between items-center">
 			<div class="">
@@ -108,7 +113,7 @@
 					readonly
 					type="text"
 					class="input input-bordered w-24 lg:w-56"
-					bind:value={$nostrPubKey}
+					bind:value={k.pub}
 				/>
 				<button class="btn btn-square btn-primary" on:click={copyToken}>
 					<svg
@@ -138,10 +143,13 @@
 					readonly
 					type="text"
 					class="input input-bordered w-24 lg:w-56"
-					value={isShowNsec ? $nostrPrivKey : ''}
+					value={isShowNsec[i] ? k.priv : ''}
 				/>
-				{#if isShowNsec === false}
-					<button class="btn btn-outline btn-square" on:click={() => (isShowNsec = true)}>
+				{#if isShowNsec[i] === false}
+					<button class="btn btn-outline btn-square" on:click={() => 
+					{	isShowNsec[i] = true
+						isShowNsec = isShowNsec
+					}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -163,7 +171,10 @@
 						</svg>
 					</button>
 				{:else}
-					<button class="btn btn-outline btn-square" on:click={() => (isShowNsec = false)}>
+					<button class="btn btn-outline btn-square" on:click={() => {
+						isShowNsec[i] = false
+						isShowNsec = isShowNsec
+						}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -230,42 +241,44 @@
 					</svg>
 				</button>
 			</div>
-			<dialog bind:this={newKeysModal} class="modal">
-				<div class="modal-box">
-					<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
-					<p class="py-4">
-						Are you sure you want to delete your current and create new ones? Ecash locked to this
-						key pair might become un-spendable. Make sure you have no locked ecash before proceeding
-					</p>
-					<div class="modal-action">
-						<form method="dialog">
-							<button class="btn">abort</button>
-							<button class="btn btn-error" on:click={generateNostrPrivKey}>Create new keys</button>
-						</form>
-					</div>
-				</div>
-			</dialog>
-			<dialog bind:this={importKeyModal} class="modal">
-				<div class="modal-box">
-					<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
-					<p class="py-4">
-						Are you sure you want to delete your current and import new ones? Ecash locked to your
-						current key pair might become un-spendable. Make sure you have no locked ecash before
-						proceeding
-					</p>
-					<input
-						type="text"
-						class="input input-primary input-sm w-full"
-						bind:value={privateKeyImport}
-					/>
-					<div class="modal-action">
-						<form method="dialog">
-							<button class="btn">abort</button>
-							<button class="btn btn-error" on:click={importKey}>Import keys</button>
-						</form>
-					</div>
-				</div>
-			</dialog>
 		</div>
 	</div>
+	{/each}
+	<dialog bind:this={newKeysModal} class="modal">
+		<div class="modal-box">
+			<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
+			<p class="py-4">
+				Are you sure you want to delete your current and create new ones? Ecash locked to this
+				key pair might become un-spendable. Make sure you have no locked ecash before proceeding
+			</p>
+			<div class="modal-action">
+				<form method="dialog">
+					<button class="btn">abort</button>
+					<button class="btn btn-error" on:click={generateNostrPrivKey}>Create new keys</button>
+				</form>
+			</div>
+		</div>
+	</dialog>
+	<dialog bind:this={importKeyModal} class="modal">
+		<div class="modal-box">
+			<h3 class="font-bold text-lg text-error">This will remove your current keys!</h3>
+			<p class="py-4">
+				Are you sure you want to delete your current and import new ones? Ecash locked to your
+				current key pair might become un-spendable. Make sure you have no locked ecash before
+				proceeding
+			</p>
+			<input
+				type="text"
+				class="input input-primary input-sm w-full"
+				bind:value={privateKeyImport}
+			/>
+			<div class="modal-action">
+				<form method="dialog">
+					<button class="btn">abort</button>
+					<button class="btn btn-error" on:click={importKey}>Import keys</button>
+				</form>
+			</div>
+		</div>
+	</dialog>
 {/if}
+

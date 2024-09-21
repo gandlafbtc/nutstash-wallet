@@ -7,7 +7,7 @@
 	import type { SendData } from '../../model/data/SendData';
 	import { HistoryItemType, type HistoryItem } from '../../model/historyItem';
 	import HistoryIcon from '../history/HistoryIcon.svelte';
-	import { isEncrypted, unit } from '../../stores/settings';
+	import { unit } from '../../stores/settings';
 	import { formatAmount } from '../util/walletUtils';
 
 	export let historyItem: HistoryItem<any>;

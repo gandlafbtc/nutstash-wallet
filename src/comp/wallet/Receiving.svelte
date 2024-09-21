@@ -8,11 +8,11 @@
 	import { formatAmount, getAmountForTokenSet, validateMintKeys } from '../util/walletUtils';
 	import ScanToken from '../elements/ScanToken.svelte';
 	import CustomSplits from '../elements/CustomSplits.svelte';
-	import { nostrPubKey } from '../../stores/nostr';
 	import NostrReceiveQr from '../elements/NostrReceiveQR.svelte';
 	import { parseSecret } from '@gandlaf21/cashu-crypto/modules/common/NUT11';
 	import { unit } from '../../stores/settings';
 	import { copyTextToClipboard } from '../util/utils';
+	import { nostrKeys } from '../../stores/nostr';
 
 	export let active: string;
 	export let encodedToken: string = '';
@@ -35,7 +35,7 @@
 	let lockPubs: string[] = [];
 	let customPriv = '';
 
-	let myPub = $nostrPubKey;
+	let myPub = $nostrKeys.length? $nostrKeys[0].pub : '';
 
 	const receive = async () => {
 		if (!isValid) {
