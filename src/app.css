@@ -2,67 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-	font-family: 'm6x';
-	src: url('/m6x11plus.ttf') format('truetype');
-}
-html,
-body {
-	overflow-x: hidden;
-}
-body {
-	width: 100%;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 240 10% 3.9%;
+    --radius: 0.5rem;
+	--sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 240 4.9% 83.9%;
+	--sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-	display: none;
-}
-
-/* For IE, Edge and Firefox */
-.scrollbar-hide {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
-}
-
-.qr-reader-box * button {
-	--tw-border-opacity: 1;
-	border-color: oklch(var(--su) / var(--tw-border-opacity));
-	--tw-bg-opacity: 1;
-	background-color: oklch(var(--su) / var(--tw-bg-opacity));
-	--tw-text-opacity: 1;
-	color: oklch(var(--suc, var(--nc)) / var(--tw-text-opacity));
-	display: inline-flex;
-	flex-shrink: 0;
-	cursor: pointer;
-	user-select: none;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	border-color: transparent;
-	border-color: oklch(var(--n) / var(--tw-border-opacity));
-	text-align: center;
-	transition-property: color, background-color, border-color, text-decoration-color, fill, stroke,
-		opacity, box-shadow, transform, filter, backdrop-filter;
-	transition-duration: 200ms;
-	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-	border-radius: var(--rounded-btn, 0.5rem);
-	height: 3rem /* 48px */;
-	padding-left: 1rem /* 16px */;
-	padding-right: 1rem /* 16px */;
-	font-size: 0.875rem /* 14px */;
-	line-height: 1.25rem /* 20px */;
-	line-height: 1em;
-	min-height: 3rem /* 48px */;
-	font-weight: 600;
-	text-transform: uppercase;
-	text-transform: var(--btn-text-case, uppercase);
-	text-decoration-line: none;
-	text-decoration-line: none;
-	border-width: var(--border-btn, 1px);
-	animation: button-pop var(--animation-btn, 0.25s) ease-out;
-	--tw-border-opacity: 1;
-	--tw-bg-opacity: 1;
-	background-color: oklch(var(--n) / var(--tw-bg-opacity));
-	--tw-text-opacity: 1;
-	color: oklch(var(--nc) / var(--tw-text-opacity));
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

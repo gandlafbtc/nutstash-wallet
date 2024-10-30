@@ -1,15 +1,22 @@
 <script lang="ts">
-	import NostrSocket from '../comp/plugin/NostrSocket.svelte';
-	import { useNostr } from '../stores/nostr';
-	import '../app.css';
-	import StorageManager from '../comp/plugin/StorageManager.svelte';
-	import Toasts from '../comp/Toasts.svelte';
+    import NostrSocket from "$lib/plugin/NostrSocket.svelte";
+    import StorageManager from "$lib/plugin/StorageManager.svelte";
+    import Toasts from "$lib/plugin/Toasts.svelte";
+    import { useNostr } from "$lib/stores/nostr";
+    import { ModeWatcher } from "mode-watcher";
+	import "../app.css";
+
 </script>
 
+<ModeWatcher></ModeWatcher>
 <StorageManager>
 	{#if $useNostr}
 		<NostrSocket />
 	{/if}
-	<slot />
-	<Toasts />
+	<div class="w-full h-full fixed">
+		<slot />
+	</div>
+	<div class="relative bottom-0 right-0 z-50">
+		<Toasts />
+	</div>
 </StorageManager>
