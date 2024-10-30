@@ -19,8 +19,9 @@
     "mode-watcher": "^0.4.1"
   },
   "devDependencies": {
-    "@cashu/cashu-ts": "link:../cashu-ts",
+    "@cashu/cashu-ts": "link:../cashu-js",
     "@cashu/crypto": "^0.3.1",
+    "@gandlaf21/bc-ur": "^1.1.12",
     "@gandlaf21/bolt11-decode": "^3.1.1",
     "@noble/curves": "^1.6.0",
     "@noble/hashes": "^1.5.0",

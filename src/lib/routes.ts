@@ -7,7 +7,10 @@ import RecommendedMints from "./elements/onboarding/RecommendedMints.svelte";
 import RestoreFromFile from "./elements/onboarding/RestoreFromFile.svelte";
 import RestoreFromSeed from "./elements/onboarding/RestoreFromSeed.svelte";
 import Base from "./elements/wallet/Base.svelte";
-import Receive from "./elements/wallet/receive/Receive.svelte";
+import ReceiveCashu from "./elements/wallet/receive/ReceiveCashu.svelte";
+import ReceiveLn from "./elements/wallet/receive/ReceiveLN.svelte";
+import SendCashu from "./elements/wallet/send/SendCashu.svelte";
+import SendLn from "./elements/wallet/send/SendLN.svelte";
 import WalletHome from "./elements/wallet/WalletHome.svelte";
 
 export const routes = {
@@ -37,6 +40,9 @@ export const WALLET_ROUTE_PREFIX = '/wallet'
 
 export const walletRoutes = {
     '/': WalletHome,
-    '/receive': Receive,
+    '/receive/ln': ReceiveLn,
+    '/receive/cashu': ReceiveCashu,
+    '/send/cashu': SendCashu,
+    '/send/ln': SendLn,
     '*': NotFound
 }

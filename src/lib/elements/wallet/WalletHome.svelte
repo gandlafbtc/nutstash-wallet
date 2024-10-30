@@ -82,7 +82,7 @@
         <Drawer.Title>Receive via ecash or Lightning</Drawer.Title>
         <Drawer.Description>This action cannot be undone.</Drawer.Description>
       </Drawer.Header>
-      <Receive></Receive>
+      <Receive bind:openScannerDrawer></Receive>
       <Drawer.Footer class="flex flex-col justify-center items-center gap-3 text-center">
         <Drawer.Close class={buttonVariants({ variant: "outline" })+ " w-80"}
           >Cancel</Drawer.Close

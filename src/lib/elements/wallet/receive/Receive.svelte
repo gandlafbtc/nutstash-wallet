@@ -12,6 +12,9 @@
     import { walk } from "svelte/compiler";
     import * as Drawer from "$lib/components/ui/drawer";
 
+
+    let { openScannerDrawer= $bindable() } = $props()
+
     let entered: string = $state("");
 
     let mint = $state($mints[0]);
@@ -103,6 +106,7 @@
             {:else}
                 <button
                     class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
+                    onclick={()=>openScannerDrawer=!openScannerDrawer}
                 >
                     <QrCode></QrCode>
                 </button>

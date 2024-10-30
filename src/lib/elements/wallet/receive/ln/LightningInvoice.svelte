@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
     import { mintQuotesStore } from "$lib/stores/mintquotes";
+    import { onMount } from "svelte";
 import { QRCodeImage } from "svelte-qrcode-image";
 
-    let currentQuote = $state($mintQuotesStore.)
+const {invoice }: {invoice: string } = $props()
+ 
 </script>
-<QRCodeImage text={}>
+<QRCodeImage text={invoice}>
 
 </QRCodeImage>
