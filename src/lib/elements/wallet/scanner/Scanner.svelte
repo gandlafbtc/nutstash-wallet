@@ -5,9 +5,12 @@ import QrScanner from 'qr-scanner';
 let videoElem: HTMLVideoElement 
 let qrScanner: QrScanner
 let hasCam: boolean | undefined = $state(undefined)
+let cams: QrScanner.Camera[] = $state([])
 onMount(async ()=>{
     if (await QrScanner.hasCamera()){
+        cams = await QrScanner.listCameras(true);
         hasCam = true
+        cams = await QrScanner.listCameras(true);
         qrScanner = new QrScanner(
             videoElem,
             result => console.log('decoded qr code:', result),
@@ -21,7 +24,9 @@ onMount(async ()=>{
 })
 onDestroy(()=>{
     console.log('destroying scanner')
-    qrScanner.destroy();
+    if (qrScanner) {
+        qrScanner.destroy();
+    }
 })
 </script>
 <div class="flex w-full items-center justify-center">
