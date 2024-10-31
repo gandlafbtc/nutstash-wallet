@@ -46,7 +46,7 @@
 	});
 </script>
 
-<Sidebar.Provider class="h-full">
+<Sidebar.Provider class="h-full" data-vaul-drawer-wrapper >
 	<Menu></Menu>
 	<div class="fixed left-5 top-5">
 		<Sidebar.Trigger></Sidebar.Trigger>

@@ -5,22 +5,24 @@
     import { mints } from "$lib/stores/mints";
     import { toast } from "$lib/stores/toasts";
     import { version } from "$lib/stores/version";
-    import { cashuWallets } from "$lib/stores/wallets";
-    import { Cog, Ellipsis, Landmark, LifeBuoy, LoaderCircle, Plus, Settings, Trash, X } from "lucide-svelte";
+    import { AlertCircle, Bitcoin, Coins, Database, Ellipsis, Github, Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X } from "lucide-svelte";
 
-    let showAddMint = $state(true);
+    let showAddMint = $state(false);
     let isAddingMint = $state(false);
     let mintUrlToAdd = $state('') 
 
     const addMint = async () => {
         try {
-        
+            if (!mintUrlToAdd) {
+                toast('No url entered', 'warning', 'Mint not added', );
+                return
+            }
             if ($mints.find((mint) => mint.mintURL === mintUrlToAdd)) {
                 toast('Mint already added', 'warning', 'Mint not added', );
                 return;               
             }
           isAddingMint = true;
-          const cashuWallet = await  cashuWallets.createWallet(mintUrlToAdd);
+          await  mints.createMint(mintUrlToAdd);
           toast('Mint added', 'success');
         } catch (error) {
             toast(error.message,  'error', 'Error adding mint', );
@@ -93,7 +95,7 @@
                               {/snippet}
                             </DropdownMenu.Trigger>
                             <DropdownMenu.Content side="right" align="start">
-                              <DropdownMenu.Item class='text-destructive' onclick={()=>cashuWallets.remove(mint.mintURL)}>
+                              <DropdownMenu.Item class='text-destructive' onclick={()=>mints.remove(mint.mintURL)}>
                                    <Trash></Trash>
                                    Remove Mint
                                </DropdownMenu.Item>
@@ -110,18 +112,145 @@
             <Sidebar.GroupLabel class='gap-2'>
                 <Settings></Settings>
                 Settings</Sidebar.GroupLabel>
+                <Sidebar.GroupContent>
+                    <Sidebar.Menu>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Landmark></Landmark>
+                                    Mints
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Bitcoin></Bitcoin>
+                                    Currencies
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Key></Key>
+                                    Keys
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Network></Network>
+                                    Nostr
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Coins></Coins>
+                                    Token settings
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Save></Save>
+                                    Backup
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                    </Sidebar.Menu>
+                </Sidebar.GroupContent>
         </Sidebar.Group>
 
         <Sidebar.Group>
             <Sidebar.GroupLabel class="gap-2">
                 <LifeBuoy></LifeBuoy>
                 Help</Sidebar.GroupLabel>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/"} {...props}>
+                            <AlertCircle></AlertCircle>
+                            Report Issue
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/"} {...props}>
+                            <Send></Send>
+                            Community
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/"} {...props}>
+                            <Heart></Heart>
+                            Donate
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
         </Sidebar.Group>
 
-        <Sidebar.Group />
-        <Sidebar.Group />
+        <Sidebar.Group>
+            <Sidebar.GroupLabel class="gap-2">
+                <Database></Database>
+                Data</Sidebar.GroupLabel>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/"} {...props}>
+                            <Coins></Coins>
+                            Ecash
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/"} {...props}>
+                            <History></History>
+                            History
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/"} {...props}>
+                            <Megaphone></Megaphone>
+                            Quotes
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+        </Sidebar.Group>
     </Sidebar.Content>
-    <Sidebar.Footer class="flex flex-col gap-1 items-center">
+    <Sidebar.Footer class="flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">
         <p class="text-xs opacity-35">
             Made by <a class="underline" href="https://github.com/gandlafbtc">
                 @gandlaf21

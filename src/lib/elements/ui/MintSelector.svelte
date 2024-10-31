@@ -5,6 +5,7 @@
     import { toast } from "$lib/stores/toasts";
     import { Landmark } from "lucide-svelte";
 
+
 	let { mint = $bindable()}: {mint: Mint} = $props()
 
 	const onValueChange = (value: string) => {

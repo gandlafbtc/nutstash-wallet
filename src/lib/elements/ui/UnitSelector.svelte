@@ -2,7 +2,7 @@
     import * as Select from "$lib/components/ui/select";
     import type { Mint } from "$lib/model/mint";
     import { unit } from "$lib/stores/settings";
-    import { getUnitSymbol } from "$lib/util/walletUtils";
+    import { getUnitsForMints, getUnitSymbol } from "$lib/util/walletUtils";
     import { onMount } from "svelte";
 
 
@@ -18,14 +18,14 @@ let {selectedMints, currentUnit = $bindable()}: {selectedMints: Mint[], currentU
             return $unit;
         }
         if (selectedMints.length) {
-            u = selectedMints.map(m=> m.keysets).flat()[0]?.unit;
+            u = getUnitsForMints(selectedMints)[0];
         }
         return u;
     };
 
     const getMintsUnits = () => {
         const units = selectedMints.length
-            ? [...new Set(selectedMints.map(m=>m.keysets).flat().map((ks) => ks.unit))]
+            ? getUnitsForMints(selectedMints)
             : ["sat"];
         return units;
     };

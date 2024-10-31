@@ -232,3 +232,12 @@ const LNURLLookup = async (endpoint: string, amount: number) => {
 };
 
 export const isNumeric = (value: unknown) => typeof value === 'number' || !isNaN(value);
+
+export const getUnitsForMints = (mints: Mint[]) => {
+	console.log(mints)
+	const units = [...new Set(mints.map(m=>m.keys.keysets).flat().map(k=>k.unit))]
+	if (!units.length) {
+		units.push('sat')
+	}
+	return units
+}

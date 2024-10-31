@@ -1,7 +1,10 @@
 import { browser } from '$app/environment';
+import { ContextError, ensureError } from '$lib/helpers/errors';
 import type { Mint } from '$lib/model/mint';
+import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
 
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
+import { seed } from './mnemonic';
 
 const createMintsStore = () => {
 
@@ -12,9 +15,22 @@ const createMintsStore = () => {
 		: JSON.stringify(initialMint);
 
 	const initialValue: Array<Mint> = JSON.parse(initialValueSting);
+	const store = writable<Array<Mint>>(initialValue);
 
-	const add = (mint: Mint) => {
+	const createMint = async (mintUrl: string) => {
+		const { mint } = await loadMint(mintUrl)
 		update(context => [mint, ...context]);
+	}
+
+	const updateMints = async (mintUrls: string[]) => {
+		for (const mintUrl of mintUrls) {
+            const { mint } = await loadMint(mintUrl)
+            mints.updateOne(mint)
+        };
+	}
+
+	const getByUrl = (mintUrl: string): Mint | undefined => {
+		return get(store).find(m => m.mintURL === mintUrl);
 	}
 
 	const remove = (mintUrl: string) => {
@@ -30,6 +46,18 @@ const createMintsStore = () => {
 		}));
 	}
 
+	const getWalletWithUnit = (mintUrl: string, unit = 'sat') => {
+		const mint = mints.getByUrl(mintUrl)
+		if (!mint) {
+			 throw new Error(`Mint ${mintUrl} not found`)
+		}
+		const keys = mint.keys.keysets.find(ks => ks.unit)
+		const keysets = mint.keysets.keysets.filter(ks => ks.unit === unit)
+		const wallet = new CashuWallet(new CashuMint(mintUrl), {mnemonicOrSeed: get(seed), mintInfo:mint.info, unit: unit, keys, keysets }) 
+	 
+	 return wallet;
+ }
+
 	const updateUrl = (mintUrl: string, newUrl: string) => {
 		update(context => context.map(m => {
 			if (m.mintURL === mintUrl) {
@@ -38,7 +66,6 @@ const createMintsStore = () => {
 			return m;
 		}));
 	}
-	const store = writable<Array<Mint>>(initialValue);
 
 	const { update, subscribe, set } = store;
 
@@ -46,10 +73,13 @@ const createMintsStore = () => {
 		subscribe,
 		set,
 		update,
-		add,
+		getByUrl,
 		updateUrl,
 		remove,
-		updateOne
+		updateOne,
+		createMint,
+		updateMints,
+		getWalletWithUnit
 	};
 }
 
@@ -80,3 +110,31 @@ selectedMints.subscribe(async (value) => {
 });
 
 export { mints, selectedMints };
+
+
+
+
+const loadMint = async (mintUrl: string) => {
+	try {
+		const cashuMint = new CashuMint(mintUrl)
+		const mintInfo = await cashuMint.getInfo()
+		const mintAllKeysets = await cashuMint.getKeySets()
+		const mintActiveKeys = await cashuMint.getKeys()
+		const mint = {
+			info: mintInfo,
+			keys: mintActiveKeys,
+			keysets: mintAllKeysets,
+			mintURL: mintUrl,
+		}
+
+		return { mint }
+	} catch (error) {
+		const err = ensureError(error);
+		throw new ContextError(`Could not load mint`, {
+			cause: err,
+			context: {
+				mintURL: mintUrl,
+			},
+		});
+	}
+}

@@ -28,6 +28,7 @@
     import { buttonVariants } from "$lib/components/ui/button";
     import Scanner from "./scanner/Scanner.svelte";
 
+
     let currentUnit = $state('sat')
 
     let openReceiveDrawer = $state(false)
@@ -51,8 +52,8 @@
     });
 </script>
 
-<div class="flex items-center justify-center flex-col gap-5 w-full h-full">
-    <div class="w-80">
+<div class="flex items-center justify-start pt-20 flex-col gap-5 w-full h-full">
+    <div class="w-80 h-48 flex items-start">
         <MintSelectorMulti></MintSelectorMulti>
     </div>
     <p class="text-7xl">
@@ -74,17 +75,15 @@
 <div
     class="w-full bottom-0 fixed bg-primary-foreground flex items-center justify-center"
 >
-<Drawer.Root bind:open={openReceiveDrawer}>
-    <Drawer.Trigger>
-    </Drawer.Trigger>
+<Drawer.Root bind:open={openReceiveDrawer} controlledOpen={openReceiveDrawer} handleOnly={true} sh>
     <Drawer.Content>
       <Drawer.Header class="flex flex-col justify-center items-center gap-3 text-center">
         <Drawer.Title>Receive via ecash or Lightning</Drawer.Title>
-        <Drawer.Description>This action cannot be undone.</Drawer.Description>
+        <Drawer.Description>Enter an amount to receive via Lightning or paste a token to receive eCash.</Drawer.Description>
       </Drawer.Header>
-      <Receive bind:openScannerDrawer></Receive>
+        <Receive bind:openScannerDrawer></Receive>
       <Drawer.Footer class="flex flex-col justify-center items-center gap-3 text-center">
-        <Drawer.Close class={buttonVariants({ variant: "outline" })+ " w-80"}
+        <Drawer.Close class={buttonVariants({ variant: "outline" })+ " w-80"} onclick={()=> openReceiveDrawer = !openReceiveDrawer}
           >Cancel</Drawer.Close
         >
       </Drawer.Footer>
@@ -111,9 +110,7 @@
     </button>
 </div>
 
-<Drawer.Root bind:open={openScannerDrawer}>
-    <Drawer.Trigger>
-    </Drawer.Trigger>
+<Drawer.Root bind:open={openScannerDrawer} nested={true}>
     <Drawer.Content>
       <Drawer.Header class="flex flex-col justify-center items-center gap-3 text-center">
         <Drawer.Title>Scan a QR code</Drawer.Title>

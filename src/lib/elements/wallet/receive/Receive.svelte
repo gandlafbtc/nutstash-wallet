@@ -4,16 +4,17 @@
     import MintSelector from "$lib/elements/ui/MintSelector.svelte";
     import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
     import { mints } from "$lib/stores/mints";
-    import { cashuWallets } from "$lib/stores/wallets";
-    import { formatAmount, isNumeric } from "$lib/util/walletUtils";
+    import { formatAmount, getUnitsForMints, isNumeric } from "$lib/util/walletUtils";
     import { QrCode, Zap } from "lucide-svelte";
     import { onMount } from "svelte";
     import { pop, push } from "svelte-spa-router";
-    import { walk } from "svelte/compiler";
-    import * as Drawer from "$lib/components/ui/drawer";
+    import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
+    import { entropyToMnemonic } from "@scure/bip39";
+    import { unit } from "$lib/stores/settings";
+    import { receive } from "$lib/actions/walletActions";
+    import { createMintQuote } from "$lib/actions/receiveActions";
 
-
-    let { openScannerDrawer= $bindable() } = $props()
+    let { openScannerDrawer = $bindable() } = $props();
 
     let entered: string = $state("");
 
@@ -21,23 +22,36 @@
 
     let token = $state("");
     let amount = $state("");
-    let currentUnit = $state(mint.keysets.map((k) => k.unit)[0] ?? "sat");
+    let currentUnit = $state(getUnitsForMints([mint]).find((u)=>u === $unit)? $unit : "sat");
 
     let inputFocus: HTMLTextAreaElement | null = $state(null);
+    let thisDrawer: HTMLDivElement | null = $state(null);
 
     let isLoading = $state(false);
 
     onMount(() => {
         setTimeout(() => {
-            console.log(inputFocus);
-            inputFocus?.focus();
+            thisDrawer?.addEventListener("keypress", (e: KeyboardEvent) => {
+                if (e.key === 'Backspace') {
+                    entered = entered.slice(0, -1);
+                }
+                else if (e.key === 'Enter') {
+                    if (entered.length && isNumeric(entered)) {
+                        receiveLN()
+                    }
+                }
+                else if (isNumeric(e.key)) {
+                    entered = entered + e.key;
+                }
+                else {
+                    e.preventDefault()
+                }
+            });
         }, 0);
     });
 
     $effect(() => {
-        console.log(entered);
         if (entered === "") {
-            console.log("empty");
             token = "";
             amount = "";
         } else if (
@@ -46,6 +60,7 @@
         ) {
             token = entered;
             amount = "";
+            receiveCashu()
         } else if (isNumeric(entered)) {
             amount = entered;
             token = "";
@@ -56,10 +71,9 @@
         }
     });
 
-    const receiveLN = () => {
+    const receiveLN = async () => {
         try {
-            const wallet = cashuWallets.getByUrl(mint.mintURL);
-
+            await createMintQuote(mint.mintURL, amount, {unit: currentUnit});
             // wallet.unit =
 
             //Show QR screen
@@ -70,25 +84,51 @@
         }
         //Create Invoice
     };
+
+    const receiveCashu = () => {
+
+    }
+
+    const onKeypadPress = (value: string | { delete: boolean }) => {
+        if (value.delete) {
+            entered = entered.slice(0, -1);
+        } else {
+            entered = entered + value;
+        }
+    };
 </script>
 
-<div class="w-full flex gap-3 flex-col items-center justify-center">
-    <Textarea
-        class="w-80"
-        bind:value={entered}
-        bind:ref={inputFocus}
-        placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount to mint"
-    ></Textarea>
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+<div class="w-full flex gap-3 flex-col items-center justify-between h-full" bind:this={thisDrawer} tabindex="0">
+    <div
+        class="{entered.length && isNumeric(entered)
+            ? 'h-0'
+            : 'h-20'} overflow-hidden"
+    >
+        <Textarea
+            class="w-80 border-dashed resize-none rounded-none"
+            inputmode="none"
+            bind:value={entered}
+            bind:ref={inputFocus}
+            oninput={(e)=> {e.preventDefault()}}
+            placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount to mint"
+        ></Textarea>
+    </div>
     <div>
-        <div class="flex items-center justify-center h-60">
+        <div class="flex items-start justify-center {entered.length && isNumeric(entered)
+            ? 'h-80'
+            : 'h-60'} min-h-40">
             {#if token.length}
                 token
             {:else if amount.length}
                 <div class="flex flex-col gap-2 items-center justify-center">
                     <div class="flex gap-2 justify-between w-80 items-center">
-                        <p class="text-2xl break-all">
+                        <button
+                            class="text-2xl break-all cursor-text w-full text-start"
+                            onclick={() => inputFocus?.focus()}
+                        >
                             {formatAmount(amount, currentUnit)}
-                        </p>
+                        </button>
                         <UnitSelector bind:currentUnit selectedMints={[mint]}
                         ></UnitSelector>
                     </div>
@@ -96,21 +136,31 @@
                     <div class="w-80">
                         <MintSelector bind:mint></MintSelector>
                     </div>
-                    <div class="w-80">
-                        <Button class="w-full" onclick={receiveLN}>
+                    <div class="w-80 py-5">
+                        <Button
+                            class="w-full border border-2 border-pink-600"
+                            onclick={receiveLN}
+                        >
                             <Zap></Zap>
                             Receive via Lightning
                         </Button>
                     </div>
                 </div>
             {:else}
+            <div>
+
                 <button
-                    class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
-                    onclick={()=>openScannerDrawer=!openScannerDrawer}
+                class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
+                onclick={() => (openScannerDrawer = !openScannerDrawer)}
                 >
-                    <QrCode></QrCode>
-                </button>
+                <QrCode></QrCode>
+            </button>
+        </div>
             {/if}
         </div>
+    </div>
+    <div class="w-80 h-64 ">
+        <NumericKeys onkeypressed={onKeypadPress} isDecimal={false}
+        ></NumericKeys>
     </div>
 </div>

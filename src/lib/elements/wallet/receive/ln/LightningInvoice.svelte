@@ -1,11 +1,22 @@
 <script lang="ts">
-    import { mintQuotesStore } from "$lib/stores/mintquotes";
+    import { qrcanvas } from "qrcanvas";
     import { onMount } from "svelte";
-import { QRCodeImage } from "svelte-qrcode-image";
 
-const {invoice }: {invoice: string } = $props()
- 
+    let canvas: HTMLCanvasElement | undefined = $state();
+    let canvasWrapper: HTMLDivElement | undefined = $state();
+    const { invoice }: { invoice: string } = $props();
+
+    onMount(() => {
+        canvas = qrcanvas({
+            data: invoice,
+            padding: 10,
+            size: 250,
+        });
+        canvasWrapper?.appendChild(canvas);
+    });
 </script>
-<QRCodeImage text={invoice}>
 
-</QRCodeImage>
+<div
+    class="w-60 h-60 flex items-center justify-center"
+    bind:this={canvasWrapper}
+></div>

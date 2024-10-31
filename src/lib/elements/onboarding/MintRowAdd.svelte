@@ -5,7 +5,6 @@
     import Button from '$lib/components/ui/button/button.svelte';
     import { LoaderCircle } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
-    import { cashuWallets } from '$lib/stores/wallets';
     import { mints } from '$lib/stores/mints';
 
 
@@ -19,7 +18,7 @@
 	const addMint = async () => {
 		try {
 			isLoading = true;
-			await cashuWallets.createWallet(url);
+			await mints.createMint(url);
 			afterAdd(url);
 		} catch (error) {
 			toast('Could not load mint', 'error');
@@ -59,7 +58,7 @@
 				{#if isLoading}
 					<Button disabled>
 						<LoaderCircle class="mr-2 size-4 animate-spin" />
-						Adding
+						Add
 					</Button>
 				{:else if $mints.find((m) => m.mintURL === url) && isPredefined}
 					<Button variant="destructive" onclick={removeMint}>

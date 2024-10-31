@@ -2,18 +2,18 @@ import { browser } from "$app/environment";
 import { MintQuoteState, type MintQuoteResponse} from "@cashu/cashu-ts";
 import { get, writable } from "svelte/store";
 
-
+export type StoredMintQuote = MintQuoteResponse & { mintUrl: string, unit: string, amount: number, createdAt: number };
 
 const createMintQuotesStore = () => {
-    const initialMintQuotes: Array<MintQuoteResponse> = [];
+    const initialMintQuotes: Array<StoredMintQuote & {}> = [];
     
     const initialMintQuoteString: string = browser
 	? window.localStorage.getItem('mint-quotes') ?? JSON.stringify(initialMintQuotes)
 	: JSON.stringify(initialMintQuotes);
     
-    const initialMintValue: Array<MintQuoteResponse> = JSON.parse(initialMintQuoteString);
+    const initialMintValue: Array<StoredMintQuote> = JSON.parse(initialMintQuoteString);
     
-    const store = writable<Array<MintQuoteResponse>>(initialMintValue);
+    const store = writable<Array<StoredMintQuote>>(initialMintValue);
     const {set, subscribe, update} = store;
     subscribe(async (value) => {
         if (browser) {
@@ -22,7 +22,7 @@ const createMintQuotesStore = () => {
         }
     });
 
-    const add = (quote: MintQuoteResponse) => {
+    const add = (quote: StoredMintQuote) => {
         update(context => [quote,...context]);
     }
 
@@ -34,7 +34,7 @@ const createMintQuotesStore = () => {
         return get(store).filter(q => q.state === MintQuoteState.UNPAID && q.expiry > Date.now());
     }
 
-    const updateOne = (newQuote: MintQuoteResponse)  => {
+    const updateOne = (newQuote: StoredMintQuote)  => {
         update(context => context.map(q => {
             if (q.quote === newQuote.quote) {
                 return newQuote;

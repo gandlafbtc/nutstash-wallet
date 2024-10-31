@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { page } from "$app/stores";
   import Loading from "$lib/elements/base/Loading.svelte";
   import PasswordInput from "$lib/elements/security/PasswordInput.svelte";
-  import { routes } from "$lib/routes";
+  import { routes, walletRoutes } from "$lib/routes";
   import { isLoaded } from "$lib/stores/isLoaded";
   import { isOnboarded } from "$lib/stores/message";
   import { isRestoring } from "$lib/stores/settings";
@@ -21,7 +22,9 @@
     } else if ($isRestoring) {
       replace("/restore");
     } else {
-      replace("/wallet/");
+      // if (![...Object.keys(routes), ...Object.keys(walletRoutes)].includes($page.url.hash)) {
+      //   push("/wallet/");
+      // }
     }
 
     const keyDown = (e: KeyboardEvent) => {
