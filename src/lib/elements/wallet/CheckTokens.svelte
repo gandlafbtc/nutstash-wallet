@@ -1,13 +1,13 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
-	import { mints } from '../../stores/mints';
-	import { pendingTokens } from '../../stores/pendingtokens';
-	import { token } from '../../stores/tokens';
+	import { mints } from '../../stores/persistent/mints';
+	import { pendingTokens } from '../../stores/persistent/pendingtokens';
+	import { token } from '../../stores/persistent/tokens';
 	import { getKeysForUnit, getTokensForMints,  } from '$lib/util/walletUtils';
-	import { checkAutomatically, checkNonPending, checkPending } from '../../stores/settings';
-	import { toast } from '../../stores/toasts';
+	import { checkAutomatically, checkNonPending, checkPending } from '../../stores/persistent/settings';
+	import { toast } from '../../stores/session/toasts';
 	import { onMount } from 'svelte';
-	import { spentTokens } from '../../stores/spenttokens';
+	import { spentTokens } from '../../stores/persistent/spenttokens';
 
 	onMount(() => {
 		if ($checkAutomatically && ($checkPending || $checkNonPending)) {
@@ -27,7 +27,7 @@
 				if (mintTokens?.length < 1) {
 					return;
 				}
-				const cahsuMint = new CashuMint(mint.mintURL);
+				const cahsuMint = new CashuMint(mint.url);
 				const cashuWallet = new CashuWallet(cahsuMint, { keys: getKeysForUnit(mint.keys) });
 
 				if ($checkNonPending) {
@@ -84,7 +84,7 @@
 					);
 				}
 			} catch (e) {
-				toast('error', mint.mintURL, 'Problem connecting to a mint');
+				toast('error', mint.url, 'Problem connecting to a mint');
 			} finally {
 				isChecking = false;
 			}
@@ -107,4 +107,4 @@
 			d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
 		/>
 	</svg>
-</button>
+</button> -->

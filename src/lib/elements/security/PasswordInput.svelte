@@ -1,45 +1,32 @@
 <script lang="ts">
 	import PasswordSetup from './PasswordSetup.svelte';
-	import {
-		decrypt,
-		decryptNostrKeys,
-		decryptOfflineTokens,
-		decryptPendingTokens,
-		decryptSeed,
-		decryptSpentTokens,
-		kdf
-	} from '$lib/actions/walletActions';
 	
-	import { isEncrypted, isRestoring } from '$lib/stores/settings';
-	import { key } from '$lib/stores/key';
-	import { toast } from '$lib/stores/toasts';
-	import { token } from '$lib/stores/tokens';
-	import {
-		encryptedTokensStore,
-		encryptedSeedStore,
-		encryptedOfflineTokensStore,
-		encryptedPendingTokensStore,
-		encryptedSpentTokensStore,
-		encryptedNostrKeysStore
-	} from '$lib/stores/encrypted';
-	import { mnemonic } from '$lib/stores/mnemonic';
-	import { isOnboarded } from '$lib/stores/message';
-	import { offlineTokens } from '$lib/stores/offlinetokens';
-	import { pendingTokens } from '$lib/stores/pendingtokens';
-	import { spentTokens } from '$lib/stores/spenttokens';
-	import { nostrKeys } from '$lib/stores/nostr';
+	import { isRestoring } from '$lib/stores/persistent/settings';
+	import { toast } from '$lib/stores/session/toasts';
+
+	import { isOnboarded } from '$lib/stores/local/message';
     import Input from '$lib/components/ui/input/input.svelte';
 	import * as Form from '$lib/components/ui/form';
-    import { LockOpen } from 'lucide-svelte';
+    import { LockOpen, LoaderCircle } from 'lucide-svelte';
     import { onMount, type Snippet } from 'svelte';
+    import { kdf } from '$lib/actions/encryption';
+    import { key } from '$lib/stores/session/key';
+    import { usePassword } from '$lib/stores/local/usePassword';
+    import { mints } from '$lib/stores/persistent/mints';
+    import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
 	
 
 	let {children}: {children?: Snippet} = $props()
 
 	let pass = $state('');
 
+	let isUnlocking: boolean = $state(false);
+
 	let inputFocus: HTMLInputElement | null = $state(null)
     onMount(()=>{
+		if ($usePassword === false) {
+			unlock()
+		}
         setTimeout(() => {
             console.log(inputFocus)
             inputFocus?.focus()
@@ -48,43 +35,18 @@
 	
 	const unlockWallet = async (e: Event) => {
 		e.preventDefault()
+		unlock()
+	};
+
+	const unlock = async () => {
+		isUnlocking  = true;
 		key.set(await kdf(pass));
 		try {
-			if ($encryptedTokensStore) {
-				const decrypted = await decrypt($encryptedTokensStore);
-				token.set(decrypted);
-			} else {
-				token.set([]);
-			}
-
-			if ($encryptedSeedStore) {
-				const decryptedSeed = await decryptSeed($encryptedSeedStore);
-				mnemonic.set(decryptedSeed);
-			}
-			if ($encryptedOfflineTokensStore) {
-				const decryptedOfflineTokens = await decryptOfflineTokens($encryptedOfflineTokensStore);
-				offlineTokens.set(decryptedOfflineTokens);
-			} else {
-				offlineTokens.set([]);
-			}
-			if ($encryptedPendingTokensStore) {
-				const decryptedPendingTokens = await decryptPendingTokens($encryptedPendingTokensStore);
-				pendingTokens.set(decryptedPendingTokens);
-			} else {
-				pendingTokens.set([]);
-			}
-			if ($encryptedSpentTokensStore) {
-				const decryptedSpentTokens = await decryptSpentTokens($encryptedSpentTokensStore);
-				spentTokens.set(decryptedSpentTokens);
-			} else {
-				spentTokens.set([]);
-			}
-			if ($nostrKeys) {
-				const decryptedNostrKeys = await decryptNostrKeys($encryptedNostrKeysStore);
-				nostrKeys.set(decryptedNostrKeys);
-			} else {
-				nostrKeys.set([]);
-			}
+			// init stores
+			await mints.init()
+			await mintQuotesStore.init()
+			
+			toast('Wallet unlocked', 'success');
 		} catch (error) {
 			key.set(undefined);
 			toast('Wrong Password', 'warning');
@@ -94,13 +56,14 @@
         }, 0);
 		} finally {
 			pass = '';
+			isUnlocking = false;
 		}
-	};
+	}
 </script>
 
-{#if !$isRestoring && $isOnboarded && $isEncrypted === undefined}
+{#if !$isRestoring && $isOnboarded && $usePassword === undefined}
 	<PasswordSetup></PasswordSetup>
-{:else if !$isRestoring && $isEncrypted && !$key}
+{:else if !$isRestoring && $usePassword && !$key || isUnlocking}
 <div class="w-full h-full flex items-center justify-center">
 
 	<div
@@ -119,8 +82,12 @@
 			placeholder="Passphrase"
 			bind:value={pass}
 			/>
-			<Form.Button>
+			<Form.Button disabled={isUnlocking}>
+				{#if isUnlocking}
+				<LoaderCircle class='animate-spin'></LoaderCircle>
+				{:else}
 				<LockOpen></LockOpen>
+				{/if}
 				Unlock
 			</Form.Button>
 		</form>

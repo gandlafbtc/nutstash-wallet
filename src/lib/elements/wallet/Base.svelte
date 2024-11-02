@@ -1,24 +1,25 @@
 <script lang="ts">
-	import { createNewNostrKeys, nostrKeys } from "../../stores/nostr";
+	import { createNewNostrKeys, nostrKeys } from "$lib/stores/persistent/nostr";
 	import { onMount } from "svelte";
-	import { mnemonic, seed } from "../../stores/mnemonic";
+	import { mnemonic, seed } from "$lib/stores/persistent/mnemonic";
 	import { deriveSeedFromMnemonic } from "@cashu/cashu-ts";
 	import Router from "svelte-spa-router";
 	import { WALLET_ROUTE_PREFIX, walletRoutes } from "$lib/routes";
-	import { Download, Lock, QrCode, Settings, Upload } from "lucide-svelte";
 	import WalletLock from "./WalletLock.svelte";
-	import { isEncrypted } from "$lib/stores/settings";
 	import Menu from "./menu/Menu.svelte";
 	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-	import Button from "$lib/components/ui/button/button.svelte";
     import Badge from "$lib/components/ui/badge/badge.svelte";
-    import { statusMessage } from "$lib/stores/statusMessage";
-    import { mints, selectedMints } from "$lib/stores/mints";
+    import { statusMessage } from "$lib/stores/session/statusMessage";
+    import { mints } from "$lib/stores/persistent/mints";
+  import { selectedMints } from "$lib/stores/local/selectedMints";
+    import { usePassword } from "$lib/stores/local/usePassword";
+    import { init } from "$lib/init/init";
+    import PasswordInput from "../security/PasswordInput.svelte";
 
 	onMount(() => {
-
+		init()
 		if (!$selectedMints.length) {
-			selectedMints.set($mints.map(mint => mint.mintURL));
+			selectedMints.set($mints.map(mint => mint.url));
 		}
 
 
@@ -46,19 +47,20 @@
 	});
 </script>
 
-<Sidebar.Provider class="h-full" data-vaul-drawer-wrapper >
-	<Menu></Menu>
-	<div class="fixed left-5 top-5">
-		<Sidebar.Trigger></Sidebar.Trigger>
-	</div>
-	{#if $statusMessage}
-		 <!-- content here -->
-		 <div  class="fixed top-5 inset-x-0 max-w-max mx-auto">
-			 <Badge></Badge>
-			</div>
-	{/if}
+<PasswordInput>
+	<Sidebar.Provider class="h-full" data-vaul-drawer-wrapper >
+		<Menu></Menu>
+		<div class="fixed left-5 top-5">
+			<Sidebar.Trigger></Sidebar.Trigger>
+		</div>
+		{#if $statusMessage}
+		<!-- content here -->
+		<div  class="fixed top-5 inset-x-0 max-w-max mx-auto">
+			<Badge></Badge>
+		</div>
+		{/if}
 	<div class="w-full h-full flex items-center justify-center">
-		{#if $isEncrypted}
+		{#if $usePassword}
 		<div  class="fixed top-5 right-5">
 			<WalletLock></WalletLock>
 		</div>
@@ -69,3 +71,4 @@
 		
 	</div>
 </Sidebar.Provider>
+</PasswordInput>

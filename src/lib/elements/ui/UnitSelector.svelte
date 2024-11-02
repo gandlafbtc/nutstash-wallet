@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Select from "$lib/components/ui/select";
-    import type { Mint } from "$lib/model/mint";
-    import { unit } from "$lib/stores/settings";
+  import type { Mint } from "$lib/db/models/types";
+    import { unit } from "$lib/stores/persistent/settings";
     import { getUnitsForMints, getUnitSymbol } from "$lib/util/walletUtils";
     import { onMount } from "svelte";
 

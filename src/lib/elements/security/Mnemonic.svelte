@@ -3,8 +3,8 @@
     import Button from '$lib/components/ui/button/button.svelte';
     import Input from '$lib/components/ui/input/input.svelte';
 
-	import { mnemonic } from '../../stores/mnemonic';
-	import { toast } from '../../stores/toasts';
+	import { mnemonic } from '$lib/stores/persistent/mnemonic';
+	import { toast } from '$lib/stores/session/toasts';
 	const copyMnemonic = () => {
 		const text = $mnemonic.join(' ');
 		if (browser) {

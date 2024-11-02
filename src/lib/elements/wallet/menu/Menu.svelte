@@ -2,10 +2,17 @@
     import * as Sidebar from "$lib/components/ui/sidebar";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
-    import { mints } from "$lib/stores/mints";
-    import { toast } from "$lib/stores/toasts";
-    import { version } from "$lib/stores/version";
-    import { AlertCircle, Bitcoin, Coins, Database, Ellipsis, Github, Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X } from "lucide-svelte";
+    import { mints } from "$lib/stores/persistent/mints";
+    import { toast } from "$lib/stores/session/toasts";
+    import { version } from "$lib/stores/static/version";
+    import { AlertCircle, Delete, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet } from "lucide-svelte";
+  import MintMenuIetm from "./MintMenuIetm.svelte";
+    import Divider from "$lib/elements/ui/Divider.svelte";
+    import Button from "$lib/components/ui/button/button.svelte";
+    import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
+    import { usePassword } from "$lib/stores/local/usePassword";
+    import { selectedMints } from "$lib/stores/local/selectedMints";
+    import { isOnboarded } from "$lib/stores/local/message";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -17,18 +24,32 @@
                 toast('No url entered', 'warning', 'Mint not added', );
                 return
             }
-            if ($mints.find((mint) => mint.mintURL === mintUrlToAdd)) {
+            if ($mints.find((mint) => mint.url === mintUrlToAdd)) {
                 toast('Mint already added', 'warning', 'Mint not added', );
                 return;               
             }
           isAddingMint = true;
-          await  mints.createMint(mintUrlToAdd);
+          await  mints.fetchMint(mintUrlToAdd);
+          mintUrlToAdd = ''
           toast('Mint added', 'success');
         } catch (error) {
             toast(error.message,  'error', 'Error adding mint', );
         }
         finally {
             isAddingMint = false;
+        }
+    }
+
+    const deleteAll = async () => {
+        try {
+            usePassword.set(undefined)
+            selectedMints.set([]);
+            isOnboarded.set(false);
+            await mints.reset();
+            await mintQuotesStore.reset();
+            
+        } catch (error) {
+            toast(error.message, 'error', 'Error deleting all mints', );
         }
     }
 </script>
@@ -40,6 +61,35 @@
     </Sidebar.Header>
 
     <Sidebar.Content>
+    <Sidebar.Group>
+        <Sidebar.GroupLabel class='gap-2'>
+            <House></House>
+            Home</Sidebar.GroupLabel>
+            <Sidebar.GroupContent>
+                <Sidebar.Menu>
+                    <Sidebar.MenuItem>
+                        <Sidebar.MenuButton>
+                            {#snippet child({ props })}
+                                <a href={"/#/wallet/"} {...props}>
+                                    <Wallet></Wallet>
+                                    Wallet
+                                </a>
+                                {/snippet}
+                        </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                    <Sidebar.MenuItem>
+                        <Sidebar.MenuButton>
+                            {#snippet child({ props })}
+                                <a href={"/#/wallet/"} {...props}>
+                                    <Contact></Contact>
+                                    Contacts
+                                </a>
+                                {/snippet}
+                        </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                </Sidebar.Menu>
+            </Sidebar.GroupContent>
+        </Sidebar.Group>
         <Sidebar.Group>
             <Sidebar.GroupLabel class='gap-2'>
                 <Landmark></Landmark>
@@ -78,30 +128,7 @@
                              
                         {/if}
                       {#each $mints as mint}
-                        <Sidebar.MenuItem>
-                          <Sidebar.MenuButton>
-                            {#snippet child({ props })}
-                              <a href={"/#/mints/mint/"+mint.mintURL} {...props}>
-                                <span class="text-xs">{mint.mintURL}</span>
-                              </a>
-                            {/snippet}
-                          </Sidebar.MenuButton>
-                          <DropdownMenu.Root>
-                            <DropdownMenu.Trigger>
-                              {#snippet child({ props })}
-                                <Sidebar.MenuAction {...props}>
-                                  <Ellipsis />
-                                </Sidebar.MenuAction>
-                              {/snippet}
-                            </DropdownMenu.Trigger>
-                            <DropdownMenu.Content side="right" align="start">
-                              <DropdownMenu.Item class='text-destructive' onclick={()=>mints.remove(mint.mintURL)}>
-                                   <Trash></Trash>
-                                   Remove Mint
-                               </DropdownMenu.Item>
-                            </DropdownMenu.Content>
-                          </DropdownMenu.Root>
-                        </Sidebar.MenuItem>
+                        <MintMenuIetm { mint }></MintMenuIetm>
                       {/each}
                     </Sidebar.Menu>
                   </Sidebar.GroupContent>
@@ -241,13 +268,26 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/"} {...props}>
-                            <Megaphone></Megaphone>
-                            Quotes
+                        <a href={"/#/wallet/receive/ln"} {...props}>
+                            <ReceiptText></ReceiptText>
+                            Invoices
                         </a>
                         {/snippet}
                     </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
+                <Divider></Divider>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <Button onclick={deleteAll} {...props} variant='destructive'>
+                            <Delete></Delete>
+                            Delete all data
+                        </Button>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+                
+
         </Sidebar.Group>
     </Sidebar.Content>
     <Sidebar.Footer class="flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">

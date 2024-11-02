@@ -1,19 +1,16 @@
 <script lang="ts">
-	import { isEncrypted } from "$lib/stores/settings";
-	import { key } from "$lib/stores/key";
-	import { toast } from "$lib/stores/toasts";
-	import { kdf } from "$lib/actions/walletActions";
-	import { mnemonic } from "$lib/stores/mnemonic";
-	import { token } from "$lib/stores/tokens";
-	import { pendingTokens } from "$lib/stores/pendingtokens";
-	import { offlineTokens } from "$lib/stores/offlinetokens";
-	import { spentTokens } from "$lib/stores/spenttokens";
-	import { nostrKeys } from "$lib/stores/nostr";
+	import { toast } from "$lib/stores/session/toasts";
+	import { mnemonic } from "$lib/stores/persistent/mnemonic";
+	import { nostrKeys } from "$lib/stores/persistent/nostr";
 	import Input from "$lib/components/ui/input/input.svelte";
 	import * as Form from "$lib/components/ui/form";
 	import Button from "$lib/components/ui/button/button.svelte";
     import { Lock } from "lucide-svelte";
     import { onMount } from "svelte";
+    import { key } from "$lib/stores/session/key";
+    import { kdf } from "$lib/actions/encryption";
+    import { usePassword } from "$lib/stores/local/usePassword";
+    import { mints } from "$lib/stores/persistent/mints";
 
 	let pass = $state("");
 	let confPass = $state("");
@@ -45,13 +42,15 @@
 		const k = await kdf(pass);
 		if (k) {
 			key.set(k);
-			isEncrypted.set(true);
+			usePassword.set(true);
 			mnemonic.set($mnemonic);
-			token.set($token);
-			pendingTokens.set($pendingTokens);
-			offlineTokens.set($offlineTokens);
-			spentTokens.set($spentTokens);
-			nostrKeys.set($nostrKeys);
+			mints.reEncrypt($mints)
+			mints.init()
+			// token.set($token);
+			// pendingTokens.set($pendingTokens);
+			// offlineTokens.set($offlineTokens);
+			// spentTokens.set($spentTokens);
+			// nostrKeys.set($nostrKeys);
 		}
 		pass = "";
 		confPass = "";
@@ -80,7 +79,7 @@
 				<Button
 					variant="link"
 					onclick={() => {
-						isEncrypted.set(false);
+						usePassword.set(false);
 					}}
 				>
 					Don't encrypt

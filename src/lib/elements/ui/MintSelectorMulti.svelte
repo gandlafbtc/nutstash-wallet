@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from "$lib/components/ui/select";
-	import { mints, selectedMints } from "$lib/stores/mints";
+	import { mints } from "$lib/stores/persistent/mints";
+  import { selectedMints } from "$lib/stores/local/selectedMints";
     import { Landmark } from "lucide-svelte";
 
 </script>
@@ -24,8 +25,8 @@
 		<Select.Group>
 			<Select.GroupHeading>Available Mints</Select.GroupHeading>
 			{#each $mints as m}
-				<Select.Item value={m.mintURL} label={m.mintURL}
-					>{m.mintURL}</Select.Item
+				<Select.Item value={m.url} label={m.url}
+					>{m.url}</Select.Item
 				>
 			{/each}
 		</Select.Group>

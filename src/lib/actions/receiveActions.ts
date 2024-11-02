@@ -1,5 +1,5 @@
-import { mintQuotesStore } from "$lib/stores/mintquotes"
-import { mints } from "$lib/stores/mints"
+import { mintQuotesStore } from "$lib/stores/persistent/mintquotes"
+import { mints } from "$lib/stores/persistent/mints"
 
 export const createMintQuote = async (mintUrl: string, amount : number, options?: {unit?: string}) => {
     const wallet = mints.getWalletWithUnit(mintUrl, options?.unit)
@@ -7,5 +7,5 @@ export const createMintQuote = async (mintUrl: string, amount : number, options?
     if (!quote) {
         throw new Error(`Error when creating mint quote for ${mintUrl}`)
     }
-    mintQuotesStore.add({...quote,createdAt: Date.now(), mintUrl, unit: options?.unit??'sat', amount})
+    mintQuotesStore.addOrUpdate(quote.quote,{...quote,createdAt: Date.now(), mintUrl, unit: options?.unit??'sat', amount}, "quote")
 } 

@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { generateNewMnemonic } from '@cashu/cashu-ts';
-	import { isOnboarded } from '$lib/stores/message';
-	import { isEncrypted } from '$lib/stores/settings';
-	import { mnemonic } from '$lib/stores/mnemonic';
+	import { isOnboarded } from '$lib/stores/local/message';
+	import { mnemonic } from '$lib/stores/persistent/mnemonic';
 	import { pop, push, replace } from "svelte-spa-router";
     import Divider from '../ui/Divider.svelte';
+    import { usePassword } from '$lib/stores/local/usePassword';
 
 	const skip = () => {
-		isEncrypted.set(false);
+		usePassword.set(false);
+		const m = generateNewMnemonic();
+		mnemonic.set(m.split(' '));
 		isOnboarded.set(true);
 		replace('/wallet/')
 	};
@@ -67,8 +69,7 @@
 		<div class="flex-col gap-2 text-start">
 			<h2 class="font-bold">Quick nuts</h2>
 			<p class="">
-				Go straight to the wallet. You can encrypt it later. Nuts will <b>not</b> be backed up by a seed
-				phrase!
+				Go straight to the wallet. You can encrypt it later.
 			</p>
 			<p class="opacity-40">
 				This option is best used for a one-time wallet or throw-away wallet

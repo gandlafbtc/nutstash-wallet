@@ -1,34 +1,32 @@
 <script>
-    import { mintQuotesStore } from "$lib/stores/mintquotes";
-    import LightningInvoice from "./ln/LightningInvoice.svelte";
-    import * as Card from "$lib/components/ui/card";
+    import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
     import * as Carousel from "$lib/components/ui/carousel";
+    import { onMount } from "svelte";
+    import MintQuoteItem from "./ln/MintQuoteItem.svelte";
     
+
+    
+    let time = $state(new Date());
+
+    let millisNow = $derived(time.getTime())
+
+    onMount(() => {
+		const interval = setInterval(() => {
+			time = new Date();
+		}, 1000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
 </script>
 {#if $mintQuotesStore.length}
 
-<Carousel.Root class='w-72'>
-    <Carousel.Content>
+<Carousel.Root class='max-w-72 lg:max-w-xl'>
+    <Carousel.Content class='max-w-72'>
         {#each $mintQuotesStore as quote}
-        <Carousel.Item>
-            <div class="h-20">
-                {quote.state}
-            </div>
-            <div class="p-1">
-                <Card.Root >
-                    <Card.Content
-                    class="flex items-center justify-center p-4"
-                    >
-                    <LightningInvoice invoice={quote.request}>
-                        
-                    </LightningInvoice>
-                    
-                </Card.Content>
-            </Card.Root>
-        </div>
-        <div class="h-20">
-            
-        </div>
+        <Carousel.Item >
+            <MintQuoteItem {quote} {millisNow}></MintQuoteItem>
         </Carousel.Item>
       {/each}
     </Carousel.Content>

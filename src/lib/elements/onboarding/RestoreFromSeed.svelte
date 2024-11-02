@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { toast } from '$lib/stores/toasts';
+	import { toast } from '$lib/stores/session/toasts';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { validateMnemonic } from '@scure/bip39';
-	import { mnemonic } from '$lib/stores/mnemonic';
-	import { checkNonPending, isRestoring } from '$lib/stores/settings';
-	import { isOnboarded } from '$lib/stores/message';
+	import { mnemonic } from '$lib/stores/persistent/mnemonic';
+	import { checkNonPending, isRestoring } from '$lib/stores/persistent/settings';
+	import { isOnboarded } from '$lib/stores/local/message';
     import Input from '$lib/components/ui/input/input.svelte';
     import Button from '$lib/components/ui/button/button.svelte';
     import * as Card from '$lib/components/ui/card';

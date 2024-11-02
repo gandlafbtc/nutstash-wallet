@@ -1,27 +1,24 @@
 <script lang="ts">
 	// @ts-ignore
 	import Dropzone from 'svelte-file-dropzone';
-	import { toast } from '../../stores/toasts';
-	import { contacts } from '../../stores/contacts';
-	import { counts } from '../../stores/counts';
-	import { mintRequests } from '../../stores/mintReqs';
-	import { mints } from '../../stores/mints';
-	import { mnemonic } from '../../stores/mnemonic';
+	import { toast } from '$lib/stores/session/toasts';
+	import { contacts } from '$lib/stores/persistent/contacts';
+	import { counts } from '$lib/stores/persistent/counts';
+	import { mints } from '$lib/stores/persistent/mints';
+	import { mnemonic } from '$lib/stores/persistent/mnemonic';
 	import {
 		nostrKeys,
 		nostrMessages,
 		nostrRelays,
 		useExternalNostrKey,
 		useNostr
-	} from '../../stores/nostr';
-	import { pendingTokens } from '../../stores/pendingtokens';
-	import { spentTokens } from '../../stores/spenttokens';
-	import { token } from '../../stores/tokens';
-	import { history } from '../../stores/history';
-	import { isOnboarded } from '../../stores/message';
-	import { offlineTokens } from '../../stores/offlinetokens';
+	} from '$lib/stores/persistent/nostr';
+	import { history } from '$lib/stores/persistent/history';
+	import { isOnboarded } from '$lib/stores/local/message';
     import Button from '$lib/components/ui/button/button.svelte';
     import { pop } from 'svelte-spa-router';
+  import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
+    import { offlineProofs, pendingProofs, proofs, spentProofs } from '$lib/stores/persistent/proofs';
 
 	let backupFileName = $state('');
 	let isLoading = $state(true);
@@ -62,7 +59,7 @@
 		contacts.set(backupObject.contacts);
 		counts.set(backupObject.counts);
 		history.set(backupObject.history);
-		mintRequests.set(backupObject.mintRequests);
+		mintQuotesStore.set(backupObject.mintQuotesStore);
 		mints.set(backupObject.mints);
 		mnemonic.set(backupObject.mnemonic);
 		useNostr.set(backupObject.useNostr);
@@ -70,10 +67,10 @@
 		nostrKeys.set(backupObject.nostrKeys);
 		nostrMessages.set(backupObject.nostrMessages);
 		nostrRelays.set(backupObject.nostrRelays);
-		pendingTokens.set(backupObject.pendingTokens);
-		spentTokens.set(backupObject.spentTokens);
-		offlineTokens.set(backupObject.offlineTokens);
-		token.set(backupObject.token);
+		pendingProofs.set(backupObject.pendingProofs);
+		spentProofs.set(backupObject.spentProofs);
+		offlineProofs.set(backupObject.offlineProofs);
+		proofs.set(backupObject.proofs);
 
 		isOnboarded.set(true);
 	};

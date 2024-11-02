@@ -3,18 +3,16 @@
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
     import MintSelector from "$lib/elements/ui/MintSelector.svelte";
     import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
-    import { mints } from "$lib/stores/mints";
+    import { mints } from "$lib/stores/persistent/mints";
     import { formatAmount, getUnitsForMints, isNumeric } from "$lib/util/walletUtils";
-    import { QrCode, Zap } from "lucide-svelte";
+    import { QrCode, Zap, LoaderCircle } from "lucide-svelte";
     import { onMount } from "svelte";
-    import { pop, push } from "svelte-spa-router";
+    import { push } from "svelte-spa-router";
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
-    import { entropyToMnemonic } from "@scure/bip39";
-    import { unit } from "$lib/stores/settings";
-    import { receive } from "$lib/actions/walletActions";
+    import { unit } from "$lib/stores/persistent/settings";
     import { createMintQuote } from "$lib/actions/receiveActions";
 
-    let { openScannerDrawer = $bindable() } = $props();
+    let { openScannerDrawer = $bindable(), openReceiveDrawer = $bindable() } = $props();
 
     let entered: string = $state("");
 
@@ -31,7 +29,10 @@
 
     onMount(() => {
         setTimeout(() => {
-            thisDrawer?.addEventListener("keypress", (e: KeyboardEvent) => {
+            thisDrawer?.addEventListener("keydown", (e: KeyboardEvent) => {
+                if (e.key === 'Escape') {
+                    openReceiveDrawer = false
+                }
                 if (e.key === 'Backspace') {
                     entered = entered.slice(0, -1);
                 }
@@ -73,7 +74,9 @@
 
     const receiveLN = async () => {
         try {
-            await createMintQuote(mint.mintURL, amount, {unit: currentUnit});
+            isLoading = true;
+            await createMintQuote(mint.url, amount, {unit: currentUnit});
+            openReceiveDrawer = false
             // wallet.unit =
 
             //Show QR screen
@@ -111,6 +114,7 @@
             bind:value={entered}
             bind:ref={inputFocus}
             oninput={(e)=> {e.preventDefault()}}
+            
             placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount to mint"
         ></Textarea>
     </div>
@@ -138,10 +142,15 @@
                     </div>
                     <div class="w-80 py-5">
                         <Button
+                            disabled={isLoading}
                             class="w-full border border-2 border-pink-600"
                             onclick={receiveLN}
                         >
+                            {#if isLoading}
+                            <LoaderCircle class='animate-spin'></LoaderCircle>
+                            {:else}
                             <Zap></Zap>
+                            {/if}
                             Receive via Lightning
                         </Button>
                     </div>

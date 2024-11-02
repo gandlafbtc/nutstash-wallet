@@ -1,11 +1,10 @@
 <script lang="ts">
     import Progress from "$lib/components/ui/progress/progress.svelte";
     import * as  Select  from "$lib/components/ui/select";
-    import { toast } from "$lib/stores/toasts";
     import {
         scannedInvoiceStore,
         scannedTokenStore,
-    } from "$lib/stores/transitionstores";
+    } from "$lib/stores/session/transitionstores";
     import type { URDecoder } from "@gandlaf21/bc-ur";
     import { Scan } from "lucide-svelte";
     import QrScanner from "qr-scanner";

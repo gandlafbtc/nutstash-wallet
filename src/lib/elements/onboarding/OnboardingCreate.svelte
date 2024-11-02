@@ -1,5 +1,5 @@
 <script>
-	import { mnemonic } from '$lib/stores/mnemonic';
+	import { mnemonic } from '$lib/stores/persistent/mnemonic';
 
 	import Mnemonic from '$lib/elements/security/Mnemonic.svelte';
     import Button from '$lib/components/ui/button/button.svelte';

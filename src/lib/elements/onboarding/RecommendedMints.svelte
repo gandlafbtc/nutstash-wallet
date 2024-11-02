@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import { isOnboarded } from "$lib/stores/message";
-	import { mints } from "$lib/stores/mints";
+	import { isOnboarded } from "$lib/stores/local/message";
+	import { mints } from "$lib/stores/persistent/mints";
 	import MintRowAdd from "./MintRowAdd.svelte";
 	import Badge from "$lib/components/ui/badge/badge.svelte";
 	import Button from "$lib/components/ui/button/button.svelte";

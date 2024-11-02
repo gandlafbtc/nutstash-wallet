@@ -142,7 +142,7 @@ export const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 	}, []);
 };
 
-export const formatAmount = (amount: number, unit: string, withSuffix = true): string => {
+export const formatAmount = (amount: number, unit: string): string => {
 	if (unit === 'sat') {
 		return formatSats(amount);
 	}
@@ -155,11 +155,24 @@ export const formatAmount = (amount: number, unit: string, withSuffix = true): s
 	}
 };
 
+export const formatTime = (time: number): string => {
+	return  new Intl.DateTimeFormat('en-US', {dateStyle: 'medium', timeStyle: 'medium'} ).format(time);
+};
+
 const formatSats = (amount: number): string => {
 	return (
 		'₿ '+new Intl.NumberFormat('en-US').format(amount)
 		
 	);
+};
+
+export const formatSecToMinStr = (seconds: number): string  =>  {
+	if (seconds<=0) {
+		return "00:00"
+	}
+	const m = Math.floor(seconds/60);
+	const s = seconds%60;
+	return m.toString().padStart(0) + ':' + s.toString().padStart(2, '0');
 };
 
 const formatMSats = (amount: number): string => {
@@ -234,7 +247,7 @@ const LNURLLookup = async (endpoint: string, amount: number) => {
 export const isNumeric = (value: unknown) => typeof value === 'number' || !isNaN(value);
 
 export const getUnitsForMints = (mints: Mint[]) => {
-	console.log(mints)
+	console.log(mints.map(m=> m.keysets))
 	const units = [...new Set(mints.map(m=>m.keys.keysets).flat().map(k=>k.unit))]
 	if (!units.length) {
 		units.push('sat')

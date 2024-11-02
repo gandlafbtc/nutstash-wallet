@@ -1,15 +1,15 @@
 <script lang="ts">
 	import * as Select from "$lib/components/ui/select";
-    import type { Mint } from "$lib/model/mint";
-	import { mints, selectedMints } from "$lib/stores/mints";
-    import { toast } from "$lib/stores/toasts";
+  import type { Mint } from "$lib/db/models/types";
+	import { mints } from "$lib/stores/persistent/mints";
+    import { toast } from "$lib/stores/session/toasts";
     import { Landmark } from "lucide-svelte";
 
 
 	let { mint = $bindable()}: {mint: Mint} = $props()
 
 	const onValueChange = (value: string) => {
-		const mintToSet = $mints.find(mint => mint.mintURL === value)
+		const mintToSet = $mints.find(mint => mint.url === value)
 		if (!mintToSet) {
 			toast(`Mint ${value} not found`, 'error')
 			return
@@ -22,14 +22,14 @@
 <Select.Root type="single" name="mint-single" {onValueChange} allowDeselect={false}>
 	<Select.Trigger class="">
 		<Landmark class='h-5 w-5'></Landmark>
-		{mint?.mintURL}
+		{mint?.url}
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
 			<Select.GroupHeading>Available Mints</Select.GroupHeading>
 			{#each $mints as m}
-				<Select.Item value={m.mintURL} label={m.mintURL}
-					>{m.mintURL}</Select.Item
+				<Select.Item value={m.url} label={m.url}
+					>{m.url}</Select.Item
 				>
 			{/each}
 		</Select.Group>

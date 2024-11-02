@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { toast } from '$lib/stores/toasts';
+	import { toast } from '$lib/stores/session/toasts';
     import * as Card from '$lib/components/ui/card';
     import Input from '$lib/components/ui/input/input.svelte';
     import Button from '$lib/components/ui/button/button.svelte';
     import { LoaderCircle } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
-    import { mints } from '$lib/stores/mints';
+    import { mints } from '$lib/stores/persistent/mints';
 
 
 	let {url, isPredefined, afterAdd, children}:{
@@ -18,7 +18,7 @@
 	const addMint = async () => {
 		try {
 			isLoading = true;
-			await mints.createMint(url);
+			await mints.fetchMint(url);
 			afterAdd(url);
 		} catch (error) {
 			toast('Could not load mint', 'error');
@@ -27,7 +27,7 @@
 		}
 	};
 	const removeMint = () => {
-		mints.remove(url)
+		mints.remove(url, 'url')
 	};
 </script>
 	<Card.Root class="flex-grow flex m-2">
@@ -60,7 +60,7 @@
 						<LoaderCircle class="mr-2 size-4 animate-spin" />
 						Add
 					</Button>
-				{:else if $mints.find((m) => m.mintURL === url) && isPredefined}
+				{:else if $mints.find((m) => m.url === url) && isPredefined}
 					<Button variant="destructive" onclick={removeMint}>
 						Remove
 					</Button>

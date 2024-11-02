@@ -11,10 +11,10 @@
 		useExternalNostrKey,
 		nostrKeys,
         nostrRelays
-	} from '$lib/stores/nostr';
+	} from '$lib/stores/persistent/nostr';
 	import { isValidToken } from '$lib/util/walletUtils';
 	import { onMount, onDestroy } from 'svelte';
-	import { toast } from '$lib/stores/toasts';
+	import { toast } from '$lib/stores/session/toasts';
 	import { browser } from '$app/environment';
 
 	const getPubKey = async (): Promise<string[]> => {

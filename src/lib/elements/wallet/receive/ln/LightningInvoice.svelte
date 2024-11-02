@@ -12,6 +12,9 @@
             padding: 10,
             size: 250,
         });
+        if (!canvas) {
+            return
+        }
         canvasWrapper?.appendChild(canvas);
     });
 </script>
