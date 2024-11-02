@@ -6,6 +6,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { mints } from "$lib/stores/persistent/mints";
   import type { Mint } from "$lib/db/models/types";
     import { toast } from "$lib/stores/session/toasts";
+    import { getHostFromUrl } from "$lib/util/utils";
 
 
   const {mint}: {mint:Mint} = $props()
@@ -24,12 +25,13 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
          isLoading = false
      }
     }
+    
 
 </script>
 <Sidebar.MenuItem>
     <Sidebar.MenuButton>
       {#snippet child({ props })}
-        <a href={"/#/mints/mint/"+mint.url} {...props}>
+        <a href={"/#/wallet/mint/"+ getHostFromUrl(mint.url)} {...props}>
           <span class="text-xs">{mint.url}</span>
           {#if isLoading}
             <LoaderCircle class='animate-spin'></LoaderCircle>

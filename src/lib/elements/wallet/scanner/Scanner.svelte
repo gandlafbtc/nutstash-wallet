@@ -5,11 +5,11 @@
         scannedInvoiceStore,
         scannedTokenStore,
     } from "$lib/stores/session/transitionstores";
-    import type { URDecoder } from "@gandlaf21/bc-ur";
     import { Scan } from "lucide-svelte";
     import QrScanner from "qr-scanner";
     import { onDestroy, onMount } from "svelte";
     import { push } from "svelte-spa-router";
+    import {URDecoder} from "@gandlaf21/bc-ur";
 
     let videoElem: HTMLVideoElement | undefined = $state();
     let qrScanner: QrScanner;
@@ -22,11 +22,8 @@
 
     let decoder: URDecoder;
 
-    let urDecoder: typeof URDecoder;
 
     onMount(async () => {
-        const { URDecoder } = await import("@gandlaf21/bc-ur");
-        urDecoder = URDecoder;
         decoder = new URDecoder();
 
         if (await QrScanner.hasCamera()) {
@@ -68,7 +65,7 @@
         } else if (result.data.startsWith("ur:")) {
             const chunkProcess = result.data.split("/")[1].split("-")[1];
             if (scanProcess && scanProcess !== chunkProcess) {
-                decoder = new urDecoder();
+                decoder = new URDecoder();
             }
             scanProcess = chunkProcess;
             decoder.receivePart(result.data);

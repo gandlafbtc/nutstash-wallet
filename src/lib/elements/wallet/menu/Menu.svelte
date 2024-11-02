@@ -5,7 +5,7 @@
     import { mints } from "$lib/stores/persistent/mints";
     import { toast } from "$lib/stores/session/toasts";
     import { version } from "$lib/stores/static/version";
-    import { AlertCircle, Delete, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet } from "lucide-svelte";
+    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
     import Divider from "$lib/elements/ui/Divider.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
@@ -165,6 +165,17 @@
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
                                 <a href={"/#/"} {...props}>
+                                    <ShieldCheck></ShieldCheck>
+                                    Security
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
                                     <Key></Key>
                                     Keys
                                 </a>
@@ -206,56 +217,64 @@
         </Sidebar.Group>
 
         <Sidebar.Group>
-            <Sidebar.GroupLabel class="gap-2">
-                <LifeBuoy></LifeBuoy>
-                Help</Sidebar.GroupLabel>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a href={"/#/"} {...props}>
-                            <AlertCircle></AlertCircle>
-                            Report Issue
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a href={"/#/"} {...props}>
-                            <Send></Send>
-                            Community
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a href={"/#/"} {...props}>
-                            <Heart></Heart>
-                            Donate
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-        </Sidebar.Group>
+            <Sidebar.GroupContent>
+                <Sidebar.Menu>
 
+                    <Sidebar.GroupLabel class="gap-2">
+                        <LifeBuoy></LifeBuoy>
+                        Help</Sidebar.GroupLabel>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <AlertCircle></AlertCircle>
+                                    Report Issue
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Send></Send>
+                                    Community
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a href={"/#/"} {...props}>
+                                    <Heart></Heart>
+                                    Donate
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                    </Sidebar.Menu>
+                    </Sidebar.GroupContent>
+                </Sidebar.Group>
+                
         <Sidebar.Group>
-            <Sidebar.GroupLabel class="gap-2">
-                <Database></Database>
-                Data</Sidebar.GroupLabel>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a href={"/#/"} {...props}>
-                            <Coins></Coins>
-                            Ecash
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <Sidebar.MenuItem>
+        <Sidebar.GroupContent>
+            <Sidebar.Menu>
+
+                <Sidebar.GroupLabel class="gap-2">
+                    <Database></Database>
+                    Data</Sidebar.GroupLabel>
+                    <Sidebar.MenuItem>
+                        <Sidebar.MenuButton>
+                            {#snippet child({ props })}
+                            <a href={"/#/"} {...props}>
+                                <Coins></Coins>
+                                Ecash
+                            </a>
+                            {/snippet}
+                        </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                    <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
                         <a href={"/#/"} {...props}>
@@ -275,6 +294,26 @@
                         {/snippet}
                     </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/wallet/receive/ln"} {...props}>
+                            <CreditCard></CreditCard>
+                            Payments
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+                <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                        {#snippet child({ props })}
+                        <a href={"/#/wallet/receive/ln"} {...props}>
+                            <ArrowLeftRight></ArrowLeftRight>
+                            Transactions
+                        </a>
+                        {/snippet}
+                    </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
                 <Divider></Divider>
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
@@ -287,7 +326,9 @@
                     </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
                 
-
+            </Sidebar.Menu>
+            </Sidebar.GroupContent>
+            
         </Sidebar.Group>
     </Sidebar.Content>
     <Sidebar.Footer class="flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">

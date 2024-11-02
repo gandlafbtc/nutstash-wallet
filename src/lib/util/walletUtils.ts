@@ -84,7 +84,7 @@ export const isPow2 = (number: number) => {
  */
 export const getTokensForMints = (mints: Mint[], tokens: Array<Proof>, unit?: string) => {
 	const tokenSubset = tokens.filter((token) => {
-		if (mints.map(m=> m.keysets).flat().map((k) => k.id).includes(token.id)) {
+		if (mints.map(m => m.keysets).flat().map((k) => k.id).includes(token.id)) {
 			return true;
 		} else {
 			return false;
@@ -149,40 +149,40 @@ export const formatAmount = (amount: number, unit: string): string => {
 	if (unit === 'msat') {
 		return formatMSats(amount);
 	}
-	
+
 	else {
-		return formatFiat(amount,unit);
+		return formatFiat(amount, unit);
 	}
 };
 
 export const formatTime = (time: number): string => {
-	return  new Intl.DateTimeFormat('en-US', {dateStyle: 'medium', timeStyle: 'medium'} ).format(time);
+	return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'medium' }).format(time);
 };
 
 const formatSats = (amount: number): string => {
 	return (
-		'₿ '+new Intl.NumberFormat('en-US').format(amount)
-		
+		'₿ ' + new Intl.NumberFormat('en-US').format(amount)
+
 	);
 };
 
-export const formatSecToMinStr = (seconds: number): string  =>  {
-	if (seconds<=0) {
+export const formatSecToMinStr = (seconds: number): string => {
+	if (seconds <= 0) {
 		return "00:00"
 	}
-	const m = Math.floor(seconds/60);
-	const s = seconds%60;
+	const m = Math.floor(seconds / 60);
+	const s = seconds % 60;
 	return m.toString().padStart(0) + ':' + s.toString().padStart(2, '0');
 };
 
 const formatMSats = (amount: number): string => {
 	return (
-		'₿ '+new Intl.NumberFormat('en-US' ,{minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(amount/1000)
-		
+		'₿ ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(amount / 1000)
+
 	);
 };
 
-export const  getUnitSymbol = (unit: string): string => {
+export const getUnitSymbol = (unit: string): string => {
 	switch (unit) {
 		case 'sat':
 			return '₿ (sat)';
@@ -190,23 +190,23 @@ export const  getUnitSymbol = (unit: string): string => {
 			return '₿ (msat)';
 		case 'btc':
 			return '₿ (btc)';
-		case 'usd': 
+		case 'usd':
 			return '$ (usd)';
-		case 'eur': 
+		case 'eur':
 			return '€  (eur)';
-		case 'gbp': 
+		case 'gbp':
 			return '£  (gbp)';
-		case 'jpy': 
+		case 'jpy':
 			return '¥  (jpy)';
-		case 'krw': 
+		case 'krw':
 			return '₩   (krw)';
-			default:
+		default:
 			return unit
 	}
 }
 const formatFiat = (amount: number, unit: string): string => {
 	return (
-		new Intl.NumberFormat('en-US', { style:'currency', minimumFractionDigits: 2, maximumFractionDigits: 2 , currency: unit.toUpperCase() }).format(amount/100)
+		new Intl.NumberFormat('en-US', { style: 'currency', minimumFractionDigits: 2, maximumFractionDigits: 2, currency: unit.toUpperCase() }).format(amount / 100)
 	);
 };
 
@@ -246,9 +246,15 @@ const LNURLLookup = async (endpoint: string, amount: number) => {
 
 export const isNumeric = (value: unknown) => typeof value === 'number' || !isNaN(value);
 
-export const getUnitsForMints = (mints: Mint[]) => {
-	console.log(mints.map(m=> m.keysets))
-	const units = [...new Set(mints.map(m=>m.keys.keysets).flat().map(k=>k.unit))]
+export const getUnitsForMints = (mints: Mint[]): string[] => {
+	if (!mints) {
+		return ['sat']
+		
+	}
+	if (!mints.length) {
+		return ['sat']
+	}
+	const units = [...new Set(mints.map(m => m?.keys.keysets).flat().map(k => k?.unit))]
 	if (!units.length) {
 		units.push('sat')
 	}

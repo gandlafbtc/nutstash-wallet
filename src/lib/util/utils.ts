@@ -38,3 +38,7 @@ export function copyTextToClipboard(text: string) {
 		}
 	);
 }
+
+export const getHostFromUrl = (url: string) => {
+	return url.split(":")[1].split('/').join("")
+}

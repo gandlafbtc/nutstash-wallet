@@ -1,3 +1,4 @@
+import { mintQuotesStore } from "$lib/stores/persistent/mintquotes"
 import { createMintsStore, mints } from "$lib/stores/persistent/mints"
 
 export const init = async () => {
@@ -6,4 +7,5 @@ export const init = async () => {
 
 const initStores = async () => {
     await mints.init()
+    await mintQuotesStore.init()
 }

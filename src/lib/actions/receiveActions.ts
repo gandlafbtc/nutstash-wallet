@@ -7,5 +7,7 @@ export const createMintQuote = async (mintUrl: string, amount : number, options?
     if (!quote) {
         throw new Error(`Error when creating mint quote for ${mintUrl}`)
     }
-    mintQuotesStore.addOrUpdate(quote.quote,{...quote,createdAt: Date.now(), mintUrl, unit: options?.unit??'sat', amount}, "quote")
+    const quoteToStore = {...quote,createdAt: Date.now(), mintUrl, unit: options?.unit??'sat', amount}
+    mintQuotesStore.addOrUpdate(quote.quote, quoteToStore , "quote")
+    return quoteToStore
 } 

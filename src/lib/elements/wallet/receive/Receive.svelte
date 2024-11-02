@@ -20,7 +20,11 @@
 
     let token = $state("");
     let amount = $state("");
-    let currentUnit = $state(getUnitsForMints([mint]).find((u)=>u === $unit)? $unit : "sat");
+    const getCurrentUnit = () => {
+        return  getUnitsForMints([mint]).find((u)=>u === $unit)? $unit : "sat";
+    };
+    let currentUnit: string = $state(getCurrentUnit());
+
 
     let inputFocus: HTMLTextAreaElement | null = $state(null);
     let thisDrawer: HTMLDivElement | null = $state(null);
@@ -75,12 +79,12 @@
     const receiveLN = async () => {
         try {
             isLoading = true;
-            await createMintQuote(mint.url, amount, {unit: currentUnit});
+            const q = await createMintQuote(mint.url, amount, {unit: currentUnit});
             openReceiveDrawer = false
             // wallet.unit =
 
             //Show QR screen
-            push("/wallet/receive/ln");
+            push("/wallet/receive/ln/"+q.quote);
         } catch (error) {
         } finally {
             isLoading = false;
@@ -143,7 +147,7 @@
                     <div class="w-80 py-5">
                         <Button
                             disabled={isLoading}
-                            class="w-full border border-2 border-pink-600"
+                            class="w-full border-2 border-pink-600"
                             onclick={receiveLN}
                         >
                             {#if isLoading}

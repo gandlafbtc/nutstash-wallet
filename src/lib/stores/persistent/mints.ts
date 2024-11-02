@@ -9,6 +9,7 @@ import { DB } from '$lib/db/db';
 import { createEncryptionHelper, type EncryptionHelper } from './helper/encryptionHelper';
 import { createDefaultStoreFunctions } from './helper/storeHelper';
 import { selectedMints } from '../local/selectedMints';
+import { getHostFromUrl } from '$lib/util/utils';
 
 
 const encryptionHelper = await createEncryptionHelper<Mint>('encrypted-mints')
@@ -16,53 +17,23 @@ const encryptionHelper = await createEncryptionHelper<Mint>('encrypted-mints')
 export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint[]>) => {
 	const store = writable<Mint[]>([]);
 	const { update, set, subscribe } = store;
-	const { addOrUpdate, clear, init, reEncrypt, remove, reset } = createDefaultStoreFunctions(encryptionHelper, store);
+	const { addOrUpdate, clear, init, reEncrypt, remove, reset, getAllBy, getBy } = createDefaultStoreFunctions(encryptionHelper, store);
 
-	// const init = async () => {
-	// 	const allMints = await encryptionHelper.decrypt()
-	// 	if (allMints.length > 0) {
-	// 		set(allMints)
-	// 	}
-	// }
-
-	// const reEncrypt = async (value: Mint[]) => {
-	// 	set(value);
-	// 	await encryptionHelper.encrypt(get(store))
-	// }
-
-	// const reset = async () => {
-	// 	set([]);
-	// 	await encryptionHelper.encrypt(get(store))
-	// }
-
-	// const clear = () => {
-	// 	set([])
-	// }
-
-	// const remove = async (mintUrl: string) => {
-	// 	update(context => context.filter(m => m.url !== mintUrl))
-	// 	await encryptionHelper.encrypt(get(store))
-	// }
-
-	// const addOrUpdate = async (id: string, mint: Mint) => {
-	// 	if (get(store).find(m => m.url === id)) {
-	// 		update(context => context.filter(m => m.url !== id))
-	// 	}
-	// 	else {
-	// 		update(context => [mint, ...context])
-	// 	}
-	// 	await encryptionHelper.encrypt(get(store))
-	// }
 
 	const fetchMint = async (url: string) => {
 		const mint = await loadMint(url)
 		addOrUpdate(url, mint, 'url')
 	}
 
+
+
 	const getById = (mintUrl: string): Mint | undefined => {
-		return get(store).find(m => m.url === mintUrl);
+		return getBy(mintUrl, 'url');
 	}
 
+	const getByHost = (host: string): Mint | undefined => {
+		return get(store).find((m)=> host === getHostFromUrl(m.url));
+	}
 
 
 	const getWalletWithUnit = (mintUrl: string, unit = 'sat') => {
@@ -90,7 +61,8 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint[]
 		init,
 		clear,
 		reEncrypt,
-		fetchMint
+		fetchMint,
+		getByHost
 	};
 }
 

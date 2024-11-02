@@ -4,8 +4,16 @@ import type { EncryptionHelper } from "./encryptionHelper"
 export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelper<T[]>, store: Writable<T[]>) => {
 
     const init = async () => {
-		const all = await encryptionHelper.decrypt()
-		store.set(all)
+        try {
+            const all = await encryptionHelper.decrypt()
+            if (all?.length === 0) {
+                store.set([])
+                return
+            }
+            store.set(all)
+        } catch (error) {
+            console.error(error)
+        }
 	}
 
 	const reEncrypt = async (value: T[]) => {
@@ -37,12 +45,24 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
 		await encryptionHelper.encrypt(get(store))
 	}
 
+    const getBy = (id: string, idFieldDescr: keyof T): T | undefined=> {
+        return get(store).find(o => o[idFieldDescr] === id)
+    }
+
+    const getAllBy = (ids: string[], idFieldDescr: keyof T): T[] => {
+        return get(store).filter(o => {
+            return ids.includes(o[idFieldDescr] as string)
+        })
+    }
+
     return {
         init,
         remove,
         addOrUpdate,    
         clear,
         reset,  
-        reEncrypt
+        reEncrypt,
+        getBy,
+        getAllBy
     }
 }

@@ -14,6 +14,7 @@
     import { usePassword } from '$lib/stores/local/usePassword';
     import { mints } from '$lib/stores/persistent/mints';
     import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
+    import { DEFAULT_PASS } from '$lib/stores/static/pass';
 	
 
 	let {children}: {children?: Snippet} = $props()
@@ -27,10 +28,12 @@
 		if ($usePassword === false) {
 			unlock()
 		}
-        setTimeout(() => {
-            console.log(inputFocus)
-            inputFocus?.focus()
-        }, 0);
+		else {
+			setTimeout(() => {
+				console.log(inputFocus)
+				inputFocus?.focus()
+			}, 0);
+		}
     }) 
 	
 	const unlockWallet = async (e: Event) => {
@@ -40,18 +43,24 @@
 
 	const unlock = async () => {
 		isUnlocking  = true;
-		key.set(await kdf(pass));
+		
 		try {
+		if ($usePassword) {
+			key.set(await kdf(pass));
+		}
+		else {
+			key.set(await kdf(DEFAULT_PASS));
+		}
 			// init stores
 			await mints.init()
-			await mintQuotesStore.init()
+			// await mintQuotesStore.init()
 			
 			toast('Wallet unlocked', 'success');
 		} catch (error) {
 			key.set(undefined);
 			toast('Wrong Password', 'warning');
 			setTimeout(() => {
-            console.log(inputFocus)
+            console.error(error)
             inputFocus?.focus()
         }, 0);
 		} finally {

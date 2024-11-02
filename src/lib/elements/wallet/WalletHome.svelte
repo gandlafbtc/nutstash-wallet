@@ -21,6 +21,7 @@
   import Scanner from "./scanner/Scanner.svelte";
   import { selectedMints } from "$lib/stores/local/selectedMints";
   import { proofs } from "$lib/stores/persistent/proofs";
+    import Textarea from "$lib/components/ui/textarea/textarea.svelte";
 
   let currentUnit = $state("sat");
 
@@ -29,8 +30,15 @@
 </script>
 
 <div class="flex items-center justify-start pt-20 flex-col gap-5 w-full h-full">
-  <div class="w-80 h-48 flex items-start">
+  <div class="w-80 flex items-start">
     <MintSelectorMulti></MintSelectorMulti>
+  </div>
+  <div class="w-80 h-28">
+    <Textarea 
+    class="w-80 border-dashed resize-none rounded-none focus-visible:outline-transparent focus:outline-transparent"
+    
+    inputmode="none"
+    placeholder="Quickpaste: paste token, invoice etc." ></Textarea>
   </div>
   <p class="text-7xl">
     {formatAmount(
@@ -93,7 +101,7 @@
     &nbsp; Receive
   </button>
   <button
-    class="z-10 rounded-full bg-pink-600 p-8 -m-6 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
+    class="z-10 rounded-full bg-pink-600 p-8 -m-6 transition-all duration-300 hover:bg-pink-700 hover:p-9 flex-shrink active:bg-pink-500"
     onclick={() => (openScannerDrawer = !openScannerDrawer)}
   >
     <QrCode></QrCode>

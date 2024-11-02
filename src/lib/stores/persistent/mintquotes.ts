@@ -12,7 +12,7 @@ const createMintQuotesStore = () => {
     const initialMintQuotes: Array<StoredMintQuote> = [];
     const store = writable<Array<StoredMintQuote>>(initialMintQuotes);
     const {set, subscribe, update} = store;
-    const {addOrUpdate, remove, clear ,init ,reEncrypt ,reset} = createDefaultStoreFunctions(encryptionHelper, store);
+    const {addOrUpdate, remove, clear ,init ,reEncrypt ,reset, getBy, getAllBy} = createDefaultStoreFunctions(encryptionHelper, store);
 
     const getActiveQuotes = () => {
         return get(store).filter(q => q.state === MintQuoteState.UNPAID && q.expiry > Date.now());
@@ -27,7 +27,7 @@ const createMintQuotesStore = () => {
         }));
     }
 
-    return {set, subscribe, update, addOrUpdate, remove, updateOne, getActiveQuotes, init, reset , clear , reEncrypt};
+    return {set, subscribe, update, addOrUpdate, remove, updateOne, getActiveQuotes, init, reset , clear , reEncrypt, getBy, getAllBy};
 }
 export const mintQuotesStore = createMintQuotesStore();
 

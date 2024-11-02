@@ -15,6 +15,7 @@
     import { usePassword } from "$lib/stores/local/usePassword";
     import { init } from "$lib/init/init";
     import PasswordInput from "../security/PasswordInput.svelte";
+    import Breadcrumb from "./menu/Breadcrumb.svelte";
 
 	onMount(() => {
 		init()
@@ -53,12 +54,13 @@
 		<div class="fixed left-5 top-5">
 			<Sidebar.Trigger></Sidebar.Trigger>
 		</div>
+		<div  class="fixed top-6 inset-x-0 max-w-max mx-auto flex items-center justify-center">
+			<Breadcrumb></Breadcrumb>
 		{#if $statusMessage}
 		<!-- content here -->
-		<div  class="fixed top-5 inset-x-0 max-w-max mx-auto">
 			<Badge></Badge>
+			{/if}
 		</div>
-		{/if}
 	<div class="w-full h-full flex items-center justify-center">
 		{#if $usePassword}
 		<div  class="fixed top-5 right-5">
