@@ -13,6 +13,7 @@
     import { usePassword } from "$lib/stores/local/usePassword";
     import { selectedMints } from "$lib/stores/local/selectedMints";
     import { isOnboarded } from "$lib/stores/local/message";
+    import { DB } from "$lib/db/db";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -45,11 +46,10 @@
             usePassword.set(undefined)
             selectedMints.set([]);
             isOnboarded.set(false);
-            await mints.reset();
-            await mintQuotesStore.reset();
-            
+            await DB.deleteDatabase()
+            toast('Database deleted', 'success');
         } catch (error) {
-            toast(error.message, 'error', 'Error deleting all mints', );
+            toast(error.message, 'error', 'error when deleteting', );
         }
     }
 </script>

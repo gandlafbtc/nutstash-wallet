@@ -6,9 +6,9 @@ import { get } from "svelte/store";
 import * as encryption  from "$lib/actions/encryption";
 import type { EncryptedStore } from "$lib/db/models/types";
 
-export type EncryptionHelper<T> = { encrypt: (o: T) => Promise<void>, decrypt: () => Promise<T> };
+export type EncryptionHelper<T> = { encrypt: (o: T[]) => Promise<void>, decrypt: () => Promise<T[]> };
 
-export const createEncryptionHelper = async <T>(dbStoreName: StoreNames<NutstashDB>): Promise<EncryptionHelper<T[]>>  => {
+export const createEncryptionHelper = async <T>(dbStoreName: StoreNames<NutstashDB>): Promise<EncryptionHelper<T>>  => {
 	const db = await DB.getInstance();
 
 	const encrypt = async <T>(o: T): Promise<void> => {
@@ -20,16 +20,16 @@ export const createEncryptionHelper = async <T>(dbStoreName: StoreNames<Nutstash
 		db.put(dbStoreName, { cypher, iv, t: Date.now() }, 'default');
 	}
 
-	const decrypt = async <T>(): Promise<T> => {
+	const decrypt = async <T>(): Promise<T[]> => {
 		const encrypted = await db.get(dbStoreName, 'default') as EncryptedStore;
 		if (!encrypted) {
-			throw new Error();
+			return []
 		}
 		const k = get(key)
 		if (!k) {
 			throw new Error("Key not set");
 		}
-		const decrypted = await encryption.decrypt<T>(encrypted.cypher, k, encrypted.iv)
+		const decrypted = await encryption.decrypt<T>(encrypted.cypher, k, encrypted.iv) as T[]
 		console.log(decrypted)
 		return decrypted
 	}

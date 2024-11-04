@@ -14,7 +14,7 @@ import { getHostFromUrl } from '$lib/util/utils';
 
 const encryptionHelper = await createEncryptionHelper<Mint>('encrypted-mints')
 
-export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint[]>) => {
+export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>) => {
 	const store = writable<Mint[]>([]);
 	const { update, set, subscribe } = store;
 	const { addOrUpdate, clear, init, reEncrypt, remove, reset, getAllBy, getBy } = createDefaultStoreFunctions(encryptionHelper, store);
@@ -26,18 +26,13 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint[]
 	}
 
 
-
-	const getById = (mintUrl: string): Mint | undefined => {
-		return getBy(mintUrl, 'url');
-	}
-
 	const getByHost = (host: string): Mint | undefined => {
 		return get(store).find((m)=> host === getHostFromUrl(m.url));
 	}
 
 
 	const getWalletWithUnit = (mintUrl: string, unit = 'sat') => {
-		const mint = getById(mintUrl)
+		const mint = getBy(mintUrl, 'url')
 		if (!mint) {
 			throw new Error(`Mint ${mintUrl} not found`)
 		}
@@ -54,7 +49,6 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint[]
 		reset,
 		update,
 		getByUrl:
-		getById,
 		remove,
 		getWalletWithUnit,
 		addOrUpdate,

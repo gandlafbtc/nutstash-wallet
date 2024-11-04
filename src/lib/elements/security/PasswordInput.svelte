@@ -15,6 +15,8 @@
     import { mints } from '$lib/stores/persistent/mints';
     import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
     import { DEFAULT_PASS } from '$lib/stores/static/pass';
+    import { countsStore } from '$lib/stores/persistent/counts';
+    import { init } from '$lib/init/init';
 	
 
 	let {children}: {children?: Snippet} = $props()
@@ -52,9 +54,7 @@
 			key.set(await kdf(DEFAULT_PASS));
 		}
 			// init stores
-			await mints.init()
-			// await mintQuotesStore.init()
-			
+			await init()
 			toast('Wallet unlocked', 'success');
 		} catch (error) {
 			key.set(undefined);

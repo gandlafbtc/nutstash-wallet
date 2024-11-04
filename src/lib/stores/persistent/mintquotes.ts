@@ -1,4 +1,3 @@
-import { browser } from "$app/environment";
 import type { StoredMintQuote } from "$lib/db/models/types";
 import { MintQuoteState, type MintQuoteResponse} from "@cashu/cashu-ts";
 import { get, writable } from "svelte/store";
@@ -18,16 +17,7 @@ const createMintQuotesStore = () => {
         return get(store).filter(q => q.state === MintQuoteState.UNPAID && q.expiry > Date.now());
     }
 
-    const updateOne = (newQuote: StoredMintQuote)  => {
-        update(context => context.map(q => {
-            if (q.quote === newQuote.quote) {
-                return newQuote;
-            }
-            return q;
-        }));
-    }
-
-    return {set, subscribe, update, addOrUpdate, remove, updateOne, getActiveQuotes, init, reset , clear , reEncrypt, getBy, getAllBy};
+    return {set, subscribe, update, addOrUpdate, remove, getActiveQuotes, init, reset , clear , reEncrypt, getBy, getAllBy};
 }
 export const mintQuotesStore = createMintQuotesStore();
 

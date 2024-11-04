@@ -8,7 +8,7 @@
   import { showShortCuts } from "$lib/stores/session/showShortCuts";
   import { onMount } from "svelte";
   import Router from "svelte-spa-router";
-  import { push, pop, replace } from "svelte-spa-router";
+  import { push, pop, replace, location } from "svelte-spa-router";
 
   onMount(() => {
     if (!$isOnboarded) {
@@ -16,12 +16,14 @@
     } else if ($isRestoring) {
       replace("/restore");
     } else {
-      // if (![...Object.keys(routes), ...Object.keys(walletRoutes)].includes($page.url.hash)) {
-      //   push("/wallet/");
-      // }
+      if ($location === '/' || $location === '/#' || $location === '/#/' || $location === '') {
+        push('/wallet/')
+      }
     }
   });
 </script>
+
+
 
 <Router {routes}></Router>
 <Loading></Loading>

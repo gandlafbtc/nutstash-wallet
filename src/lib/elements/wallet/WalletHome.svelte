@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { mints } from "$lib/stores/persistent/mints";
-  // import Tokens from '$lib/tokens/Tokens.svelte';
   import {
     formatAmount,
     getAmountForTokenSet,
@@ -20,13 +18,20 @@
   import { buttonVariants } from "$lib/components/ui/button";
   import Scanner from "./scanner/Scanner.svelte";
   import { selectedMints } from "$lib/stores/local/selectedMints";
-  import { proofs } from "$lib/stores/persistent/proofs";
+  import { proofsStore } from "$lib/stores/persistent/proofs";
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
+    import ScannerDrawer from "./scanner/ScannerDrawer.svelte";
+    import { mints } from "$lib/stores/persistent/mints";
+    import { getBy, getByMany } from "$lib/stores/persistent/helper/storeHelper";
 
   let currentUnit = $state("sat");
 
   let openReceiveDrawer = $state(false);
   let openScannerDrawer = $state(false);
+
+  let activeMints = $derived($selectedMints.map(url => getBy($mints, url, 'url')).filter(m=> m!==undefined))
+  let keysetIds = $derived(activeMints.map(m => m.keysets.keysets).flat().filter(k=> k.unit===currentUnit).map(k=> k.id))
+  let amount = $derived(getByMany($proofsStore, keysetIds, 'id').reduce((a,b)=> a+b.amount, 0))
 </script>
 
 <div class="flex items-center justify-start pt-20 flex-col gap-5 w-full h-full">
@@ -42,8 +47,8 @@
   </div>
   <p class="text-7xl">
     {formatAmount(
-      getAmountForTokenSet(getTokensForMints($mints, $proofs, currentUnit)),
-      currentUnit,
+      amount,
+      currentUnit
     )}
   </p>
   <div class="flex gap-2 items-center justify-center">
@@ -95,7 +100,7 @@
 
   <button
     onclick={() => (openReceiveDrawer = !openReceiveDrawer)}
-    class="flex-grow z-0 flex gap-2 items-center justify-center h-full transition-all duration-300 opacity-70 hover:opacity-100 active:bg-secondary"
+    class="flex-grow z-0 flex gap-2 items-center justify-center h-full pb-3 pt-4 transition-all duration-300 opacity-70 hover:opacity-100 active:bg-secondary"
   >
     <Download></Download>
     &nbsp; Receive
@@ -114,24 +119,4 @@
   </button>
 </div>
 
-<Drawer.Root bind:open={openScannerDrawer} nested={true}>
-  <Drawer.Content>
-    <Drawer.Header
-      class="flex flex-col justify-center items-center gap-3 text-center"
-    >
-      <Drawer.Title>Scan a QR code</Drawer.Title>
-      <Drawer.Description
-        >You can scan a cashu token, a lightning address or invoice, a pubkey
-        and more!</Drawer.Description
-      >
-    </Drawer.Header>
-    <Scanner></Scanner>
-    <Drawer.Footer
-      class="flex flex-col justify-center items-center gap-3 text-center"
-    >
-      <Drawer.Close class={buttonVariants({ variant: "outline" }) + " w-80"}
-        >Cancel</Drawer.Close
-      >
-    </Drawer.Footer>
-  </Drawer.Content>
-</Drawer.Root>
+<ScannerDrawer bind:openScannerDrawer></ScannerDrawer>

@@ -1,7 +1,9 @@
 import { get, type Writable } from "svelte/store"
 import type { EncryptionHelper } from "./encryptionHelper"
+import { getHostFromUrl } from "$lib/util/utils"
+import type { Mint } from "$lib/db/models/types"
 
-export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelper<T[]>, store: Writable<T[]>) => {
+export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelper<T>, store: Writable<T[]>) => {
 
     const init = async () => {
         try {
@@ -45,6 +47,16 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
 		await encryptionHelper.encrypt(get(store))
 	}
 
+    const addMany = async (elements: T[]) => {
+        store.update(context => [...elements,...context])
+        await encryptionHelper.encrypt(get(store))
+    }
+
+    const removeMany = async (ids: string[], idFieldDescr: keyof T) => {
+        store.update(context => context.filter(o => !ids.includes(o[idFieldDescr] as string)))
+        await encryptionHelper.encrypt(get(store))
+    }
+
     const getBy = (id: string, idFieldDescr: keyof T): T | undefined=> {
         return get(store).find(o => o[idFieldDescr] === id)
     }
@@ -63,6 +75,22 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
         reset,  
         reEncrypt,
         getBy,
-        getAllBy
+        getAllBy,
+        addMany,
+        removeMany
     }
+}
+
+export const getBy = <T>(array: T[], id: string, idFieldDescr: keyof T): T | undefined => {
+    return array.find(o => o[idFieldDescr] === id)
+}
+
+export const getByMany = <T>(array: T[], id: string[], idFieldDescr: keyof T): T[] => {
+    return array.filter(o => id.includes(o[idFieldDescr] as string))
+}
+
+///////////// Mint
+
+export const getByHost = (array: Mint[], host: string): Mint | undefined => {
+	return array.find((m)=> host === getHostFromUrl(m.url))
 }

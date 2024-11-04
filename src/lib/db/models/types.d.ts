@@ -1,9 +1,9 @@
 import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof } from "@cashu/cashu-ts";
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 
-export type StoredMintQuote = MintQuoteResponse & { mintUrl: string, unit: string, amount: number, createdAt: number };
+export type StoredMintQuote = MintQuoteResponse & { mintUrl: string, unit: string, amount: number, createdAt: number, counts?: {keysetId: string, counts:number[]} };
 
-export type StoredMeltQuote = MeltQuoteResponse & { mintUrl: string, unit: string, amount: number, createdAt: number };
+export type StoredMeltQuote = MeltQuoteResponse & { mintUrl: string, unit: string, createdAt: number, counts?: {keysetId: string, counts:number[]} };
 
 export type Contact = {
 

@@ -161,7 +161,7 @@ export const formatTime = (time: number): string => {
 
 const formatSats = (amount: number): string => {
 	return (
-		'₿ ' + new Intl.NumberFormat('en-US').format(amount)
+		'₿ ' + new Intl.NumberFormat('en-US').format(amount) + " sat"
 
 	);
 };
@@ -177,7 +177,7 @@ export const formatSecToMinStr = (seconds: number): string => {
 
 const formatMSats = (amount: number): string => {
 	return (
-		'₿ ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(amount / 1000)
+		'₿ ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(amount / 1000) + " sat"
 
 	);
 };

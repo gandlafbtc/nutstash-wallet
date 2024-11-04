@@ -1,20 +1,21 @@
 <script lang="ts">
-	import { generateNewMnemonic } from '@cashu/cashu-ts';
 	import { isOnboarded } from '$lib/stores/local/message';
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
 	import { pop, push, replace } from "svelte-spa-router";
     import Divider from '../ui/Divider.svelte';
     import { usePassword } from '$lib/stores/local/usePassword';
+    import { wordlist } from '@scure/bip39/wordlists/english';;
+    import { generateMnemonic } from '@scure/bip39';
 
 	const skip = () => {
 		usePassword.set(false);
-		const m = generateNewMnemonic();
+		const m = generateMnemonic(wordlist, 128);
 		mnemonic.set(m.split(' '));
 		isOnboarded.set(true);
 		replace('/wallet/')
 	};
 	const create = () => {
-		const m = generateNewMnemonic();
+		const m = generateMnemonic(wordlist, 128);
 		mnemonic.set(m.split(' '));
 		push('/onboarding/new/secure')
 	};

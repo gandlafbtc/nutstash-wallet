@@ -1,16 +1,22 @@
-import { openDB, deleteDB, wrap, unwrap } from 'idb';
+import { openDB, deleteDB, type IDBPDatabase } from 'idb';
 import type { NutstashDB } from './model';
 
 export const DB_VERSION = 1;
 export const DB_NAME = 'nutstash-db';
 
 export class DB {
-  private static _db = undefined
+  private static _db: IDBPDatabase<NutstashDB> | undefined = undefined
 
   static getInstance = async () => {
     if (this._db) {
       return this._db;
     }
+    const database = await this.openDatabase()
+    this._db = database
+    return this._db
+  }
+
+  static async openDatabase() {
     const db = await openDB<NutstashDB>(DB_NAME, DB_VERSION, {
       upgrade:
         (db, oldVersion, newVersion, transaction, event) => {
@@ -38,6 +44,15 @@ export class DB {
       },
     });
     return db
+  }
+
+  static async deleteDatabase () {
+     await deleteDB(DB_NAME)
+  }
+
+  static async close() {
+    throw new Error("Not implemented");
+    
   }
 
 }

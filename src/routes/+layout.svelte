@@ -13,6 +13,7 @@
 	let isInit = $state(false);
 
 	onMount(async () => {
+		navigator.storage.persist()
 		isInit = true;
 		await key.init();
 	});
@@ -22,7 +23,7 @@
 	<ModeWatcher></ModeWatcher>
 	<StorageManager>
 		{#if $useNostr}
-			<NostrSocket />
+			<!-- <NostrSocket /> -->
 		{/if}
 		<div class="w-full h-full fixed">
 			<slot />

@@ -2,23 +2,9 @@
 	// @ts-ignore
 	import Dropzone from 'svelte-file-dropzone';
 	import { toast } from '$lib/stores/session/toasts';
-	import { contacts } from '$lib/stores/persistent/contacts';
-	import { counts } from '$lib/stores/persistent/counts';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import {
-		nostrKeys,
-		nostrMessages,
-		nostrRelays,
-		useExternalNostrKey,
-		useNostr
-	} from '$lib/stores/persistent/nostr';
-	import { history } from '$lib/stores/persistent/history';
 	import { isOnboarded } from '$lib/stores/local/message';
     import Button from '$lib/components/ui/button/button.svelte';
     import { pop } from 'svelte-spa-router';
-  import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-    import { offlineProofs, pendingProofs, proofs, spentProofs } from '$lib/stores/persistent/proofs';
 
 	let backupFileName = $state('');
 	let isLoading = $state(true);
@@ -56,21 +42,23 @@
 		if (!checkIsBackup(backupObject)) {
 			throw new Error('Not a backup file');
 		}
-		contacts.set(backupObject.contacts);
-		counts.set(backupObject.counts);
-		history.set(backupObject.history);
-		mintQuotesStore.set(backupObject.mintQuotesStore);
-		mints.set(backupObject.mints);
-		mnemonic.set(backupObject.mnemonic);
-		useNostr.set(backupObject.useNostr);
-		useExternalNostrKey.set(backupObject.useExternalNostrKey);
-		nostrKeys.set(backupObject.nostrKeys);
-		nostrMessages.set(backupObject.nostrMessages);
-		nostrRelays.set(backupObject.nostrRelays);
-		pendingProofs.set(backupObject.pendingProofs);
-		spentProofs.set(backupObject.spentProofs);
-		offlineProofs.set(backupObject.offlineProofs);
-		proofs.set(backupObject.proofs);
+
+		// TODO restore from file once persistence is implemented
+		// contacts.set(backupObject.contacts);
+		// countsStore.set(backupObject.counts);
+		// history.set(backupObject.history);
+		// mintQuotesStore.set(backupObject.mintQuotesStore);
+		// mints.set(backupObject.mints);
+		// mnemonic.set(backupObject.mnemonic);
+		// useNostr.set(backupObject.useNostr);
+		// useExternalNostrKey.set(backupObject.useExternalNostrKey);
+		// nostrKeys.set(backupObject.nostrKeys);
+		// nostrMessages.set(backupObject.nostrMessages);
+		// nostrRelays.set(backupObject.nostrRelays);
+		// pendingProofs.set(backupObject.pendingProofs);
+		// spentProofs.set(backupObject.spentProofs);
+		// offlineProofs.set(backupObject.offlineProofs);
+		// proofs.set(backupObject.proofs);
 
 		isOnboarded.set(true);
 	};

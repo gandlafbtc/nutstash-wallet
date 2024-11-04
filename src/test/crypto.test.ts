@@ -1,4 +1,5 @@
 import { decrypt, encrypt, kdf } from '$lib/actions/encryption'
+import { getCount } from '$lib/util/utils'
 import { expect, test } from 'vitest'
 
 test('encrypt decrypt', async () => {
@@ -48,3 +49,8 @@ test(
         ])
     },
 )
+
+test('correct counts', () => { 
+    const counts = getCount(4,9)
+    expect(counts).toEqual([4,5,6,7,8,9])
+ })

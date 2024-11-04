@@ -2,7 +2,6 @@
 	import { createNewNostrKeys, nostrKeys } from "$lib/stores/persistent/nostr";
 	import { onMount } from "svelte";
 	import { mnemonic, seed } from "$lib/stores/persistent/mnemonic";
-	import { deriveSeedFromMnemonic } from "@cashu/cashu-ts";
 	import Router from "svelte-spa-router";
 	import { WALLET_ROUTE_PREFIX, walletRoutes } from "$lib/routes";
 	import WalletLock from "./WalletLock.svelte";
@@ -16,36 +15,25 @@
     import { init } from "$lib/init/init";
     import PasswordInput from "../security/PasswordInput.svelte";
     import Breadcrumb from "./menu/Breadcrumb.svelte";
+    import { mnemonicToSeed } from "@scure/bip39";
 
-	onMount(() => {
-		init()
+	onMount(async () => {
+		await init()
 		if (!$selectedMints.length) {
 			selectedMints.set($mints.map(mint => mint.url));
 		}
 
 
-		setTimeout(() => {
+		setTimeout(async () => {
 			if (!$nostrKeys.length) {
 				createNewNostrKeys();
 			}
 			if ($mnemonic.length) {
-				seed.set(deriveSeedFromMnemonic($mnemonic.join(" ")));
+				seed.set(await mnemonicToSeed($mnemonic.join(" ")));
 			}
 		}, 300);
 
-		const keyDown = (e: KeyboardEvent) => {
-			if (e.key === "W") {
-			} else if (e.key === "M") {
-			} else if (e.key === "O") {
-			}
-		};
-		window.addEventListener("keydown", keyDown);
-
-		return () => {
-			// this function is called when the component is destroyed
-			window.removeEventListener("keydown", keyDown);
-		};
-	});
+	})
 </script>
 
 <PasswordInput>

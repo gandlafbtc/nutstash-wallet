@@ -1,20 +1,18 @@
-import { DB } from '$lib/db/db';
-import { randDBKey } from '$lib/db/helper';
-import type { KeysetCount } from '$lib/db/models/types';
+import type { KeysetCount } from "$lib/db/models/types";
+import { get, writable } from "svelte/store";
+import { createDefaultStoreFunctions } from "./helper/storeHelper";
+import { createEncryptionHelper } from "./helper/encryptionHelper";
 
-import { writable } from 'svelte/store';
 
+const encryptionHelper = await createEncryptionHelper<KeysetCount>("encrypted-counts")
 
-const createCountsStore = async () =>{
+const createCountsStore = () => {
+    const initialCounts: Array<KeysetCount> = [];
+    const store = writable<Array<KeysetCount>>(initialCounts);
+    const {set, subscribe, update} = store;
+    const {addOrUpdate, remove, clear ,init ,reEncrypt ,reset, getBy, getAllBy} = createDefaultStoreFunctions(encryptionHelper, store);
 
-	const store = writable<KeysetCount[]>([]);
-	const {set, update ,subscribe} = store
-
-	return {
-		subscribe,
-		set,
-		update,
-	}
+    return {set, subscribe, update, addOrUpdate, remove, init, reset, clear, reEncrypt, getBy, getAllBy};
 }
-export const counts = await createCountsStore()
+export const countsStore = createCountsStore();
 
