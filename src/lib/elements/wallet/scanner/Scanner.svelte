@@ -26,21 +26,10 @@
         decoder = new URDecoder();
 
         if (await QrScanner.hasCamera()) {
-            cams = await QrScanner.listCameras(true);
-            selectedCamId = cams[0]?.id;
             if (!videoElem) {
-                console.error("failed to load camera");
+                console.error("video element not present");
                 return;
             }
-        } else {
-            cams = [];
-        }
-    });
-
-    $effect(() => {
-        if (!videoElem) {
-            return;
-        }
         qrScanner = new QrScanner(
             videoElem,
             (result) => {
@@ -52,8 +41,21 @@
             },
         );
         qrScanner.start();
+        cams = await QrScanner.listCameras(true);
+        selectedCamId = cams[0]?.id;
+        } else {
+            cams = [];
+        }
     });
 
+    $effect(()=> {
+        if (qrScanner && selectedCamId) {
+            qrScanner.setCamera(selectedCamId)
+        }
+    })
+
+   
+    
     onDestroy(() => {
         console.log("destroying scanner");
         if (qrScanner) {
@@ -132,7 +134,8 @@
             {:else if cams?.length === 0}
                 no camera found...
             {:else}
-                <!-- svelte-ignore a11y_media_has_caption -->
+            {/if}
+            <!-- svelte-ignore a11y_media_has_caption -->
                 <video
                     bind:this={videoElem}
                     width="100%"
@@ -140,7 +143,6 @@
                     class="video-container"
                 >
                 </video>
-            {/if}
         </div>
         {#if cams?.length}
             <div class="absolute z-10 top-3 right-3">
