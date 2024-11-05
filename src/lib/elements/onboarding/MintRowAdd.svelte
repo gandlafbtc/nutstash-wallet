@@ -32,7 +32,7 @@
 </script>
 	<Card.Root class="flex-grow flex m-2">
 		 <Card.Content class="p-3 flex flex-grow gap-2 w-full justify-center items-center">
-			<div class=" overflow-scroll scrollbar-hide w-full">
+			<div class=" overflow-clip w-full">
 				{#if isPredefined}
 					<div class="flex flex-col lg:flex-row lg:items-center gap-2">
 						{url}

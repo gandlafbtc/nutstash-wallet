@@ -70,9 +70,8 @@
 	}
 </script>
 
-{#if !$isRestoring && $isOnboarded && $usePassword === undefined}
-	<PasswordSetup></PasswordSetup>
-{:else if !$isRestoring && $usePassword && !$key || isUnlocking}
+
+{#if !$isRestoring && $usePassword && !$key || isUnlocking}
 <div class="w-full h-full flex items-center justify-center">
 
 	<div

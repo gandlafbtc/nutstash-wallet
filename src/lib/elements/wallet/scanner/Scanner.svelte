@@ -5,7 +5,7 @@
         scannedInvoiceStore,
         scannedTokenStore,
     } from "$lib/stores/session/transitionstores";
-    import { Scan } from "lucide-svelte";
+    import { Scan, SwitchCamera } from "lucide-svelte";
     import QrScanner from "qr-scanner";
     import { onDestroy, onMount } from "svelte";
     import { push } from "svelte-spa-router";
@@ -14,7 +14,8 @@
     let videoElem: HTMLVideoElement | undefined = $state();
     let qrScanner: QrScanner | undefined = $state();
     let cams: QrScanner.Camera[] | undefined = $state();
-    let selectedCamId: string | undefined = $state();
+
+    let facingMode: QrScanner.FacingMode = "environment";
 
     let completion = $state(0);
 
@@ -30,32 +31,25 @@
                 console.error("video element not present");
                 return;
             }
-        qrScanner = new QrScanner(
-            videoElem,
-            (result) => {
-                onScanSuccess(result);
-            },
-            {
-                preferredCamera: selectedCamId,
-                /* your options or returnDetailedScanResult: true if you're not specifying any other options */
-            },
-        );
-        qrScanner.start();
-        cams = await QrScanner.listCameras(true);
-        selectedCamId = cams[0]?.id;
+            qrScanner = new QrScanner(
+                videoElem,
+                (result) => {
+                    onScanSuccess(result);
+                },
+                {
+                    /* your options or returnDetailedScanResult: true if you're not specifying any other options */
+                },
+            );
+            qrScanner.start();
+            cams = await QrScanner.listCameras(true);
+            if (cams.length > 1) {
+                qrScanner.setCamera(facingMode);
+            }
         } else {
             cams = [];
         }
     });
 
-    $effect(()=> {
-        if (qrScanner && selectedCamId) {
-            qrScanner.setCamera(selectedCamId)
-        }
-    })
-
-   
-    
     onDestroy(() => {
         console.log("destroying scanner");
         if (qrScanner) {
@@ -133,41 +127,30 @@
                 loading camera ...
             {:else if cams?.length === 0}
                 no camera found...
-            {:else}
             {/if}
             <!-- svelte-ignore a11y_media_has_caption -->
-                <video
-                    bind:this={videoElem}
-                    width="100%"
-                    height="auto"
-                    class="video-container"
-                >
-                </video>
+            <video
+                bind:this={videoElem}
+                width="100%"
+                height="auto"
+                class="video-container"
+            >
+            </video>
         </div>
-        {#if cams?.length}
-            <div class="absolute z-10 top-3 right-3">
-                <Select.Root
-                    type="single"
-                    name="favoriteFruit"
-                    bind:value={selectedCamId}
+
+        <div class="absolute z-10 w-10 h-10 top-5 right-5">
+            {#if (cams?.length ?? 0) > 1}
+                <button
+                    class=""
+                    onclick={() => {
+                        qrScanner?.setCamera(facingMode);
+                    }}
                 >
-                    <Select.Trigger class="w-[180px]">
-                        {cams?.find((cam) => cam.id === selectedCamId)?.label ??
-                            ""}
-                    </Select.Trigger>
-                    <Select.Content>
-                        <Select.Group>
-                            <Select.GroupHeading>Cams</Select.GroupHeading>
-                            {#each cams ?? [] as cam}
-                                <Select.Item value={cam.id} label={cam.label}
-                                    >{cam.label}</Select.Item
-                                >
-                            {/each}
-                        </Select.Group>
-                    </Select.Content>
-                </Select.Root>
-            </div>
-        {/if}
+                    <SwitchCamera></SwitchCamera>
+                </button>
+            {/if}
+        </div>
+
         <div class="absolute z-10 w-56 h-56 opacity-30">
             <Scan color="rgb(219 39 119)" size={220} strokeWidth={1}></Scan>
         </div>

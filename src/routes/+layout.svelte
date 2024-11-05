@@ -13,7 +13,7 @@
 	let isInit = $state(false);
 
 	onMount(async () => {
-		navigator.storage.persist()
+		// navigator.storage.persist()
 		isInit = true;
 		await key.init();
 	});

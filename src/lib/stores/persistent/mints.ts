@@ -7,7 +7,7 @@ import { seed } from './mnemonic';
 import type { Mint } from '$lib/db/models/types';
 import { DB } from '$lib/db/db';
 import { createEncryptionHelper, type EncryptionHelper } from './helper/encryptionHelper';
-import { createDefaultStoreFunctions } from './helper/storeHelper';
+import { createDefaultStoreFunctions, getBy } from './helper/storeHelper';
 import { selectedMints } from '../local/selectedMints';
 import { getHostFromUrl } from '$lib/util/utils';
 
@@ -16,13 +16,12 @@ const encryptionHelper = await createEncryptionHelper<Mint>('encrypted-mints')
 
 export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>) => {
 	const store = writable<Mint[]>([]);
-	const { update, set, subscribe } = store;
-	const { addOrUpdate, clear, init, reEncrypt, remove, reset, getAllBy, getBy } = createDefaultStoreFunctions(encryptionHelper, store);
+	const defaults = createDefaultStoreFunctions(encryptionHelper, store);
 
 
 	const fetchMint = async (url: string) => {
 		const mint = await loadMint(url)
-		addOrUpdate(url, mint, 'url')
+		defaults.addOrUpdate(url, mint, 'url')
 	}
 
 
@@ -30,31 +29,9 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>)
 		return get(store).find((m)=> host === getHostFromUrl(m.url));
 	}
 
-
-	const getWalletWithUnit = (mintUrl: string, unit = 'sat') => {
-		const mint = getBy(mintUrl, 'url')
-		if (!mint) {
-			throw new Error(`Mint ${mintUrl} not found`)
-		}
-		const keys = mint.keys.keysets.find(ks => ks.unit)
-		const keysets = mint.keysets.keysets.filter(ks => ks.unit === unit)
-		const wallet = new CashuWallet(new CashuMint(mintUrl), { mnemonicOrSeed: get(seed), mintInfo: mint.info, unit: unit, keys, keysets })
-
-		return wallet;
-	}
-
 	return {
-		subscribe,
-		set,
-		reset,
-		update,
-		getByUrl:
-		remove,
-		getWalletWithUnit,
-		addOrUpdate,
-		init,
-		clear,
-		reEncrypt,
+		...store,
+		...defaults,
 		fetchMint,
 		getByHost
 	};
@@ -92,3 +69,5 @@ const loadMint = async (mintUrl: string): Promise<Mint> => {
 		});
 	}
 }
+
+

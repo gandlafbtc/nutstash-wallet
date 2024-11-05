@@ -4,10 +4,12 @@ import { mintQuotesStore } from "$lib/stores/persistent/mintquotes"
 import { mints } from "$lib/stores/persistent/mints"
 import { proofsStore } from "$lib/stores/persistent/proofs"
 import { getCount } from "$lib/util/utils"
+import { getWalletWithUnit } from "$lib/util/walletUtils"
+import { get } from "svelte/store"
 
 export const createMintQuote = async (mintUrl: string, amount : number, options?: {unit?: string}) => {
-    const wallet = mints.getWalletWithUnit(mintUrl, options?.unit)
-    const quote = await wallet?.createMintQuote(amount)
+    const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit)
+    const quote = await wallet.createMintQuote(amount)
     if (!quote) {
         throw new Error(`Error when creating mint quote for ${mintUrl}`)
     }
@@ -17,7 +19,7 @@ export const createMintQuote = async (mintUrl: string, amount : number, options?
 } 
 
 export const checkMintQuote = async (quote: StoredMintQuote) => {
-    const wallet = mints.getWalletWithUnit(quote.mintUrl, quote.unit)
+    const wallet = await getWalletWithUnit(get(mints),quote.mintUrl, quote.unit)
     const updatedQuote = await wallet.checkMintQuote(quote.quote)
     const quoteToStore = {...quote}
     if (quote.state !== updatedQuote.state) {
@@ -28,7 +30,7 @@ export const checkMintQuote = async (quote: StoredMintQuote) => {
 }
 
 export const mintProofs = async (quote: StoredMintQuote) => {
-    const wallet = mints.getWalletWithUnit(quote.mintUrl, quote.unit)
+    const wallet = await getWalletWithUnit(get(mints),quote.mintUrl, quote.unit)
     const quoteToStore = {...quote}
 
     let countStart = countsStore.getBy(wallet.keysetId, 'keysetId')

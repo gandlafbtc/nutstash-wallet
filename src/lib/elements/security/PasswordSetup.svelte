@@ -11,13 +11,13 @@
     import { kdf } from "$lib/actions/encryption";
     import { usePassword } from "$lib/stores/local/usePassword";
     import { mints } from "$lib/stores/persistent/mints";
+    import { pop, push } from "svelte-spa-router";
 
 	let pass = $state("");
 	let confPass = $state("");
 	let inputFocus: HTMLInputElement | null = $state(null)
     onMount(()=>{
         setTimeout(() => {
-            console.log(inputFocus)
             inputFocus?.focus()
         }, 0);
     }) 
@@ -26,7 +26,6 @@
 		if (!pass) {
 			toast("Password cannot be empty", "warning");
 			setTimeout(() => {
-            console.log(inputFocus)
             inputFocus?.focus()
         }, 0);
 			return;
@@ -34,7 +33,6 @@
 		if (pass !== confPass) {
 			toast("Passwords do not match", "warning");
 			setTimeout(() => {
-            console.log(inputFocus)
             inputFocus?.focus()
         }, 0);
 			return;
@@ -43,17 +41,10 @@
 		if (k) {
 			key.set(k);
 			usePassword.set(true);
-			mnemonic.set($mnemonic);
-			mints.reEncrypt($mints)
-			mints.init()
-			// token.set($token);
-			// pendingTokens.set($pendingTokens);
-			// offlineTokens.set($offlineTokens);
-			// spentTokens.set($spentTokens);
-			// nostrKeys.set($nostrKeys);
 		}
 		pass = "";
 		confPass = "";
+		push('/onboarding/select')
 	};
 </script>
 
@@ -80,11 +71,22 @@
 					variant="link"
 					onclick={() => {
 						usePassword.set(false);
+						push('/onboarding/select')
 					}}
 				>
 					Don't encrypt
 				</Button>
 			</div>
 		</form>
+		<div class="mt-10">
+			<Button
+				variant="link"
+				onclick={() => {
+					pop()
+	}}
+			>
+				Back
+			</Button>
+		</div>
 	</div>
 </div>

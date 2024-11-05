@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex flex-col gap-5 items-center justify-center p-3 h-full">
-	<img src="/nutstash_app.svg" alt="" class="w-32" />
+	<img src="/nutstash_app.svg" alt="" class="w-32 " />
 
 	<h1 class="font-bold text-xl">Welcome to Nutstash!</h1>
 	<p class="flex gap-1 items-center text-yellow-500 opacity-80">
@@ -57,5 +57,5 @@
 		</span>
 	</p>
 
-	<Button href="/#/onboarding/select">OK</Button>
+	<Button href="/#/onboarding/pass">OK</Button>
 </div>

@@ -17,12 +17,14 @@ import MintQuoteListView from "./elements/wallet/receive/ln/MintQuoteListView.sv
 import MintQuoteItem from "./elements/wallet/receive/ln/MintQuoteItem.svelte";
 import Receive from "./elements/wallet/receive/Receive.svelte";
 import ReceiveView from "./elements/wallet/receive/ReceiveView.svelte";
+import PasswordSetup from "./elements/security/PasswordSetup.svelte";
 
 export const routes = {
     '/': Loading,
 
     // Onboarding
     '/onboarding': Onboarding,
+    '/onboarding/pass': PasswordSetup,
     '/onboarding/select': OnboardingSelect,
     '/onboarding/new/quick': OnboardingSelect,
     '/onboarding/new/secure': OnboardingCreate,

@@ -1,8 +1,11 @@
-import type { Keys, MintActiveKeys, MintKeys } from '@cashu/cashu-ts';
-import type { Mint } from '$lib/model/mint';
+import { CashuMint, CashuWallet, type Keys, type MintActiveKeys, type MintKeys } from '@cashu/cashu-ts';
 import type { Proof } from '@cashu/cashu-ts';
 import { bech32 } from 'bech32';
 import { Buffer } from 'buffer';
+import { getBy } from '$lib/stores/persistent/helper/storeHelper';
+import { get } from 'svelte/store';
+import { seed } from '$lib/stores/persistent/mnemonic';
+import type { Mint } from '$lib/db/models/types';
 // import { parseSecret } from '@cashu/crypto/modules/client/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -259,4 +262,17 @@ export const getUnitsForMints = (mints: Mint[]): string[] => {
 		units.push('sat')
 	}
 	return units
+}
+
+export const getWalletWithUnit = async (mints: Mint[], mintUrl: string, unit = 'sat'): Promise<CashuWallet> => {
+	const mint = getBy<Mint>(mints, mintUrl, 'url')
+	console.log(mint)
+	if (!mint) {
+		throw new Error(`Mint ${mintUrl} not found`)
+	}
+	const keys = mint.keys.keysets.find(ks => ks.unit)
+	const keysets = mint.keysets.keysets.filter(ks => ks.unit === unit)
+	const wallet = new CashuWallet(new CashuMint(mintUrl), { bip39seed: get(seed), mintInfo: mint.info, unit: unit, keys, keysets })
+	await wallet.getKeys()
+	return wallet;
 }

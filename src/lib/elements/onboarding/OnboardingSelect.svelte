@@ -24,31 +24,9 @@
 <div class="p-2 flex w-full flex-col items-center justify-center max-w-4xl">
 	<h1 class="font-bold text-xl">Select your way to start!</h1>
 
+	
 	<button
 		onclick={create}
-		class="items-center gap-3 flex rounded-lg border-2 p-2 w-full max-w-4xl m-2 transition-opacity opacity-70 hover:opacity-100 duration-300 cursor-pointer"
-	>
-		<svg
-			class="w-10 h-10"
-			viewBox="0 0 25 25"
-			fill="currentColor"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				d="M22.7783 4.08667L13.4033 0.180423C13.1177 0.0619557 12.8116 0.000976563 12.5024 0.000976562C12.1933 0.000976563 11.8871 0.0619557 11.6016 0.180423L2.22656 4.08667C1.35254 4.448 0.78125 5.30249 0.78125 6.24976C0.78125 15.9421 6.37207 22.6414 11.5967 24.8191C12.1729 25.0584 12.8223 25.0584 13.3984 24.8191C17.583 23.0759 24.2188 17.0554 24.2188 6.24976C24.2188 5.30249 23.6475 4.448 22.7783 4.08667ZM12.5049 21.7917L12.5 3.18824L21.0889 6.76734C20.9277 14.1599 17.0801 19.5164 12.5049 21.7917Z"
-			/>
-		</svg>
-		<div class="flex-col gap-2 text-start">
-			<h2 class="font-bold">Secure nuts (recommended)</h2>
-			<p class="text-neutral-content">
-				Create a seed phrase backup for this wallet, and encrypt your nutstash with a passphrase
-			</p>
-			<p class="opacity-40">Select this option to prevent losing your nuts</p>
-		</div>
-	</button>
-	<Divider></Divider>
-	<button
-		onclick={skip}
 		class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity opacity-70 hover:opacity-100"
 	>
 		<svg
@@ -68,12 +46,12 @@
 			/>
 		</svg>
 		<div class="flex-col gap-2 text-start">
-			<h2 class="font-bold">Quick nuts</h2>
+			<h2 class="font-bold">Create wallet</h2>
 			<p class="">
-				Go straight to the wallet. You can encrypt it later.
+				Create a new nutstash wallet.
 			</p>
 			<p class="opacity-40">
-				This option is best used for a one-time wallet or throw-away wallet
+				If you have no cashu seed phrase or nutstash backup file, select this option
 			</p>
 		</div>
 	</button>
@@ -133,7 +111,7 @@
 			pop()
 		}}
 	>
-	Abort
+	Back
 </button>
 	</div>
 </div>
