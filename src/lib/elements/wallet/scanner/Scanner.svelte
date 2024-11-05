@@ -1,6 +1,6 @@
 <script lang="ts">
     import Progress from "$lib/components/ui/progress/progress.svelte";
-    import * as  Select  from "$lib/components/ui/select";
+    import * as Select from "$lib/components/ui/select";
     import {
         scannedInvoiceStore,
         scannedTokenStore,
@@ -9,12 +9,12 @@
     import QrScanner from "qr-scanner";
     import { onDestroy, onMount } from "svelte";
     import { push } from "svelte-spa-router";
-    import {URDecoder} from "@gandlaf21/bc-ur";
+    import { URDecoder } from "@gandlaf21/bc-ur";
 
     let videoElem: HTMLVideoElement | undefined = $state();
-    let qrScanner: QrScanner;
+    let qrScanner: QrScanner | undefined = $state();
     let cams: QrScanner.Camera[] | undefined = $state();
-    let selectedCamId: string | undefined  = $state();
+    let selectedCamId: string | undefined = $state();
 
     let completion = $state(0);
 
@@ -22,31 +22,38 @@
 
     let decoder: URDecoder;
 
-
     onMount(async () => {
         decoder = new URDecoder();
 
         if (await QrScanner.hasCamera()) {
             cams = await QrScanner.listCameras(true);
-            selectedCamId = cams[0]?.id
+            selectedCamId = cams[0]?.id;
             if (!videoElem) {
                 console.error("failed to load camera");
                 return;
             }
-            qrScanner = new QrScanner(
-                videoElem,
-                (result) => {
-                    onScanSuccess(result);
-                },
-                { preferredCamera: selectedCamId
-                    /* your options or returnDetailedScanResult: true if you're not specifying any other options */
-                },
-            );
-            qrScanner.start();
         } else {
-            cams = []
+            cams = [];
         }
     });
+
+    $effect(() => {
+        if (!videoElem) {
+            return;
+        }
+        qrScanner = new QrScanner(
+            videoElem,
+            (result) => {
+                onScanSuccess(result);
+            },
+            {
+                preferredCamera: selectedCamId,
+                /* your options or returnDetailedScanResult: true if you're not specifying any other options */
+            },
+        );
+        qrScanner.start();
+    });
+
     onDestroy(() => {
         console.log("destroying scanner");
         if (qrScanner) {
@@ -57,7 +64,9 @@
     const onScanSuccess = (result: QrScanner.ScanResult) => {
         console.log("scanned", result.data);
         if (
-            result.data.toLowerCase().startsWith("lightning:") || result.data.toLowerCase().startsWith("lnbc")) {
+            result.data.toLowerCase().startsWith("lightning:") ||
+            result.data.toLowerCase().startsWith("lnbc")
+        ) {
             if (result.data.toLowerCase().startsWith("lightning:")) {
                 result.data = result.data.split(":")[1];
             }
@@ -134,24 +143,29 @@
             {/if}
         </div>
         {#if cams?.length}
-             <div class="absolute z-10 top-3 right-3">
-                 <Select.Root type="single" name="favoriteFruit" bind:value={selectedCamId}>
-                     <Select.Trigger class="w-[180px]">
-                         {cams?.find((cam) => cam.id === selectedCamId)?.label?? ''}
-                        </Select.Trigger>
-                        <Select.Content>
-                            <Select.Group>
-                                <Select.GroupHeading>Cams</Select.GroupHeading>
-                                {#each cams??[] as cam}
+            <div class="absolute z-10 top-3 right-3">
+                <Select.Root
+                    type="single"
+                    name="favoriteFruit"
+                    bind:value={selectedCamId}
+                >
+                    <Select.Trigger class="w-[180px]">
+                        {cams?.find((cam) => cam.id === selectedCamId)?.label ??
+                            ""}
+                    </Select.Trigger>
+                    <Select.Content>
+                        <Select.Group>
+                            <Select.GroupHeading>Cams</Select.GroupHeading>
+                            {#each cams ?? [] as cam}
                                 <Select.Item value={cam.id} label={cam.label}
-                                >{cam.label}</Select.Item
+                                    >{cam.label}</Select.Item
                                 >
-                    {/each}
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
-    </div>
-    {/if}
+                            {/each}
+                        </Select.Group>
+                    </Select.Content>
+                </Select.Root>
+            </div>
+        {/if}
         <div class="absolute z-10 w-56 h-56 opacity-30">
             <Scan color="rgb(219 39 119)" size={220} strokeWidth={1}></Scan>
         </div>
