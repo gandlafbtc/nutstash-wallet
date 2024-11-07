@@ -11,24 +11,10 @@
     $effect(() => {
         $mintQuotesStore
     });
-
-    let time = $state(new Date());
-
-    let millisNow = $derived(time.getTime())
-
-    onMount(() => {
-		const interval = setInterval(() => {
-			time = new Date();
-		}, 1000);
-		return () => {
-			clearInterval(interval);
-		};
-	});
-
-    
+   
 </script>
 {#if quote}
-    <MintQuoteListItem isListView={false} {quote} {millisNow}></MintQuoteListItem>
+    <MintQuoteListItem isListView={false} {quote}></MintQuoteListItem>
 {:else}
     Quote not found
 {/if}

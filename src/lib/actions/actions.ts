@@ -16,7 +16,7 @@ export const createMintQuote = async (mintUrl: string, amount: number, options?:
     if (!quote) {
         throw new Error(`Error when creating mint quote for ${mintUrl}`)
     }
-    const quoteToStore = { ...quote, createdAt: Date.now(), mintUrl, unit: options?.unit ?? 'sat', amount }
+    const quoteToStore: StoredMintQuote = { ...quote, createdAt: Date.now(), lastChangedAt: Date.now(), mintUrl, unit: options?.unit ?? 'sat', amount, type: 'mint' }
     await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
     return quoteToStore
 }
@@ -25,10 +25,9 @@ export const checkMintQuote = async (quote: StoredMintQuote) => {
     const wallet = await getWalletWithUnit(get(mints), quote.mintUrl, quote.unit)
     const updatedQuote = await wallet.checkMintQuote(quote.quote)
     const quoteToStore = { ...quote }
-    if (quote.state !== updatedQuote.state) {
-        quoteToStore.state = updatedQuote.state
-        await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
-    }
+    quoteToStore.state = updatedQuote.state
+    quoteToStore.lastChangedAt = Date.now()
+    await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
     return quoteToStore
 }
 
@@ -48,9 +47,9 @@ export const mintProofs = async (quote: StoredMintQuote) => {
         quoteToStore.counts = { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) }
     }
     const updatedQuote = await wallet.checkMintQuote(quote.quote)
-    if (quote.state !== updatedQuote.state) {
-        quoteToStore.state = updatedQuote.state
-    }
+    quoteToStore.state = updatedQuote.state
+    quoteToStore.lastChangedAt = Date.now()
+
     await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
 }
 
@@ -72,21 +71,22 @@ export const receiveEcash = async (token: string | Token): Promise<{ untrustedMi
     let endCount = currentCount
     if (proofs?.length) {
         await proofsStore.addMany(proofs)
-        endCount = endCount +proofs.length 
+        endCount = endCount + proofs.length
         await updateCount(wallet.keysetId, endCount)
     }
     const transactionToAdd: StoredTransaction = {
         id: bytesToHex(randomBytes(12)),
-        type: TransactionType.SEND,
+        type: TransactionType.RECEIVE,
         in: token.proofs,
         out: proofs,
         mint: token.mint,
         unit: token.unit,
         createdAt: Date.now(),
+        lastChangedAt: Date.now(),
         amount: getAmountForTokenSet(token.proofs),
-        counts: {keysetId: wallet.keysetId, counts: getCount(currentCount, endCount)},
-        status: TransactionStatus.COMPLETED,
-        fees: getAmountForTokenSet(token.proofs)-getAmountForTokenSet(proofs)
+        counts: { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) },
+        state: TransactionStatus.COMPLETED,
+        fees: getAmountForTokenSet(token.proofs) - getAmountForTokenSet(proofs)
     }
 
     await transactionsStore.addOrUpdate(transactionToAdd.id, transactionToAdd, 'id')
@@ -99,16 +99,16 @@ export const sendEcash = async (mintUrl: string, amount: number, unit?: string) 
     const mintUnitProofs = proofsStore.getByKeysetIds(wallet.keysets.map((ks) => ks.id))
     const currentCount = getCurrentCount(wallet.keysetId)
     const { send, keep } = await wallet.send(amount, mintUnitProofs, { counter: currentCount })
-    const mintUnitProofIds =mintUnitProofs.map((p) => p.secret)
+    const mintUnitProofIds = mintUnitProofs.map((p) => p.secret)
     await proofsStore.removeMany(mintUnitProofIds, 'secret')
     await proofsStore.addMany(keep)
     await pendingProofsStore.addMany(send)
-    const newKeepProofCount = keep.reduce((acc, p) => mintUnitProofIds.includes(p.id)? acc : acc + 1, 0) 
-    const newSendProofCount = send.reduce((acc, p) => mintUnitProofIds.includes(p.id)? acc : acc + 1, 0) 
+    const newKeepProofCount = keep.reduce((acc, p) => mintUnitProofIds.includes(p.id) ? acc : acc + 1, 0)
+    const newSendProofCount = send.reduce((acc, p) => mintUnitProofIds.includes(p.id) ? acc : acc + 1, 0)
     let endCount = newSendProofCount + newKeepProofCount
     endCount = endCount + currentCount
     await updateCount(wallet.keysetId, endCount)
-    
+
     const keepIds = keep.map((p) => p.id)
 
     const transactionToAdd: StoredTransaction = {
@@ -116,13 +116,14 @@ export const sendEcash = async (mintUrl: string, amount: number, unit?: string) 
         type: TransactionType.SEND,
         mint: mintUrl,
         amount,
-        in: mintUnitProofs.filter((p)=> !keepIds.includes(p.id)),
+        in: mintUnitProofs.filter((p) => !keepIds.includes(p.id)),
         out: send,
         change: keep,
         createdAt: Date.now(),
-        counts: {keysetId: wallet.keysetId, counts: getCount(currentCount, endCount)},
-        status: TransactionStatus.PENDING,
-        fees: getAmountForTokenSet(mintUnitProofs)-(getAmountForTokenSet(keep)+getAmountForTokenSet(send))
+        lastChangedAt: Date.now(),
+        counts: { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) },
+        state: TransactionStatus.PENDING,
+        fees: getAmountForTokenSet(mintUnitProofs) - (getAmountForTokenSet(keep) + getAmountForTokenSet(send))
     }
 
     await transactionsStore.addOrUpdate(transactionToAdd.id, transactionToAdd, 'id')

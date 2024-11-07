@@ -12,19 +12,18 @@
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import { mintProofs } from "$lib/actions/actions";
     import QrCode from "$lib/elements/ui/QRCode.svelte";
+    import { now } from "$lib/stores/session/time";
 
     let {
         quote,
-        millisNow,
         isListView = true,
     }: {
         quote: StoredMintQuote;
-        millisNow: number;
         isListView?: boolean;
     } = $props();
 
     let expiredAndUnpaid = $derived(
-        quote.expiry - Math.floor(millisNow / 1000) < 1 &&
+        quote.expiry - Math.floor($now / 1000) < 1 &&
             quote.state === "UNPAID",
     );
 
@@ -101,12 +100,12 @@
     <Card.Footer class="flex justify-between h-12">
         <div>
             {#if quote.state === "UNPAID"}
-                {#if quote.expiry - Math.floor(millisNow / 1000) < 1}
+                {#if quote.expiry - Math.floor($now / 1000) < 1}
                     <Badge variant="destructive">EXPIRED</Badge>
                 {:else}
                     <Badge variant="secondary">
                         {formatSecToMinStr(
-                            quote.expiry - Math.floor(millisNow / 1000),
+                            quote.expiry - Math.floor($now / 1000),
                         )}
                     </Badge>
                 {/if}

@@ -15,19 +15,7 @@
  let page = $state(1)
  let currentQuotes = $derived($mintQuotesStore.slice((page - 1) * perPage, page * perPage ))
     
-    let time = $state(new Date());
 
-    let millisNow = $derived(time.getTime())
-
-    onMount(() => {
-		const interval = setInterval(() => {
-			time = new Date();
-		}, 1000);
-
-		return () => {
-			clearInterval(interval);
-		};
-	});
 </script>
 {#if $mintQuotesStore.length}
 <div class="h-full pt-16">
@@ -35,7 +23,7 @@
    
    <ScrollArea class='h-[90%]'>
     {#each  currentQuotes as quote}
-           <MintQuoteListItem {quote} {millisNow}></MintQuoteListItem>
+           <MintQuoteListItem {quote}></MintQuoteListItem>
      {/each}
      </ScrollArea>
 

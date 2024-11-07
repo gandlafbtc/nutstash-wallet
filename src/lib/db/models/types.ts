@@ -1,9 +1,24 @@
 import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token } from "@cashu/cashu-ts";
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 
-export type StoredMintQuote = MintQuoteResponse & { mintUrl: string, unit: string, amount: number, createdAt: number, counts?: {keysetId: string, counts:number[]} };
+export type StoredMintQuote = MintQuoteResponse & {
+    mintUrl: string,
+    unit: string,
+    amount: number
+    createdAt: number
+    lastChangedAt: number
+    type: 'mint'
+    counts?: {keysetId: string, counts:number[]
+    } 
+};
 
-export type StoredMeltQuote = MeltQuoteResponse & { mintUrl: string, unit: string, createdAt: number, counts?: {keysetId: string, counts:number[]} };
+export type StoredMeltQuote = MeltQuoteResponse & { 
+    mintUrl: string,
+    unit: string,
+    createdAt: number,
+    lastChangedAt: number,
+    type: 'melt'
+    counts?: {keysetId: string, counts:number[]} };
 
 export type StoredTransaction = {
     id: string;
@@ -12,8 +27,9 @@ export type StoredTransaction = {
     out: Proof[]
     change?: Proof[]
     mint: string
-    status: TransactionStatus
+    state: TransactionStatus
     createdAt: number
+    lastChangedAt: number
     amount: number
     unit?: string
     counts?: {keysetId: string, counts:number[]}
@@ -120,7 +136,7 @@ export type Settings = {
     contactSettings: ContactSettings;
 }
 
-export type typeMintSettings = {
+export type MintSettings = {
     fetchMintsOnStartup: boolean;
 }
 

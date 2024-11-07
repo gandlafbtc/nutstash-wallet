@@ -12,6 +12,7 @@
     import { getBy, getByMany } from "$lib/stores/persistent/helper/storeHelper";
     import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
+    import CompactHistory from "../data/history/CompactHistory.svelte";
 
   let currentUnit = $state("sat");
 
@@ -46,8 +47,10 @@
     ></UnitSelector>
   </div>
 
-  <ScrollArea class="flex flex-col gap-5 w-80 h-full border mb-20">
-    
+  <ScrollArea class="from-background flex flex-col gap-5 w-80 h-full mb-20 p-2 relative overflow-y-hidden
+  after:bg-gradient-to-t after:z-10 after:absolute after:h-10 after:w-full  after:bottom-0 after:pointer-events-none
+  before:bg-gradient-to-b before:z-10 before:absolute before:w-full before:h-10 before:top-0 before:bottom-0 before:pointer-events-none">
+    <CompactHistory></CompactHistory>
   </ScrollArea>
 </div>
 <div
