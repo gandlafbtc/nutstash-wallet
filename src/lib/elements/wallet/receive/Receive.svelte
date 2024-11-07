@@ -14,10 +14,8 @@
     import { push } from "svelte-spa-router";
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
     import { unit } from "$lib/stores/persistent/settings";
-    import { createMintQuote } from "$lib/actions/receiveActions";
-
-    let { openScannerDrawer = $bindable(), openReceiveDrawer = $bindable() } =
-        $props();
+    import { createMintQuote } from "$lib/actions/actions";
+    import { openReceiveDrawer, openScannerDrawer } from "$lib/stores/session/drawer";
 
     let entered: string = $state("");
 
@@ -40,8 +38,9 @@
     onMount(() => {
         setTimeout(() => {
             thisDrawer?.addEventListener("keydown", (e: KeyboardEvent) => {
+                e.preventDefault();
                 if (e.key === "Escape") {
-                    openReceiveDrawer = false;
+                    openReceiveDrawer.set(false);
                 }
                 if (e.key === "Backspace") {
                     entered = entered.slice(0, -1);
@@ -52,7 +51,6 @@
                 } else if (isNumeric(e.key)) {
                     entered = entered + e.key;
                 } else {
-                    e.preventDefault();
                 }
             });
         }, 0);
@@ -82,10 +80,11 @@
     const receiveLN = async () => {
         try {
             isLoading = true;
-            const q = await createMintQuote(mint.url, amount, {
+            const amountInt =  parseInt(amount)
+            const q = await createMintQuote(mint.url, amountInt, {
                 unit: currentUnit,
             });
-            openReceiveDrawer = false;
+            openReceiveDrawer.set(false)
             // wallet.unit =
 
             //Show QR screen
@@ -97,7 +96,11 @@
         //Create Invoice
     };
 
-    const receiveCashu = () => {};
+    const receiveCashu = () => {
+        // scannedTokenStore.set(entered)
+        openReceiveDrawer.set(false)
+        push("/wallet/receive/cashu/"+entered);
+    };
 
     const onKeypadPress = (value: string | { delete: boolean }) => {
         if (value.delete) {
@@ -175,7 +178,7 @@
                 <div>
                     <button
                         class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
-                        onclick={() => (openScannerDrawer = !openScannerDrawer)}
+                        onclick={() => (openScannerDrawer.update(ctx=>!ctx))}
                     >
                         <QrCode></QrCode>
                     </button>

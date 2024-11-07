@@ -6,7 +6,7 @@ import Receive from "./Receive.svelte";
 
 </script>
 <div>
-    <Receive bind:openScannerDrawer></Receive>
+    <Receive></Receive>
 </div>
 
-<ScannerDrawer bind:openScannerDrawer></ScannerDrawer>
+<ScannerDrawer></ScannerDrawer>

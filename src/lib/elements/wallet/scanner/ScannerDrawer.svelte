@@ -3,12 +3,12 @@
 
 
     import * as Drawer from "$lib/components/ui/drawer/";
+    import { openScannerDrawer } from "$lib/stores/session/drawer";
     import Scanner from "./Scanner.svelte";
 
-    let {openScannerDrawer = $bindable(false)} : {openScannerDrawer: boolean} = $props()
 
 </script>
-<Drawer.Root bind:open={openScannerDrawer} nested={true}>
+<Drawer.Root bind:open={$openScannerDrawer} nested={true}>
     <Drawer.Content>
       <Drawer.Header
         class="flex flex-col justify-center items-center gap-3 text-center"

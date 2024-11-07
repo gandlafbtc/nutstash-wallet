@@ -2,7 +2,6 @@
 	import { getDecodedToken } from '@cashu/cashu-ts';
 
 	import * as nostrTools from 'nostr-tools';
-	import type { NostrMessage } from '$lib/model/nostrMessage';
 	import {
 		nostrPool,
 		useNostr,
@@ -14,8 +13,8 @@
 	} from '$lib/stores/persistent/nostr';
 	import { isValidToken } from '$lib/util/walletUtils';
 	import { onMount, onDestroy } from 'svelte';
-	import { toast } from '$lib/stores/session/toasts';
 	import { browser } from '$app/environment';
+    import { toast } from 'svelte-sonner';
 
 	const getPubKey = async (): Promise<string[]> => {
 		return $useExternalNostrKey
@@ -45,20 +44,19 @@
 		);
 
 		if (activeRelays.length < 1) {
-			toast('warning', 'Add at least one relay', 'No relay configured');
+			toast.warning('Add at least one relay to use nostr');
 			return;
 		}
 
 		if ($useExternalNostrKey && !window.nostr) {
-			toast('warning', 'Install extension or use local keys', 'No nostr Keys present');
+			toast.warning('No nostr Keys present');
 			return;
 		}
 		if ($useExternalNostrKey && (await !window.nostr.getPublicKey())) {
-			toast('warning', 'Add a key to nostr extension.', 'No key in nostr extension');
+			toast.warning('No key in nostr extension');
 			return;
 		}
 		if (!$useExternalNostrKey && !$nostrKeys.length) {
-			// toast('warning', 'Generate a new key pair.', 'No nostr Keys found');
 			return;
 		}
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { toast } from '$lib/stores/session/toasts';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { validateMnemonic } from '@scure/bip39';
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
@@ -9,6 +8,7 @@
     import Button from '$lib/components/ui/button/button.svelte';
     import * as Card from '$lib/components/ui/card';
     import { pop } from 'svelte-spa-router';
+    import { toast } from 'svelte-sonner';
 
 	let restoreSeed: Array<string> = $state(new Array(12));
 	let seedString: string = $state('');
@@ -19,11 +19,11 @@
 			seedString = '';
 			const splitted = seedStringCopy.split(' ');
 			if (splitted.length !== 12) {
-				toast( 'The seed phrase must be 12 words','warning', 'Mnemonic is not valid');
+				toast.warning( 'The seed phrase must be 12 words');
 				return;
 			}
 			if (!validateMnemonic(seedStringCopy, wordlist)) {
-				toast( 'The seed phrase is not valid','warning', 'Mnemonic is not valid');
+				toast.warning( 'The seed phrase is not valid');
 				return;
 			}
 			restoreSeed = splitted;
@@ -32,10 +32,10 @@
 
 	function startRestore() {
 		if (!validateMnemonic(restoreSeed.join(' '), wordlist)) {
-			toast( 'Invalid seed phrase', 'error');
+			toast.error('Invalid seed phrase');
 			return;
 		}
-		mnemonic.set(restoreSeed);
+		mnemonic.add({mnemonic:seedString});
 		isRestoring.set(true);
 		isOnboarded.set(true);
 		checkNonPending.set(true);

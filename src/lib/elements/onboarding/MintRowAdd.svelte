@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { toast } from '$lib/stores/session/toasts';
     import * as Card from '$lib/components/ui/card';
     import Input from '$lib/components/ui/input/input.svelte';
     import Button from '$lib/components/ui/button/button.svelte';
     import { LoaderCircle } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
     import { mints } from '$lib/stores/persistent/mints';
-
+	import { toast } from "svelte-sonner";
 
 	let {url, isPredefined, afterAdd, children}:{
 	url: string,
@@ -21,13 +20,13 @@
 			await mints.fetchMint(url);
 			afterAdd(url);
 		} catch (error) {
-			toast('Could not load mint', 'error');
+			toast.error('Could not load mint');
 		} finally {
 			isLoading = false;
 		}
 	};
-	const removeMint = () => {
-		mints.remove(url, 'url')
+	const removeMint = async () => {
+		await mints.remove(url, 'url')
 	};
 </script>
 	<Card.Root class="flex-grow flex m-2">

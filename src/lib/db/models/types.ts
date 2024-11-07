@@ -1,9 +1,36 @@
-import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof } from "@cashu/cashu-ts";
+import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token } from "@cashu/cashu-ts";
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 
 export type StoredMintQuote = MintQuoteResponse & { mintUrl: string, unit: string, amount: number, createdAt: number, counts?: {keysetId: string, counts:number[]} };
 
 export type StoredMeltQuote = MeltQuoteResponse & { mintUrl: string, unit: string, createdAt: number, counts?: {keysetId: string, counts:number[]} };
+
+export type StoredTransaction = {
+    id: string;
+    type: TransactionType;
+    in: Proof[]
+    out: Proof[]
+    change?: Proof[]
+    mint: string
+    status: TransactionStatus
+    createdAt: number
+    amount: number
+    unit?: string
+    counts?: {keysetId: string, counts:number[]}
+    address?: string
+    fees?: number
+    memo?: string
+ };
+
+ export enum TransactionType {
+    SEND="send",
+    RECEIVE="receive",
+ }
+
+ export enum TransactionStatus {
+    PENDING="pending",
+    COMPLETED="completed",
+ }
 
 export type Contact = {
 
@@ -17,6 +44,10 @@ export type HistoryItem = {
     type: HistoryItemType;
     date: number;
     data: HistoryData;
+}
+
+export type StoredSeed = {
+    mnemonic : string;
 }
 
 export enum HistoryItemType {
@@ -55,6 +86,11 @@ export type Message = {
     date: number;
     isRead: boolean;
     data: MessageData;
+}
+
+export enum MessageType {
+    NOSTR,
+
 }
 
 export type MessageData = {

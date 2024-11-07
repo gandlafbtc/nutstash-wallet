@@ -5,8 +5,8 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Ellipsis, Loader, LoaderCircle, Trash } from "lucide-svelte";
   import { mints } from "$lib/stores/persistent/mints";
   import type { Mint } from "$lib/db/models/types";
-    import { toast } from "$lib/stores/session/toasts";
     import { getHostFromUrl } from "$lib/util/utils";
+    import { toast } from "svelte-sonner";
 
 
   const {mint}: {mint:Mint} = $props()
@@ -16,10 +16,10 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
      try {
          isLoading = true
          await mints.fetchMint(mint.url)
-         toast('Mint updated', 'success')
+         toast.success('Mint updated')
      } catch (error) {
       console.log(error)
-      toast('Problem updating mint', 'error')
+      toast.error('Problem updating mint')
      }
      finally {
          isLoading = false

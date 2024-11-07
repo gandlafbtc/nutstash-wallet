@@ -4,7 +4,6 @@ import { HDKey } from '@scure/bip32';
 import { get, writable } from 'svelte/store';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { schnorr, secp256k1 } from '@noble/curves/secp256k1';
-import { toast } from '../session/toasts';
 import { seed } from './mnemonic';
 import { deriveBlindingFactor } from '@cashu/crypto/modules/client/NUT09';
 import type { Relay, SimplePool } from 'nostr-tools';
@@ -135,12 +134,12 @@ const restartNostr = () => {
 	if (!get(useExternalNostrKey) && !get(nostrKeys).length) {
 		return;
 	}
-	toast( 'Setting new nostr keys','info');
+	// toast( 'Setting new nostr keys','info');
 	setTimeout(() => {
 		useNostr.update((state) => !state);
 		setTimeout(() => {
 			useNostr.update((state) => !state);
-			toast( 'Restarted nostr with new keys','success');
+			// toast( 'Restarted nostr with new keys','success');
 		}, 500);
 	}, 2000);
 };

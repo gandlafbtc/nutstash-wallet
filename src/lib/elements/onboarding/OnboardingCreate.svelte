@@ -18,7 +18,7 @@
 			<button
 			class="font-bold hover:underline"
 			on:click={() => {
-				mnemonic.set([]);
+				mnemonic.reset();
 				pop()
 			}}
 	>

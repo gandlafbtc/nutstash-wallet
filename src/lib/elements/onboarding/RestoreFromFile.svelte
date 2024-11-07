@@ -1,10 +1,10 @@
 <script lang="ts">
 	// @ts-ignore
 	import Dropzone from 'svelte-file-dropzone';
-	import { toast } from '$lib/stores/session/toasts';
 	import { isOnboarded } from '$lib/stores/local/message';
     import Button from '$lib/components/ui/button/button.svelte';
     import { pop } from 'svelte-spa-router';
+    import { toast } from 'svelte-sonner';
 
 	let backupFileName = $state('');
 	let isLoading = $state(true);
@@ -17,7 +17,7 @@
 	};
 
 	const handleDropRejected = () => {
-		toast('File is no a valid nutstash_backup.json', 'warning', 'Could not load backup!');
+		toast.warning('File is no a valid nutstash_backup.json');
 	};
 
 	const handleDropAccepted = async (file) => {
@@ -25,7 +25,7 @@
 			isLoading = true;
 			await readBackupFileToObject(file);
 			backupFileName = file.detail.acceptedFiles[0].path;
-			toast( 'Wallet restored!','success');
+			toast.success( 'Wallet restored!');
 		} catch (error) {
 			handleDropRejected();
 		} finally {

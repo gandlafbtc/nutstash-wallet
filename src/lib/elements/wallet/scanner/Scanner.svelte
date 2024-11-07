@@ -142,8 +142,10 @@
             {#if (cams?.length ?? 0) > 1}
                 <button
                     class=""
-                    onclick={() => {
-                        qrScanner?.setCamera(facingMode);
+                    onclick={async () => {
+                        await qrScanner?.setCamera(facingMode);
+                        qrScanner?.stop()
+                        qrScanner?.start()
                     }}
                 >
                     <SwitchCamera></SwitchCamera>

@@ -51,6 +51,10 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
         store.update(context => [...elements,...context])
         await encryptionHelper.encrypt(get(store))
     }
+    const add = async (o: T) => {
+        store.update(context => [...context, o])
+        await encryptionHelper.encrypt(get(store))
+    }
 
     const removeMany = async (ids: string[], idFieldDescr: keyof T) => {
         store.update(context => context.filter(o => !ids.includes(o[idFieldDescr] as string)))
@@ -67,6 +71,8 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
         })
     }
 
+    
+
     return {
         init,
         remove,
@@ -77,6 +83,7 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
         getBy,
         getAllBy,
         addMany,
+        add,
         removeMany
     }
 }

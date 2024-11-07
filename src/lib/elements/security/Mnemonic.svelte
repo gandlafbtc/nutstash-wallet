@@ -4,9 +4,9 @@
     import Input from '$lib/components/ui/input/input.svelte';
 
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import { toast } from '$lib/stores/session/toasts';
+    import { toast } from 'svelte-sonner';
 	const copyMnemonic = () => {
-		const text = $mnemonic.join(' ');
+		const text = $mnemonic[0].mnemonic
 		if (browser) {
 			copyTextToClipboard(text);
 		}
@@ -27,10 +27,10 @@
 		try {
 			var successful = document.execCommand('copy');
 			if (successful) {
-				toast('Copied mnemonic to clipboard', 'info');
+				toast.info('Copied mnemonic to clipboard');
 			}
 		} catch (err) {
-			toast('Could not copy text', 'error');
+			toast.warning('Could not copy text');
 		}
 
 		document.body.removeChild(textArea);
@@ -42,10 +42,10 @@
 		}
 		navigator.clipboard.writeText(text).then(
 			function () {
-				toast('Copied mnemonic to clipboard', 'info');
+				toast.info('Copied mnemonic to clipboard');
 			},
 			function (err) {
-			toast('Could not copy text', 'error');
+			toast.warning('Could not copy text');
 			}
 		);
 	}
@@ -54,7 +54,7 @@
 <div class="flex flex-col gap-6">
 	<p>Write down these 12 words in the correct order and store them securely</p>
 	<div class="flex flex-col gap-1 items-center justify-center rounded-xl">
-		<Button on:click={copyMnemonic} class="w"
+		<Button onclick={copyMnemonic} class="w"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -73,8 +73,8 @@
 		</Button>
 	</div>
 	<div class="w-full flex justify-center">
-		<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl">
-			{#each $mnemonic as word, i}
+		<div class="grid grid-rows-6 grid-flow-col lg:grid-rows-4 gap-3 max-w-4xl">
+			{#each $mnemonic[0]?.mnemonic?.split(' ') as word, i}
 				<div class="flex gap-1 items-center">
 					<p class="w-8">{i + 1}.</p>
 					<Input type="text" readonly class="" value={word} />

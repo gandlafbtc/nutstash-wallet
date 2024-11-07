@@ -3,17 +3,16 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
     import { mints } from "$lib/stores/persistent/mints";
-    import { toast } from "$lib/stores/session/toasts";
     import { version } from "$lib/stores/static/version";
     import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
     import Divider from "$lib/elements/ui/Divider.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
-    import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
     import { usePassword } from "$lib/stores/local/usePassword";
     import { selectedMints } from "$lib/stores/local/selectedMints";
     import { isOnboarded } from "$lib/stores/local/message";
     import { DB } from "$lib/db/db";
+    import { toast } from "svelte-sonner";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -22,19 +21,19 @@
     const addMint = async () => {
         try {
             if (!mintUrlToAdd) {
-                toast('No url entered', 'warning', 'Mint not added', );
+                toast.warning('No url entered');
                 return
             }
             if ($mints.find((mint) => mint.url === mintUrlToAdd)) {
-                toast('Mint already added', 'warning', 'Mint not added', );
+                toast.warning('Mint is already added');
                 return;               
             }
           isAddingMint = true;
           await  mints.fetchMint(mintUrlToAdd);
           mintUrlToAdd = ''
-          toast('Mint added', 'success');
+          toast.success('Mint added');
         } catch (error) {
-            toast(error.message,  'error', 'Error adding mint', );
+            toast.error(error.message);
         }
         finally {
             isAddingMint = false;
@@ -47,9 +46,9 @@
             selectedMints.set([]);
             isOnboarded.set(false);
             await DB.deleteDatabase()
-            toast('Database deleted', 'success');
+            toast.success('Database deleted');
         } catch (error) {
-            toast(error.message, 'error', 'error when deleteting', );
+            toast.error(error.message);
         }
     }
 </script>
@@ -80,7 +79,7 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                                <a href={"/#/wallet/"} {...props}>
+                                <a href={"/#/wallet/contacts"} {...props}>
                                     <Contact></Contact>
                                     Contacts
                                 </a>
@@ -144,7 +143,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/mints"} {...props}>
                                     <Landmark></Landmark>
                                     Mints
                                 </a>
@@ -154,7 +153,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/currency"} {...props}>
                                     <Bitcoin></Bitcoin>
                                     Currencies
                                 </a>
@@ -164,7 +163,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/security"} {...props}>
                                     <ShieldCheck></ShieldCheck>
                                     Security
                                 </a>
@@ -175,7 +174,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/keys"} {...props}>
                                     <Key></Key>
                                     Keys
                                 </a>
@@ -185,7 +184,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/nostr"} {...props}>
                                     <Network></Network>
                                     Nostr
                                 </a>
@@ -195,9 +194,9 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/ecash"} {...props}>
                                     <Coins></Coins>
-                                    Token settings
+                                    Ecash settings
                                 </a>
                                 {/snippet}
                             </Sidebar.MenuButton>
@@ -205,7 +204,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a href={"/#/wallet/settings/backup"} {...props}>
                                     <Save></Save>
                                     Backup
                                 </a>
@@ -297,7 +296,7 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/wallet/receive/ln"} {...props}>
+                        <a href={"/#/wallet/send/ln"} {...props}>
                             <CreditCard></CreditCard>
                             Payments
                         </a>
@@ -307,7 +306,7 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/wallet/receive/ln"} {...props}>
+                        <a href={"/#/wallet/send/cashu"} {...props}>
                             <ArrowLeftRight></ArrowLeftRight>
                             Transactions
                         </a>

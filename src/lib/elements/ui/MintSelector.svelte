@@ -2,8 +2,8 @@
 	import * as Select from "$lib/components/ui/select";
   import type { Mint } from "$lib/db/models/types";
 	import { mints } from "$lib/stores/persistent/mints";
-    import { toast } from "$lib/stores/session/toasts";
     import { Landmark } from "lucide-svelte";
+    import { toast } from "svelte-sonner";
 
 
 	let { mint = $bindable()}: {mint: Mint} = $props()
@@ -11,7 +11,7 @@
 	const onValueChange = (value: string) => {
 		const mintToSet = $mints.find(mint => mint.url === value)
 		if (!mintToSet) {
-			toast(`Mint ${value} not found`, 'error')
+			toast.error(`Mint ${value} not found`)
 			return
 		}
 		mint = mintToSet

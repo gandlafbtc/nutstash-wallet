@@ -1,4 +1,4 @@
-import { toast } from '$lib/stores/session/toasts';
+import { toast } from "svelte-sonner";
 
 function fallbackCopyTextToClipboard(text: string) {
 	var textArea = document.createElement('textarea');
@@ -16,7 +16,7 @@ function fallbackCopyTextToClipboard(text: string) {
 	try {
 		var successful = document.execCommand('copy');
 		if (successful) {
-			toast( 'copied!', 'info');
+			toast.info( 'copied!');
 		}
 	} catch (err) {
 		console.error('Fallback: Oops, unable to copy', err);
@@ -31,7 +31,7 @@ export function copyTextToClipboard(text: string) {
 	}
 	navigator.clipboard.writeText(text).then(
 		function () {
-			toast( 'copied!', 'info');
+			toast.info( 'copied!');
 		},
 		function (err) {
 			console.error('Async: Could not copy text: ', err);

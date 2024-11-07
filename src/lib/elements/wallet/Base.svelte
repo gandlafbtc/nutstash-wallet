@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { createNewNostrKeys, nostrKeys } from "$lib/stores/persistent/nostr";
 	import { onMount } from "svelte";
-	import { mnemonic, seed } from "$lib/stores/persistent/mnemonic";
 	import Router from "svelte-spa-router";
 	import { WALLET_ROUTE_PREFIX, walletRoutes } from "$lib/routes";
 	import WalletLock from "./WalletLock.svelte";
@@ -12,32 +10,21 @@
     import { mints } from "$lib/stores/persistent/mints";
   import { selectedMints } from "$lib/stores/local/selectedMints";
     import { usePassword } from "$lib/stores/local/usePassword";
-    import { init } from "$lib/init/init";
     import PasswordInput from "../security/PasswordInput.svelte";
     import Breadcrumb from "./menu/Breadcrumb.svelte";
-    import { mnemonicToSeed } from "@scure/bip39";
 
 	onMount(async () => {
-		await init()
 		if (!$selectedMints.length) {
 			selectedMints.set($mints.map(mint => mint.url));
 		}
-
-
 		setTimeout(async () => {
-			if (!$nostrKeys.length) {
-				createNewNostrKeys();
-			}
-			if ($mnemonic.length) {
-				seed.set(await mnemonicToSeed($mnemonic.join(" ")));
-			}
 		}, 300);
 
 	})
 </script>
 
 <PasswordInput>
-	<Sidebar.Provider class="h-full" data-vaul-drawer-wrapper >
+	<Sidebar.Provider class="h-full" >
 		<Menu></Menu>
 		<div class="fixed left-5 top-5">
 			<Sidebar.Trigger></Sidebar.Trigger>

@@ -1,16 +1,21 @@
 <script lang="ts">
-	import NostrSocket from "$lib/plugin/NostrSocket.svelte";
 	import StorageManager from "$lib/plugin/StorageManager.svelte";
-	import Toasts from "$lib/plugin/Toasts.svelte";
 	import { useNostr } from "$lib/stores/persistent/nostr";
 	import { ModeWatcher } from "mode-watcher";
 	import "../app.css";
 	import { onMount } from "svelte";
-	import { init } from "$lib/init/init";
 	import Loading from "$lib/elements/base/Loading.svelte";
 	import { key } from "$lib/stores/session/key";
+    import { Toaster } from "$lib/components/ui/sonner";
+    import * as Drawer from "$lib/components/ui/drawer";
+    import Receive from "$lib/elements/wallet/receive/Receive.svelte";
+    import { buttonVariants } from "$lib/components/ui/button";
+    import Send from "$lib/elements/wallet/send/Send.svelte";
+    import ScannerDrawer from "$lib/elements/wallet/scanner/ScannerDrawer.svelte";
+    import { openReceiveDrawer, openSendDrawer } from "$lib/stores/session/drawer";
 
 	let isInit = $state(false);
+	let { children } = $props();
 
 	onMount(async () => {
 		// navigator.storage.persist()
@@ -26,12 +31,71 @@
 			<!-- <NostrSocket /> -->
 		{/if}
 		<div class="w-full h-full fixed">
-			<slot />
+			{@render children?.()}
 		</div>
 		<div class="relative bottom-0 right-0 z-50">
-			<Toasts />
+			<Toaster position="top-right" richColors closeButton></Toaster>
 		</div>
+		<Drawer.Root
+bind:open={$openReceiveDrawer}
+controlledOpen={$openReceiveDrawer}
+    handleOnly={true}
+>
+<Drawer.Content>
+  <Drawer.Header
+    class="flex flex-col justify-center items-center gap-3 text-center"
+  >
+    <Drawer.Title>Receive via ecash or Lightning</Drawer.Title>
+    <Drawer.Description
+      >Enter an amount to receive via Lightning or paste a token to receive
+      eCash.</Drawer.Description
+    >
+  </Drawer.Header>
+  <Receive></Receive>
+  <Drawer.Footer
+    class="flex flex-col justify-center items-center gap-3 text-center"
+  >
+    <Drawer.Close
+      class={buttonVariants({ variant: "outline" }) + " w-80"}
+      onclick={() => (openReceiveDrawer.set(false))}
+      >Cancel</Drawer.Close
+    >
+  </Drawer.Footer>
+</Drawer.Content>
+</Drawer.Root>
+
+<Drawer.Root
+    bind:open={$openSendDrawer}
+	controlledOpen={$openSendDrawer}
+    handleOnly={true}
+  >
+    <Drawer.Content>
+      <Drawer.Header
+        class="flex flex-col justify-center items-center gap-3 text-center"
+      >
+        <Drawer.Title>Send via ecash or Lightning</Drawer.Title>
+        <Drawer.Description
+          >Enter an amount to send ecash or paste a Lightning invoice.</Drawer.Description
+        >
+      </Drawer.Header>
+      <Send></Send>
+      <Drawer.Footer
+        class="flex flex-col justify-center items-center gap-3 text-center"
+      >
+        <Drawer.Close
+          class={buttonVariants({ variant: "outline" }) + " w-80"}
+          onclick={() => (openSendDrawer.set(false))}
+          >Cancel</Drawer.Close
+        >
+      </Drawer.Footer>
+    </Drawer.Content>
+  </Drawer.Root>
+  <ScannerDrawer></ScannerDrawer>
 	</StorageManager>
 {:else}
 	<Loading></Loading>
 {/if}
+
+
+
+

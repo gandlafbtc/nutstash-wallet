@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { toast } from "$lib/stores/session/toasts";
-	import { mnemonic } from "$lib/stores/persistent/mnemonic";
-	import { nostrKeys } from "$lib/stores/persistent/nostr";
 	import Input from "$lib/components/ui/input/input.svelte";
 	import * as Form from "$lib/components/ui/form";
 	import Button from "$lib/components/ui/button/button.svelte";
@@ -10,8 +7,8 @@
     import { key } from "$lib/stores/session/key";
     import { kdf } from "$lib/actions/encryption";
     import { usePassword } from "$lib/stores/local/usePassword";
-    import { mints } from "$lib/stores/persistent/mints";
     import { pop, push } from "svelte-spa-router";
+    import { toast } from "svelte-sonner";
 
 	let pass = $state("");
 	let confPass = $state("");
@@ -20,18 +17,19 @@
         setTimeout(() => {
             inputFocus?.focus()
         }, 0);
-    }) 
+    })
+	
 	const enableEncryption = async (e: Event) => {
 		e.preventDefault();
 		if (!pass) {
-			toast("Password cannot be empty", "warning");
+			toast.warning("Password cannot be empty");
 			setTimeout(() => {
             inputFocus?.focus()
         }, 0);
 			return;
 		}
 		if (pass !== confPass) {
-			toast("Passwords do not match", "warning");
+			toast.warning("Passwords do not match");
 			setTimeout(() => {
             inputFocus?.focus()
         }, 0);

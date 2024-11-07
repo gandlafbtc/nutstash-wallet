@@ -1,22 +1,14 @@
 <script lang="ts">
-	import { isOnboarded } from '$lib/stores/local/message';
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import { pop, push, replace } from "svelte-spa-router";
-    import Divider from '../ui/Divider.svelte';
-    import { usePassword } from '$lib/stores/local/usePassword';
+	import { pop, push } from "svelte-spa-router";
     import { wordlist } from '@scure/bip39/wordlists/english';;
     import { generateMnemonic } from '@scure/bip39';
 
-	const skip = () => {
-		usePassword.set(false);
+	const create =async () => {
+		
 		const m = generateMnemonic(wordlist, 128);
-		mnemonic.set(m.split(' '));
-		isOnboarded.set(true);
-		replace('/wallet/')
-	};
-	const create = () => {
-		const m = generateMnemonic(wordlist, 128);
-		mnemonic.set(m.split(' '));
+		await mnemonic.reset()
+		await mnemonic.add({mnemonic: m})
 		push('/onboarding/new/secure')
 	};
 </script>

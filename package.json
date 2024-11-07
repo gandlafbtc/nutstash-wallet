@@ -11,13 +11,14 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "tauri": "tauri",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write ."
   },
   "license": "MIT",
   "dependencies": {
     "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-shell": "^2",
-    "mode-watcher": "^0.4.1"
+    "@tauri-apps/plugin-shell": "^2"
   },
   "devDependencies": {
     "@cashu/cashu-ts": "2.0.0-rc1",
@@ -35,15 +36,17 @@
     "@tauri-apps/cli": "^2.0.4",
     "autoprefixer": "^10.4.20",
     "bech32": "^2.0.0",
-    "bits-ui": "1.0.0-next.36",
+    "bits-ui": "1.0.0-next.46",
     "buffer": "^6.0.3",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "embla-carousel-svelte": "^8.3.1",
     "formsnap": "2.0.0-next.0",
     "idb": "^8.0.0",
     "jsdom": "^25.0.1",
     "lucide-svelte": "^0.453.0",
+    "mode-watcher": "^0.4.1",
     "nostr-tools": "^2.9.3",
     "qr-scanner": "^1.4.2",
     "qrcanvas": "^3.1.2",
@@ -51,6 +54,7 @@
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "svelte-file-dropzone": "^2.0.9",
+    "svelte-sonner": "^0.3.28",
     "svelte-spa-router": "^4.0.1",
     "sveltekit-superforms": "^2.20.0",
     "tailwind-merge": "^2.5.4",

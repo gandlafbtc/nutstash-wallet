@@ -1,9 +1,7 @@
 <script lang="ts">
     import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
-    import * as Carousel from "$lib/components/ui/carousel";
     import { onMount } from "svelte";
     import {MediaQuery} from 'runed'
-    import MintQuoteItem from "./MintQuoteItem.svelte";
     import MintQuoteListItem from "./MintQuoteListItem.svelte";
     import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import * as Pagination from "$lib/components/ui/pagination";
@@ -30,7 +28,6 @@
 			clearInterval(interval);
 		};
 	});
-    console.log($mintQuotesStore)
 </script>
 {#if $mintQuotesStore.length}
 <div class="h-full pt-16">

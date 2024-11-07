@@ -5,13 +5,13 @@
         formatSecToMinStr,
     } from "$lib/util/walletUtils";
     import * as Card from "$lib/components/ui/card";
-    import LightningInvoice from "./LightningInvoice.svelte";
     import { Copy, Banknote, CircleCheck, RefreshCcw } from "lucide-svelte";
     import { copyTextToClipboard, getHostFromUrl } from "$lib/util/utils";
     import { decode } from "@gandlaf21/bolt11-decode";
     import type { StoredMintQuote } from "$lib/db/models/types";
     import Badge from "$lib/components/ui/badge/badge.svelte";
-    import { mintProofs } from "$lib/actions/receiveActions";
+    import { mintProofs } from "$lib/actions/actions";
+    import QrCode from "$lib/elements/ui/QRCode.svelte";
 
     let {
         quote,
@@ -55,8 +55,8 @@
                     onclick={() => (isListView = !isListView)}
                     class="absolute -right-2 -top-2"
                 >
-                    <LightningInvoice invoice={quote.request} QRsize="small"
-                    ></LightningInvoice>
+                    <QrCode data={quote.request} QRsize="small"
+                    ></QrCode>
                 </button>
             {/if}
         </Card.Title>
@@ -64,7 +64,7 @@
             <div class="max-w-48 overflow-clip text-ellipsis">
                 <a
                     class="underline"
-                    href={`/#/wallet/mint/${getHostFromUrl(quote.mintUrl)}`}
+                    href={`/#/wallet/mint/${getHostFromUrl(quote.mintUrl??'')}`}
                 >
                     {quote.mintUrl}
                 </a>
@@ -74,8 +74,8 @@
     <Card.Content class="flex flex-col gap-3">
         {#if !isListView}
             <button onclick={() => (isListView = !isListView)}>
-                <LightningInvoice invoice={quote.request} QRsize="medium"
-                ></LightningInvoice>
+                <QrCode data={quote.request} QRsize="medium"
+                ></QrCode>
             </button>
         {/if}
         <div class="flex gap-2 items-center">

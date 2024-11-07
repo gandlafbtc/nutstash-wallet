@@ -145,7 +145,10 @@ export const removeDuplicatesFromArray = <Type>(array: Array<Type>) => {
 	}, []);
 };
 
-export const formatAmount = (amount: number, unit: string): string => {
+export const formatAmount = (amount: number, unit?: string): string => {
+	if (!unit) {
+		unit = 'sat'
+	}
 	if (unit === 'sat') {
 		return formatSats(amount);
 	}
@@ -207,9 +210,9 @@ export const getUnitSymbol = (unit: string): string => {
 			return unit
 	}
 }
-const formatFiat = (amount: number, unit: string): string => {
+const formatFiat = (amount: number, unit?: string): string => {
 	return (
-		new Intl.NumberFormat('en-US', { style: 'currency', minimumFractionDigits: 2, maximumFractionDigits: 2, currency: unit.toUpperCase() }).format(amount / 100)
+		new Intl.NumberFormat('en-US', { style: 'currency', minimumFractionDigits: 2, maximumFractionDigits: 2, currency: unit?.toUpperCase() }).format(amount / 100)
 	);
 };
 

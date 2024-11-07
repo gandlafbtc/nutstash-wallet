@@ -1,10 +1,7 @@
 <script lang="ts">
-	import PasswordSetup from './PasswordSetup.svelte';
 	
 	import { isRestoring } from '$lib/stores/persistent/settings';
-	import { toast } from '$lib/stores/session/toasts';
 
-	import { isOnboarded } from '$lib/stores/local/message';
     import Input from '$lib/components/ui/input/input.svelte';
 	import * as Form from '$lib/components/ui/form';
     import { LockOpen, LoaderCircle } from 'lucide-svelte';
@@ -12,11 +9,9 @@
     import { kdf } from '$lib/actions/encryption';
     import { key } from '$lib/stores/session/key';
     import { usePassword } from '$lib/stores/local/usePassword';
-    import { mints } from '$lib/stores/persistent/mints';
-    import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
     import { DEFAULT_PASS } from '$lib/stores/static/pass';
-    import { countsStore } from '$lib/stores/persistent/counts';
     import { init } from '$lib/init/init';
+    import { toast } from 'svelte-sonner';
 	
 
 	let {children}: {children?: Snippet} = $props()
@@ -55,10 +50,10 @@
 		}
 			// init stores
 			await init()
-			toast('Wallet unlocked', 'success');
+			toast.success('Wallet unlocked');
 		} catch (error) {
 			key.set(undefined);
-			toast('Wrong Password', 'warning');
+			toast.warning('Wrong Password');
 			setTimeout(() => {
             console.error(error)
             inputFocus?.focus()
