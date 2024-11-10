@@ -8,7 +8,6 @@
 	import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
 
 	let someMints = $state([
-		"https://8333.space:3338",
 		"https://mint.minibits.cash/Bitcoin",
 		"https://testnut.cashu.space",
 	]);

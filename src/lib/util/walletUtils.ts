@@ -2,7 +2,7 @@ import { CashuMint, CashuWallet, type Keys, type MintActiveKeys, type MintKeys }
 import type { Proof } from '@cashu/cashu-ts';
 import { bech32 } from 'bech32';
 import { Buffer } from 'buffer';
-import { getBy } from '$lib/stores/persistent/helper/storeHelper';
+import { getBy, getByMany } from '$lib/stores/persistent/helper/storeHelper';
 import { get } from 'svelte/store';
 import { seed } from '$lib/stores/persistent/mnemonic';
 import type { Mint } from '$lib/db/models/types';
@@ -111,21 +111,99 @@ export const getTokenSubset = (tokens: Array<Proof>, tokensToRemove: Array<Proof
 	return tokens.filter((token) => !tokensToRemove.includes(token));
 };
 
-export const getMintForToken = (token: Proof, mints: Array<Mint>): Mint | undefined => {
-	let mint: Mint | undefined = undefined;
-	mints.forEach((m) => {
-		if (m.keysets.map((k) => k.id).includes(token.id)) {
-			mint = m;
-		}
-	});
-	return mint;
-};
-
 export const getAmountForTokenSet = (tokens: Array<Proof>): number => {
 	return tokens.reduce((acc, t) => {
 		return acc + t.amount;
 	}, 0);
 };
+
+export const getUnitForKeysetId =(mints: Mint[], keysetId:string):string =>{
+	let unit
+	for (const mint of mints) {
+		unit = mint.keysets.keysets.find(ks=> ks.id  = keysetId)?.unit;
+	}
+	return unit??'sat'
+}
+
+export const getMintForKeysetId =(mints: Mint[], keysetId:string):Mint|undefined =>{
+	return mints.find(m=> m.keysets.keysets.find(ks=> ks.id === keysetId))
+}
+
+
+export const getExactAmount = (amount: number, proofs: Proof[], includeFees?: boolean): Proof[] | undefined => {
+    //todo how to calculate this
+    if (includeFees) {
+        amount = amount+1
+    }
+    const exactProofs: Proof[] = []
+    const sorted = proofs.sort((a, b) => b.amount - a.amount)
+
+    while (getAmountForTokenSet(exactProofs)<amount) {
+        const next = sorted.shift()
+        if (!next) {
+            break
+        }
+        if (getAmountForTokenSet(exactProofs)+next.amount<=amount) {
+            exactProofs.push(next)
+        }
+        if (getAmountForTokenSet(exactProofs)===amount) {
+            return exactProofs
+        }
+    }
+    return undefined
+}
+
+export const getAproxAmount = (amount: number, proofs: Proof[], includeFees?: boolean): Proof[] | undefined => {
+    //todo how to calculate this
+    if (includeFees) {
+        amount = amount+1
+    }
+
+	const exactProofs: Proof[] = []
+	let lastClosest: Proof[] = []
+	
+	
+	for (let i = 0; i < 2; i++) {
+		const sorted = proofs.sort((a, b) => b.amount - a.amount)
+		while (getAmountForTokenSet(exactProofs)<amount) {
+			const next = sorted.shift()
+			if (!next) {
+				break
+			}
+            if (exactProofs.find(p=>p.secret===next.secret)){
+                continue
+            }
+			
+			if (getAmountForTokenSet(exactProofs)+next.amount<=amount) {
+
+				exactProofs.push(next)
+			}
+			else {
+				lastClosest = [next]
+			}
+			if (getAmountForTokenSet(exactProofs)===amount) {
+				return exactProofs
+			}
+		}
+	}
+	for (let i = 0; i < exactProofs.length ; i++) {
+        if(getAmountForTokenSet(exactProofs)+getAmountForTokenSet(lastClosest)-getAmountForTokenSet([exactProofs[i]])>=amount){
+            exactProofs.splice(i)
+            i--
+        }
+    }
+
+	if (amount>getAmountForTokenSet(exactProofs)+getAmountForTokenSet(lastClosest)) {
+		return undefined
+	}
+    return [...exactProofs, ...lastClosest]
+}
+
+export const getProofsOfMintUnit = (mint: Mint, proofs: Proof[], unit:string ='sat'): Proof[] => {
+	let keysetIds = mint.keysets.keysets.filter(k=> k.unit===unit).map(k=> k.id)
+	const mintUnitProofs = getByMany(proofs, keysetIds, 'id')
+	return mintUnitProofs
+}
 
 export const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	return removeDuplicatesFromArray(

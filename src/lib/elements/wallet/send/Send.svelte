@@ -6,10 +6,13 @@
     import { mints } from "$lib/stores/persistent/mints";
     import {
         formatAmount,
+        getAmountForTokenSet,
+        getAproxAmount,
+        getProofsOfMintUnit,
         getUnitsForMints,
         isNumeric,
     } from "$lib/util/walletUtils";
-    import { QrCode, Zap, LoaderCircle, Banknote } from "lucide-svelte";
+    import { QrCode, Zap, LoaderCircle, Banknote, Copy } from "lucide-svelte";
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
@@ -18,44 +21,60 @@
     import { getByMany } from "$lib/stores/persistent/helper/storeHelper";
     import TokenOptions from "./TokenOptions.svelte";
     import { toast } from "svelte-sonner";
-    import { sendEcash } from "$lib/actions/actions";
+    import { createMeltQuote, sendEcash } from "$lib/actions/actions";
     import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import { openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
+    import { decode } from "@gandlaf21/bolt11-decode";
+    import { copyTextToClipboard } from "$lib/util/utils";
+    import type { Proof } from "$lib/db/models/types";
 
     let entered: string = $state("");
-
-    let mint = $state($mints[0]);
-
-    let invoice = $state("");
-
-    let amount = $state("");
-    let tokenOptions = $state({
-        p2pk: false,
-        customIn: false,
-        customOut: false,
-    });
+    let includeReceiverFees = $state(false)
 
     const getCurrentUnit = () => {
         return getUnitsForMints([mint]).find((u) => u === $unit)
             ? $unit
             : "sat";
     };
+
+    let mint = $state($mints[0]);
     let currentUnit: string = $state(getCurrentUnit());
+
+    let unitProofs = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit))
+    $inspect(unitProofs)
+    let balance = $derived(getAmountForTokenSet(unitProofs));
+    let invoice = $derived.by(()=> {
+        if (
+            entered.toLowerCase().startsWith("lnbc") ||
+            entered.toLowerCase().startsWith("lightning:lnbc")
+        ) {
+            return entered
+        }
+        else {
+            return ''
+        }
+    });
+
+    let amount = $derived.by(()=> {
+        if (isNumeric(entered)) {
+            return parseInt(entered);
+        }
+    });
+
+    let selectedProofs: Proof[] = $derived(getAproxAmount(amount??0, unitProofs, includeReceiverFees)??[])
+    // $inspect(selectedProofs);
+    // let isOfflineSendable = $derived.by(()=> {
+    //     return amount === getAmountForTokenSet(selectedProofs)
+    // });
+    let tokenOptions = $state({
+        p2pk: false,
+        customIn: false,
+        customOut: false,
+    });
+
 
     let inputFocus: HTMLTextAreaElement | null = $state(null);
     let thisDrawer: HTMLDivElement | null = $state(null);
-
-    let keysetIds = $derived(
-        mint.keysets.keysets
-            .filter((k) => k.unit === currentUnit)
-            .map((k) => k.id),
-    );
-    let balance = $derived(
-        getByMany($proofsStore, keysetIds, "id").reduce(
-            (a, b) => a + b.amount,
-            0,
-        ),
-    );
 
     let isLoading = $state(false);
 
@@ -67,6 +86,9 @@
                     openScannerDrawer.set(false);
                 }
                 if (e.key === "Backspace") {
+                    if (invoice) {
+                        entered = ''
+                    }
                     entered = entered.slice(0, -1);
                 } else if (e.key === "Enter") {
                     if (entered.length && isNumeric(entered)) {
@@ -80,38 +102,33 @@
         }, 0);
     });
 
-    $effect(() => {
-        if (entered === "") {
-            invoice = "";
-            amount = "";
-        } else if (
-            entered.startsWith("ln") ||
-            entered.startsWith("lightning")
-        ) {
-            invoice = entered;
-            amount = "";
-            sendLn();
-        } else if (isNumeric(entered)) {
-            amount = entered;
-            invoice = "";
-        } else {
-            console.log("invalid");
-            invoice = "";
-            amount = "";
-        }
-    });
 
-    const sendLn = async () => {};
+    const createQuote = async () => {
+        try {
+          isLoading = true  
+          const {quote}= await createMeltQuote(mint.url, invoice, {unit: currentUnit})
+          openSendDrawer.set(false)
+          push('/wallet/send/ln/'+quote)
+        }  catch (error) {
+            
+        }
+        finally {
+            isLoading = false;
+        }
+    }
+
+    const sendLN = async () => {
+
+    };
 
     const sendCashu = async () => {
         try {
              isLoading = true;
-             const amountInt = parseInt(amount);
-             if (amountInt>balance) {
+             if (amount??0>balance) {
                 toast.warning("Not enough funds");
                 return
              }
-             const {txId} = await sendEcash(mint.url, amountInt, currentUnit)
+             const {txId} = await sendEcash(mint.url, amount??0, currentUnit, includeReceiverFees)
              openSendDrawer.set(false)
              push('/wallet/send/cashu/'+txId)
         } catch (error) {
@@ -125,6 +142,9 @@
 
     const onKeypadPress = (value: string | { delete: boolean }) => {
         if (typeof value !== "string" && value.delete) {
+            if (invoice) {
+                        entered = ''
+            }
             entered = entered.slice(0, -1);
         } else {
             entered = entered + value;
@@ -148,30 +168,32 @@
         </span>
         <UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
     </div>
-    <div
-        class="{entered.length && isNumeric(entered)
+    {#if !invoice}
+         <!-- content here -->
+         <div
+         class="{entered.length && isNumeric(entered)
             ? 'h-0'
             : 'h-20'} overflow-hidden"
     >
-        <Textarea
-            class="w-80 border-dashed resize-none rounded-none"
-            inputmode="none"
-            bind:value={entered}
-            bind:ref={inputFocus}
-            oninput={(e) => {
-                e.preventDefault();
-            }}
+    <Textarea
+    class="w-80 border-dashed resize-none rounded-none"
+    inputmode="none"
+    bind:value={entered}
+    bind:ref={inputFocus}
+    oninput={(e) => {
+        e.preventDefault();
+    }}
             placeholder="- Paste invoice or address (lnbc... , lnurl... )                           - Or enter amount to send"
-        ></Textarea>
-    </div>
-    <div>
+            ></Textarea>
+        </div>
+        {/if}
+        <div>
         <div
-            class="flex items-start justify-center {entered.length &&
-            isNumeric(entered)
+            class="flex items-start justify-center {invoice ||amount
                 ? 'h-40'
                 : 'h-20'}"
         >
-            {#if amount.length}
+            {#if amount}
                 <div
                     class="flex flex-col gap-2 justify-between w-80 items-center"
                 >
@@ -181,14 +203,24 @@
                             onclick={() => inputFocus?.focus()}
                         >
                             {formatAmount(amount, currentUnit)}
+
                         </button>
                         <TokenOptions bind:tokenOptions></TokenOptions>
                     </div>
-                    <div class="h-14">
-                        
+                    <!-- <div class="h-14 flex gap-2 justify-between">
+                        <span>Include receiver fees</span>
+                        <Switch bind:checked={includeReceiverFees}></Switch>
+                    </div> -->
+                    <div>
+                        <!-- {isOfflineSendable} -->
+                        {selectedProofs.map(p=>p.amount).join(', ')}
                     </div>
-                    <Button class="w-full" onclick={sendCashu}>
-                        <Banknote></Banknote>
+                    <Button class="w-full" onclick={sendCashu} disabled={isLoading}>
+                        {#if isLoading}
+                            <LoaderCircle class='animate-spin'></LoaderCircle>
+                        {:else}
+                             <Banknote></Banknote>
+                        {/if}
                         <span>
                             Create
                             {#if tokenOptions.customOut}
@@ -203,14 +235,25 @@
                     </Button>
                 </div>
             {:else if invoice.length}
-                <div class="flex flex-col gap-2 items-center justify-center">
-                    <div class="text-sm text-secondary">via</div>
+                <div class="flex flex-col gap-2 items-center justify-center h-40">
+                    <button class=" italic text-xs text-secondary " onclick={()=>copyTextToClipboard(invoice)}>
+                        <div class="w-80 flex gap-1 items-center justify-center">
 
+                            <Copy class='w-4 h-4'></Copy>
+                            <span class="w-60 text-ellipsis overflow-clip">
+
+                                {invoice}
+                            </span>
+                        </div>
+                    </button>
+                    <span>
+                        {formatAmount(decode(invoice).sections[2].value/1000, 'sat')}
+                    </span>
                     <div class="w-80 py-5">
                         <Button
                             disabled={isLoading}
                             class="w-full border-2 border-pink-600"
-                            onclick={sendLn}
+                            onclick={createQuote}
                         >
                             {#if isLoading}
                                 <LoaderCircle class="animate-spin"
@@ -218,7 +261,7 @@
                             {:else}
                                 <Zap></Zap>
                             {/if}
-                            Send via Lightning
+                            Create Lightning payment
                         </Button>
                     </div>
                 </div>

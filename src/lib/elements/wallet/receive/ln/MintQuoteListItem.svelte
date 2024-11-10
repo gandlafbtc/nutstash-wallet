@@ -8,11 +8,12 @@
     import { Copy, Banknote, CircleCheck, RefreshCcw } from "lucide-svelte";
     import { copyTextToClipboard, getHostFromUrl } from "$lib/util/utils";
     import { decode } from "@gandlaf21/bolt11-decode";
-    import type { StoredMintQuote } from "$lib/db/models/types";
+    import { EXPIRED, type StoredMintQuote } from "$lib/db/models/types";
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import { mintProofs } from "$lib/actions/actions";
     import QrCode from "$lib/elements/ui/QRCode.svelte";
     import { now } from "$lib/stores/session/time";
+    import Button from "$lib/components/ui/button/button.svelte";
 
     let {
         quote,
@@ -22,11 +23,6 @@
         isListView?: boolean;
     } = $props();
 
-    let expiredAndUnpaid = $derived(
-        quote.expiry - Math.floor($now / 1000) < 1 &&
-            quote.state === "UNPAID",
-    );
-
     const tryMint = async () => {
         mintProofs(quote)
     };
@@ -35,7 +31,7 @@
 </script>
 
 <Card.Root
-    class="w-80 m-3 {expiredAndUnpaid
+    class="w-80 m-3 {quote.state === EXPIRED.EXPIRED
         ? 'bg-red-700 bg-opacity-20 opacity-40'
         : ''}"
 >
@@ -98,17 +94,16 @@
         </button>
     </Card.Content>
     <Card.Footer class="flex justify-between h-12">
+        {#if !isListView}
+             <Button href="/#/wallet/">Close</Button>
+        {/if}
         <div>
             {#if quote.state === "UNPAID"}
-                {#if quote.expiry - Math.floor($now / 1000) < 1}
-                    <Badge variant="destructive">EXPIRED</Badge>
-                {:else}
                     <Badge variant="secondary">
                         {formatSecToMinStr(
                             quote.expiry - Math.floor($now / 1000),
                         )}
                     </Badge>
-                {/if}
             {/if}
         </div>
         <div class="flex gap-1">
@@ -131,7 +126,10 @@
                         </Tooltip.Content>
                     </Tooltip.Root>
                 </Tooltip.Provider>
-                
+            {:else if quote.state === EXPIRED.EXPIRED}
+                <Badge variant="destructive">
+                    {quote.state}
+                </Badge>
             {:else}
                 <Badge variant="outline" class="text-green-600">
                     <CircleCheck class="w-4 h-4"></CircleCheck>

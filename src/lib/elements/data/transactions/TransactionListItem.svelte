@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Tooltip from "$lib/components/ui/tooltip";
-    import { formatAmount, formatSecToMinStr } from "$lib/util/walletUtils";
+    import { formatAmount, formatSecToMinStr, getAmountForTokenSet } from "$lib/util/walletUtils";
     import * as Card from "$lib/components/ui/card";
     import { Copy, Banknote, CircleCheck, RefreshCcw } from "lucide-svelte";
     import { copyTextToClipboard, getHostFromUrl } from "$lib/util/utils";
@@ -67,9 +67,12 @@
                 {/if}
             {/if}
         </button>
-        <div class="flex gap-2 justify-center items-center">
+        <div class="flex flex-col gap-2 justify-center items-center">
             <Badge variant="outline" class="text-2xl">
-                {formatAmount(tx.amount - (tx.fees ?? 0), "sat")}
+                {formatAmount(tx.amount, "sat")}
+            </Badge>
+            <Badge variant="outline" class="">
+                {formatAmount(tx.fees??0, "sat")} fee
             </Badge>
         </div>
         <button

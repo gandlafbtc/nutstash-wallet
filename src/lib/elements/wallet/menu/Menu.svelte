@@ -266,7 +266,7 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                            <a href={"/#/"} {...props}>
+                            <a href={"/#/wallet/ecash"} {...props}>
                                 <Coins></Coins>
                                 Ecash
                             </a>
@@ -276,7 +276,7 @@
                     <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/"} {...props}>
+                        <a href={"/#/wallet/history"} {...props}>
                             <History></History>
                             History
                         </a>

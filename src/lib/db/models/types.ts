@@ -1,23 +1,33 @@
-import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token } from "@cashu/cashu-ts";
+import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token, MintQuoteState, MeltQuoteState } from "@cashu/cashu-ts";
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 
-export type StoredMintQuote = MintQuoteResponse & {
+export enum EXPIRED  {
+    EXPIRED = "EXPIRED"
+    }
+
+export type StoredMintQuote = Omit<MintQuoteResponse,'state'> & {
+    state: MintQuoteState | EXPIRED
     mintUrl: string,
     unit: string,
     amount: number
     createdAt: number
     lastChangedAt: number
     type: 'mint'
+    out?: Proof[]
     counts?: {keysetId: string, counts:number[]
     } 
 };
 
-export type StoredMeltQuote = MeltQuoteResponse & { 
+export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & { 
+    state: MeltQuoteState | EXPIRED
     mintUrl: string,
     unit: string,
     createdAt: number,
     lastChangedAt: number,
     type: 'melt'
+    in?: Proof[]
+    out?: Proof[]
+    request: string
     counts?: {keysetId: string, counts:number[]} };
 
 export type StoredTransaction = {

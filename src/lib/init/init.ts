@@ -1,4 +1,5 @@
 import { countsStore } from "$lib/stores/persistent/counts"
+import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
 import { mintQuotesStore } from "$lib/stores/persistent/mintquotes"
 import { createMintsStore, mints } from "$lib/stores/persistent/mints"
 import { mnemonic } from "$lib/stores/persistent/mnemonic"
@@ -13,6 +14,7 @@ const initStores = async () => {
     await mints.init()
     await transactionsStore.init()
     await mintQuotesStore.init()
+    await meltQuotesStore.init()
     await proofsStore.init()
     await countsStore.init()
     await mnemonic.init()

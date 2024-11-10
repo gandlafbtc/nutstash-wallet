@@ -1,0 +1,136 @@
+<script lang="ts">
+    import { meltQuotesStore } from "$lib/stores/persistent/meltquotes";
+    import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
+    import { mints } from "$lib/stores/persistent/mints";
+    import {
+        offlineProofsStore,
+        pendingProofsStore,
+        proofsStore,
+        spentProofsStore,
+    } from "$lib/stores/persistent/proofs";
+    import { transactionsStore } from "$lib/stores/persistent/transactions";
+    import { formatAmount, getUnitForKeysetId } from "$lib/util/walletUtils";
+    import { Coins } from "lucide-svelte";
+    import { params } from "svelte-spa-router";
+
+    let allProofs = $derived([
+        ...$proofsStore,
+        ...$offlineProofsStore,
+        ...$pendingProofsStore,
+        ...$spentProofsStore,
+    ]);
+
+    let proof = $derived(allProofs.find((p) => p.secret === $params?.secret));
+
+    let unit = $derived.by(() => {
+        if (!proof) {
+            return "sat";
+        }
+        return getUnitForKeysetId($mints, proof?.id);
+    });
+
+    //creators
+    let mintQuote = $derived(
+        $mintQuotesStore.find((mq) =>
+            mq.out?.find((mqp) => mqp.id === proof?.id),
+        ),
+    );
+    let transactionOut = $derived(
+        $transactionsStore.find((tx) =>
+            tx.out?.find((txo) => txo.id === proof?.id),
+        ),
+    );
+    let meltQuoteOut = $derived(
+        $meltQuotesStore.find((mq) =>
+            mq.out?.find((mqp) => mqp.id === proof?.id),
+        ),
+    );
+
+    //consumers
+    let transactionIn = $derived(
+        $transactionsStore.find((tx) =>
+            tx.in?.find((txi) => txi.id === proof?.id),
+        ),
+    );
+    let meltQuoteIn = $derived(
+        $meltQuotesStore.find((mq) =>
+            mq.in?.find((mqp) => mqp.id === proof?.id),
+        ),
+    );
+</script>
+
+{#if proof}
+<div class="border rounded-xl p-5 w-80 flex flex-col gap-2">
+
+    <div class="flex justify-between items-center">
+        <div class="relative">
+            <Coins class="text-yellow-500"></Coins>
+            <div class="absolute -top-2 -right-2"></div>
+        </div>
+        
+        <span class="text-sm"> </span>
+        <div class="flex flex-col gap-1 items-end">
+            <span>
+                {formatAmount(proof.amount)}
+            </span>
+            <span class="text-xs text-secondary">
+                {proof.id}
+            </span>
+        </div>
+    </div>
+    <div>
+        {#if mintQuote||transactionOut||meltQuoteOut}
+        <span>
+            Created by:
+        </span>
+        <!-- created by -->
+             {#if mintQuote}
+             <a 
+             class="overflow-clip text-ellipsis cursor-pointer hover:underline" 
+             href={`/#/wallet/receive/ln/${mintQuote.quote}`}>
+                {mintQuote.quote}
+            </a>
+             {/if}
+             {#if transactionOut}
+             <a 
+             class="overflow-clip text-ellipsis cursor-pointer hover:underline" 
+             href={`/#/wallet/send/cashu/${transactionOut.id}`}>
+             {transactionOut.id}
+             </a>
+             {/if}
+             {#if meltQuoteOut}
+             <a 
+             class="overflow-clip text-ellipsis cursor-pointer hover:underline" 
+             href={`/#/wallet/send/ln/${meltQuoteOut.quote}`}>
+             {meltQuoteOut.quote}
+             </a>
+             {/if}
+        {/if}
+
+        {#if meltQuoteIn||transactionIn}
+            <span>
+                Consumed by:
+            </span>
+        <!-- consumed by -->
+             {#if meltQuoteIn}
+             <a 
+             class="overflow-clip text-ellipsis cursor-pointer hover:underline" 
+             href={`/#/wallet/send/ln/${meltQuoteIn.quote}`}>
+             {meltQuoteIn.quote}
+             </a>
+             {/if}
+             {#if transactionIn}
+             <a 
+             class="overflow-clip text-ellipsis cursor-pointer hover:underline" 
+             href={`/#/wallet/send/cashu/${transactionIn.id}`}>
+             {transactionIn.id}
+             </a>
+             {/if}
+        {/if}
+
+        
+    </div>
+</div>
+{:else}
+    Ecash not found
+{/if}

@@ -4,11 +4,14 @@ import { mints } from "$lib/stores/persistent/mints"
 import { pendingProofsStore, proofsStore } from "$lib/stores/persistent/proofs"
 import { transactionsStore } from "$lib/stores/persistent/transactions"
 import { getCount } from "$lib/util/utils"
-import { getAmountForTokenSet, getWalletWithUnit } from "$lib/util/walletUtils"
-import { getDecodedToken, type Proof, type Token } from "@cashu/cashu-ts"
+import { formatAmount, getAmountForTokenSet, getAproxAmount, getExactAmount, getMintForKeysetId, getUnitForKeysetId, getWalletWithUnit } from "$lib/util/walletUtils"
+import { getDecodedToken, MintQuoteState, type Proof, type Token } from "@cashu/cashu-ts"
 import { get } from "svelte/store"
 import { bytesToHex, randomBytes } from "@noble/hashes/utils"
-import { TransactionStatus, TransactionType, type StoredMintQuote, type StoredTransaction } from "$lib/db/models/types"
+import { EXPIRED, TransactionStatus, TransactionType, type Mint, type StoredMeltQuote, type StoredMintQuote, type StoredTransaction } from "$lib/db/models/types"
+import { toast } from "svelte-sonner"
+import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
+import { decode } from "@gandlaf21/bolt11-decode"
 
 export const createMintQuote = async (mintUrl: string, amount: number, options?: { unit?: string }) => {
     const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit)
@@ -21,12 +24,30 @@ export const createMintQuote = async (mintUrl: string, amount: number, options?:
     return quoteToStore
 }
 
+export const createMeltQuote = async (mintUrl: string, invoice: string, options?: { unit?: string }) => {
+    const amount = decode(invoice).sections[2].value / 1000
+    if (!amount) {
+        throw new Error(`Decoding invoice failed for ${invoice}`)
+    }
+    const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit)
+    const quote = await wallet.createMeltQuote(invoice)
+    if (!quote) {
+        throw new Error(`Error when creating melt quote for ${mintUrl}`)
+    }
+    const quoteToStore: StoredMeltQuote = { ...quote, request: invoice, createdAt: Date.now(), lastChangedAt: Date.now(), mintUrl, unit: options?.unit ?? 'sat', type: 'melt' }
+    await meltQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
+    return quoteToStore
+}
+
 export const checkMintQuote = async (quote: StoredMintQuote) => {
     const wallet = await getWalletWithUnit(get(mints), quote.mintUrl, quote.unit)
     const updatedQuote = await wallet.checkMintQuote(quote.quote)
-    const quoteToStore = { ...quote }
+    const quoteToStore: StoredMintQuote = { ...quote }
     quoteToStore.state = updatedQuote.state
     quoteToStore.lastChangedAt = Date.now()
+    if (quoteToStore.state === MintQuoteState.UNPAID && Math.floor(quoteToStore.lastChangedAt / 1000) > quoteToStore.expiry) {
+        quoteToStore.state = EXPIRED.EXPIRED
+    }
     await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
     return quoteToStore
 }
@@ -41,6 +62,7 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 
     await proofsStore.addMany(proofs.proofs)
     if (proofs?.proofs?.length) {
+        quoteToStore.out = proofs.proofs
         let endCount = proofs.proofs.length
         endCount = endCount + currentCount
         await updateCount(wallet.keysetId, endCount)
@@ -49,8 +71,10 @@ export const mintProofs = async (quote: StoredMintQuote) => {
     const updatedQuote = await wallet.checkMintQuote(quote.quote)
     quoteToStore.state = updatedQuote.state
     quoteToStore.lastChangedAt = Date.now()
-
     await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
+    toast.success(`Received ${formatAmount(getAmountForTokenSet(proofs.proofs), quoteToStore.unit)}`, {
+        description: `At mint ${quoteToStore.mintUrl}`
+    })
 }
 
 export const receiveEcash = async (token: string | Token): Promise<{ untrustedMint?: string, proofs: Proof[] }> => {
@@ -94,11 +118,12 @@ export const receiveEcash = async (token: string | Token): Promise<{ untrustedMi
 
 }
 
-export const sendEcash = async (mintUrl: string, amount: number, unit?: string) => {
+export const sendEcash = async (mintUrl: string, amount: number, unit?: string, includeFees?: boolean) => {
     const wallet = await getWalletWithUnit(get(mints), mintUrl, unit)
     const mintUnitProofs = proofsStore.getByKeysetIds(wallet.keysets.map((ks) => ks.id))
+    const exactAmountProofs = getAproxAmount(amount, mintUnitProofs, includeFees)
     const currentCount = getCurrentCount(wallet.keysetId)
-    const { send, keep } = await wallet.send(amount, mintUnitProofs, { counter: currentCount })
+    const { send, keep } = await wallet.send(amount, exactAmountProofs??mintUnitProofs, { counter: currentCount, includeFees })
     const mintUnitProofIds = mintUnitProofs.map((p) => p.secret)
     await proofsStore.removeMany(mintUnitProofIds, 'secret')
     await proofsStore.addMany(keep)
@@ -110,20 +135,21 @@ export const sendEcash = async (mintUrl: string, amount: number, unit?: string) 
     await updateCount(wallet.keysetId, endCount)
 
     const keepIds = keep.map((p) => p.id)
+    const sendIds = keep.map((p) => p.id)
 
     const transactionToAdd: StoredTransaction = {
         id: bytesToHex(randomBytes(12)),
         type: TransactionType.SEND,
         mint: mintUrl,
-        amount,
-        in: mintUnitProofs.filter((p) => !keepIds.includes(p.id)),
+        amount: getAmountForTokenSet(send),
+        in: mintUnitProofs.filter((p) => !keepIds.includes(p.id) && !sendIds.includes(p.id)),
         out: send,
         change: keep,
         createdAt: Date.now(),
         lastChangedAt: Date.now(),
         counts: { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) },
         state: TransactionStatus.PENDING,
-        fees: getAmountForTokenSet(mintUnitProofs) - (getAmountForTokenSet(keep) + getAmountForTokenSet(send))
+        fees: getAmountForTokenSet(send) - amount,
     }
 
     await transactionsStore.addOrUpdate(transactionToAdd.id, transactionToAdd, 'id')
@@ -143,3 +169,33 @@ const getCurrentCount = (ksId: string) => {
 const updateCount = async (ksId: string, endCount: number) => {
     await countsStore.addOrUpdate(ksId, { keysetId: ksId, count: endCount }, 'keysetId')
 }
+
+
+
+
+// const getFeeForProofs = async (proofs: Proof[]): Promise<number | 'unknown'> => {
+//     if (proofs.length === 0) {
+//         return 0
+//     }
+//     const mint = getMintForKeysetId(get(mints), proofs[0].id)
+//     if (!mint) {
+//         return 'unknown'
+//     }
+//     const unit = getUnitForKeysetId(get(mints), proofs[0].id)
+//     const wallet = await getWalletWithUnit(get(mints), mint?.url, unit)
+
+//     return wallet.getFeesForProofs(proofs)
+// }
+
+// const selectProofsForAmount = (amount: number, proofs: Proof[]): Proof[] => {
+//     return proofs
+// }
+
+// export const getMinMaxFeeForAmount = (amount: number, mint: Mint, unit: string) => {
+//     const keyset = mint.keysets.keysets.find(ks => ks.unit === unit)
+//     const keys = mint.keys.keysets.find(k => k.id === keyset?.id)
+
+
+//     const feeppk = keyset?.input_fee_ppk
+//     const denos = Object.keys(keys?.keys ?? {})
+// }

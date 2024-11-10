@@ -29,6 +29,8 @@ import NostrSettings from "./elements/settings/NostrSettings.svelte";
 import SecuritySettings from "./elements/settings/SecuritySettings.svelte";
 import TransactionsView from "./elements/data/transactions/TransactionsView.svelte";
 import TransactionItem from "./elements/data/transactions/TransactionItem.svelte";
+import EcashDetailView from "./elements/data/ecash/EcashDetailView.svelte";
+import MeltQuoteItem from "./elements/wallet/send/ln/MeltQuoteItem.svelte";
 
 export const routes = {
     '/': Loading,
@@ -64,6 +66,7 @@ export const walletRoutes = {
     '/contacts': ContactsView,
     
     '/ecash': EcashView,
+    '/ecash/:type/:secret': EcashDetailView,
     
     '/history': HistoryView,
     
@@ -76,7 +79,7 @@ export const walletRoutes = {
     '/send/cashu': TransactionsView,
     '/send/cashu/:id': TransactionItem,
     '/send/ln': SendLn,
-    '/send/ln/:quote': SendLn,
+    '/send/ln/:quote': MeltQuoteItem,
 
     '/settings': SettingsView,
     '/settings/backup': BackupSettings,
@@ -86,11 +89,6 @@ export const walletRoutes = {
     '/settings/mints': MintsSettings,
     '/settings/nostr': NostrSettings,
     '/settings/security': SecuritySettings,
-
-
-    
-
-
 
     '*': NotFound
 }

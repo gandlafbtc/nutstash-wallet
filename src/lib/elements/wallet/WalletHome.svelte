@@ -16,13 +16,10 @@
 
   let currentUnit = $state("sat");
 
-
-
   let activeMints = $derived($selectedMints.map(url => getBy($mints, url, 'url')).filter(m=> m!==undefined))
   let keysetIds = $derived(activeMints.map(m => m.keysets.keysets).flat().filter(k=> k.unit===currentUnit).map(k=> k.id))
   let amount = $derived(getByMany($proofsStore, keysetIds, 'id').reduce((a,b)=> a+b.amount, 0))
 </script>
-
 <div class="flex items-center justify-start pt-20 flex-col gap-5 w-full h-full">
   <div class="w-80 flex items-start">
     <MintSelectorMulti></MintSelectorMulti>
