@@ -36,7 +36,7 @@ export type StoredTransaction = {
     in: Proof[]
     out: Proof[]
     change?: Proof[]
-    mint: string
+    mintUrl: string
     state: TransactionStatus
     createdAt: number
     lastChangedAt: number

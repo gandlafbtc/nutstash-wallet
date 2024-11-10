@@ -1,8 +1,8 @@
 <script lang="ts">
     import Toggle from "$lib/components/ui/toggle/toggle.svelte";
-    import { Lock , FileInput, FileOutput} from "lucide-svelte";
+    import { Lock , FileInput, FileOutput, HandCoins} from "lucide-svelte";
 
-    const {tokenOptions = $bindable() }: {tokenOptions: {p2pk: boolean, customIn: boolean, customOut:boolean}} = $props()
+    const {tokenOptions = $bindable() }: {tokenOptions: {p2pk: boolean, customIn: boolean, customOut:boolean, includeReceiverFees: boolean}} = $props()
     
 </script>
 
@@ -12,7 +12,14 @@
             
         </Lock>
     </Toggle>
-    <Toggle aria-label="toggle bold" bind:pressed={tokenOptions.customIn}>
+    
+    <Toggle aria-label="toggle bold" bind:pressed={tokenOptions.includeReceiverFees}>
+        <HandCoins class='w-4 h-4'>
+            
+        </HandCoins>
+    </Toggle>
+    
+    <!-- <Toggle aria-label="toggle bold" bind:pressed={tokenOptions.customIn}>
         <FileInput class='w-4 h-4'>
             
         </FileInput>
@@ -23,7 +30,7 @@
                 
             </FileOutput>
         </div>
-    </Toggle>
+    </Toggle> -->
 </div>
 
 <style>

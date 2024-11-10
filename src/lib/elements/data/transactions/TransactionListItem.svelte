@@ -21,7 +21,7 @@
     } = $props();
 
     let token: Token = $derived({
-        mint: tx.mint,
+        mint: tx.mintUrl,
         proofs: tx.out,
         unit: tx.unit,
         memo: tx.memo,
@@ -45,9 +45,9 @@
             <div class="max-w-48 overflow-clip text-ellipsis">
                 <a
                     class="underline"
-                    href={`/#/wallet/mint/${getHostFromUrl(tx.mint ?? "")}`}
+                    href={`/#/wallet/mint/${getHostFromUrl(tx.mintUrl ?? "")}`}
                 >
-                    {tx.mint}
+                    {tx.mintUrl}
                 </a>
             </div>
         </Card.Description>

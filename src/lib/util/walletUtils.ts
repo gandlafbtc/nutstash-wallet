@@ -266,24 +266,24 @@ const formatMSats = (amount: number): string => {
 	);
 };
 
-export const getUnitSymbol = (unit: string): string => {
+export const getUnitSymbol = (unit: string, isLong = true): string => {
 	switch (unit) {
 		case 'sat':
-			return '₿ (sat)';
+			return '₿' + (isLong?' (sat)':'');
 		case 'msat':
-			return '₿ (msat)';
+			return '₿' + (isLong?' (msat)':'');
 		case 'btc':
-			return '₿ (btc)';
+			return '₿' + (isLong?' (btc)':'');
 		case 'usd':
-			return '$ (usd)';
+			return '$' + (isLong?' (usd)':'');
 		case 'eur':
-			return '€  (eur)';
+			return '€' + (isLong?' (eur)':'');
 		case 'gbp':
-			return '£  (gbp)';
+			return '£' + (isLong?' (gbp)':'');
 		case 'jpy':
-			return '¥  (jpy)';
+			return '¥' + (isLong?' (jpy)':'');
 		case 'krw':
-			return '₩   (krw)';
+			return '₩' + (isLong?' (krw)':'');
 		default:
 			return unit
 	}

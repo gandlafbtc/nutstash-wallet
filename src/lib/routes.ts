@@ -31,6 +31,7 @@ import TransactionsView from "./elements/data/transactions/TransactionsView.svel
 import TransactionItem from "./elements/data/transactions/TransactionItem.svelte";
 import EcashDetailView from "./elements/data/ecash/EcashDetailView.svelte";
 import MeltQuoteItem from "./elements/wallet/send/ln/MeltQuoteItem.svelte";
+import Send from "./elements/wallet/send/Send.svelte";
 
 export const routes = {
     '/': Loading,
@@ -76,6 +77,7 @@ export const walletRoutes = {
     '/receive/cashu': ReceiveCashu,
     '/receive/cashu/:token': ReceiveCashu,
     
+    '/send': Send,
     '/send/cashu': TransactionsView,
     '/send/cashu/:id': TransactionItem,
     '/send/ln': SendLn,

@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     formatAmount,
+    getUnitSymbol,
   } from "$lib/util/walletUtils";
   import { Download, QrCode, Upload } from "lucide-svelte";
   import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
@@ -13,6 +14,7 @@
     import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
     import CompactHistory from "../data/history/CompactHistory.svelte";
+import NumberFlow from '@number-flow/svelte'
 
   let currentUnit = $state("sat");
 
@@ -32,10 +34,10 @@
     placeholder="Quickpaste: paste token, invoice etc." ></Textarea>
   </div>
   <p class="text-7xl">
-    {formatAmount(
-      amount,
-      currentUnit
-    )}
+    <NumberFlow value={amount}></NumberFlow> {getUnitSymbol(currentUnit, false)}
+    <span class="text-xs">
+      {(currentUnit)}
+    </span>
   </p>
   <div class="flex gap-2 items-center justify-center">
     <UnitSelector

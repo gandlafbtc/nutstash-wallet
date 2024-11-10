@@ -108,16 +108,24 @@
                         </div>
                     </div>
                 {/if}
-                <span class="text-sm">
-                    {formatDistance($now, item.lastChangedAt)} ago
-                </span>
+                <div class="flex flex-col gap-1 items-center">
+
+                    <span class="text-sm">
+                        {formatDistance($now, item.lastChangedAt)} ago
+                    </span>
+                    <span class="text-xs text-secondary overflow-clip text-ellipsis">
+                        {item.mintUrl}
+                    </span>
+                </div>
                 <div class="flex flex-col gap-1 items-end">
                     <span>
                         {formatAmount(item.amount, item.unit)}
                     </span>
+                    {#if item.type==='send' || item.type==='receive'}
                     <span class="text-xs text-secondary">
                         {formatAmount(item.fees ?? 0, item.unit)} fee
                     </span>
+                    {/if}
                 </div>
             </a>
         {/each}

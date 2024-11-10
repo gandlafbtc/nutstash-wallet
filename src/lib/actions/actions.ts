@@ -103,7 +103,7 @@ export const receiveEcash = async (token: string | Token): Promise<{ untrustedMi
         type: TransactionType.RECEIVE,
         in: token.proofs,
         out: proofs,
-        mint: token.mint,
+        mintUrl: token.mint,
         unit: token.unit,
         createdAt: Date.now(),
         lastChangedAt: Date.now(),
@@ -121,11 +121,16 @@ export const receiveEcash = async (token: string | Token): Promise<{ untrustedMi
 export const sendEcash = async (mintUrl: string, amount: number, unit?: string, includeFees?: boolean) => {
     const wallet = await getWalletWithUnit(get(mints), mintUrl, unit)
     const mintUnitProofs = proofsStore.getByKeysetIds(wallet.keysets.map((ks) => ks.id))
-    const exactAmountProofs = getAproxAmount(amount, mintUnitProofs, includeFees)
+    const aproxProofs = getAproxAmount(amount, mintUnitProofs, includeFees)
+    if (!aproxProofs) {
+        throw new Error("Not enough funds");
+    }
     const currentCount = getCurrentCount(wallet.keysetId)
-    const { send, keep } = await wallet.send(amount, exactAmountProofs??mintUnitProofs, { counter: currentCount, includeFees })
+    const { send, keep } = await wallet.send(amount, aproxProofs, { counter: currentCount, includeFees })
     const mintUnitProofIds = mintUnitProofs.map((p) => p.secret)
-    await proofsStore.removeMany(mintUnitProofIds, 'secret')
+    const keepIds = keep.map((p) => p.id)
+    const sendIds = keep.map((p) => p.id)
+    await proofsStore.removeMany(aproxProofs.map(p=>p.secret), 'secret')
     await proofsStore.addMany(keep)
     await pendingProofsStore.addMany(send)
     const newKeepProofCount = keep.reduce((acc, p) => mintUnitProofIds.includes(p.id) ? acc : acc + 1, 0)
@@ -134,13 +139,11 @@ export const sendEcash = async (mintUrl: string, amount: number, unit?: string, 
     endCount = endCount + currentCount
     await updateCount(wallet.keysetId, endCount)
 
-    const keepIds = keep.map((p) => p.id)
-    const sendIds = keep.map((p) => p.id)
 
     const transactionToAdd: StoredTransaction = {
         id: bytesToHex(randomBytes(12)),
         type: TransactionType.SEND,
-        mint: mintUrl,
+        mintUrl: mintUrl,
         amount: getAmountForTokenSet(send),
         in: mintUnitProofs.filter((p) => !keepIds.includes(p.id) && !sendIds.includes(p.id)),
         out: send,
@@ -149,7 +152,7 @@ export const sendEcash = async (mintUrl: string, amount: number, unit?: string, 
         lastChangedAt: Date.now(),
         counts: { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) },
         state: TransactionStatus.PENDING,
-        fees: getAmountForTokenSet(send) - amount,
+        fees: getAmountForTokenSet(aproxProofs)-(getAmountForTokenSet(send)+getAmountForTokenSet(keep)),
     }
 
     await transactionsStore.addOrUpdate(transactionToAdd.id, transactionToAdd, 'id')
@@ -170,32 +173,29 @@ const updateCount = async (ksId: string, endCount: number) => {
     await countsStore.addOrUpdate(ksId, { keysetId: ksId, count: endCount }, 'keysetId')
 }
 
+export const getFeeForProofs = async (proofs: Proof[]): Promise<number | 'unknown'> => {
+    if (proofs.length === 0) {
+        return 0
+    }
+    const mint = getMintForKeysetId(get(mints), proofs[0].id)
+    if (!mint) {
+        return 'unknown'
+    }
+    const unit = getUnitForKeysetId(get(mints), proofs[0].id)
+    const wallet = await getWalletWithUnit(get(mints), mint?.url, unit)
+
+    return wallet.getFeesForProofs(proofs)
+}
+
+const selectProofsForAmount = (amount: number, proofs: Proof[]): Proof[] => {
+    return proofs
+}
+
+export const getMinMaxFeeForAmount = (amount: number, mint: Mint, unit: string) => {
+    const keyset = mint.keysets.keysets.find(ks => ks.unit === unit)
+    const keys = mint.keys.keysets.find(k => k.id === keyset?.id)
 
 
-
-// const getFeeForProofs = async (proofs: Proof[]): Promise<number | 'unknown'> => {
-//     if (proofs.length === 0) {
-//         return 0
-//     }
-//     const mint = getMintForKeysetId(get(mints), proofs[0].id)
-//     if (!mint) {
-//         return 'unknown'
-//     }
-//     const unit = getUnitForKeysetId(get(mints), proofs[0].id)
-//     const wallet = await getWalletWithUnit(get(mints), mint?.url, unit)
-
-//     return wallet.getFeesForProofs(proofs)
-// }
-
-// const selectProofsForAmount = (amount: number, proofs: Proof[]): Proof[] => {
-//     return proofs
-// }
-
-// export const getMinMaxFeeForAmount = (amount: number, mint: Mint, unit: string) => {
-//     const keyset = mint.keysets.keysets.find(ks => ks.unit === unit)
-//     const keys = mint.keys.keysets.find(k => k.id === keyset?.id)
-
-
-//     const feeppk = keyset?.input_fee_ppk
-//     const denos = Object.keys(keys?.keys ?? {})
-// }
+    const feeppk = keyset?.input_fee_ppk
+    const denos = Object.keys(keys?.keys ?? {})
+}

@@ -21,15 +21,15 @@
     import { getByMany } from "$lib/stores/persistent/helper/storeHelper";
     import TokenOptions from "./TokenOptions.svelte";
     import { toast } from "svelte-sonner";
-    import { createMeltQuote, sendEcash } from "$lib/actions/actions";
+    import { createMeltQuote, getFeeForProofs, sendEcash } from "$lib/actions/actions";
     import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import { openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
     import { decode } from "@gandlaf21/bolt11-decode";
     import { copyTextToClipboard } from "$lib/util/utils";
     import type { Proof } from "$lib/db/models/types";
+    import Switch from "$lib/components/ui/switch/switch.svelte";
 
     let entered: string = $state("");
-    let includeReceiverFees = $state(false)
 
     const getCurrentUnit = () => {
         return getUnitsForMints([mint]).find((u) => u === $unit)
@@ -40,8 +40,9 @@
     let mint = $state($mints[0]);
     let currentUnit: string = $state(getCurrentUnit());
 
-    let unitProofs = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit))
-    $inspect(unitProofs)
+    let allProofs = $derived($proofsStore)
+
+    let unitProofs: Proof[] = $derived(getProofsOfMintUnit(mint, allProofs , currentUnit))
     let balance = $derived(getAmountForTokenSet(unitProofs));
     let invoice = $derived.by(()=> {
         if (
@@ -61,16 +62,14 @@
         }
     });
 
-    let selectedProofs: Proof[] = $derived(getAproxAmount(amount??0, unitProofs, includeReceiverFees)??[])
-    // $inspect(selectedProofs);
-    // let isOfflineSendable = $derived.by(()=> {
-    //     return amount === getAmountForTokenSet(selectedProofs)
-    // });
     let tokenOptions = $state({
         p2pk: false,
         customIn: false,
         customOut: false,
+        includeReceiverFees: false,
     });
+    let selectedProofs: Proof[] = $derived(getAproxAmount(amount??0, getProofsOfMintUnit(mint, allProofs , currentUnit), tokenOptions.includeReceiverFees)??[])
+
 
 
     let inputFocus: HTMLTextAreaElement | null = $state(null);
@@ -124,11 +123,15 @@
     const sendCashu = async () => {
         try {
              isLoading = true;
-             if (amount??0>balance) {
+             if (!amount) {
+                toast("Please enter amount");
+                return
+             }
+             if (amount>balance) {
                 toast.warning("Not enough funds");
                 return
              }
-             const {txId} = await sendEcash(mint.url, amount??0, currentUnit, includeReceiverFees)
+             const {txId} = await sendEcash(mint.url, amount??0, currentUnit, tokenOptions.includeReceiverFees)
              openSendDrawer.set(false)
              push('/wallet/send/cashu/'+txId)
         } catch (error) {
@@ -154,7 +157,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
-    class="w-full flex gap-3 flex-col items-center justify-between h-full"
+    class="w-full flex gap-3 flex-col items-center justify-center h-full"
     bind:this={thisDrawer}
     tabindex="0"
 >
@@ -207,13 +210,34 @@
                         </button>
                         <TokenOptions bind:tokenOptions></TokenOptions>
                     </div>
-                    <!-- <div class="h-14 flex gap-2 justify-between">
-                        <span>Include receiver fees</span>
-                        <Switch bind:checked={includeReceiverFees}></Switch>
-                    </div> -->
-                    <div>
-                        <!-- {isOfflineSendable} -->
-                        {selectedProofs.map(p=>p.amount).join(', ')}
+
+                    <div class="h-16 text-xs flex flex-col gap-1 w-full items-start justify-start">
+                        <span>
+                            {#if tokenOptions.includeReceiverFees}
+                            Include {formatAmount(1, currentUnit)} receiver fee
+                            {:else}
+                            Receiver fee is not included
+                            {/if}
+                        </span>
+                            <span>
+                            Selected coins: {selectedProofs.map(p=>p.amount).join(', ')}
+                        </span>
+                        <span>
+                            {#if getAmountForTokenSet(selectedProofs)>amount+(tokenOptions.includeReceiverFees?1:0)}
+                            <span class="text-yellow-500">
+                                Token requires split: 
+                                {#await getFeeForProofs(selectedProofs)}
+                                <LoaderCircle class='animate-spin w-2 h-2'></LoaderCircle>
+                                {:then fee}
+                                {fee==='unknown'? 'unknown' : formatAmount(fee, currentUnit)} fee
+                                {/await}
+                            </span>
+                            {:else}
+                            <span class="text-green-500">
+                                Token can be sent offline
+                            </span>
+                            {/if}
+                        </span>
                     </div>
                     <Button class="w-full" onclick={sendCashu} disabled={isLoading}>
                         {#if isLoading}

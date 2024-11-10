@@ -27,6 +27,8 @@
 
     let isLoading = $state(false);
 
+    let invoiceAmount = $derived(decode(quote.request).sections[2].value/1000)
+
     const confirmPayment = async () => {
         try {
             isLoading = true;
