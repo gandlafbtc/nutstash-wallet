@@ -33,6 +33,7 @@
           mintUrlToAdd = ''
           toast.success('Mint added');
         } catch (error) {
+			console.error(error)
             toast.error(error.message);
         }
         finally {
@@ -48,6 +49,7 @@
             await DB.deleteDatabase()
             toast.success('Database deleted');
         } catch (error) {
+			console.error(error)
             toast.error(error.message);
         }
     }

@@ -30,6 +30,7 @@
 				toast.info('Copied mnemonic to clipboard');
 			}
 		} catch (err) {
+			console.error(err)
 			toast.warning('Could not copy text');
 		}
 

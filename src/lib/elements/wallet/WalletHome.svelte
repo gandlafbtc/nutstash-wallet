@@ -14,9 +14,23 @@
     import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
     import CompactHistory from "../data/history/CompactHistory.svelte";
-import NumberFlow from '@number-flow/svelte'
+import NumberFlow, { type Format } from '@number-flow/svelte'
 
   let currentUnit = $state("sat");
+
+  const getDivider = () => {
+    if (currentUnit === "sat") {
+      return {divider:1, fraction: 0};
+
+    } else if (currentUnit === "msat") {
+      return {divider:1000, fraction: 3};
+
+    } else {
+      return {divider:100, fraction: 2};
+    }
+  }
+
+  let {divider, fraction} = $derived(getDivider())
 
   let activeMints = $derived($selectedMints.map(url => getBy($mints, url, 'url')).filter(m=> m!==undefined))
   let keysetIds = $derived(activeMints.map(m => m.keysets.keysets).flat().filter(k=> k.unit===currentUnit).map(k=> k.id))
@@ -34,7 +48,7 @@ import NumberFlow from '@number-flow/svelte'
     placeholder="Quickpaste: paste token, invoice etc." ></Textarea>
   </div>
   <p class="text-7xl">
-    <NumberFlow value={amount}></NumberFlow> {getUnitSymbol(currentUnit, false)}
+    <NumberFlow value={amount/divider} format={{ minimumFractionDigits: fraction, maximumFractionDigits: fraction}}></NumberFlow> {getUnitSymbol(currentUnit, false)}
     <span class="text-xs">
       {(currentUnit)}
     </span>

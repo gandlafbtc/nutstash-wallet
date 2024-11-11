@@ -11,7 +11,7 @@
     let quote = $derived($meltQuotesStore.find((q) => q.quote === quoteId))
 
     $effect(() => {
-        $meltQuotesStore
+        // $meltQuotesStore
     });
    
 </script>

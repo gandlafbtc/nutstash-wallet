@@ -28,6 +28,7 @@ export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
     in?: Proof[]
     out?: Proof[]
     request: string
+    fees: number
     counts?: {keysetId: string, counts:number[]} };
 
 export type StoredTransaction = {

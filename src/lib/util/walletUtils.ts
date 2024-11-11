@@ -46,55 +46,11 @@ export const getKeysForKeysetId = (keys: MintKeys[], keysetId: string): MintKeys
 	});
 };
 
-export const validateMintKeys = (keys: MintActiveKeys): boolean => {
-	let isValid = true;
-	try {
-		const keysets = keys.keysets.map((ks) => ks.keys);
-		if (!keysets.length) {
-			return false;
-		}
-		if (!keysets) {
-			return false;
-		}
-		keysets.forEach((ks) => {
-			const allKeys = Object.keys(ks);
-			allKeys.forEach((k) => {
-				//try parse int?
-				if (isNaN(k)) {
-					isValid = false;
-				}
-				if (!isPow2(k)) {
-					isValid = false;
-				}
-			});
-		});
-		return isValid;
-	} catch (error) {
-		return false;
-	}
-};
 
 export const isPow2 = (number: number) => {
 	return Math.log2(number) % 1 === 0;
 };
 
-
-/**
- * returns a subset of all tokens that belong to the specified mints
- * @param mint
- * @param tokens
- * @returns
- */
-export const getTokensForMints = (mints: Mint[], tokens: Array<Proof>, unit?: string) => {
-	const tokenSubset = tokens.filter((token) => {
-		if (mints.map(m => m.keysets).flat().map((k) => k.id).includes(token.id)) {
-			return true;
-		} else {
-			return false;
-		}
-	});
-	return tokenSubset;
-};
 
 export const isValidToken = (obj: any) => {
 	// todo implement
@@ -131,12 +87,14 @@ export const getMintForKeysetId =(mints: Mint[], keysetId:string):Mint|undefined
 
 
 export const getExactAmount = (amount: number, proofs: Proof[], includeFees?: boolean): Proof[] | undefined => {
+	const proofsClone = [...proofs]
+
     //todo how to calculate this
     if (includeFees) {
         amount = amount+1
     }
     const exactProofs: Proof[] = []
-    const sorted = proofs.sort((a, b) => b.amount - a.amount)
+    const sorted = proofsClone.sort((a, b) => b.amount - a.amount)
 
     while (getAmountForTokenSet(exactProofs)<amount) {
         const next = sorted.shift()
@@ -154,6 +112,7 @@ export const getExactAmount = (amount: number, proofs: Proof[], includeFees?: bo
 }
 
 export const getAproxAmount = (amount: number, proofs: Proof[], includeFees?: boolean): Proof[] | undefined => {
+	const proofsClone = [...proofs]
     //todo how to calculate this
     if (includeFees) {
         amount = amount+1
@@ -164,7 +123,7 @@ export const getAproxAmount = (amount: number, proofs: Proof[], includeFees?: bo
 	
 	
 	for (let i = 0; i < 2; i++) {
-		const sorted = proofs.sort((a, b) => b.amount - a.amount)
+		const sorted = proofsClone.sort((a, b) => b.amount - a.amount)
 		while (getAmountForTokenSet(exactProofs)<amount) {
 			const next = sorted.shift()
 			if (!next) {
@@ -194,7 +153,7 @@ export const getAproxAmount = (amount: number, proofs: Proof[], includeFees?: bo
     }
 
 	if (amount>getAmountForTokenSet(exactProofs)+getAmountForTokenSet(lastClosest)) {
-		return undefined
+		return []
 	}
     return [...exactProofs, ...lastClosest]
 }

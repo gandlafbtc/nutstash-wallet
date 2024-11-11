@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { ContextError, ensureError } from '$lib/helpers/errors';
-import { CashuMint, CashuWallet } from '@cashu/cashu-ts';
+import { CashuMint, CashuWallet, type MintActiveKeys } from '@cashu/cashu-ts';
 
 import { get, writable } from 'svelte/store';
 import { seed } from './mnemonic';
@@ -50,7 +50,7 @@ const loadMint = async (mintUrl: string): Promise<Mint> => {
 		const cashuMint = new CashuMint(mintUrl)
 		const mintInfo = await cashuMint.getInfo()
 		const mintAllKeysets = await cashuMint.getKeySets()
-		const mintActiveKeys = await cashuMint.getKeys()
+		const mintActiveKeys: MintActiveKeys = await cashuMint.getKeys()
 		const mint = {
 			info: mintInfo,
 			keys: mintActiveKeys,

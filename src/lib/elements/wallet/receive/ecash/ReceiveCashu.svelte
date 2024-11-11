@@ -37,6 +37,7 @@
                 return getDecodedToken($scannedTokenStore);
             } else return null;
         } catch (error) {
+			console.error(error)
             return null;
         }
     };
@@ -57,19 +58,10 @@
             isLoading = true;
             const { proofs } = await receiveEcash(token);
             if (proofs) {
-                toast.success(
-                    `Received ${formatAmount(
-                        token.proofs.reduce(
-                            (acc, curr) => acc + curr.amount,
-                            0,
-                        ),
-                        token.unit,
-                    )}`
-                );
                 push('/wallet/');
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toast.error(error.message);
         } finally {
             isLoading = false;
@@ -84,7 +76,7 @@
             }
             await mints.fetchMint(token?.mint)   
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
         finally {
             isLoading = false;

@@ -21,6 +21,7 @@
 			afterAdd(url);
 		} catch (error) {
 			toast.error('Could not load mint');
+			console.error(error)
 		} finally {
 			isLoading = false;
 		}

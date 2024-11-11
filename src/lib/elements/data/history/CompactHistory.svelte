@@ -10,7 +10,10 @@
         Zap,
         Timer,
         X,
-        HandCoins
+        HandCoins,
+
+        Check
+
     } from "lucide-svelte";
     import { formatDistance } from "date-fns";
     import { now } from "$lib/stores/session/time";
@@ -29,7 +32,7 @@
     let limit = $state(5);
 
     let latest = $derived(
-        items.sort((a, b) => b.lastChangedAt - a.lastChangedAt).slice(0, limit),
+        [...items].sort((a, b) => b.lastChangedAt - a.lastChangedAt).slice(0, limit),
     );
 
     const getUrlForItem = (
@@ -90,6 +93,24 @@
                             <ArrowUpRight class="w-4 h-4 text-red-600"
                             ></ArrowUpRight>
                         </div>
+                        {#if item.state === "UNPAID"}
+                            <div class="absolute -top-1 -right-3">
+                                <Timer class="w-4 h-4"></Timer>
+                            </div>
+                            {#if isExpired}
+                                <div class="absolute -top-2 -right-4">
+                                    <X class="w-6 h-6 text-red-600"></X>
+                                </div>
+                            {/if}
+                        {:else if item.state==='PAID'}
+                            <!-- <div class="absolute -top-1 -right-3">
+                                <Check class="w-4 h-4 text-green-500"></Check>
+                            </div> -->
+                            {:else if item.state==='PENDING'}
+                            <div class="absolute -top-1 -right-3">
+                                <Timer class="w-4 h-4 text-red-600"></Timer>
+                            </div>
+                        {/if}
                     </div>
                 {:else if item.type === "send"}
                     <div class="relative">
@@ -121,7 +142,7 @@
                     <span>
                         {formatAmount(item.amount, item.unit)}
                     </span>
-                    {#if item.type==='send' || item.type==='receive'}
+                    {#if item.type==='send' || item.type==='receive' || item.type==='melt'}
                     <span class="text-xs text-secondary">
                         {formatAmount(item.fees ?? 0, item.unit)} fee
                     </span>

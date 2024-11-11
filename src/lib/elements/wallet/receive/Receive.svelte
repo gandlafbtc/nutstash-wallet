@@ -90,6 +90,7 @@
             //Show QR screen
             push("/wallet/receive/ln/" + q.quote);
         } catch (error) {
+			console.error(error)
         } finally {
             isLoading = false;
         }

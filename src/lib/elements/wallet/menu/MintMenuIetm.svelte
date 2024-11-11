@@ -18,7 +18,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
          await mints.fetchMint(mint.url)
          toast.success('Mint updated')
      } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Problem updating mint')
      }
      finally {

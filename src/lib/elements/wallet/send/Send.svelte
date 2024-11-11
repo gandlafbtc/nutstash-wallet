@@ -40,9 +40,8 @@
     let mint = $state($mints[0]);
     let currentUnit: string = $state(getCurrentUnit());
 
-    let allProofs = $derived($proofsStore)
 
-    let unitProofs: Proof[] = $derived(getProofsOfMintUnit(mint, allProofs , currentUnit))
+    let unitProofs: Proof[] = $derived(getProofsOfMintUnit(mint, $proofsStore , currentUnit))
     let balance = $derived(getAmountForTokenSet(unitProofs));
     let invoice = $derived.by(()=> {
         if (
@@ -68,7 +67,7 @@
         customOut: false,
         includeReceiverFees: false,
     });
-    let selectedProofs: Proof[] = $derived(getAproxAmount(amount??0, getProofsOfMintUnit(mint, allProofs , currentUnit), tokenOptions.includeReceiverFees)??[])
+    let selectedProofs: Proof[] = $derived(getAproxAmount(amount??0, unitProofs, tokenOptions.includeReceiverFees)??[])
 
 
 
@@ -109,7 +108,7 @@
           openSendDrawer.set(false)
           push('/wallet/send/ln/'+quote)
         }  catch (error) {
-            
+			console.error(error)
         }
         finally {
             isLoading = false;
@@ -135,7 +134,7 @@
              openSendDrawer.set(false)
              push('/wallet/send/cashu/'+txId)
         } catch (error) {
-            
+			console.error(error)
         }
         finally
         {
@@ -229,8 +228,12 @@
                                 {#await getFeeForProofs(selectedProofs)}
                                 <LoaderCircle class='animate-spin w-2 h-2'></LoaderCircle>
                                 {:then fee}
-                                {fee==='unknown'? 'unknown' : formatAmount(fee, currentUnit)} fee
+                                {formatAmount(fee, currentUnit)} fee
                                 {/await}
+                            </span>
+                            {:else if getAmountForTokenSet(selectedProofs)<amount+(tokenOptions.includeReceiverFees?1:0)}
+                            <span class="text-red-500">
+                               Not enough funds
                             </span>
                             {:else}
                             <span class="text-green-500">
