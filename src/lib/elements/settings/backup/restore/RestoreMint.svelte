@@ -8,6 +8,7 @@
     import { CashuMint, CashuWallet, CheckStateEnum, type MintKeyset, type Proof } from "@cashu/cashu-ts";
     import { LoaderCircle } from "lucide-svelte";
     import {hashToCurve} from '@cashu/crypto/modules/common'
+    import { countsStore } from "$lib/stores/persistent/counts";
 
     const INCREMENT = 25
 
@@ -52,7 +53,8 @@
         try {
             const keys = await cashuMint.getKeys(ks.id)
             const cashuWallet = new CashuWallet(cashuMint, {keys: keys.keysets, bip39seed: $seed, unit: ks.unit})
-            const keysetProofs = await restoreBatch(cashuWallet, 0)
+            const {keysetProofs, count} = await restoreBatch(cashuWallet, 0)
+            await countsStore.addOrUpdate(ks.id, {count, keysetId:ks.id}, 'keysetId')
             statusMessage2 = `checking proof states`
             const proofStates = await cashuWallet.checkProofsStates(keysetProofs)
 
@@ -81,7 +83,7 @@
                 keysetProofs.push(...proofs)
                 from = from + INCREMENT
             } while (newProofs.length);
-            return keysetProofs
+            return {keysetProofs, count: from+INCREMENT}
         } catch (error) {
             statusMessage2 = ''
             statusMessage = error.message

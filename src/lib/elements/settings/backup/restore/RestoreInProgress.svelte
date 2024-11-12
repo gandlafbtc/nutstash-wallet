@@ -2,7 +2,7 @@
     import { getByMany } from "$lib/stores/persistent/helper/storeHelper";
     import { mints } from "$lib/stores/persistent/mints";
     import { selectedMints } from "$lib/stores/local/selectedMints";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { Coins, Landmark, LoaderCircle } from "lucide-svelte";
     import Progress from "$lib/components/ui/progress/progress.svelte";
     import RestoreMint from "./RestoreMint.svelte";
@@ -12,8 +12,17 @@
     import type { Proof } from "@cashu/cashu-ts";
     import { countsStore } from "$lib/stores/persistent/counts";
     import UnitDisplay from "./UnitDisplay.svelte";
+    import Button from "$lib/components/ui/button/button.svelte";
+    import Divider from "$lib/elements/ui/Divider.svelte";
+    import { proofsStore } from "$lib/stores/persistent/proofs";
+    import { toast } from "svelte-sonner";
+    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
+    import * as Dialog  from "$lib/components/ui/dialog";
+    import { push } from "svelte-spa-router";
 
     const restoreMints = $state(getByMany($mints, $selectedMints, "url"))
+
+    let isOpen = $state(false)
 
     const getUnitProofs = (proofs:Proof[]) => {
         const unitProofs: {proofs:Proof[], unit: string}[] = []
@@ -37,6 +46,7 @@
     let mintsRestored = $state(0);
     let progress = $state(0)
     let inprogress = $state(false);
+
     onMount(async () => {
         setTimeout(async () => {
             inprogress = true;
@@ -45,10 +55,26 @@
                 mintsRestored++
                 progress = ((i + 1) / restores.length)*100;
             }
+            toast.success(`Restore has completed`)
             inprogress = false;
         }, 200);
     });
-    console.log($countsStore)
+
+    onDestroy(()=> {
+        restoredProofs.set([])
+    })
+    const addToWallet = async (enforceAdd=false) => {
+        if ($proofsStore.length && !enforceAdd) {
+            isOpen = true
+            return
+        }
+        await proofsStore.reset()
+        await proofsStore.addMany($restoredProofs)
+        restoredProofs.set([])
+        toast.success(`Added restored ecash to wallet`)
+        isOpen = false
+        push('/wallet/')
+    }
 </script>
 
 <div class="flex flex-col gap-2 h-full mt-32 w-80">
@@ -83,7 +109,48 @@
 
         </Progress>
     </div>
-    {#each restoreMints as mint, i}
-        <RestoreMint {mint} bind:restore={restores[i]}></RestoreMint>
-    {/each}
+    <div class="w-full">
+        <Button disabled={progress<100} class='w-full' onclick={()=> addToWallet()}>
+            Add restored ecash to wallet
+        </Button>
+    </div>
+    <Divider text='Restoring mints'>
+
+    </Divider>
+    
+    <ScrollArea class='h-4/6'>
+        {#each restoreMints as mint, i}
+        <div class="my-2">
+            <RestoreMint {mint} bind:restore={restores[i]}></RestoreMint>
+        </div>
+        {/each}
+    </ScrollArea>
 </div>
+
+
+<Dialog.Root bind:open={isOpen}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title class='text-destructive'
+                >Wallet already contains ecash!</Dialog.Title
+            >
+            <Dialog.Description>
+                Adding the restored ecash will replace all ecash in the wallet. Only proceed if you are sure of what you are doing.
+            </Dialog.Description>
+        </Dialog.Header>
+
+        <Dialog.Footer class='flex gap-2'>
+            <Button
+                variant="outline"
+                onclick={() => {
+                    isOpen = false;
+                }}
+            >
+                Cancel
+            </Button>
+            <Button variant="destructive" onclick={()=>addToWallet(true)}>
+                Add
+            </Button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>
