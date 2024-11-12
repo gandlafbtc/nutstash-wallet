@@ -15,11 +15,11 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
             store.set(all)
         } catch (error) {
             console.error(error)
+            throw error
         }
 	}
 
-	const reEncrypt = async (value: T[]) => {
-		store.set(value);
+	const reEncrypt = async () => {
 		await encryptionHelper.encrypt(get(store))
 	}
 

@@ -12,26 +12,35 @@ export const createEncryptionHelper = async <T>(dbStoreName: StoreNames<Nutstash
 	const db = await DB.getInstance();
 
 	const encrypt = async <T>(o: T): Promise<void> => {
-		const k = get(key)
-		if (!k) {
-			throw new Error("Key not set");
+		try {
+			const k = get(key)
+			if (!k) {
+				throw new Error("Key not set");
+			}
+			const { cypher, iv } = await encryption.encrypt<T>(o, k);
+			db.put(dbStoreName, { cypher, iv, t: Date.now() }, 'default');
+		} catch (error) {
+			throw error
 		}
-		const { cypher, iv } = await encryption.encrypt<T>(o, k);
-		db.put(dbStoreName, { cypher, iv, t: Date.now() }, 'default');
 	}
 
 	const decrypt = async <T>(): Promise<T[]> => {
-		const encrypted = await db.get(dbStoreName, 'default') as EncryptedStore;
-		if (!encrypted) {
-			return []
+		try {
+			
+			const encrypted = await db.get(dbStoreName, 'default') as EncryptedStore;
+			if (!encrypted) {
+				return []
+			}
+			const k = get(key)
+			if (!k) {
+				throw new Error("Key not set");
+			}
+			const decrypted = await encryption.decrypt<T>(encrypted.cypher, k, encrypted.iv) as T[]
+			console.log(decrypted)
+			return decrypted
+		} catch (error) {
+			throw error	
 		}
-		const k = get(key)
-		if (!k) {
-			throw new Error("Key not set");
-		}
-		const decrypted = await encryption.decrypt<T>(encrypted.cypher, k, encrypted.iv) as T[]
-		console.log(decrypted)
-		return decrypted
 	}
 	return {
 		encrypt,

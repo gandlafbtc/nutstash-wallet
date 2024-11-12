@@ -32,6 +32,7 @@ import TransactionItem from "./elements/data/transactions/TransactionItem.svelte
 import EcashDetailView from "./elements/data/ecash/EcashDetailView.svelte";
 import MeltQuoteItem from "./elements/wallet/send/ln/MeltQuoteItem.svelte";
 import Send from "./elements/wallet/send/Send.svelte";
+import ChangePassword from "./elements/security/ChangePassword.svelte";
 
 export const routes = {
     '/': Loading,
@@ -91,6 +92,7 @@ export const walletRoutes = {
     '/settings/mints': MintsSettings,
     '/settings/nostr': NostrSettings,
     '/settings/security': SecuritySettings,
+    '/settings/security/changepass': ChangePassword,
 
     '*': NotFound
 }

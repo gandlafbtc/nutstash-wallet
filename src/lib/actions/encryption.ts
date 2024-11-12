@@ -30,6 +30,21 @@ export const decrypt = async <T>(payload: Uint8Array, k: CryptoKey, ivString: st
 	}
 };
 
+export const checkIfKeysMatch = async ( key1: CryptoKey, key2: CryptoKey ) => {
+	try {
+		type test = {test: string}
+		const encrypted = await encrypt({test:'test'}, key1)
+		const decrypted = (await decrypt(encrypted.cypher, key1, encrypted.iv)) as test
+		const decrypted2 = (await decrypt(encrypted.cypher, key2, encrypted.iv)) as test
+		if (decrypted?.test !== decrypted2?.test) {
+			return false
+		}
+		return true
+	} catch (error) {
+		return false
+	}
+}
+
 export const kdf = async (password: string): Promise<CryptoKey> => {
 	return await window.crypto.subtle
 		.importKey(

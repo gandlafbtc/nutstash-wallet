@@ -24,6 +24,11 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>)
 		defaults.addOrUpdate(url, mint, 'url')
 	}
 
+	const makeDefaultMint = async (mint: Mint) => {
+		await defaults.remove(mint.url, 'url')
+		await defaults.addOrUpdate(mint.url, mint, 'url')
+	}
+
 
 	const getByHost = (host: string): Mint | undefined => {
 		return get(store).find((m)=> host === getHostFromUrl(m.url));
@@ -33,7 +38,8 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>)
 		...store,
 		...defaults,
 		fetchMint,
-		getByHost
+		getByHost,
+		makeDefaultMint
 	};
 }
 

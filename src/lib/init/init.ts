@@ -19,3 +19,13 @@ const initStores = async () => {
     await countsStore.init()
     await mnemonic.init()
 }
+
+export const reencrypt = async () => {
+    await mints.reEncrypt()
+    await transactionsStore.reEncrypt()
+    await mintQuotesStore.reEncrypt()
+    await meltQuotesStore.reEncrypt()
+    await proofsStore.reEncrypt()
+    await countsStore.reEncrypt()
+    await mnemonic.reEncrypt()
+}
