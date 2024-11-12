@@ -33,6 +33,7 @@ import EcashDetailView from "./elements/data/ecash/EcashDetailView.svelte";
 import MeltQuoteItem from "./elements/wallet/send/ln/MeltQuoteItem.svelte";
 import Send from "./elements/wallet/send/Send.svelte";
 import ChangePassword from "./elements/security/ChangePassword.svelte";
+import RestoreSeedView from "./elements/settings/backup/restore/RestoreSeedView.svelte";
 
 export const routes = {
     '/': Loading,
@@ -86,6 +87,7 @@ export const walletRoutes = {
 
     '/settings': SettingsView,
     '/settings/backup': BackupSettings,
+    '/settings/backup/restore': RestoreSeedView,
     '/settings/currency': CurrencySettings,
     '/settings/ecash': EcashSettings,
     '/settings/keys': KeysSettings,

@@ -26,7 +26,7 @@
         if (!proof) {
             return "sat";
         }
-        return getUnitForKeysetId($mints, proof?.id);
+        return getUnitForKeysetId($mints, proof.id);
     });
 
     //creators
@@ -71,7 +71,7 @@
         <span class="text-sm"> </span>
         <div class="flex flex-col gap-1 items-end">
             <span>
-                {formatAmount(proof.amount)}
+                {formatAmount(proof.amount, unit)}
             </span>
             <span class="text-xs text-secondary">
                 {proof.id}

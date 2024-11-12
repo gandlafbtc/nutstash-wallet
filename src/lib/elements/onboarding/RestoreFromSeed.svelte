@@ -2,12 +2,11 @@
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { validateMnemonic } from '@scure/bip39';
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import { checkNonPending, isRestoring } from '$lib/stores/persistent/settings';
 	import { isOnboarded } from '$lib/stores/local/message';
     import Input from '$lib/components/ui/input/input.svelte';
     import Button from '$lib/components/ui/button/button.svelte';
     import * as Card from '$lib/components/ui/card';
-    import { pop } from 'svelte-spa-router';
+    import { pop, push } from 'svelte-spa-router';
     import { toast } from 'svelte-sonner';
 
 	let restoreSeed: Array<string> = $state(new Array(12));
@@ -35,10 +34,9 @@
 			toast.error('Invalid seed phrase');
 			return;
 		}
-		mnemonic.add({mnemonic:seedString});
-		isRestoring.set(true);
+		mnemonic.add({mnemonic:restoreSeed.join(' ')});
 		isOnboarded.set(true);
-		checkNonPending.set(true);
+		push('/wallet/settings/backup/restore')
 	}
 </script>
 

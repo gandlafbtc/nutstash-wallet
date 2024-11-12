@@ -67,39 +67,10 @@ export type KeysetCount = { keysetId: string; count: number }
 
 export type Proof = CashuProof
 
-export type HistoryItem = {
-    type: HistoryItemType;
-    date: number;
-    data: HistoryData;
-}
-
 export type StoredSeed = {
     mnemonic : string;
 }
 
-export enum HistoryItemType {
-    SEND,
-    RECEIVE,
-    RECEIVE_NOSTR,
-    MINT,
-    MINT_QUOTE,
-    MELT_QUOTE,
-    RECEIVE_OFFLINE
-}
-
-export type HistoryData = {
-    amount?: number;
-    unit?: string;
-    mint?: string;
-    proofs?: Proof[];
-    address?: string;
-    preimage?: string;
-    change?: string;
-    quote?: string;
-    expiry?: number;
-    fee_reserve?: number;
-    fee?: number;
-}
 
 export type EncryptedStore = {
     cypher: Uint8Array

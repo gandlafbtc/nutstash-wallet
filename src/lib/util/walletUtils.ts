@@ -74,10 +74,7 @@ export const getAmountForTokenSet = (tokens: Array<Proof>): number => {
 };
 
 export const getUnitForKeysetId =(mints: Mint[], keysetId:string):string =>{
-	let unit
-	for (const mint of mints) {
-		unit = mint.keysets.keysets.find(ks=> ks.id  = keysetId)?.unit;
-	}
+	const unit = mints.map(m=>m.keysets.keysets).flat().find(ks=> ks.id  === keysetId)?.unit;
 	return unit??'sat'
 }
 
@@ -306,7 +303,6 @@ export const getUnitsForMints = (mints: Mint[]): string[] => {
 
 export const getWalletWithUnit = async (mints: Mint[], mintUrl: string, unit = 'sat'): Promise<CashuWallet> => {
 	const mint = getBy<Mint>(mints, mintUrl, 'url')
-	console.log(mint)
 	if (!mint) {
 		throw new Error(`Mint ${mintUrl} not found`)
 	}

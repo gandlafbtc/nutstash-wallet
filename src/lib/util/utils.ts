@@ -50,3 +50,15 @@ export const getCount = (from: number, to: number): number[] => {
 	}
 	return count;
 }
+
+export const getDivider = (currentUnit : string) => {
+    if (currentUnit === "sat") {
+      return {divider:1, fraction: 0};
+
+    } else if (currentUnit === "msat") {
+      return {divider:1000, fraction: 3};
+
+    } else {
+      return {divider:100, fraction: 2};
+    }
+  }

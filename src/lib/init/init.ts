@@ -29,3 +29,13 @@ export const reencrypt = async () => {
     await countsStore.reEncrypt()
     await mnemonic.reEncrypt()
 }
+
+export const setStoresFromBackupJSON = async (obj:any) => {
+    mints.set(obj.mints)
+    transactionsStore.set(obj.transactionsStore)
+    mintQuotesStore.set(obj.mintQuotesStore)
+    meltQuotesStore.set(obj.meltQuotesStore)
+    proofsStore.set(obj.proofsStore)
+    countsStore.set(obj.countsStore)
+    mnemonic.set(obj.mnemonic)
+}
