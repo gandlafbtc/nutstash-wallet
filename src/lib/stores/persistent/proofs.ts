@@ -4,10 +4,10 @@ import { get, writable } from 'svelte/store';
 import { createEncryptionHelper, type EncryptionHelper } from './helper/encryptionHelper';
 import { createDefaultStoreFunctions } from './helper/storeHelper';
 
-const proofsEncryptionHelper = await createEncryptionHelper<Proof>('encrypted-proofs')
-const offflineProofsEncryptionHelper = await createEncryptionHelper<Proof>('encrypted-offline-proofs')
-const pendingProofsEncryptionHelper = await createEncryptionHelper<Proof>('encrypted-pending-proofs')
-const spentProofsEncryptionHelper = await createEncryptionHelper<Proof>('encrypted-spent-proofs')
+const proofsEncryptionHelper = createEncryptionHelper<Proof>('encrypted-proofs')
+const offflineProofsEncryptionHelper = createEncryptionHelper<Proof>('encrypted-offline-proofs')
+const pendingProofsEncryptionHelper = createEncryptionHelper<Proof>('encrypted-pending-proofs')
+const spentProofsEncryptionHelper = createEncryptionHelper<Proof>('encrypted-spent-proofs')
 
 const createProofsStore = (encryptionHelper: EncryptionHelper<Proof>) => {
     const initialProofs: Array<Proof> = [];
@@ -21,7 +21,7 @@ const createProofsStore = (encryptionHelper: EncryptionHelper<Proof>) => {
     return {...store, ...defaultFuncs, getByKeysetIds };
 }
 
-export const proofsStore = await createProofsStore(proofsEncryptionHelper)
-export const offlineProofsStore = await createProofsStore(offflineProofsEncryptionHelper)
-export const pendingProofsStore = await createProofsStore(pendingProofsEncryptionHelper)
-export const spentProofsStore = await createProofsStore(spentProofsEncryptionHelper)
+export const proofsStore = createProofsStore(proofsEncryptionHelper)
+export const offlineProofsStore = createProofsStore(offflineProofsEncryptionHelper)
+export const pendingProofsStore = createProofsStore(pendingProofsEncryptionHelper)
+export const spentProofsStore = createProofsStore(spentProofsEncryptionHelper)

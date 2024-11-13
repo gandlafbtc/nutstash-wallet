@@ -30,7 +30,7 @@ export default defineConfig(async () => ({
     },
   },
   build: {
-    target: 'es2022',
+    target: 'es2020',
   },
   test: {
     environment: "jsdom",

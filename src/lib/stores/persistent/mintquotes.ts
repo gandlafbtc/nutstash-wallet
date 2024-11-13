@@ -6,7 +6,7 @@ import { createEncryptionHelper } from "./helper/encryptionHelper";
 import { checkMintQuote, mintProofs } from "$lib/actions/actions";
 
 
-const encryptionHelper = await createEncryptionHelper<StoredMintQuote>("encrypted-mint-quotes")
+const encryptionHelper = createEncryptionHelper<StoredMintQuote>("encrypted-mint-quotes")
 
 const createMintQuotesStore = () => {
     const initialMintQuotes: Array<StoredMintQuote> = [];

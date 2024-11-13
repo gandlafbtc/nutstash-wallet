@@ -4,7 +4,7 @@
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import { version } from "$lib/stores/static/version";
-    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet } from "lucide-svelte";
+    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
     import Divider from "$lib/elements/ui/Divider.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
@@ -228,9 +228,12 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"https://github.com/gandlafbtc/nutstash-wallet/issues"} {...props} target='_blank' rel="noopener noreferrer">
                                     <AlertCircle></AlertCircle>
-                                    Report Issue
+                                    <span class="flex gap-1 items-center">
+                                        Report Issue
+                                        <ExternalLink class="w-4 h-4"></ExternalLink>
+                                    </span>
                                 </a>
                                 {/snippet}
                             </Sidebar.MenuButton>
@@ -238,7 +241,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/wallet/community"} {...props} >
                                     <Send></Send>
                                     Community
                                 </a>
@@ -248,7 +251,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/donate"} {...props}>
                                     <Heart></Heart>
                                     Donate
                                 </a>
@@ -316,7 +319,7 @@
                         {/snippet}
                     </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
-                <Divider></Divider>
+                <!-- <Divider></Divider>
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
@@ -327,7 +330,7 @@
                         {/snippet}
                     </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
-                
+                 -->
             </Sidebar.Menu>
             </Sidebar.GroupContent>
             

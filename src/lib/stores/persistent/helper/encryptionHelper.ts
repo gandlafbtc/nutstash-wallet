@@ -8,11 +8,11 @@ import type { EncryptedStore } from "$lib/db/models/types";
 
 export type EncryptionHelper<T> = { encrypt: (o: T[]) => Promise<void>, decrypt: () => Promise<T[]> };
 
-export const createEncryptionHelper = async <T>(dbStoreName: StoreNames<NutstashDB>): Promise<EncryptionHelper<T>>  => {
-	const db = await DB.getInstance();
-
+export const createEncryptionHelper = <T>(dbStoreName: StoreNames<NutstashDB>): EncryptionHelper<T>  => {
+	
 	const encrypt = async <T>(o: T): Promise<void> => {
 		try {
+			const db = await DB.getInstance();
 			const k = get(key)
 			if (!k) {
 				throw new Error("Key not set");
@@ -25,8 +25,9 @@ export const createEncryptionHelper = async <T>(dbStoreName: StoreNames<Nutstash
 	}
 
 	const decrypt = async <T>(): Promise<T[]> => {
+		
 		try {
-			
+			const db = await DB.getInstance();
 			const encrypted = await db.get(dbStoreName, 'default') as EncryptedStore;
 			if (!encrypted) {
 				return []

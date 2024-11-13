@@ -12,9 +12,9 @@ import { selectedMints } from '../local/selectedMints';
 import { getHostFromUrl } from '$lib/util/utils';
 
 
-const encryptionHelper = await createEncryptionHelper<Mint>('encrypted-mints')
+const encryptionHelper = createEncryptionHelper<Mint>('encrypted-mints')
 
-export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>) => {
+export const createMintsStore = (encryptionHelper: EncryptionHelper<Mint>) => {
 	const store = writable<Mint[]>([]);
 	const defaults = createDefaultStoreFunctions(encryptionHelper, store);
 
@@ -43,7 +43,7 @@ export const createMintsStore = async (encryptionHelper: EncryptionHelper<Mint>)
 	};
 }
 
-export const mints = await createMintsStore(encryptionHelper)
+export const mints = createMintsStore(encryptionHelper)
 
 mints.subscribe((mints)=> {
 	const urls = mints.map(m=> m.url)

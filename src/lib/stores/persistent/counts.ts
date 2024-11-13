@@ -4,7 +4,7 @@ import { createDefaultStoreFunctions } from "./helper/storeHelper";
 import { createEncryptionHelper } from "./helper/encryptionHelper";
 
 
-const encryptionHelper = await createEncryptionHelper<KeysetCount>("encrypted-counts")
+const encryptionHelper = createEncryptionHelper<KeysetCount>("encrypted-counts")
 
 const createCountsStore = () => {
     const initialCounts: Array<KeysetCount> = [];

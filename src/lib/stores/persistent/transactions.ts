@@ -4,7 +4,7 @@ import { createDefaultStoreFunctions } from "./helper/storeHelper";
 import { createEncryptionHelper } from "./helper/encryptionHelper";
 
 
-const encryptionHelper = await createEncryptionHelper<StoredTransaction>("encrypted-transactions");
+const encryptionHelper = createEncryptionHelper<StoredTransaction>("encrypted-transactions");
 
 const createTransactionsStore = () => {
     const initialTransactions: Array<StoredTransaction> = [];

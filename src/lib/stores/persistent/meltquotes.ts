@@ -5,7 +5,7 @@ import { createDefaultStoreFunctions } from "./helper/storeHelper";
 import { createEncryptionHelper } from "./helper/encryptionHelper";
 
 
-const encryptionHelper = await createEncryptionHelper<StoredMeltQuote>("encrypted-melt-quotes")
+const encryptionHelper = createEncryptionHelper<StoredMeltQuote>("encrypted-melt-quotes")
 
 const createMeltQuotesStore = () => {
     const initialMeltQuotes: Array<StoredMeltQuote> = [];

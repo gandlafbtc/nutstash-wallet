@@ -7,9 +7,9 @@ import { mnemonicToSeed } from '@scure/bip39';
 
 
 
-const encryptionHelper = await createEncryptionHelper<StoredSeed>('encrypted-mnemonics')
+const encryptionHelper = createEncryptionHelper<StoredSeed>('encrypted-mnemonics')
 
-export const createSeedStore = async (encryptionHelper: EncryptionHelper<StoredSeed>) => {
+export const createSeedStore = (encryptionHelper: EncryptionHelper<StoredSeed>) => {
     const store = writable<StoredSeed[]>([]);
 	const defaults = createDefaultStoreFunctions(encryptionHelper, store);
     
@@ -22,7 +22,7 @@ export const createSeedStore = async (encryptionHelper: EncryptionHelper<StoredS
 
 export const seed = writable<Uint8Array>();
 
-export const mnemonic = await createSeedStore(encryptionHelper)
+export const mnemonic = createSeedStore(encryptionHelper)
 
 mnemonic.subscribe(async (value)=> {
     if (value.length) {
