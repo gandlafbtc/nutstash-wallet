@@ -145,6 +145,9 @@
                 token
             {:else if amount.length}
                 <div class="flex flex-col gap-2 items-center justify-center">
+                    <div class="w-80">
+                        <MintSelector bind:mint></MintSelector>
+                    </div>
                     <div class="flex gap-2 justify-between w-80 items-center">
                         <button
                             class="text-2xl break-all cursor-text w-full text-start"
@@ -154,10 +157,6 @@
                         </button>
                         <UnitSelector bind:currentUnit selectedMints={[mint]}
                         ></UnitSelector>
-                    </div>
-                    <div class="text-sm text-secondary">via</div>
-                    <div class="w-80">
-                        <MintSelector bind:mint></MintSelector>
                     </div>
                     <div class="w-80 py-5">
                         <Button

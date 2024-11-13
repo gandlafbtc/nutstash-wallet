@@ -17,6 +17,7 @@
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
     let mintUrlToAdd = $state('') 
+    const sidebar = Sidebar.useSidebar()
 
     const addMint = async () => {
         try {
@@ -71,7 +72,7 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                                <a href={"/#/wallet/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/"} {...props}>
                                     <Wallet></Wallet>
                                     Wallet
                                 </a>
@@ -81,7 +82,7 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                                <a href={"/#/wallet/contacts"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/contacts"} {...props}>
                                     <Contact></Contact>
                                     Contacts
                                 </a>
@@ -145,7 +146,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/mints"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/mints"} {...props}>
                                     <Landmark></Landmark>
                                     Mints
                                 </a>
@@ -155,7 +156,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/currency"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/currency"} {...props}>
                                     <Bitcoin></Bitcoin>
                                     Currencies
                                 </a>
@@ -165,7 +166,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/security"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/security"} {...props}>
                                     <ShieldCheck></ShieldCheck>
                                     Security
                                 </a>
@@ -176,7 +177,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/keys"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/keys"} {...props}>
                                     <Key></Key>
                                     Keys
                                 </a>
@@ -186,7 +187,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/nostr"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/nostr"} {...props}>
                                     <Network></Network>
                                     Nostr
                                 </a>
@@ -196,7 +197,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/ecash"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/ecash"} {...props}>
                                     <Coins></Coins>
                                     Ecash settings
                                 </a>
@@ -206,7 +207,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/wallet/settings/backup"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/backup"} {...props}>
                                     <Save></Save>
                                     Backup
                                 </a>
@@ -227,7 +228,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/"} {...props}>
                                     <AlertCircle></AlertCircle>
                                     Report Issue
                                 </a>
@@ -237,7 +238,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/"} {...props}>
                                     <Send></Send>
                                     Community
                                 </a>
@@ -247,7 +248,7 @@
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>
                                 {#snippet child({ props })}
-                                <a href={"/#/"} {...props}>
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/"} {...props}>
                                     <Heart></Heart>
                                     Donate
                                 </a>
@@ -268,7 +269,7 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                            <a href={"/#/wallet/ecash"} {...props}>
+                            <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/ecash"} {...props}>
                                 <Coins></Coins>
                                 Ecash
                             </a>
@@ -278,7 +279,7 @@
                     <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/wallet/history"} {...props}>
+                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/history"} {...props}>
                             <History></History>
                             History
                         </a>
@@ -288,7 +289,7 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/wallet/receive/ln"} {...props}>
+                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/receive/ln"} {...props}>
                             <ReceiptText></ReceiptText>
                             Invoices
                         </a>
@@ -298,7 +299,7 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/wallet/send/ln"} {...props}>
+                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/send/ln"} {...props}>
                             <CreditCard></CreditCard>
                             Payments
                         </a>
@@ -308,7 +309,7 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                        <a href={"/#/wallet/send/cashu"} {...props}>
+                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/send/cashu"} {...props}>
                             <ArrowLeftRight></ArrowLeftRight>
                             Transactions
                         </a>
@@ -334,7 +335,7 @@
     </Sidebar.Content>
     <Sidebar.Footer class="flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">
         <p class="text-xs opacity-35">
-            Made by <a class="underline" href="https://github.com/gandlafbtc">
+            Made by <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} class="underline" href="https://github.com/gandlafbtc">
                 @gandlaf21
             </a>
         </p>

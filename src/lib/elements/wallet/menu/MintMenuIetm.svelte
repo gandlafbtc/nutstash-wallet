@@ -7,6 +7,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import type { Mint } from "$lib/db/models/types";
     import { getHostFromUrl } from "$lib/util/utils";
     import { toast } from "svelte-sonner";
+    const sidebar = Sidebar.useSidebar()
 
 
   const {mint}: {mint:Mint} = $props()
@@ -31,7 +32,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 <Sidebar.MenuItem>
     <Sidebar.MenuButton>
       {#snippet child({ props })}
-        <a href={"/#/wallet/mint/"+ getHostFromUrl(mint.url)} {...props}>
+        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/mint/"+ getHostFromUrl(mint.url)} {...props}>
           <span class="text-xs">{mint.url}</span>
           {#if isLoading}
             <LoaderCircle class='animate-spin'></LoaderCircle>
