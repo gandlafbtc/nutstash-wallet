@@ -34,6 +34,7 @@ import MeltQuoteItem from "./elements/wallet/send/ln/MeltQuoteItem.svelte";
 import Send from "./elements/wallet/send/Send.svelte";
 import ChangePassword from "./elements/security/ChangePassword.svelte";
 import RestoreSeedView from "./elements/settings/backup/restore/RestoreSeedView.svelte";
+import Scan from "./elements/wallet/scanner/Scan.svelte";
 
 export const routes = {
     '/': Loading,
@@ -72,6 +73,8 @@ export const walletRoutes = {
     '/ecash/:type/:secret': EcashDetailView,
     
     '/history': HistoryView,
+
+    '/scan': Scan,
     
     '/receive': ReceiveView,
     '/receive/ln': MintQuoteListView,

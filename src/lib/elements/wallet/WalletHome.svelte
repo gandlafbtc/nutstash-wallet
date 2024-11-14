@@ -16,6 +16,7 @@
     import CompactHistory from "../data/history/CompactHistory.svelte";
 import NumberFlow, { type Format } from '@number-flow/svelte'
     import { getDivider } from "$lib/util/utils";
+    import QuickPaste from "./QuickPaste.svelte";
 
   let currentUnit = $state("sat");
 
@@ -30,11 +31,7 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
     <MintSelectorMulti></MintSelectorMulti>
   </div>
   <div class="w-80 h-28">
-    <Textarea 
-    class="w-80 border-dashed resize-none rounded-none focus-visible:outline-transparent focus:outline-transparent"
-    
-    inputmode="none"
-    placeholder="Quickpaste: paste token, invoice etc." ></Textarea>
+    <QuickPaste></QuickPaste>
   </div>
   <p class="text-7xl">
     <NumberFlow value={amount/divider} format={{ minimumFractionDigits: fraction, maximumFractionDigits: fraction}}></NumberFlow> {getUnitSymbol(currentUnit, false)}

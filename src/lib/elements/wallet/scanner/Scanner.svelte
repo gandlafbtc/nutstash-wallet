@@ -10,6 +10,8 @@
     import { onDestroy, onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import { URDecoder } from "@gandlaf21/bc-ur";
+    import ScannerDrawer from "./ScannerDrawer.svelte";
+    import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
 
     let videoElem: HTMLVideoElement | undefined = $state();
     let qrScanner: QrScanner | undefined = $state();
@@ -105,14 +107,22 @@
     const lnurlScanned = () => {};
 
     const lnInvoiceScanned = (invoice: string) => {
+        closeDrawers();
         scannedInvoiceStore.set(invoice);
         push("/wallet/receive/ln");
     };
 
     const cashuTokenScanned = (token: string) => {
+        closeDrawers();
         scannedTokenStore.set(token);
         push("/wallet/receive/cashu");
     };
+
+    const closeDrawers = () => {
+        openScannerDrawer.set(false)
+        openReceiveDrawer.set(false)
+        openSendDrawer.set(false)
+    }
 </script>
 
 <div class="flex flex-col w-full items-center justify-center min-h-96">
