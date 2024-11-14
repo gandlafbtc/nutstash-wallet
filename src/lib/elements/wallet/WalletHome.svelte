@@ -3,7 +3,7 @@
     formatAmount,
     getUnitSymbol,
   } from "$lib/util/walletUtils";
-  import { Download, QrCode, Upload } from "lucide-svelte";
+  import { Download, Nfc, QrCode, SmartphoneNfc, Upload } from "lucide-svelte";
   import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
   import MintSelectorMulti from "$lib/elements/ui/MintSelectorMulti.svelte";
   import { selectedMints } from "$lib/stores/local/selectedMints";
@@ -17,6 +17,8 @@
 import NumberFlow, { type Format } from '@number-flow/svelte'
     import { getDivider } from "$lib/util/utils";
     import QuickPaste from "./QuickPaste.svelte";
+    import Toggle from "$lib/components/ui/toggle/toggle.svelte";
+    import NfcListener from "./NFCListener.svelte";
 
   let currentUnit = $state("sat");
 
@@ -33,7 +35,11 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
   <div class="w-80 h-28">
     <QuickPaste></QuickPaste>
   </div>
-  <p class="text-7xl">
+  <div>
+
+   <NfcListener></NfcListener>
+  </div>
+  <p class="text-5xl">
     <NumberFlow value={amount/divider} format={{ minimumFractionDigits: fraction, maximumFractionDigits: fraction}}></NumberFlow> {getUnitSymbol(currentUnit, false)}
     <span class="text-xs">
       {(currentUnit)}
