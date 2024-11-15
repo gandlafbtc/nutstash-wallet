@@ -13,7 +13,7 @@
             const ndef = new NDEFReader();
             console.log(ndef)
             ndef.write(
-                "Hello World"
+                token
             ).then(() => {
                 isOpen = false
                 toast.info('Token has been written to nfc tag')

@@ -51,6 +51,7 @@
             };
             }).catch(error => {
             console.log(`Error! Scan failed to start: ${error}.`);
+            nfcReady = true
         });
         return ()=> {abortController.abort()}
         } catch (error) {
