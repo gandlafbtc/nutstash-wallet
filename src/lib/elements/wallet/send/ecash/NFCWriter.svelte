@@ -10,10 +10,19 @@
 
     onMount(() => {
         try {
+            const chunkLen = 100
+            const tokenChunks = []
+            for (var i = 0, charsLength = token.length; i < charsLength; i += chunkLen) {
+                tokenChunks.push(token.substring(i, i + chunkLen));
+            }
+            const records = tokenChunks.map((c)=> {return {
+                recordType: 'text',
+                data: c
+            }})
             const ndef = new NDEFReader();
             console.log(ndef)
             ndef.write(
-                token
+                {records}
             ).then(() => {
                 isOpen = false
                 toast.info('Token has been written to nfc tag')
