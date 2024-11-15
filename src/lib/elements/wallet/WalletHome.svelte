@@ -17,8 +17,7 @@
 import NumberFlow, { type Format } from '@number-flow/svelte'
     import { getDivider } from "$lib/util/utils";
     import QuickPaste from "./QuickPaste.svelte";
-    import Toggle from "$lib/components/ui/toggle/toggle.svelte";
-    import NfcListener from "./NFCListener.svelte";
+    import NfcListenerButton from "./send/ecash/NFCListenerButton.svelte";
 
   let currentUnit = $state("sat");
 
@@ -37,7 +36,7 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
   </div>
   <div>
 
-   <NfcListener></NfcListener>
+   <NfcListenerButton></NfcListenerButton>
   </div>
   <p class="text-5xl">
     <NumberFlow value={amount/divider} format={{ minimumFractionDigits: fraction, maximumFractionDigits: fraction}}></NumberFlow> {getUnitSymbol(currentUnit, false)}
