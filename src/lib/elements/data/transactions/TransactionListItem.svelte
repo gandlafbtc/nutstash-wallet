@@ -11,6 +11,8 @@
     import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import Button from "$lib/components/ui/button/button.svelte";
     import BigTokenQr from "$lib/elements/ui/BigTokenQR.svelte";
+    import NfcDrawer from "$lib/elements/wallet/send/ecash/NFCDrawer.svelte";
+    import SendViaNfcButton from "$lib/elements/wallet/send/ecash/SendViaNFCButton.svelte";
 
     let {
         tx,
@@ -27,6 +29,8 @@
         memo: tx.memo,
     });
     let encodedToken = $derived(getEncodedTokenV4(token));
+
+    let nfcDrawerIsOpen = $state(false)
 </script>
 
 <Card.Root class="m-3">
@@ -93,5 +97,10 @@
         {:else}
             <Button href="/#/wallet/">Close</Button>
         {/if}
+        {#if !isListView}
+             <SendViaNfcButton token={encodedToken}></SendViaNfcButton>
+        {/if}
     </Card.Footer>
 </Card.Root>
+
+     
