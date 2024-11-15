@@ -6,8 +6,12 @@
     let scanned = $state("");
 
     onMount(() => {
+        const abortController = new AbortController()
+        abortController.signal.onabort = event => {
+            toast.info("Aborted nfc scan");
+        };
         const ndef = new NDEFReader();
-        ndef.scan()
+        ndef.scan({signal: abortController.signal})
             .then(() => {
                 toast.info("Scanning for NFC tag");
                 ndef.onreadingerror = () => {
@@ -41,6 +45,7 @@
                 console.log(`Error! Scan failed to start: ${error}.`);
             });
         return () => {
+            abortController.abort()
         };
     });
 </script>
