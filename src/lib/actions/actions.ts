@@ -73,10 +73,10 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 
     const proofs = await wallet.mintProofs(quote.amount, quote.quote, { counter: currentCount })
 
-    await proofsStore.addMany(proofs.proofs)
-    if (proofs?.proofs?.length) {
-        quoteToStore.out = proofs.proofs
-        let endCount = proofs.proofs.length
+    await proofsStore.addMany(proofs)
+    if (proofs.length) {
+        quoteToStore.out = proofs
+        let endCount = proofs.length
         endCount = endCount + currentCount
         await updateCount(wallet.keysetId, endCount)
         quoteToStore.counts = { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) }
@@ -85,7 +85,7 @@ export const mintProofs = async (quote: StoredMintQuote) => {
     quoteToStore.state = updatedQuote.state
     quoteToStore.lastChangedAt = Date.now()
     await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
-    toast.success(`Received ${formatAmount(getAmountForTokenSet(proofs.proofs), quoteToStore.unit)}`, {
+    toast.success(`Received ${formatAmount(getAmountForTokenSet(proofs), quoteToStore.unit)}`, {
         description: `At mint ${quoteToStore.mintUrl}`
     })
 }

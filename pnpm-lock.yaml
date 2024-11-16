@@ -19,8 +19,8 @@ importers:
         version: 2.0.1
     devDependencies:
       '@cashu/cashu-ts':
-        specifier: 2.0.0-rc1
-        version: 2.0.0-rc1
+        specifier: ../cashu-ts
+        version: link:../cashu-ts
       '@cashu/crypto':
         specifier: ^0.3.4
         version: 0.3.4
@@ -182,12 +182,6 @@ packages:
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
     engines: {node: '>=6.9.0'}
-
-  '@cashu/cashu-ts@2.0.0-rc1':
-    resolution: {integrity: sha512-39459l7x/fUMEgOsCdGLLl6rMekO4nbv+wEuavmyElh8hgN8t66wcb29AJvdFTb6K3lPACKF2rs/jAlPYrN7Ng==}
-
-  '@cashu/crypto@0.2.7':
-    resolution: {integrity: sha512-1aaDfUjiHNXoJqg8nW+341TLWV9W28DsVNXJUKcHL0yAmwLs5+56SSnb8LLDJzPamLVoYL0U0bda91klAzptig==}
 
   '@cashu/crypto@0.3.4':
     resolution: {integrity: sha512-mfv1Pj4iL1PXzUj9NKIJbmncCLMqYfnEDqh/OPxAX0nNBt6BOnVJJLjLWFlQeYxlnEfWABSNkrqPje1t5zcyhA==}
@@ -2054,22 +2048,6 @@ snapshots:
   '@babel/runtime@7.26.0':
     dependencies:
       regenerator-runtime: 0.14.1
-
-  '@cashu/cashu-ts@2.0.0-rc1':
-    dependencies:
-      '@cashu/crypto': 0.2.7
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
-      '@scure/bip32': 1.5.0
-      buffer: 6.0.3
-
-  '@cashu/crypto@0.2.7':
-    dependencies:
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
-      '@scure/bip32': 1.5.0
-      '@scure/bip39': 1.4.0
-      buffer: 6.0.3
 
   '@cashu/crypto@0.3.4':
     dependencies:

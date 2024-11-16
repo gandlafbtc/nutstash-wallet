@@ -22,7 +22,7 @@
     "@tauri-apps/plugin-shell": "^2.0.1"
   },
   "devDependencies": {
-    "@cashu/cashu-ts": "2.0.0-rc1",
+    "@cashu/cashu-ts": "../cashu-ts",
     "@cashu/crypto": "^0.3.4",
     "@gandlaf21/bc-ur": "^1.1.12",
     "@gandlaf21/bolt11-decode": "^3.1.1",

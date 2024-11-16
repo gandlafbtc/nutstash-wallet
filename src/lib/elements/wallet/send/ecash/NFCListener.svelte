@@ -1,4 +1,5 @@
 <script>
+    import { getDecodedToken, getEncodedTokenV4, rawTokenToToken } from "@cashu/cashu-ts";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
     import { push } from "svelte-spa-router";
@@ -24,13 +25,16 @@
                     scanned = "";
                     const message = event.message;
                     for (const record of message.records) {
-                        if (record.recordType !== "text") {
+                        if (record.recordType !== "mime" || record.mediaType !== 'application/octet-stream') {
                             continue;
                         }
-                        const textDecoder = new TextDecoder(record.encoding);
-                        const decoded = textDecoder.decode(record.data);
-                        scanned = scanned + decoded;
+                        if (!record.data) {
+                            continue
+                        }
+                        const uint8 = new Uint8Array(record.data.buffer)
+                        scanned = getEncodedTokenV4(rawTokenToToken(uint8))
                     }
+                    
                     if (scanned.startsWith("cashu")) {
                         toast.info("Cashu token scanned");
                         push("/wallet/receive/cashu/" + scanned);

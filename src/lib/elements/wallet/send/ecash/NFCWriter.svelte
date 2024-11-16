@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { getDecodedToken, tokenToRawToken } from "@cashu/cashu-ts";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
     let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } =
@@ -10,15 +11,14 @@
 
     onMount(() => {
         try {
-            const chunkLen = 100
-            const tokenChunks = []
-            for (var i = 0, charsLength = token.length; i < charsLength; i += chunkLen) {
-                tokenChunks.push(token.substring(i, i + chunkLen));
-            }
-            const records = tokenChunks.map((c)=> {return {
-                recordType: 'text',
-                data: c
-            }})
+            const decodedToken = getDecodedToken(token)
+            const rawToken = tokenToRawToken(token)
+            const uint = new Uint8Array()
+            const records: NDEFRecord[] = [{
+                recordType: 'mime',
+                mediaType: "application/octet-stream",
+                data: new DataView(rawToken.buffer, rawToken.byteOffset, rawToken.byteLength)
+         }]
             const ndef = new NDEFReader();
             console.log(ndef)
             ndef.write(
