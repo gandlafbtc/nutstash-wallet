@@ -71,7 +71,6 @@
             amount = entered;
             token = "";
         } else {
-            console.log("invalid");
             token = "";
             amount = "";
         }

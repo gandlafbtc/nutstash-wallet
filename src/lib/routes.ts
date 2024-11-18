@@ -35,6 +35,10 @@ import Send from "./elements/wallet/send/Send.svelte";
 import ChangePassword from "./elements/security/ChangePassword.svelte";
 import RestoreSeedView from "./elements/settings/backup/restore/RestoreSeedView.svelte";
 import Scan from "./elements/wallet/scanner/Scan.svelte";
+import KeysList from "./elements/wallet/keys/KeysList.svelte";
+import AddressesView from "./elements/addresses/AddressesView.svelte";
+import Chat from "./elements/contacts/chat/Chat.svelte";
+import ChatsView from "./elements/contacts/chat/ChatsView.svelte";
 
 export const routes = {
     '/': Loading,
@@ -68,6 +72,9 @@ export const walletRoutes = {
     "/mint/": MintListView,
     
     '/contacts': ContactsView,
+    '/contacts/chat': ChatsView,
+    '/contacts/chat/:npub': Chat,
+    '/address': AddressesView,
     
     '/ecash': EcashView,
     '/ecash/:type/:secret': EcashDetailView,
@@ -75,7 +82,7 @@ export const walletRoutes = {
     '/history': HistoryView,
 
     '/scan': Scan,
-    
+
     '/receive': ReceiveView,
     '/receive/ln': MintQuoteListView,
     '/receive/ln/:quote': MintQuoteItem,

@@ -52,7 +52,7 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
         await encryptionHelper.encrypt(get(store))
     }
     const add = async (o: T) => {
-        store.update(context => [...context, o])
+        store.update(context => [o,...context])
         await encryptionHelper.encrypt(get(store))
     }
 

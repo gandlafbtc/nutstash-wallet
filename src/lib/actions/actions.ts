@@ -73,10 +73,10 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 
     const proofs = await wallet.mintProofs(quote.amount, quote.quote, { counter: currentCount })
 
-    await proofsStore.addMany(proofs.proofs)
-    if (proofs?.proofs?.length) {
-        quoteToStore.out = proofs.proofs
-        let endCount = proofs.proofs.length
+    await proofsStore.addMany(proofs)
+    if (proofs.length) {
+        quoteToStore.out = proofs
+        let endCount = proofs.length
         endCount = endCount + currentCount
         await updateCount(wallet.keysetId, endCount)
         quoteToStore.counts = { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) }
@@ -85,19 +85,19 @@ export const mintProofs = async (quote: StoredMintQuote) => {
     quoteToStore.state = updatedQuote.state
     quoteToStore.lastChangedAt = Date.now()
     await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, "quote")
-    toast.success(`Received ${formatAmount(getAmountForTokenSet(proofs.proofs), quoteToStore.unit)}`, {
+    toast.success(`Received ${formatAmount(getAmountForTokenSet(proofs), quoteToStore.unit)}`, {
         description: `At mint ${quoteToStore.mintUrl}`
     })
 }
 
-export const meltProofs = async (quote: StoredMeltQuote) => {
+export const meltProofs = async (quote: StoredMeltQuote, options?: {privkey?: string}) => {
     if (quote.state === EXPIRED.EXPIRED) {
         throw new Error("Melt quote expired");
     }
     const wallet = await getWalletWithUnit(get(mints), quote.mintUrl, quote.unit)
     const quoteToStore = { ...quote }
     const totalAmount =  quote.amount+quote.fee_reserve
-    const {aproxProofs,currentCount, endCount ,keep,keysetId, send } = await doSend(quote.mintUrl, totalAmount,quote.unit, true)
+    const {aproxProofs,currentCount, endCount ,keep,keysetId, send } = await doSend(quote.mintUrl, totalAmount, { unit: quote.unit, privkey : options?.privkey })
     const qquote: MeltQuoteResponse = {
         quote: quote.quote,
         amount: quote.amount,
@@ -118,7 +118,7 @@ export const meltProofs = async (quote: StoredMeltQuote) => {
     await meltQuotesStore.addOrUpdate(quoteToStore.quote, quoteToStore, 'quote')
 }
 
-export const receiveEcash = async (token: string | Token): Promise<{ untrustedMint?: string, proofs: Proof[] }> => {
+export const receiveEcash = async (token: string | Token, options?:{pubkey?:string, privkey?:string}): Promise<{ untrustedMint?: string, proofs: Proof[] }> => {
     if (typeof token === "string") {
         try {
             token = getDecodedToken(token)
@@ -132,7 +132,7 @@ export const receiveEcash = async (token: string | Token): Promise<{ untrustedMi
     }
     const wallet = await getWalletWithUnit(get(mints), token.mint, token.unit)
     const currentCount = getCurrentCount(wallet.keysetId)
-    const proofs = await wallet.receive(token, { counter: currentCount })
+    const proofs = await wallet.receive(token, { counter: currentCount, ...options })
     let endCount = currentCount
     if (proofs?.length) {
         await proofsStore.addMany(proofs)
@@ -160,15 +160,15 @@ export const receiveEcash = async (token: string | Token): Promise<{ untrustedMi
 
 }
 
-const doSend = async (mintUrl: string, amount: number, unit?: string, includeFees?: boolean) => {
-    const wallet = await getWalletWithUnit(get(mints), mintUrl, unit)
+const doSend = async (mintUrl: string, amount: number, options?:{unit?: string, includeFees?: boolean, pubkey?: string, privkey?: string}) => {
+    const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit)
     const mintUnitProofs = proofsStore.getByKeysetIds(wallet.keysets.map((ks) => ks.id))
-    const aproxProofs = getAproxAmount(amount, mintUnitProofs, includeFees)
+    const aproxProofs = getAproxAmount(amount, mintUnitProofs, options?.includeFees)
     if (!aproxProofs) {
         throw new Error("Not enough funds");
     }
     const currentCount = getCurrentCount(wallet.keysetId)
-    const { send, keep } = await wallet.send(amount, aproxProofs, { counter: currentCount, includeFees })
+    const { send, keep } = await wallet.send(amount, aproxProofs, { counter: currentCount, includeFees:  options?.includeFees, privkey: options?.privkey, pubkey: options?.pubkey })
     const mintUnitProofIds = mintUnitProofs.map((p) => p.secret)
     await proofsStore.removeMany(aproxProofs.map(p=>p.secret), 'secret')
     await proofsStore.addMany(keep)
@@ -181,8 +181,8 @@ const doSend = async (mintUrl: string, amount: number, unit?: string, includeFee
     return { send, keep, endCount , aproxProofs, keysetId: wallet.keysetId, currentCount }
 }
 
-export const sendEcash = async (mintUrl: string, amount: number, unit?: string, includeFees?: boolean) => {
-    const {send, keep, aproxProofs, endCount, keysetId, currentCount } = await  doSend(mintUrl, amount, unit, includeFees)
+export const sendEcash = async (mintUrl: string, amount: number, options?:{unit?: string, includeFees?: boolean, pubkey?: string, privkey?: string}) => {
+    const {send, keep, aproxProofs, endCount, keysetId, currentCount } = await  doSend(mintUrl, amount, options)
 
     const transactionToAdd: StoredTransaction = {
         id: bytesToHex(randomBytes(12)),
@@ -200,7 +200,7 @@ export const sendEcash = async (mintUrl: string, amount: number, unit?: string, 
     }
 
     await transactionsStore.addOrUpdate(transactionToAdd.id, transactionToAdd, 'id')
-    toast.info('Ecash token created', {description: formatAmount(amount, unit)})
+    toast.info('Ecash token created', {description: formatAmount(amount, options?.unit)})
     return { send, keep, txId: transactionToAdd.id }
 }
 

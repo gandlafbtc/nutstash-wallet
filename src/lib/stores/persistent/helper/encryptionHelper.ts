@@ -37,7 +37,6 @@ export const createEncryptionHelper = <T>(dbStoreName: StoreNames<NutstashDB>): 
 				throw new Error("Key not set");
 			}
 			const decrypted = await encryption.decrypt<T>(encrypted.cypher, k, encrypted.iv) as T[]
-			console.log(decrypted)
 			return decrypted
 		} catch (error) {
 			throw error	

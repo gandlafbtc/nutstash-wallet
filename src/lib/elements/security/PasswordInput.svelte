@@ -23,7 +23,6 @@
 			unlock();
 		} else {
 			setTimeout(() => {
-				console.log(inputFocus);
 				inputFocus?.focus();
 			}, 0);
 		}

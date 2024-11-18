@@ -27,9 +27,6 @@
 {#if isInit}
 	<ModeWatcher></ModeWatcher>
 	<StorageManager>
-		{#if $useNostr}
-			<!-- <NostrSocket /> -->
-		{/if}
 		<div class="w-full h-full fixed">
 			{@render children?.()}
 		</div>

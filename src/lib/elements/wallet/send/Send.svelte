@@ -5,6 +5,7 @@
     import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import {
+    checkValidPubkey,
         formatAmount,
         getAmountForTokenSet,
         getAproxAmount,
@@ -12,7 +13,7 @@
         getUnitsForMints,
         isNumeric,
     } from "$lib/util/walletUtils";
-    import { QrCode, Zap, LoaderCircle, Banknote, Copy } from "lucide-svelte";
+    import { QrCode, Zap, LoaderCircle, Banknote, Copy, HandCoins, Check, X, Coins } from "lucide-svelte";
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
@@ -28,7 +29,10 @@
     import { copyTextToClipboard } from "$lib/util/utils";
     import type { Proof } from "$lib/db/models/types";
     import Switch from "$lib/components/ui/switch/switch.svelte";
-
+    import * as Tooltip from "$lib/components/ui/tooltip";
+    import Badge from "$lib/components/ui/badge/badge.svelte";
+    import Input from "$lib/components/ui/input/input.svelte";
+    import { isValid } from "date-fns";
     let entered: string = $state("");
 
     const getCurrentUnit = () => {
@@ -63,6 +67,8 @@
 
     let tokenOptions = $state({
         p2pk: false,
+        pubkey: '',
+        isValidPubkey: false,
         customIn: false,
         customOut: false,
         includeReceiverFees: false,
@@ -130,7 +136,15 @@
                 toast.warning("Not enough funds");
                 return
              }
-             const {txId} = await sendEcash(mint.url, amount??0, currentUnit, tokenOptions.includeReceiverFees)
+             const sendOptions: {unit: string, includeFees: boolean, pubkey?: string} = {unit: currentUnit, includeFees:tokenOptions.includeReceiverFees}
+             if (tokenOptions.p2pk) {
+                if (!checkValidPubkey(tokenOptions.pubkey)) {
+                    toast("Invalid public key");
+                    return
+                }
+                sendOptions.pubkey = tokenOptions.pubkey
+             }
+             const {txId} = await sendEcash(mint.url, amount??0, sendOptions)
              openSendDrawer.set(false)
              push('/wallet/send/cashu/'+txId)
         } catch (error) {
@@ -210,39 +224,123 @@
                         <TokenOptions bind:tokenOptions></TokenOptions>
                     </div>
 
-                    <div class="h-16 text-xs flex flex-col gap-1 w-full items-start justify-start">
+                    <div class="h-4 text-xs flex gap-5 w-full items-start justify-start">
                         <span>
                             {#if tokenOptions.includeReceiverFees}
-                            Include {formatAmount(1, currentUnit)} receiver fee
+                            <Tooltip.Provider>
+                                <Tooltip.Root>
+                                  <Tooltip.Trigger>
+                                    <div class="relative">
+                                        <HandCoins class='w-4 h-4'></HandCoins>
+                                        <div class="absolute top-0 -right-3">
+                                            <Check class="text-green-500 w-3 h-3"></Check>
+                                        </div>
+                                    </div>
+                                  </Tooltip.Trigger>
+                                  <Tooltip.Content>
+                                    <div class="flex gap-1 text-xs">
+                                        <p>Include receiver fee</p>
+                                        {formatAmount(1, currentUnit)}
+                                    </div>
+                                  </Tooltip.Content>
+                                </Tooltip.Root>
+                              </Tooltip.Provider>
                             {:else}
-                            Receiver fee is not included
+                            <Tooltip.Provider>
+                                <Tooltip.Root>
+                                  <Tooltip.Trigger>
+                                    <div class="relative">
+                                        <HandCoins class='w-4 h-4'></HandCoins>
+                                        <div class="absolute top-0 -right-3">
+                                            <X class="text-yellow-500 w-3 h-3"></X>
+                                        </div>
+                                    </div>
+                                  </Tooltip.Trigger>
+                                  <Tooltip.Content>
+                                    <div class="flex gap-1 text-xs">
+                                        <p>Receiver fee not included</p>
+                                    </div>
+                                  </Tooltip.Content>
+                                </Tooltip.Root>
+                              </Tooltip.Provider>
                             {/if}
                         </span>
-                            <span>
-                            Selected coins: {selectedProofs.map(p=>p.amount).join(', ')}
-                        </span>
+                                
+                        {#if getAmountForTokenSet(selectedProofs)>amount+(tokenOptions.includeReceiverFees?1:0) || tokenOptions.p2pk}
                         <span>
-                            {#if getAmountForTokenSet(selectedProofs)>amount+(tokenOptions.includeReceiverFees?1:0)}
+                            <Tooltip.Provider>
+                                <Tooltip.Root>
+                                  <Tooltip.Trigger>
+                                    <div class="relative">
+                                        <Coins class='w-4 h-4'></Coins>
+                                        <div class="absolute top-0 -right-3">
+                                            <X class="text-yellow-500 w-3 h-3"></X>
+
+                                        </div>
+                                    </div>
+                                  </Tooltip.Trigger>
+                                  <Tooltip.Content>
+                                    <div class="flex gap-1 text-xs items-center">
+                                        Selected coins: 
+                                        {#each selectedProofs.map(p=>p.amount) as amount}
+                                             <!-- content here -->
+                                             <Badge variant='outline' class='text-xs p-1'>
+                                                {amount}
+                                            </Badge>
+                                        {/each}
+                                            
+                                    </div>
+                                  </Tooltip.Content>
+                                </Tooltip.Root>
+                              </Tooltip.Provider>
+                            </span>
                             <span class="text-yellow-500">
-                                Token requires split: 
                                 {#await getFeeForProofs(selectedProofs)}
                                 <LoaderCircle class='animate-spin w-2 h-2'></LoaderCircle>
                                 {:then fee}
-                                {formatAmount(fee, currentUnit)} fee
+                                {formatAmount(fee, currentUnit)} swap fee
                                 {/await}
                             </span>
-                            {:else if getAmountForTokenSet(selectedProofs)<amount+(tokenOptions.includeReceiverFees?1:0)}
-                            <span class="text-red-500">
-                               Not enough funds
+                        {:else if getAmountForTokenSet(selectedProofs)<amount+(tokenOptions.includeReceiverFees?1:0)}
+                        <span class="text-red-500">
+                           Not enough funds
+                        </span>
+                        {:else}
+                        <span>
+                            <Tooltip.Provider>
+                                <Tooltip.Root>
+                                  <Tooltip.Trigger>
+                                    <div class="relative">
+                                        <Coins class='w-4 h-4'></Coins>
+                                        <div class="absolute top-0 -right-3">
+                                            <Check class="text-green-500 w-3 h-3"></Check>
+                                        </div>
+                                    </div>
+                                  </Tooltip.Trigger>
+                                  <Tooltip.Content>
+                                    <div class="flex gap-1 text-xs items-center">
+                                        Selected coins: 
+                                        <Badge variant='outline' class='text-xs p-1'>
+                                            {selectedProofs.map(p=>p.amount).join(', ')}
+                                        </Badge>
+                                    </div>
+                                  </Tooltip.Content>
+                                </Tooltip.Root>
+                              </Tooltip.Provider>
                             </span>
-                            {:else}
                             <span class="text-green-500">
                                 Token can be sent offline
                             </span>
                             {/if}
-                        </span>
-                    </div>
-                    <Button class="w-full" onclick={sendCashu} disabled={isLoading}>
+                        </div>
+                        <div class="h-10 w-full">
+
+                            {#if tokenOptions.p2pk}
+                            <!-- content here -->
+                            <Input placeholder='pubkey' bind:value={tokenOptions.pubkey} oninput={()=>tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey)} />
+                            {/if}
+                        </div>
+                    <Button class="w-full" onclick={sendCashu} disabled={ (tokenOptions.p2pk && !tokenOptions.isValidPubkey) ||isLoading|| getAmountForTokenSet(selectedProofs)<amount+(tokenOptions.includeReceiverFees?1:0)}>
                         {#if isLoading}
                             <LoaderCircle class='animate-spin'></LoaderCircle>
                         {:else}

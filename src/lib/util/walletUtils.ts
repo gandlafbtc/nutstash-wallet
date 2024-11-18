@@ -6,6 +6,7 @@ import { getBy, getByMany } from '$lib/stores/persistent/helper/storeHelper';
 import { get } from 'svelte/store';
 import { seed } from '$lib/stores/persistent/mnemonic';
 import type { Mint } from '$lib/db/models/types';
+import { nip05, nip19 } from 'nostr-tools';
 // import { parseSecret } from '@cashu/crypto/modules/client/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -312,3 +313,25 @@ export const getWalletWithUnit = async (mints: Mint[], mintUrl: string, unit = '
 	await wallet.getKeys()
 	return wallet;
 }
+
+export const checkValidPubkey = (pubkey: string) => {
+	return /^[0-9a-f]{66}$/i.test(pubkey)
+}
+
+export const getConvertedPubKey = async (key: string) => {
+	key = await resolveNip05(key);
+	let nostrPubKey = key.startsWith('npub') ? (nip19.decode(key).data as string) : key;
+	return nostrPubKey;
+};
+
+export const resolveNip05 = async (nostrAddr: string) => {
+	if (!nostrAddr.includes('.')) {
+		return nostrAddr;
+	}
+	const profile = await nip05.queryProfile(nostrAddr);
+	if (profile?.pubkey) {
+		return profile?.pubkey;
+	} else {
+		throw new Error('could not fetch nip-05');
+	}
+};

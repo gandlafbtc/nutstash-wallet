@@ -26,6 +26,7 @@ export class DB {
           db.createObjectStore('encrypted-melt-quotes')
           db.createObjectStore('encrypted-transactions')
           db.createObjectStore('encrypted-contacts')
+          db.createObjectStore('encrypted-messages')
           db.createObjectStore('encrypted-counts')
           db.createObjectStore('encrypted-proofs')
           db.createObjectStore('encrypted-spent-proofs')

@@ -26,7 +26,6 @@ export const mnemonic = createSeedStore(encryptionHelper)
 
 mnemonic.subscribe(async (value)=> {
     if (value.length) {
-        console.log(value[0].mnemonic)
         seed.set(await mnemonicToSeed(value[0].mnemonic))
     }
 })

@@ -1,5 +1,6 @@
 import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token, MintQuoteState, MeltQuoteState } from "@cashu/cashu-ts";
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
+import type { Event } from "nostr-tools";
 
 export enum EXPIRED  {
     EXPIRED = "EXPIRED"
@@ -60,7 +61,8 @@ export type StoredTransaction = {
  }
 
 export type Contact = {
-
+    npub: string
+    alias: string
 }
 
 export type KeysetCount = { keysetId: string; count: number }
@@ -79,22 +81,10 @@ export type EncryptedStore = {
     // preimage: hex
 }
 
-export type Message = {
-    type: MessageType;
-    date: number;
-    isRead: boolean;
-    data: MessageData;
-}
+export type Message = Event & {
+    wrapId: string
+    isRead?: boolean
 
-export enum MessageType {
-    NOSTR,
-
-}
-
-export type MessageData = {
-    content: string;
-    title?: string;
-    event?: string;
 }
 
 export type Mint = {
@@ -138,6 +128,12 @@ export type NostrSettings = {
 
 export type TokenSettings = {
     tokenCheckMode: TokenCheckMode
+}
+
+export type KeyPair = {
+    counter: number;
+    publicKey: string;
+    privateKey: string;
 }
 
 export enum TokenCheckMode {

@@ -22,12 +22,13 @@
     "@tauri-apps/plugin-shell": "^2.0.1"
   },
   "devDependencies": {
-    "@cashu/cashu-ts": "2.0.0-rc1",
+    "@cashu/cashu-ts": "2.0.0-rc3",
     "@cashu/crypto": "^0.3.4",
     "@gandlaf21/bc-ur": "^1.1.12",
     "@gandlaf21/bolt11-decode": "^3.1.1",
     "@noble/curves": "^1.6.0",
     "@noble/hashes": "^1.5.0",
+    "@nostr-dev-kit/ndk": "^2.10.6",
     "@number-flow/svelte": "^0.1.2",
     "@scure/bip32": "^1.5.0",
     "@scure/bip39": "^1.4.0",
@@ -38,7 +39,7 @@
     "@tauri-apps/cli": "^2.1.0",
     "autoprefixer": "^10.4.20",
     "bech32": "^2.0.0",
-    "bits-ui": "1.0.0-next.51",
+    "bits-ui": "1.0.0-next.58",
     "buffer": "^6.0.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

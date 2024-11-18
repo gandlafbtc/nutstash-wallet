@@ -4,7 +4,9 @@
     import * as Dialog  from "$lib/components/ui/dialog";
     import Input from "$lib/components/ui/input/input.svelte";
     import Toggle from "$lib/components/ui/toggle/toggle.svelte";
+    import { contactsStore } from "$lib/stores/persistent/contacts";
     import { countsStore } from "$lib/stores/persistent/counts";
+    import { keysStore } from "$lib/stores/persistent/keys";
     import { meltQuotesStore } from "$lib/stores/persistent/meltquotes";
     import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
     import { mints } from "$lib/stores/persistent/mints";
@@ -38,6 +40,8 @@
         meltQuotesStore: $meltQuotesStore,
         countsStore: $countsStore,
         mnemonic: $mnemonic,
+        keysStore: $keysStore,
+        contactsStore: $contactsStore,
     };
 
 

@@ -23,7 +23,7 @@
     }
 
     location.subscribe(crumbs => {
-        console.log(crumbs)
+        // console.log(crumbs)
     })
 
   </script>
