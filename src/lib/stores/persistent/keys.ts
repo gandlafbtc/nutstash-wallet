@@ -1,19 +1,18 @@
 import type { KeyPair } from "$lib/db/models/types";
 import { get, writable } from "svelte/store";
 import { createDefaultStoreFunctions } from "./helper/storeHelper";
-import { createEncryptionHelper } from "./helper/encryptionHelper";
+import { createEncryptionHelper, type EncryptionHelper } from "./helper/encryptionHelper";
 import {  getPublicKey } from "nostr-tools";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
-import { countsStore } from "./counts";
 import { seed } from "./mnemonic";
 import { HDKey } from "@scure/bip32";
 
 const STANDARD_DERIVATION_PATH = `m/129372'/0'`;
 const NOSTR_KEYS_PATH = `10101010`;
 
-const encryptionHelper = createEncryptionHelper<KeyPair>("encrypted-keys")
+const keysEncryptionHelper = createEncryptionHelper<KeyPair>("encrypted-keys")
 
-const createKeysStore = () => {
+const createKeysStore = (encryptionHelper: EncryptionHelper<KeyPair>, keysId: number) => {
     const initialKeys: Array<KeyPair> = [];
     const store = writable<Array<KeyPair>>(initialKeys);
     const { set, subscribe, update } = store;
@@ -33,7 +32,7 @@ const createKeysStore = () => {
         largest++
 
         const hdkey = HDKey.fromMasterSeed(get(seed));
-        const derivationPath = `${STANDARD_DERIVATION_PATH}/${NOSTR_KEYS_PATH}'/${largest}`;
+        const derivationPath = `${STANDARD_DERIVATION_PATH}/${NOSTR_KEYS_PATH}'/${keysId}'/${largest}`;
         const sk = hdkey.derive(derivationPath).privateKey;
         if (!sk) {
             throw new Error('Could not derive private key');
@@ -68,5 +67,5 @@ const createKeysStore = () => {
 
     return { set, subscribe, update, addOrUpdate, remove, init, reset, clear, reEncrypt, getBy, getAllBy, createNewKeypair, addKey };
 }
-export const keysStore = createKeysStore();
+export const keysStore = createKeysStore(keysEncryptionHelper, 0);
 

@@ -33,6 +33,7 @@ export class DB {
           db.createObjectStore('encrypted-pending-proofs')
           db.createObjectStore('encrypted-offline-proofs')
           db.createObjectStore('encrypted-keys')
+          db.createObjectStore('encrypted-nwc-keys')
           db.createObjectStore('encrypted-mnemonics')
           db.createObjectStore('encrypted-relays')
       },

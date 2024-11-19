@@ -10,10 +10,13 @@ import { mnemonic } from "$lib/stores/persistent/mnemonic"
 import { offlineProofsStore, pendingProofsStore, proofsStore, spentProofsStore } from "$lib/stores/persistent/proofs"
 import { transactionsStore } from "$lib/stores/persistent/transactions"
 import { relaysStore } from "$lib/stores/persistent/relays"
+import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections"
+import { nwc } from "$lib/stores/session/nwc"
 
 export const init = async () => {
     await initStores()
     await initNostrConnections()
+    nwc.init()
 }
 
 const initNostrConnections = async () => {
@@ -30,6 +33,7 @@ const initStores = async () => {
     await pendingProofsStore.init()
     await spentProofsStore.init()
     await keysStore.init()
+    await nwcKeysStore.init()
     await countsStore.init()
     await mnemonic.init()
     await messagesStore.init()
@@ -47,6 +51,7 @@ export const reencrypt = async () => {
     await pendingProofsStore.reEncrypt()
     await spentProofsStore.reEncrypt()
     await keysStore.reEncrypt()
+    await nwcKeysStore.reEncrypt()
     await countsStore.reEncrypt()
     await mnemonic.reEncrypt()
     await messagesStore.reEncrypt()
@@ -64,6 +69,7 @@ export const setStoresFromBackupJSON = async (obj:any) => {
     pendingProofsStore.set(obj.pendingProofsStore)
     spentProofsStore.set(obj.spentProofsStore)
     keysStore.set(obj.keysStore)
+    nwcKeysStore.set(obj.nwcKeysStore)
     countsStore.set(obj.countsStore)
     mnemonic.set(obj.mnemonic)
     messagesStore.set(obj.messagesStore)

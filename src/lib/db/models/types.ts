@@ -80,6 +80,18 @@ export type Relay = {
     hasConnection?: boolean;
 }
 
+
+export type NWCConnection = {
+    counter: number
+    isActive: boolean,
+    walletPublicKey: string,
+    walletPrivateKey: string,
+    connectionSecret: string,
+    connectionPublicKey: string,
+    allowanceLeft: number
+  }
+  
+
 export type EncryptedStore = {
     cypher: Uint8Array
     iv: string

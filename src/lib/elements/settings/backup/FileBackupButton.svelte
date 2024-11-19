@@ -24,6 +24,7 @@
     import { Lock } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { relaysStore } from "$lib/stores/persistent/relays";
+    import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections";
 
     let isEncrypt = $state(false);
 
@@ -43,6 +44,7 @@
         countsStore: $countsStore,
         mnemonic: $mnemonic,
         keysStore: $keysStore,
+        nwcKeysStore: $nwcKeysStore,
         contactsStore: $contactsStore,
         messagesStore: $messagesStore,
         relaysStore: $relaysStore,

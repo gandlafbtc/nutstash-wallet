@@ -108,7 +108,7 @@ export const meltProofs = async (quote: StoredMeltQuote, options?: {privkey?: st
     }
     const {change, quote: updatedQuote} = await wallet.meltProofs(qquote, send, { counter : endCount})
     await proofsStore.addMany(change)
-    await updateCount(keysetId, endCount+change.length)
+    await updateCount(keysetId, endCount+change.length+1)
     quoteToStore.lastChangedAt = Date.now()
     quoteToStore.state = updatedQuote.state
     quoteToStore.payment_preimage = updatedQuote.payment_preimage
@@ -116,6 +116,8 @@ export const meltProofs = async (quote: StoredMeltQuote, options?: {privkey?: st
     quoteToStore.out = change
     quoteToStore.fees =  (updatedQuote.fee_reserve-getAmountForTokenSet(change))+(getAmountForTokenSet(aproxProofs)-(getAmountForTokenSet(keep)+getAmountForTokenSet(send)))
     await meltQuotesStore.addOrUpdate(quoteToStore.quote, quoteToStore, 'quote')
+    toast.success('Paid invoice'+ formatAmount(quote.amount,'sat'))
+    return {change, quoteToStore}
 }
 
 export const receiveEcash = async (token: string | Token, options?:{pubkey?:string, privkey?:string}): Promise<{ untrustedMint?: string, proofs: Proof[] }> => {

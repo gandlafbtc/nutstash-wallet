@@ -46,6 +46,10 @@ export interface NutstashDB extends DBSchema {
     key: string;
     value: EncryptedStore;
   },
+  'encrypted-nwc-keys': {
+    key: string;
+    value: EncryptedStore;
+  },
   'encrypted-messages': {
     key: string;
     value: EncryptedStore;

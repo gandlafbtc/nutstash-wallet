@@ -4,7 +4,7 @@
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import { version } from "$lib/stores/static/version";
-    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore, RefreshCcw } from "lucide-svelte";
+    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore, RefreshCcw, Unplug } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
     import Divider from "$lib/elements/ui/Divider.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
@@ -214,6 +214,16 @@
                                 <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/keys"} {...props}>
                                     <Key></Key>
                                     Keys
+                                </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton>
+                                {#snippet child({ props })}
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/nwc"} {...props}>
+                                    <Unplug></Unplug>
+                                    NWC
                                 </a>
                                 {/snippet}
                             </Sidebar.MenuButton>

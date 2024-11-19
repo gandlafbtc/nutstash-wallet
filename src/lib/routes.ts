@@ -39,6 +39,7 @@ import AddressesView from "./elements/addresses/AddressesView.svelte";
 import Chat from "./elements/contacts/chat/Chat.svelte";
 import ChatsView from "./elements/contacts/chat/ChatsView.svelte";
 import ImportContacts from "./elements/contacts/ImportContacts.svelte";
+import NwcSettings from "./elements/settings/NWCSettings.svelte";
 
 export const routes = {
     '/': Loading,
@@ -97,6 +98,7 @@ export const walletRoutes = {
 
     '/settings': SettingsView,
     '/settings/backup': BackupSettings,
+    '/settings/nwc': NwcSettings,
     '/settings/backup/restore': RestoreSeedView,
     '/settings/currency': CurrencySettings,
     '/settings/ecash': EcashSettings,

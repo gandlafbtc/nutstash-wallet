@@ -54,7 +54,7 @@
             const keys = await cashuMint.getKeys(ks.id)
             const cashuWallet = new CashuWallet(cashuMint, {keys: keys.keysets, bip39seed: $seed, unit: ks.unit})
             const {keysetProofs, count} = await restoreBatch(cashuWallet, 0)
-            await countsStore.addOrUpdate(ks.id, {count, keysetId:ks.id}, 'keysetId')
+            await countsStore.addOrUpdate(ks.id, {count: count+1, keysetId:ks.id}, 'keysetId')
             statusMessage2 = `checking proof states`
             const proofStates = await cashuWallet.checkProofsStates(keysetProofs)
 
