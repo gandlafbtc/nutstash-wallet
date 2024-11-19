@@ -26,10 +26,8 @@
 
     const getUnitProofs = (proofs:Proof[]) => {
         const unitProofs: {proofs:Proof[], unit: string}[] = []
-        console.log(proofs)
         for (const proof of proofs) {
             const unit = getUnitForKeysetId(restoreMints,proof.id);
-            console.log(unit)
             let unitProof = unitProofs.find(u => u.unit === unit)
             if (!unitProof) {
                unitProof = {proofs:[], unit: unit} 

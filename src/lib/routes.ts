@@ -4,7 +4,6 @@ import MintView from "./elements/mint/MintView.svelte";
 import Onboarding from "./elements/onboarding/Onboarding.svelte";
 import OnboardingCreate from "./elements/onboarding/OnboardingCreate.svelte";
 import OnboardingSelect from "./elements/onboarding/OnboardingSelect.svelte";
-import RecommendedMints from "./elements/onboarding/RecommendedMints.svelte";
 import RestoreFromFile from "./elements/onboarding/RestoreFromFile.svelte";
 import RestoreFromSeed from "./elements/onboarding/RestoreFromSeed.svelte";
 import Base from "./elements/wallet/Base.svelte";
@@ -39,6 +38,7 @@ import KeysList from "./elements/wallet/keys/KeysList.svelte";
 import AddressesView from "./elements/addresses/AddressesView.svelte";
 import Chat from "./elements/contacts/chat/Chat.svelte";
 import ChatsView from "./elements/contacts/chat/ChatsView.svelte";
+import ImportContacts from "./elements/contacts/ImportContacts.svelte";
 
 export const routes = {
     '/': Loading,
@@ -51,7 +51,6 @@ export const routes = {
     '/onboarding/new/secure': OnboardingCreate,
     '/onboarding/restore/seed': RestoreFromSeed,
     '/onboarding/restore/file': RestoreFromFile,
-    '/onboarding/addMints': RecommendedMints,
     
     // wallet routes
     '/wallet/*': Base,
@@ -72,6 +71,7 @@ export const walletRoutes = {
     "/mint/": MintListView,
     
     '/contacts': ContactsView,
+    '/contacts/import': ImportContacts,
     '/contacts/chat': ChatsView,
     '/contacts/chat/:npub': Chat,
     '/address': AddressesView,

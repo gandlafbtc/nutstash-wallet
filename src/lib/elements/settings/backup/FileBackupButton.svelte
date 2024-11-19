@@ -5,6 +5,7 @@
     import Input from "$lib/components/ui/input/input.svelte";
     import Toggle from "$lib/components/ui/toggle/toggle.svelte";
     import { contactsStore } from "$lib/stores/persistent/contacts";
+    import { messagesStore } from "$lib/stores/persistent/message";
     import { countsStore } from "$lib/stores/persistent/counts";
     import { keysStore } from "$lib/stores/persistent/keys";
     import { meltQuotesStore } from "$lib/stores/persistent/meltquotes";
@@ -22,6 +23,7 @@
     import { bytesToHex } from "@noble/hashes/utils";
     import { Lock } from "lucide-svelte";
     import { toast } from "svelte-sonner";
+    import { relaysStore } from "$lib/stores/persistent/relays";
 
     let isEncrypt = $state(false);
 
@@ -42,6 +44,8 @@
         mnemonic: $mnemonic,
         keysStore: $keysStore,
         contactsStore: $contactsStore,
+        messagesStore: $messagesStore,
+        relaysStore: $relaysStore,
     };
 
 

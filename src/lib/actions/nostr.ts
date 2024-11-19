@@ -1,28 +1,104 @@
 import { keysStore } from "$lib/stores/persistent/keys";
-import { nostrPool } from "$lib/stores/persistent/nostr";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
-import { SimplePool, getPublicKey, kinds, type Event, type EventTemplate, getEventHash, type UnsignedEvent, nip44, generateSecretKey, type Filter, type NostrEvent, nip19 } from "nostr-tools";
-import { wrapEvent, unwrapManyEvents } from "nostr-tools/nip17";
-import { encrypt, decrypt } from "nostr-tools/nip44";
+import { getPublicKey, kinds, type Event, type EventTemplate, getEventHash, type UnsignedEvent, nip44, generateSecretKey, type Filter, type NostrEvent, nip19 } from "nostr-tools";
 import NDK, { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 
 import { get } from "svelte/store";
-import { messagesStore } from "$lib/stores/persistent/contacts copy";
+import { messagesStore } from "$lib/stores/persistent/message";
 import type { Message } from "$lib/db/models/types";
 import type { NPub, ProfilePointer } from "nostr-tools/nip19";
+import { relaysStore } from "$lib/stores/persistent/relays";
+import { toast } from "svelte-sonner";
+import { nostrPool } from "$lib/stores/session/nostr";
+import { discoveredMints } from "$lib/stores/session/mintdiscover";
+import { wordlist } from "@scure/bip39/wordlists/english";
+import { discoveredContacts } from "$lib/stores/session/contactdiscover";
+
+export const createAlias = () => {
+  const wordlistLength  = wordlist.length
+  return wordlist[Math.floor(Math.random() * wordlistLength)]+' '+ wordlist[Math.floor(Math.random() * wordlistLength)]
+}
 
 export const connectNostrRelays = async () => {
   await subscribeToNip17DirectMessages()
 }
 
-export const sendNip17DirectMessageToNprofile = async  (nprofile: string,  message: string) => {
+export const reconnect = async () => {
+
+  get(nostrPool).close(get(relaysStore).filter(r => r.hasConnection).map(r => r.url))
+  toast.promise(subscribeToNip17DirectMessages(), {
+    loading: 'Reconnecting nostr relays...',
+    success: () => {
+      return 'Reconnected!'
+    },
+    error: (data) => {
+      return 'Failed to reconnect'
+    }
+  })
+}
+
+export const discoverMints = async () => {
+  discoveredMints.set([])
+  const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
+  const filter: Filter = { kinds: [38000], limit: 2000 };
+  get(nostrPool).subscribeMany(activeRelays, [filter], {
+    onevent: (event: Event) => {
+      const uTag = event.tags.find(t => t[0] === 'u')
+      const kTag = event.tags.find(t => t[0] === 'k')
+      if (!kTag || !uTag) {
+        return
+      }
+
+      if (kTag[1] != "38172") {
+        return
+      }
+      const mintUrl = uTag[1] 
+      discoveredMints.add(mintUrl)
+    }
+  })
+}
+
+export const discoverContacts = async (npub: string) => {
+  discoveredContacts.set([])
+  const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
+  const filter: Filter = { kinds: [3], limit: 1000,authors: [ nip19.decode(npub).data as string] };
+  const sub = get(nostrPool).subscribeMany(activeRelays, [filter], {
+    onevent: (event: Event) => {
+      console.log(event)
+      const contacts  = []
+      for (const tag of event.tags) {
+        if (tag[0] !== 'p') {
+          continue
+        }
+        contacts.push(tag[1])
+      } 
+      sub.close()
+      discoverContactsDetails(contacts)
+    },
+    
+  })
+}
+
+const discoverContactsDetails = async (contacts: string[]) => {
+  const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
+  const filter: Filter = { kinds: [0], limit: 1000,authors: contacts };
+  const sub = get(nostrPool).subscribeMany(activeRelays, [filter], {
+    onevent: (event: Event) => {
+      const content = JSON.parse(event.content) 
+      discoveredContacts.add(nip19.npubEncode(event.pubkey), content.name, content.picture )
+    },
+    
+  })
+}
+
+export const sendNip17DirectMessageToNprofile = async (nprofile: string, message: string) => {
   const result = nip19.decode(nprofile);
   const pubkey: string = (result.data as ProfilePointer).pubkey;
   const relays: string[] | undefined = (result.data as ProfilePointer).relays;
   await sendNip17DirectMessage(pubkey, message, relays)
 }
 
-export const sendNip17DirectMessageToNpub = async  (npub: string, message: string) => {
+export const sendNip17DirectMessageToNpub = async (npub: string, message: string) => {
   const pubkey = nip19.decode(npub).data as string;
   console.log()
   await sendNip17DirectMessage(pubkey, message, undefined)
@@ -30,6 +106,7 @@ export const sendNip17DirectMessageToNpub = async  (npub: string, message: strin
 
 
 const sendNip17DirectMessage = async function (receiverPubkey: string, message: string, relays: string[] | undefined) {
+  const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
   const hexPrivKey = get(keysStore)[get(keysStore).length - 1].privateKey
   const seedSignerSecKey = hexToBytes(hexPrivKey)
   const signerPubKey = keysStore.getBy(hexPrivKey, 'privateKey')?.publicKey.slice(2)
@@ -38,7 +115,7 @@ const sendNip17DirectMessage = async function (receiverPubkey: string, message: 
   }
   const randomPrivateKey = generateSecretKey();
   const randomPublicKey = getPublicKey(randomPrivateKey);
-  const ndk = new NDK({ explicitRelayUrls: ['wss://relay.damus.io'], signer: new NDKPrivateKeySigner(bytesToHex(randomPrivateKey)) });
+  const ndk = new NDK({ explicitRelayUrls: activeRelays, signer: new NDKPrivateKeySigner(bytesToHex(randomPrivateKey)) });
 
   const dmEvent = new NDKEvent();
   dmEvent.kind = 14;
@@ -107,8 +184,8 @@ const sendNip17DirectMessage = async function (receiverPubkey: string, message: 
 
   try {
     console.log('publishing events...')
-    await get(nostrPool).publish(['wss://relay.damus.io'], nostrEventReceiver)
-    await get(nostrPool).publish(['wss://relay.damus.io'], NostrEventSender)
+    await get(nostrPool).publish(activeRelays, nostrEventReceiver)
+    await get(nostrPool).publish(activeRelays, NostrEventSender)
     console.log('events published')
 
   } catch (e) {
@@ -116,6 +193,7 @@ const sendNip17DirectMessage = async function (receiverPubkey: string, message: 
   }
 }
 const subscribeToNip17DirectMessages = async function () {
+  const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
   const secKeyHex = get(keysStore)[get(keysStore).length - 1].privateKey
   const seedSignerSecKey = hexToBytes(secKeyHex)
   const pubkeyHex = keysStore.getBy(secKeyHex, 'privateKey')?.publicKey.slice(2)
@@ -131,13 +209,31 @@ const subscribeToNip17DirectMessages = async function () {
   };
 
   console.log('subscribing to NIP-17 direct messages')
+
+  relaysStore.update((context) => {
+    context.forEach(e => {
+      if (activeRelays.includes(e.url)) {
+        e.hasConnection = true
+      }
+      else {
+        e.hasConnection = false
+      }
+    })
+    return context
+  }
+  )
+
   get(nostrPool).subscribeMany(
-    ['wss://relay.damus.io']
+    activeRelays
     , [filter],
     {
+      onclose: () => {
+        console.log('closed pool')
+      },
+
       onevent: (wrapEvent: Event) => {
         try {
-          
+
           if (get(messagesStore).find(m => m.wrapId === wrapEvent.id)) {
             console.log(`### Already seen NIP-17 event ${wrapEvent.id}`);
             return
@@ -152,12 +248,12 @@ const subscribeToNip17DirectMessages = async function () {
             isRead: false,
             wrapId: wrapEvent.id
           }
-        console.log(dmEvent.content)
-        messagesStore.addOrUpdate(wrapEvent.id, message, 'wrapId')
-        lastEventTimestamp = Math.floor(Date.now() / 1000);
-      } catch (error) {
-       console.log(error) 
-      }
+          console.log(dmEvent.content)
+          messagesStore.addOrUpdate(wrapEvent.id, message, 'wrapId')
+          lastEventTimestamp = Math.floor(Date.now() / 1000);
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
   );

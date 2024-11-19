@@ -12,11 +12,13 @@
     import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import { proofsStore } from "$lib/stores/persistent/proofs";
     import { toast } from "svelte-sonner";
+    import type { Mint } from "$lib/db/models/types";
+    import AddMint from "$lib/elements/mint/AddMint.svelte";
 
 
     let {sendCallback, to} = $props()
     let isLoading = $state(false)
-    let mint = $state($mints[0])
+    let mint: Mint | undefined = $state($mints[0])
     let currentUnit = $state($unit)
     let balance = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit))
     let amount = $state(0)
@@ -26,6 +28,10 @@
     const send = async () => {
         try {
             isLoading = true
+            if (!mint) {
+                toast.warning( 'Wallet has no mint' )
+                return
+            }
             if (amount>getAmountForTokenSet(balance)) {
                 toast.warning( 'Insufficient balance' )
                 return
@@ -61,14 +67,21 @@
         <Dialog.Description>
         </Dialog.Description>
       </Dialog.Header>
+      {#if !mint}
+      <p class="text-destructive">No mint added to wallet! add a mint first:</p>
+      <AddMint>
+
+      </AddMint>
+      {:else}
       <MintSelector bind:mint={mint}></MintSelector>
       <div class="flex gap-2 items-center">
-
+          
           <UnitSelector bind:currentUnit={currentUnit} selectedMints={[mint]}></UnitSelector>
-            {formatAmount(getAmountForTokenSet(balance), currentUnit)} available
+          {formatAmount(getAmountForTokenSet(balance), currentUnit)} available
         </div>
         <Input type='number' bind:value={amount}></Input>
         send {formatAmount(amount, currentUnit)} to {to.alias}
+        {/if}
       <Dialog.Footer class='flex gap-2'>
           <Button variant="outline" onclick={()=> {sendEcashOpen=false}}>
               Cancel

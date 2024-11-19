@@ -10,9 +10,9 @@ const createContactsStore = () => {
     const initialContacts: Array<Contact> = [];
     const store = writable<Array<Contact>>(initialContacts);
     const {set, subscribe, update} = store;
-    const {addOrUpdate, remove, clear ,init ,reEncrypt ,reset, getBy, getAllBy} = createDefaultStoreFunctions(encryptionHelper, store);
+    const {addMany, addOrUpdate, remove, clear ,init ,reEncrypt ,reset, getBy, getAllBy} = createDefaultStoreFunctions(encryptionHelper, store);
 
-    return {set, subscribe, update, addOrUpdate, remove, init, reset, clear, reEncrypt, getBy, getAllBy};
+    return {addMany, set, subscribe, update, addOrUpdate, remove, init, reset, clear, reEncrypt, getBy, getAllBy};
 }
 export const contactsStore = createContactsStore();
 

@@ -2,14 +2,11 @@
     import type { Message } from "$lib/db/models/types";
 
 
-    import { messagesStore } from "$lib/stores/persistent/contacts copy";
+    import { messagesStore } from "$lib/stores/persistent/message";
     import { keysStore } from "$lib/stores/persistent/keys";
-    import { now } from "$lib/stores/session/time";
-    import { formatDistance } from "date-fns";
     import RecentChat from "./RecentChat.svelte";
     import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
-
-    let allpubkeys = $derived(new Set([...$messagesStore.map(m=> [m.pubkey,m.tags[0][1]]).flat()]))
+    import Button from "$lib/components/ui/button/button.svelte";
 
     const getLatestMessages = () => {
         const latestMap: Map<string, Message>  = new Map()
@@ -40,7 +37,15 @@
     let latestMessageForPubKey = $derived.by(getLatestMessages)
 </script>
 
-<div class="w-80 mt-32 flex flex-col">
+<div class="w-80 mt-32 h-full flex flex-col justify-start gap-3">
+    <p class="font-bold">
+        Recent chats
+    </p>
+    <div>
+        <Button href='/#/wallet/contacts'>
+            Start a new chat
+        </Button>
+    </div>
     <ScrollArea>
 
         {#each latestMessageForPubKey.entries() as message}

@@ -26,6 +26,11 @@ import { keysStore } from "$lib/stores/persistent/keys";
 </script>
 
 <div class="h-full flex mt-32 gap-5 flex-col w-80">
+    <div>
+        <p class="font-bold">
+            Keys
+        </p>
+    </div>
     <div class="flex gap-2">
 
         <Button class='flex-grow' onclick={createNew}>

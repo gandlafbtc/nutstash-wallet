@@ -63,6 +63,7 @@ export type StoredTransaction = {
 export type Contact = {
     npub: string
     alias: string
+    picture?: string
 }
 
 export type KeysetCount = { keysetId: string; count: number }
@@ -73,6 +74,11 @@ export type StoredSeed = {
     mnemonic : string;
 }
 
+export type Relay = {
+    url: string;
+    isOn: boolean;
+    hasConnection?: boolean;
+}
 
 export type EncryptedStore = {
     cypher: Uint8Array

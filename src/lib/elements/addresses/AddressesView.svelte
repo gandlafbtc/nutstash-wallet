@@ -6,7 +6,7 @@
 
 </script>
 <div class="h-full mt-32 flex flex-col gap-4">
-    <p>My Addresses</p>
+    <p class="font-bold">My Addresses</p>
     <Carousel.Root class="w-full max-w-xs">
         <Carousel.Content>
             {#each $keysStore.map(ks=> ks.publicKey) as pub}
@@ -19,5 +19,3 @@
         <Carousel.Next />
       </Carousel.Root>
 </div>
-
-

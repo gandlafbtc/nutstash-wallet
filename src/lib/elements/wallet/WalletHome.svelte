@@ -18,6 +18,8 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
     import { getDivider } from "$lib/util/utils";
     import QuickPaste from "./QuickPaste.svelte";
     import NfcListenerButton from "./send/ecash/NFCListenerButton.svelte";
+    import AddMint from "../mint/AddMint.svelte";
+    import DiscoverMints from "../mint/DiscoverMints.svelte";
 
   let currentUnit = $state("sat");
 
@@ -27,6 +29,9 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
   let keysetIds = $derived(activeMints.map(m => m.keysets.keysets).flat().filter(k=> k.unit===currentUnit).map(k=> k.id))
   let amount = $derived(getByMany($proofsStore, keysetIds, 'id').reduce((a,b)=> a+b.amount, 0))
 </script>
+
+
+{#if $mints.length}
 <div class="flex items-center justify-start pt-20 flex-col gap-5 w-full h-full">
   <div class="w-80 flex items-start">
     <MintSelectorMulti></MintSelectorMulti>
@@ -83,4 +88,25 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
     &nbsp; Send &nbsp;&nbsp;
   </button>
 </div>
+  {:else}
+  <div class="flex flex-col gap-5 items-center justify-start w-full h-full mt-32">
+    <p class="font-bold">
+      Welcome to nutstash!
+    </p>
 
+    To use the wallet, add a mint.
+    <div class="flex-col flex gap-1">
+      <p class="text-sm">
+        Add mint manually
+      </p>
+      <AddMint></AddMint>
+    </div>
+    <div class="flex-col flex gap-1">
+      <p class="text-sm">
+        Add mint indexed on nostr
+      </p>
+    
+    <DiscoverMints></DiscoverMints>
+  </div>
+</div>
+  {/if}

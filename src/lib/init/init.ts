@@ -1,6 +1,6 @@
 import { connectNostrRelays } from "$lib/actions/nostr"
 import { contactsStore } from "$lib/stores/persistent/contacts"
-import { messagesStore } from "$lib/stores/persistent/contacts copy"
+import { messagesStore } from "$lib/stores/persistent/message"
 import { countsStore } from "$lib/stores/persistent/counts"
 import { keysStore } from "$lib/stores/persistent/keys"
 import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
@@ -9,6 +9,7 @@ import { createMintsStore, mints } from "$lib/stores/persistent/mints"
 import { mnemonic } from "$lib/stores/persistent/mnemonic"
 import { offlineProofsStore, pendingProofsStore, proofsStore, spentProofsStore } from "$lib/stores/persistent/proofs"
 import { transactionsStore } from "$lib/stores/persistent/transactions"
+import { relaysStore } from "$lib/stores/persistent/relays"
 
 export const init = async () => {
     await initStores()
@@ -33,6 +34,7 @@ const initStores = async () => {
     await mnemonic.init()
     await messagesStore.init()
     await contactsStore.init()
+    await relaysStore.init()
 }
 
 export const reencrypt = async () => {
@@ -49,6 +51,7 @@ export const reencrypt = async () => {
     await mnemonic.reEncrypt()
     await messagesStore.reEncrypt()
     await contactsStore.reEncrypt()
+    await relaysStore.reEncrypt()
 }
 
 export const setStoresFromBackupJSON = async (obj:any) => {
@@ -65,4 +68,5 @@ export const setStoresFromBackupJSON = async (obj:any) => {
     mnemonic.set(obj.mnemonic)
     messagesStore.set(obj.messagesStore)
     contactsStore.set(obj.contactsStore)
+    relaysStore.set(obj.relaysStore)
 }

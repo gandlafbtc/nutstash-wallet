@@ -58,5 +58,9 @@ export interface NutstashDB extends DBSchema {
     key: string;
     value: EncryptedStore;
   }
+  'encrypted-relays': {
+    key: string;
+    value: EncryptedStore;
+  }
 
 }

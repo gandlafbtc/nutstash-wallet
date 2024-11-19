@@ -1,6 +1,5 @@
 <script lang="ts">
 	import StorageManager from "$lib/plugin/StorageManager.svelte";
-	import { useNostr } from "$lib/stores/persistent/nostr";
 	import { ModeWatcher } from "mode-watcher";
 	import "../app.css";
 	import { onMount } from "svelte";

@@ -7,7 +7,7 @@
 
 <div class="rounded-xl border p-2 flex items-center gap-4">
     <Avatar.Root>
-        <Avatar.Image src="" alt={contact.alias} />
+        <Avatar.Image src={contact.picture??''} alt={contact.alias} />
         <Avatar.Fallback
             >{contact.alias
                 .split(" ")

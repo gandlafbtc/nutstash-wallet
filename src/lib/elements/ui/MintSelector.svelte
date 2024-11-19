@@ -6,7 +6,7 @@
     import { toast } from "svelte-sonner";
 
 
-	let { mint = $bindable()}: {mint: Mint} = $props()
+	let { mint = $bindable(), onchange}: {mint: Mint, onchange?: (value: string)=>void} = $props()
 
 	const onValueChange = (value: string) => {
 		const mintToSet = $mints.find(mint => mint.url === value)
@@ -15,6 +15,9 @@
 			return
 		}
 		mint = mintToSet
+		if (onchange) {
+			onchange(value)
+		}
 	}
 
 </script>

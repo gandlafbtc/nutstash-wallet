@@ -15,11 +15,17 @@
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
     import { unit } from "$lib/stores/persistent/settings";
     import { createMintQuote } from "$lib/actions/actions";
-    import { openReceiveDrawer, openScannerDrawer } from "$lib/stores/session/drawer";
+    import {
+        openReceiveDrawer,
+        openScannerDrawer,
+    } from "$lib/stores/session/drawer";
+    import type { Mint } from "$lib/db/models/types";
+    import AddMint from "$lib/elements/mint/AddMint.svelte";
+    import { toast } from "svelte-sonner";
 
     let entered: string = $state("");
 
-    let mint = $state($mints[0]);
+    let mint: Mint | undefined = $state($mints[0]);
 
     let token = $state("");
     let amount = $state("");
@@ -78,18 +84,22 @@
 
     const receiveLN = async () => {
         try {
+            if (!mint) {
+                toast.warning("no mint available");
+                return;
+            }
             isLoading = true;
-            const amountInt =  parseInt(amount)
+            const amountInt = parseInt(amount);
             const q = await createMintQuote(mint.url, amountInt, {
                 unit: currentUnit,
             });
-            openReceiveDrawer.set(false)
+            openReceiveDrawer.set(false);
             // wallet.unit =
 
             //Show QR screen
             push("/wallet/receive/ln/" + q.quote);
         } catch (error) {
-			console.error(error)
+            console.error(error);
         } finally {
             isLoading = false;
         }
@@ -98,8 +108,8 @@
 
     const receiveCashu = () => {
         // scannedTokenStore.set(entered)
-        openReceiveDrawer.set(false)
-        push("/wallet/receive/cashu/"+entered);
+        openReceiveDrawer.set(false);
+        push("/wallet/receive/cashu/" + entered);
     };
 
     const onKeypadPress = (value: string | { delete: boolean }) => {
@@ -144,19 +154,31 @@
                 token
             {:else if amount.length}
                 <div class="flex flex-col gap-2 items-center justify-center">
-                    <div class="w-80">
-                        <MintSelector bind:mint></MintSelector>
-                    </div>
-                    <div class="flex gap-2 justify-between w-80 items-center">
-                        <button
-                            class="text-2xl break-all cursor-text w-full text-start"
-                            onclick={() => inputFocus?.focus()}
+                    {#if !mint}
+                        <p class="text-destructive">
+                            No mint added to wallet! add a mint first:
+                        </p>
+
+                        <AddMint></AddMint>
+                    {:else}
+                        <div class="w-80">
+                            <MintSelector bind:mint></MintSelector>
+                        </div>
+                        <div
+                            class="flex gap-2 justify-between w-80 items-center"
                         >
-                            {formatAmount(amount, currentUnit)}
-                        </button>
-                        <UnitSelector bind:currentUnit selectedMints={[mint]}
-                        ></UnitSelector>
-                    </div>
+                            <button
+                                class="text-2xl break-all cursor-text w-full text-start"
+                                onclick={() => inputFocus?.focus()}
+                            >
+                                {formatAmount(amount, currentUnit)}
+                            </button>
+                            <UnitSelector
+                                bind:currentUnit
+                                selectedMints={[mint]}
+                            ></UnitSelector>
+                        </div>
+                    {/if}
                     <div class="w-80 py-5">
                         <Button
                             disabled={isLoading}
@@ -177,7 +199,7 @@
                 <div>
                     <button
                         class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
-                        onclick={() => (openScannerDrawer.update(ctx=>!ctx))}
+                        onclick={() => openScannerDrawer.update((ctx) => !ctx)}
                     >
                         <QrCode></QrCode>
                     </button>

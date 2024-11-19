@@ -4,6 +4,7 @@
 	import Mnemonic from '$lib/elements/security/Mnemonic.svelte';
     import Button from '$lib/components/ui/button/button.svelte';
     import { pop } from 'svelte-spa-router';
+    import { isOnboarded } from '$lib/stores/local/message';
 
 </script>
 
@@ -12,7 +13,7 @@
 		<h2 class="text-xl font-bold pt-32">New Seed phrase created!</h2>
 		<Mnemonic />
 		<div class="card-actions gap-5 flex items-center justify-center w-full pt-3 flex-col">
-			<Button href="/#/onboarding/addMints" class="btn btn-primary w-full max-w-4xl">
+			<Button href="/#/wallet/" class="btn btn-primary w-full max-w-4xl" onclick={()=> isOnboarded.set(true)}>
 				I wrote it down
 			</Button>
 			<button

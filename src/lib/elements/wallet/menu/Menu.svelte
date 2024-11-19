@@ -4,7 +4,7 @@
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import { version } from "$lib/stores/static/version";
-    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore } from "lucide-svelte";
+    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore, RefreshCcw } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
     import Divider from "$lib/elements/ui/Divider.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
@@ -13,6 +13,7 @@
     import { isOnboarded } from "$lib/stores/local/message";
     import { DB } from "$lib/db/db";
     import { toast } from "svelte-sonner";
+    import { reconnect } from "$lib/actions/nostr";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -217,8 +218,8 @@
                                 {/snippet}
                             </Sidebar.MenuButton>
                         </Sidebar.MenuItem>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
+                        <Sidebar.MenuItem class='flex items-center'>
+                            <Sidebar.MenuButton class='flex-grow w-full'>
                                 {#snippet child({ props })}
                                 <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/nostr"} {...props}>
                                     <Network></Network>
@@ -226,6 +227,9 @@
                                 </a>
                                 {/snippet}
                             </Sidebar.MenuButton>
+                            <Sidebar.GroupAction onclick={reconnect}>
+                                <RefreshCcw></RefreshCcw>
+                            </Sidebar.GroupAction>
                         </Sidebar.MenuItem>
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton>

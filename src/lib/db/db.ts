@@ -34,6 +34,7 @@ export class DB {
           db.createObjectStore('encrypted-offline-proofs')
           db.createObjectStore('encrypted-keys')
           db.createObjectStore('encrypted-mnemonics')
+          db.createObjectStore('encrypted-relays')
       },
       blocked: (currentVersion, blockedVersion, event) => {
         // …
