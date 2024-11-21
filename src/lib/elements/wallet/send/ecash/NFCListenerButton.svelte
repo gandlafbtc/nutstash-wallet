@@ -2,6 +2,7 @@
     import Toggle from "$lib/components/ui/toggle/toggle.svelte";
     import { onDestroy, onMount } from "svelte";
     import NfcListener from "./NFCListener.svelte";
+    import NfcListenDrawer from "./NFCListenDrawer.svelte";
 
     let pressed = $state(false)
     let nfcReady = $state(false)
@@ -46,9 +47,10 @@
             >
         {#if pressed}
         <div class="absolute right-0 top-0">
-            <NfcListener></NfcListener>
+            <NfcListenDrawer bind:isOpen={pressed}></NfcListenDrawer>
         </div>
         {/if}
     </div>
 </Toggle>
 {/if}
+

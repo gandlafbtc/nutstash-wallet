@@ -17,7 +17,7 @@
 
     <div class="flex items-center gap-4">
         <Avatar.Root>
-            <Avatar.Image src="" alt={alias} />
+            <Avatar.Image src={$contactsStore.find(c=>c.npub===npub)?.picture??''} alt={alias} />
             <Avatar.Fallback
             >{alias
                 .split(" ")

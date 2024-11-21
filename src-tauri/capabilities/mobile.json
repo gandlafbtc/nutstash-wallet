@@ -15,9 +15,9 @@
     "barcode-scanner:allow-vibrate",
     "barcode-scanner:allow-request-permissions",
     "barcode-scanner:default",
-    "nfc:default",
     "nfc:allow-is-available",
     "nfc:allow-scan",
-    "nfc:allow-write"
+    "nfc:allow-write",
+    "nfc:default"
   ]
 }

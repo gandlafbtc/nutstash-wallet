@@ -11,8 +11,8 @@
     import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import Button from "$lib/components/ui/button/button.svelte";
     import BigTokenQr from "$lib/elements/ui/BigTokenQR.svelte";
-    import NfcDrawer from "$lib/elements/wallet/send/ecash/NFCDrawer.svelte";
     import SendViaNfcButton from "$lib/elements/wallet/send/ecash/SendViaNFCButton.svelte";
+    import isTauri from "$lib/tauri/deviceHelper";
 
     let {
         tx,
@@ -30,7 +30,6 @@
     });
     let encodedToken = $derived(getEncodedTokenV4(token));
 
-    let nfcDrawerIsOpen = $state(false)
 </script>
 
 <Card.Root class="m-3">
@@ -97,7 +96,7 @@
         {:else}
             <Button href="/#/wallet/">Close</Button>
         {/if}
-        {#if !isListView}
+        {#if !isListView && !isTauri}
              <SendViaNfcButton token={encodedToken}></SendViaNfcButton>
         {/if}
     </Card.Footer>

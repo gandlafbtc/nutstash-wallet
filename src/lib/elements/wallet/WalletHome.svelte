@@ -20,6 +20,7 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
     import NfcListenerButton from "./send/ecash/NFCListenerButton.svelte";
     import AddMint from "../mint/AddMint.svelte";
     import DiscoverMints from "../mint/DiscoverMints.svelte";
+    import isTauri from "$lib/tauri/deviceHelper";
 
   let currentUnit = $state("sat");
 
@@ -40,8 +41,10 @@ import NumberFlow, { type Format } from '@number-flow/svelte'
     <QuickPaste></QuickPaste>
   </div>
   <div>
-
-   <NfcListenerButton></NfcListenerButton>
+    <!-- todo fix this later -->
+    {#if !isTauri}
+      <NfcListenerButton></NfcListenerButton>
+    {/if}
   </div>
   <p class="text-5xl">
     <NumberFlow value={amount/divider} format={{ minimumFractionDigits: fraction, maximumFractionDigits: fraction}}></NumberFlow> {getUnitSymbol(currentUnit, false)}
