@@ -22,14 +22,14 @@
 	const enableEncryption = async (e: Event) => {
 		e.preventDefault();
 		if (!pass) {
-			toast.warning("Password cannot be empty");
+			toast.warning("Passphrase cannot be empty");
 			setTimeout(() => {
             inputFocus?.focus()
         }, 0);
 			return;
 		}
 		if (pass !== confPass) {
-			toast.warning("Passwords do not match");
+			toast.warning("Passphrases do not match");
 			setTimeout(() => {
             inputFocus?.focus()
         }, 0);
@@ -64,7 +64,7 @@
 			<Form.Button>
 				<Lock></Lock>
 				Encrypt</Form.Button>
-			<div>
+			<div class="mt-10">
 				<Button
 					variant="link"
 					onclick={() => {

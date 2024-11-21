@@ -42,7 +42,7 @@
 			} else {
 				key.set(await kdf(DEFAULT_PASS));
 			}
-			// init stores
+			// init
 			await init();
 			toast.success("Wallet unlocked");
 		} catch (error) {
@@ -69,12 +69,14 @@
 				<p class="text-lg font-bold">Wallet is locked.</p>
 				<p>Enter your passphrase to unlock.</p>
 				<form class="flex flex-col gap-2" onsubmit={unlockWallet}>
+					{#if !isUnlocking}
 					<Input
-						bind:ref={inputFocus}
-						type="password"
-						placeholder="Passphrase"
-						bind:value={pass}
+					bind:ref={inputFocus}
+					type="password"
+					placeholder="Passphrase"
+					bind:value={pass}
 					/>
+					{/if}
 					<Form.Button disabled={isUnlocking}>
 						{#if isUnlocking}
 							<LoaderCircle class="animate-spin"></LoaderCircle>

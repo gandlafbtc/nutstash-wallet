@@ -14,7 +14,6 @@ import MintListView from "./elements/mint/MintListView.svelte";
 import MintQuoteListView from "./elements/wallet/receive/ln/MintQuoteListView.svelte";
 import MintQuoteItem from "./elements/wallet/receive/ln/MintQuoteItem.svelte";
 import ReceiveView from "./elements/wallet/receive/ReceiveView.svelte";
-import PasswordSetup from "./elements/security/PasswordSetup.svelte";
 import ContactsView from "./elements/contacts/ContactsView.svelte";
 import EcashView from "./elements/data/ecash/EcashView.svelte";
 import HistoryView from "./elements/data/history/HistoryView.svelte";
@@ -34,19 +33,24 @@ import Send from "./elements/wallet/send/Send.svelte";
 import ChangePassword from "./elements/security/ChangePassword.svelte";
 import RestoreSeedView from "./elements/settings/backup/restore/RestoreSeedView.svelte";
 import Scan from "./elements/wallet/scanner/Scan.svelte";
-import KeysList from "./elements/wallet/keys/KeysList.svelte";
 import AddressesView from "./elements/addresses/AddressesView.svelte";
 import Chat from "./elements/contacts/chat/Chat.svelte";
 import ChatsView from "./elements/contacts/chat/ChatsView.svelte";
 import ImportContacts from "./elements/contacts/ImportContacts.svelte";
 import NwcSettings from "./elements/settings/NWCSettings.svelte";
+import OnboardingPass from "./elements/onboarding/OnboardingPass.svelte";
+import SendLnurl from "./elements/wallet/send/ln/SendLNURL.svelte";
+import AddNewContact from "./elements/contacts/AddNewContact.svelte";
+import DonateView from "./elements/Donate/DonateView.svelte";
+import DonatePublic from "./elements/Donate/DonatePublic.svelte";
+import DonateAnon from "./elements/Donate/DonateAnon.svelte";
 
 export const routes = {
     '/': Loading,
 
     // Onboarding
     '/onboarding': Onboarding,
-    '/onboarding/pass': PasswordSetup,
+    '/onboarding/pass': OnboardingPass,
     '/onboarding/select': OnboardingSelect,
     '/onboarding/new/quick': OnboardingSelect,
     '/onboarding/new/secure': OnboardingCreate,
@@ -68,10 +72,15 @@ export const WALLET_ROUTE_PREFIX = '/wallet'
 export const walletRoutes = {
     '/': WalletHome,
     
+    '/donate':DonateView,
+    '/donate/public':DonatePublic,
+    '/donate/anon':DonateAnon,
+
     "/mint/:url": MintView,
     "/mint/": MintListView,
     
     '/contacts': ContactsView,
+    '/contacts/add': AddNewContact,
     '/contacts/import': ImportContacts,
     '/contacts/chat': ChatsView,
     '/contacts/chat/:npub': Chat,
@@ -94,6 +103,7 @@ export const walletRoutes = {
     '/send/cashu': TransactionsView,
     '/send/cashu/:id': TransactionItem,
     '/send/ln': SendLn,
+    '/send/lnurl': SendLnurl,
     '/send/ln/:quote': MeltQuoteItem,
 
     '/settings': SettingsView,

@@ -2,7 +2,7 @@
 
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
     import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
-    import { scannedInvoiceStore, scannedTokenStore } from "$lib/stores/session/transitionstores";
+    import { scanresultStore } from "$lib/stores/session/transitionstores";
     import { toast } from "svelte-sonner";
     import { push } from "svelte-spa-router";
 
@@ -27,12 +27,14 @@
                 }
                 const scannedToken = pasted;
                 cashuTokenScanned(scannedToken);
-            } else if (
-                pasted.includes("@") ||
-                pasted.toLowerCase().startsWith("lnurl")
-            ) {
-                lnurlScanned();
             }
+            else if (pasted.toLowerCase().startsWith("npub")) {
+            npubScanned(pasted);
+        } else if (pasted.toLowerCase().startsWith("lnurl")) {
+            lnurlScanned(pasted);
+        } else if (pasted.includes("@") && pasted.includes(".")) {
+            lnAddressScanned(pasted);
+        }
             else{
                 toast.warning('No known action available for pasted informaion')
             }
@@ -40,17 +42,32 @@
         }, 100);
     };
 
-    const lnurlScanned = () => {};
+    const npubScanned = (npub: string) => {
+        closeDrawers();
+        push('/wallet/contacts/chat/'+npub);
+    };
+
+    const lnAddressScanned = (lnAddress :string) => {
+        closeDrawers();
+        scanresultStore.set(lnAddress);
+        push('/wallet/send/lnurl');
+    };
+
+    const lnurlScanned = (lnurl: string) => {
+        closeDrawers();
+        scanresultStore.set(lnurl);
+        push('/wallet/send/lnurl');
+    };
 
     const lnInvoiceScanned = (invoice: string) => {
         closeDrawers();
-        scannedInvoiceStore.set(invoice);
+        scanresultStore.set(invoice);
         push("/wallet/receive/ln");
     };
 
     const cashuTokenScanned = (token: string) => {
         closeDrawers();
-        scannedTokenStore.set(token);
+        scanresultStore.set(token);
         push("/wallet/receive/cashu");
     };
 

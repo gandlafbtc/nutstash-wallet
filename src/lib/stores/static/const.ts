@@ -1,0 +1,1 @@
+export const NUTSTASH_PUBKEY = 'ca1d8486abd03d6e91aa042cb856a7da0da95e7b68180b22337aea2cd2ed0469'

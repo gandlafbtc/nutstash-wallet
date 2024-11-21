@@ -13,8 +13,9 @@
     import ThemMessageWrapper from "./ThemMessageWrapper.svelte";
     import SendEcash from "./SendEcash.svelte";
     import * as Avatar from "$lib/components/ui/avatar";
-    import { Send } from "lucide-svelte";
+    import { LoaderCircle, Send } from "lucide-svelte";
     import AddContact from "../AddContact.svelte";
+    import { onMount } from "svelte";
 
     let contact = $derived(getBy($contactsStore, $params?.npub ?? "", "npub"));
 
@@ -24,8 +25,15 @@
 
     let pubkey = $derived(nip19.decode(contact?.npub ?? "").data);
 
+    const sortAndReadMessages = async ()=> {
+        const chatMessages = [...$messagesStore]
+        .filter(m=> m.pubkey===pubkey || m.tags[0][1] === pubkey)
+        .sort((a, b) => b.created_at - a.created_at)
+        return chatMessages
+    }
+
     let sortedMessages = $derived(
-        [...$messagesStore].sort((a, b) => b.created_at - a.created_at),
+        sortAndReadMessages()
     );
 
     let chatText = $state("");
@@ -50,6 +58,7 @@
         }
         await sendNip17DirectMessageToNpub(contact.npub, tokenString);
     };
+
 </script>
 
 <div class="flex flex-col items-start gap-3 w-80 h-full mt-32">
@@ -70,17 +79,21 @@
         </div>
         <div class="h-screen">
             <div class="flex flex-col-reverse overflow-auto h-2/3">
+                {#await sortedMessages}
+                    <LoaderCircle class='animate-spin'></LoaderCircle>
+                {:then sortedMessages}
                 {#each sortedMessages as message}
-                    {#if message.tags[0][1] === pubkey}
-                        <MeMessageWrapper>
-                            <Message {message}></Message>
-                        </MeMessageWrapper>
-                    {:else if message.pubkey === pubkey}
-                        <ThemMessageWrapper>
-                            <Message alias={contact.alias} {message}></Message>
-                        </ThemMessageWrapper>
-                    {/if}
+                {#if message.tags[0][1] === pubkey}
+                <MeMessageWrapper>
+                    <Message {message}></Message>
+                </MeMessageWrapper>
+                {:else if message.pubkey === pubkey}
+                <ThemMessageWrapper>
+                    <Message alias={contact.alias} {message}></Message>
+                </ThemMessageWrapper>
+                {/if}
                 {/each}
+                {/await}
             </div>
             <div class="w-80 flex gap-2">
                 <Textarea bind:value={chatText}></Textarea>
@@ -94,9 +107,8 @@
             </div>
         </div>
         {:else}
-            <p>
-
-                Contact not found
+            <p class="font-bold">
+                Add contact
             </p>            
             
             <p class="overflow-clip text-ellipsis w-80">

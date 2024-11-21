@@ -102,7 +102,6 @@ export type EncryptedStore = {
 export type Message = Event & {
     wrapId: string
     isRead?: boolean
-
 }
 
 export type Mint = {

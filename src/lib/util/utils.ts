@@ -40,7 +40,7 @@ export function copyTextToClipboard(text: string) {
 }
 
 export const getHostFromUrl = (url: string) => {
-	return url.split(":")[1].split('/').join("")
+	return url?.split(":")[1].split('/').join("")
 }
 
 export const getCount = (from: number, to: number): number[] => {
@@ -62,3 +62,5 @@ export const getDivider = (currentUnit : string) => {
       return {divider:100, fraction: 2};
     }
   }
+
+  export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));

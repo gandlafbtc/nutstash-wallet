@@ -1,6 +1,6 @@
 import { keysStore } from "$lib/stores/persistent/keys";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
-import { getPublicKey, kinds, type Event, type EventTemplate, getEventHash, type UnsignedEvent, nip44, generateSecretKey, type Filter, type NostrEvent, nip19 } from "nostr-tools";
+import { finalizeEvent, getPublicKey, kinds, type Event, getEventHash, type UnsignedEvent, nip44, generateSecretKey, type Filter, type NostrEvent, nip19, type EventTemplate } from "nostr-tools";
 import NDK, { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 
 import { get } from "svelte/store";
@@ -102,6 +102,23 @@ export const sendNip17DirectMessageToNpub = async (npub: string, message: string
   const pubkey = nip19.decode(npub).data as string;
   console.log()
   await sendNip17DirectMessage(pubkey, message, undefined)
+}
+
+export const publishEvent = async (content: string, tags: string[][]) => {
+  const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
+  const event: EventTemplate = {
+    content,
+    created_at: Math.floor(Date.now()/1000),
+    kind: 1,
+    tags,
+  }
+  try {
+    const signedEvent = finalizeEvent(event, hexToBytes(get(keysStore)[0].privateKey))
+    await get(nostrPool).publish(activeRelays, signedEvent)
+    console.log(signedEvent.id)
+  } catch (error) {
+    console.error(error)    
+  }
 }
 
 

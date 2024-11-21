@@ -1,30 +1,8 @@
 <script lang="ts">
-    import { scannedTokenStore } from "$lib/stores/session/transitionstores";
+    import { scanresultStore } from "$lib/stores/session/transitionstores";
     import { getDecodedToken, type Token } from "@cashu/cashu-ts";
-    import { parseSecret } from "@cashu/crypto/modules/common/NUT11";
-    import { Button } from "$lib/components/ui/button/";
-    import * as Card from "$lib/components/ui/card/";
-    import {
-        AlertCircle,
-        BookCheck,
-        Check,
-        CircleCheck,
-        Coins,
-        Download,
-        Landmark,
-        LoaderCircle,
-        Lock,
-    } from "lucide-svelte";
-    import { mints } from "$lib/stores/persistent/mints";
-    import { formatAmount } from "$lib/util/walletUtils";
-    import * as Accordion from "$lib/components/ui/accordion";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
-    import { receiveEcash } from "$lib/actions/actions";
-    import { params, push } from "svelte-spa-router";
+    import { params } from "svelte-spa-router";
     import Input from "$lib/components/ui/input/input.svelte";
-    import { toast } from "svelte-sonner";
-    import { keysStore } from "$lib/stores/persistent/keys";
-    import { getBy } from "$lib/stores/persistent/helper/storeHelper";
     import ReceiveCard from "./ReceiveCard.svelte";
 
 
@@ -38,8 +16,8 @@
             else if (enteredToken) {
                 return getDecodedToken(enteredToken);
             }
-            else if ($scannedTokenStore) {
-                return getDecodedToken($scannedTokenStore);
+            else if ($scanresultStore) {
+                return getDecodedToken($scanresultStore);
             } else return null;
         } catch (error) {
 			console.error(error)

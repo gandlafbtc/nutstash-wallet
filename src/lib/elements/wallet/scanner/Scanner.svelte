@@ -1,17 +1,19 @@
 <script lang="ts">
     import Progress from "$lib/components/ui/progress/progress.svelte";
     import * as Select from "$lib/components/ui/select";
-    import {
-        scannedInvoiceStore,
-        scannedTokenStore,
-    } from "$lib/stores/session/transitionstores";
+    import { scanresultStore } from "$lib/stores/session/transitionstores";
     import { Scan, SwitchCamera } from "lucide-svelte";
     import QrScanner from "qr-scanner";
     import { onDestroy, onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import { URDecoder } from "@gandlaf21/bc-ur";
     import ScannerDrawer from "./ScannerDrawer.svelte";
-    import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
+    import {
+        openReceiveDrawer,
+        openScannerDrawer,
+        openSendDrawer,
+    } from "$lib/stores/session/drawer";
+    import { getInvoiceFromAddress } from "$lib/util/walletUtils";
 
     let videoElem: HTMLVideoElement | undefined = $state();
     let qrScanner: QrScanner | undefined = $state();
@@ -96,33 +98,49 @@
             }
             const scannedToken = result.data;
             cashuTokenScanned(scannedToken);
-        } else if (
-            result.data.includes("@") ||
-            result.data.toLowerCase().startsWith("lnurl")
-        ) {
-            lnurlScanned();
+        } else if (result.data.toLowerCase().startsWith("npub")) {
+            npubScanned(result.data);
+        } else if (result.data.toLowerCase().startsWith("lnurl")) {
+            lnurlScanned(result.data);
+        } else if (result.data.includes("@") && result.data.includes(".")) {
+            lnAddressScanned(result.data);
         }
     };
 
-    const lnurlScanned = () => {};
+    const npubScanned = (npub: string) => {
+        closeDrawers();
+        push('/wallet/contacts/chat/'+npub);
+    };
+
+    const lnAddressScanned = (lnAddress :string) => {
+        closeDrawers();
+        scanresultStore.set(lnAddress);
+        push('/wallet/send/lnurl');
+    };
+
+    const lnurlScanned = (lnurl: string) => {
+        closeDrawers();
+        scanresultStore.set(lnurl);
+        push('/wallet/send/lnurl');
+    };
 
     const lnInvoiceScanned = (invoice: string) => {
         closeDrawers();
-        scannedInvoiceStore.set(invoice);
+        scanresultStore.set(invoice);
         push("/wallet/receive/ln");
     };
 
     const cashuTokenScanned = (token: string) => {
         closeDrawers();
-        scannedTokenStore.set(token);
+        scanresultStore.set(token);
         push("/wallet/receive/cashu");
     };
 
     const closeDrawers = () => {
-        openScannerDrawer.set(false)
-        openReceiveDrawer.set(false)
-        openSendDrawer.set(false)
-    }
+        openScannerDrawer.set(false);
+        openReceiveDrawer.set(false);
+        openSendDrawer.set(false);
+    };
 </script>
 
 <div class="flex flex-col w-full items-center justify-center min-h-96">
@@ -154,8 +172,8 @@
                     class=""
                     onclick={async () => {
                         await qrScanner?.setCamera(facingMode);
-                        qrScanner?.stop()
-                        qrScanner?.start()
+                        qrScanner?.stop();
+                        qrScanner?.start();
                     }}
                 >
                     <SwitchCamera></SwitchCamera>

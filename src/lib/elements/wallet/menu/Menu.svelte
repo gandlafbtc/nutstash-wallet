@@ -14,6 +14,7 @@
     import { DB } from "$lib/db/db";
     import { toast } from "svelte-sonner";
     import { reconnect } from "$lib/actions/nostr";
+    import { messagesStore } from "$lib/stores/persistent/message";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -101,14 +102,18 @@
                                 </a>
                                 {/snippet}
                         </Sidebar.MenuButton>
+                        <Sidebar.MenuBadge>
+                            {$messagesStore.filter(m=> !m.isRead).length}
+                        </Sidebar.MenuBadge>
                     </Sidebar.MenuItem>
 
+                 
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/scan"} {...props}>
-                                    <Scan></Scan>
-                                    Scan
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/address"} {...props}>
+                                    <QrCode></QrCode>
+                                    My address
                                 </a>
                                 {/snippet}
                         </Sidebar.MenuButton>
@@ -116,9 +121,9 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/address"} {...props}>
-                                    <QrCode></QrCode>
-                                    My address
+                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/scan"} {...props}>
+                                    <Scan></Scan>
+                                    Scan
                                 </a>
                                 {/snippet}
                         </Sidebar.MenuButton>

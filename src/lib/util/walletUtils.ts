@@ -145,7 +145,8 @@ export const getAproxAmount = (amount: number, proofs: Proof[], includeFees?: bo
 	}
 	for (let i = 0; i < exactProofs.length ; i++) {
         if(getAmountForTokenSet(exactProofs)+getAmountForTokenSet(lastClosest)-getAmountForTokenSet([exactProofs[i]])>=amount){
-            exactProofs.splice(i)
+            // BUG? should this not be splice(i,1)
+			exactProofs.splice(i)
             i--
         }
     }

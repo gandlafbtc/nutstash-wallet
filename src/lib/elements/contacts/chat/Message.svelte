@@ -2,12 +2,20 @@
     import type { Message } from "$lib/db/models/types";
     import ReceiveCard from "$lib/elements/wallet/receive/ecash/ReceiveCard.svelte";
     import { keysStore } from "$lib/stores/persistent/keys";
+    import { messagesStore } from "$lib/stores/persistent/message";
     import { now } from "$lib/stores/session/time";
     import { getDecodedToken } from "@cashu/cashu-ts";
     import { formatDistance } from "date-fns";
     import { nip19 } from "nostr-tools";
+    import { onMount } from "svelte";
 
     let { message, alias }: { message: Message, alias?:string } = $props();
+
+    onMount(()=>{
+        if (!message.isRead) {
+            messagesStore.setRead([message])
+        }
+    })
 
 </script>
 

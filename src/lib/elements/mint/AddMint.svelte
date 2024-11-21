@@ -5,7 +5,7 @@ import { mints } from "$lib/stores/persistent/mints";
     import { LoaderCircle, Plus } from "lucide-svelte";
     import { toast } from "svelte-sonner";
 
-    let {mintUrlToAdd='', readOnly=false, showAddText=true}: {mintUrlToAdd?: string, readOnly?: boolean, showAddText?: boolean} = $props()
+    let {mintUrlToAdd=$bindable(''), readOnly=false, showAddText=true}: {mintUrlToAdd?: string, readOnly?: boolean, showAddText?: boolean} = $props()
 
     
     let isAddingMint = $state(false);

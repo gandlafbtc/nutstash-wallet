@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { scannedTokenStore } from "$lib/stores/session/transitionstores";
+    import { scanresultStore } from "$lib/stores/session/transitionstores";
     import { parseSecret } from "@cashu/crypto/modules/common/NUT11";
     import { Button } from "$lib/components/ui/button/";
     import * as Card from "$lib/components/ui/card/";
@@ -87,7 +87,7 @@
     } 
 
     const discard = () => {
-        scannedTokenStore.set(undefined)
+        scanresultStore.set(undefined)
         push("/wallet/")
     }
 </script>

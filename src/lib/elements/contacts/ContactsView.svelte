@@ -13,11 +13,9 @@
     import { toast } from "svelte-sonner";
 
     let isOpen = $state(false);
-    let isLoading = $state(false);
     
     let importNpub = $state('')
     
-    let loadedContacts = $state([]);
     
     const loadContactList= () => {
         if (!importNpub.startsWith('npub')) {
@@ -33,12 +31,16 @@
 
 </script>
 <div class="w-80 flex flex-col gap-2 h-full mt-32">
+    <div class="w-full flex gap-2">
 
-    <Button onclick={() => isOpen =!isOpen}>
-        <Download></Download>
-        Import contacts
+        <Button onclick={() => isOpen =!isOpen}>
+            <Download></Download>
+            Import contacts
+        </Button>
+    <Button href='/#/wallet/contacts/add'>
+        Add contact
     </Button>
-    <AddContact></AddContact>
+</div>
     <ScrollArea>
         {#each $contactsStore as contact}
         <div class="my-2">

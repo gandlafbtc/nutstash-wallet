@@ -11,7 +11,6 @@
     const getLatestMessages = () => {
         const latestMap: Map<string, Message>  = new Map()
         for (const message of $messagesStore) {
-            
             if (latestMap.has(message.tags[0][1])) {
                 if ( message.created_at > ((latestMap.get(message.tags[0][1])?.created_at)??0)) {
                     latestMap.set(message.tags[0][1], message)    
@@ -49,7 +48,10 @@
     <ScrollArea>
 
         {#each latestMessageForPubKey.entries() as message}
-        <RecentChat {message}></RecentChat>
+        <div class="my-2">
+
+            <RecentChat {message}></RecentChat>
+        </div>
         {/each}
     </ScrollArea>
 </div>

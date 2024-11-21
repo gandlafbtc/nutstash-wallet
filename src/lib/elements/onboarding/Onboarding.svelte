@@ -2,8 +2,8 @@
 	import { Button } from "$lib/components/ui/button";
 	import {SquareArrowOutUpRight} from "lucide-svelte"
 </script>
-
-<div class="flex flex-col gap-5 items-center justify-center p-3 h-full">
+<div class="h-full flex items-center justify-center">
+<div class="flex flex-col gap-5 items-center justify-center p-3 w-80 text-center ">
 	<img src="/nutstash_app.svg" alt="" class="w-32 " />
 
 	<h1 class="font-bold text-xl">Welcome to Nutstash!</h1>
@@ -26,7 +26,7 @@
 	</p>
 	<p>
 		<span>
-			Nutstash is a cashu ecash wallet that uses the Cashu protocol.
+			Nutstash is Cashu ecash wallet.
 		</span>
 	</p>
 	<p>
@@ -58,4 +58,5 @@
 	</p>
 
 	<Button href="/#/onboarding/pass">OK</Button>
+</div>
 </div>

@@ -37,6 +37,18 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
 		await encryptionHelper.encrypt(get(store))
 	}
 
+    const addOrUpdateMany = async (elements: T[], idFieldDescr: keyof T) => {
+        for (const element of elements) {
+            if (get(store).find(o => o[idFieldDescr] === element[idFieldDescr])) {
+			store.update(context => context.map(o => o[idFieldDescr] === element[idFieldDescr]? element : o))
+            }
+            else {
+			store.update(context => [element, ...context])
+            }
+        }
+        await encryptionHelper.encrypt(get(store))
+    }
+
 	const addOrUpdate = async (id: string, element: T, idFieldDescr : keyof T) => {
 		if (get(store).find(o => o[idFieldDescr] === id)) {
 			store.update(context => context.map(o => o[idFieldDescr] === id? element : o))
@@ -84,7 +96,8 @@ export const createDefaultStoreFunctions = <T>(encryptionHelper: EncryptionHelpe
         getAllBy,
         addMany,
         add,
-        removeMany
+        removeMany,
+        addOrUpdateMany
     }
 }
 

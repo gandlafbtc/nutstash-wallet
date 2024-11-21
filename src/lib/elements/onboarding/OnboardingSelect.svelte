@@ -13,7 +13,7 @@
 	};
 </script>
 <div class="w-full flex justify-center h-full">
-<div class="p-2 flex w-full flex-col items-center justify-center max-w-4xl">
+<div class="p-2 flex w-80 flex-col items-center justify-center max-w-4xl">
 	<h1 class="font-bold text-xl">Select your way to start!</h1>
 
 	
