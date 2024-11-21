@@ -1,7 +1,6 @@
-# Tauri + SvelteKit + TypeScript
+⚠️ don't be reckless!
+This app is in early development and most likely buggy. It does handle real sats though, so be sure to use only amounts that are small enough to lose.
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+# Nutstash wallet
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+A multi platform cashu wallet

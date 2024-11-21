@@ -15,6 +15,7 @@
     import { toast } from "svelte-sonner";
     import { reconnect } from "$lib/actions/nostr";
     import { messagesStore } from "$lib/stores/persistent/message";
+    import { push } from "svelte-spa-router";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -388,7 +389,7 @@
                         {/snippet}
                     </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
-                <Divider></Divider>
+                <!-- <Divider></Divider>
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
@@ -398,29 +399,41 @@
                         </Button>
                         {/snippet}
                     </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
+                </Sidebar.MenuItem> -->
                 
             </Sidebar.Menu>
             </Sidebar.GroupContent>
             
         </Sidebar.Group>
     </Sidebar.Content>
-    <Sidebar.Footer class="flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">
-        <p class="text-xs opacity-35">
-            Made by <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} class="underline" href="https://github.com/gandlafbtc">
-                @gandlaf21
-            </a>
-        </p>
-        <p class="text-xs opacity-85">
-            version
-            <a
+    <Sidebar.Footer class="h-[3.25em] flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">
+        <div class="flex gap-2">
+            <div>
+
+                <Sidebar.MenuButton onclick={()=>push('/wallet/donate')} variant='outline'>
+                    
+                    <Heart></Heart>
+                </Sidebar.MenuButton>
+            </div>
+            <div>
+
+                <p class="text-xs opacity-35">
+                    Made by <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} class="underline" href="https://github.com/gandlafbtc">
+                        @gandlaf21
+                </a>
+            </p>
+            <p class="text-xs opacity-85">
+                version
+                <a
                 href="https://github.com/gandlafbtc/nutstash-app"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 class="underline"
-            >
+                >
                 {$version}
             </a>
         </p>
+    </div>
+    </div>
     </Sidebar.Footer>
 </Sidebar.Root>
