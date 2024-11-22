@@ -51,7 +51,11 @@ export class DB {
   }
 
   static async deleteDatabase () {
-     await deleteDB(DB_NAME)
+    try {
+      await deleteDB(DB_NAME)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   static async close() {

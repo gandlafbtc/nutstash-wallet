@@ -44,6 +44,8 @@ import AddNewContact from "./elements/contacts/AddNewContact.svelte";
 import DonateView from "./elements/Donate/DonateView.svelte";
 import DonatePublic from "./elements/Donate/DonatePublic.svelte";
 import DonateAnon from "./elements/Donate/DonateAnon.svelte";
+import ManipulateCounters from "./elements/dangerzone/ManipulateCounters.svelte";
+import DeleteStuff from "./elements/dangerzone/DeleteStuff.svelte";
 
 export const routes = {
     '/': Loading,
@@ -71,7 +73,7 @@ export const WALLET_ROUTE_PREFIX = '/wallet'
 
 export const walletRoutes = {
     '/': WalletHome,
-    
+
     '/donate':DonateView,
     '/donate/public':DonatePublic,
     '/donate/anon':DonateAnon,
@@ -117,6 +119,11 @@ export const walletRoutes = {
     '/settings/nostr': NostrSettings,
     '/settings/security': SecuritySettings,
     '/settings/security/changepass': ChangePassword,
+
+
+    //dangerzone
+    '/counters': ManipulateCounters,
+    '/delete': DeleteStuff,
 
     '*': NotFound
 }
