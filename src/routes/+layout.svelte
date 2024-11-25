@@ -24,7 +24,7 @@
 </script>
 
 {#if isInit}
-	<ModeWatcher></ModeWatcher>
+	<ModeWatcher defaultMode={"dark"}></ModeWatcher>
 	<StorageManager>
 		<div class="w-full h-full fixed">
 			{@render children?.()}

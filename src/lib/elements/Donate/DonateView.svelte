@@ -195,7 +195,7 @@
     <div class="flex h-10 w-full items-center justify-center">
         {#if !(isNaN(donationAmount) || donationAmount < 1)}
             <!-- content here -->
-            <Badge class="text-xl text-pink-500" variant="outline">
+            <Badge class="text-xl text-nutstash" variant="outline">
                 {emojiForAmount(donationAmount)}
                 {formatAmount(donationAmount, currentUnit)}
             </Badge>
@@ -207,14 +207,14 @@
             disabled={isNaN(donationAmount) || donationAmount < 1}
             onclick={openPublicDono}
         >
-            <Heart class="text-pink-500"></Heart>
+            <Heart class="text-nutstash"></Heart>
             Public donation
         </Button>
         <Button
             disabled={isNaN(donationAmount) || donationAmount < 1}
             onclick={openAnonDono}
         >
-            <Heart class="text-pink-500"></Heart>
+            <Heart class="text-nutstash"></Heart>
             Anon donation
         </Button>
     </div>
@@ -279,7 +279,7 @@
                 {#if isLoading}
                     <LoaderCircle class="animate-spin"></LoaderCircle>
                 {:else}
-                    <Heart class="text-pink-500"></Heart>
+                    <Heart class="text-nutstash"></Heart>
                 {/if}
                 Confirm
             </Button>
@@ -317,7 +317,7 @@
                 {#if isLoading}
                     <LoaderCircle class="animate-spin"></LoaderCircle>
                 {:else}
-                    <Heart class="text-pink-500"></Heart>
+                    <Heart class="text-nutstash"></Heart>
                 {/if}
                 Confirm
             </Button>

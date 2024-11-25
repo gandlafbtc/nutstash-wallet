@@ -1,4 +1,6 @@
 <script lang="ts">
+    import Input from "$lib/components/ui/input/input.svelte";
+
 
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
     import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from "$lib/stores/session/drawer";
@@ -78,8 +80,8 @@
     }
 
 </script>
-<Textarea bind:value={pasted} onpaste={(e)=>onPaste()}
+<Input bind:value={pasted} onpaste={(e)=>onPaste()}
 class="w-80 border-dashed resize-none rounded-none focus-visible:outline-transparent focus:outline-transparent"
 
 inputmode="none"
-placeholder="Quickpaste: paste token, invoice etc." ></Textarea>
+placeholder="Quickpaste: paste token, invoice etc." ></Input>

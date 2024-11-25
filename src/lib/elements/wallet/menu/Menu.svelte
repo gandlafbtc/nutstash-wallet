@@ -1,26 +1,24 @@
 <script lang="ts">
     import * as Sidebar from "$lib/components/ui/sidebar";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import { version } from "$lib/stores/static/version";
     import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore, RefreshCcw, Unplug, FileQuestion, Skull, Tally5 } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
-    import Divider from "$lib/elements/ui/Divider.svelte";
-    import Button from "$lib/components/ui/button/button.svelte";
-    import { usePassword } from "$lib/stores/local/usePassword";
-    import { selectedMints } from "$lib/stores/local/selectedMints";
-    import { isOnboarded } from "$lib/stores/local/message";
-    import { DB } from "$lib/db/db";
     import { toast } from "svelte-sonner";
     import { reconnect } from "$lib/actions/nostr";
     import { messagesStore } from "$lib/stores/persistent/message";
     import { push } from "svelte-spa-router";
+    import { onMount } from "svelte";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
     let mintUrlToAdd = $state('') 
-    const sidebar = Sidebar.useSidebar()
+    let {sidebar = $bindable(Sidebar.useSidebar())} = $props()
+
+    onMount(() => {
+        sidebar = Sidebar.useSidebar()
+    })
 
     const addMint = async () => {
         try {
@@ -51,7 +49,12 @@
 <Sidebar.Root>
     <Sidebar.Header class=" justify-between flex-row">
         <DarkModeSetting></DarkModeSetting>
-        <Sidebar.Trigger></Sidebar.Trigger>
+        <div class="p-1">
+            <button  onclick={()=>sidebar.toggle()}>
+                <X class='w-4 h-4'>
+                </X>
+            </button>
+        </div>
     </Sidebar.Header>
 
     <Sidebar.Content>

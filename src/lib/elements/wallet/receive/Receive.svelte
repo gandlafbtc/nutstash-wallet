@@ -182,7 +182,7 @@
                     <div class="w-80 py-5">
                         <Button
                             disabled={isLoading}
-                            class="w-full border-2 border-pink-600"
+                            class="w-full border-2 border-nutstash"
                             onclick={receiveLN}
                         >
                             {#if isLoading}
@@ -198,7 +198,7 @@
             {:else}
                 <div>
                     <button
-                        class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
+                        class=""
                         onclick={() => openScannerDrawer.update((ctx) => !ctx)}
                     >
                         <QrCode></QrCode>

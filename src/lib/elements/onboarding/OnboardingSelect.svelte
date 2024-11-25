@@ -3,6 +3,7 @@
 	import { pop, push } from "svelte-spa-router";
     import { wordlist } from '@scure/bip39/wordlists/english';;
     import { generateMnemonic } from '@scure/bip39';
+    import OnboardingHeader from './OnboardingHeader.svelte';
 
 	const create =async () => {
 		
@@ -12,38 +13,28 @@
 		push('/onboarding/new/secure')
 	};
 </script>
+<OnboardingHeader></OnboardingHeader>
 <div class="w-full flex justify-center h-full">
 <div class="p-2 flex w-80 flex-col items-center justify-center max-w-4xl">
-	<h1 class="font-bold text-xl">Select your way to start!</h1>
+	<h1 class="font-bold text-xl mb-4">Select your way to start!</h1>
 
 	
 	<button
 		onclick={create}
-		class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity opacity-70 hover:opacity-100"
+		class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity sm:opacity-70 hover:opacity-100"
 	>
-		<svg
-			class="w-10 h-10"
-			viewBox="0 0 18 25"
-			fill="currentColor"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				d="M12.3755 0.0126953C9.07893 0.0601104 5.93335 1.39621 3.6179 3.73251C1.30245 6.06881 0.00290775 9.21787 -0.000152588 12.4998C0.00290775 15.7817 1.30245 18.9308 3.6179 21.2671C5.93335 23.6034 9.07893 24.9395 12.3755 24.9869L12.3755 14.9987C12.3731 14.999 12.3707 14.9994 12.3684 14.9998C12.0385 14.9998 11.712 14.9351 11.4073 14.8095C11.1026 14.6838 10.8257 14.4997 10.5925 14.2676C10.3593 14.0354 10.1743 13.7598 10.0481 13.4565C9.92186 13.1532 9.8569 12.8281 9.8569 12.4998C9.8569 12.1715 9.92186 11.8464 10.0481 11.5431C10.1743 11.2398 10.3593 10.9642 10.5925 10.732C10.8257 10.4999 11.1026 10.3157 11.4073 10.1901C11.712 10.0645 12.0385 9.99981 12.3684 9.99981C12.3707 10.0002 12.3731 10.0005 12.3755 10.0009V0.0126953Z"
-			/>
-			<path
-				d="M7.34546 5C7.34546 7.76142 9.59426 10 12.3683 10C15.1423 10 17.3911 7.76142 17.3911 5C17.3911 2.23858 15.1423 0 12.3683 0C9.59426 0 7.34546 2.23858 7.34546 5Z"
-			/>
-			<path
-				d="M7.34546 20C7.34546 22.7614 9.59426 25 12.3683 25C15.1423 25 17.3911 22.7614 17.3911 20C17.3911 17.2386 15.1423 15 12.3683 15C9.59426 15 7.34546 17.2386 7.34546 20Z"
-			/>
+	<svg class="w-10 h-10 text-nutstash" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M10.1647 6.59821C9.95372 7.47821 9.63972 8.36021 8.99972 9.00021C8.35972 9.64021 7.47872 9.95421 6.59772 10.1652C5.16828 10.5075 3.91423 11.3627 3.07351 12.5684C2.23278 13.774 1.86388 15.2464 2.03679 16.706C2.20971 18.1657 2.91241 19.5111 4.01156 20.487C5.11072 21.4629 6.52986 22.0013 7.99972 22.0002C15.7317 22.0002 21.9997 15.7322 21.9997 8.00021C22.0008 6.53035 21.4624 5.11121 20.4865 4.01205C19.5106 2.9129 18.1652 2.2102 16.7056 2.03728C15.2459 1.86437 13.7736 2.23327 12.5679 3.07399C11.3622 3.91472 10.5071 5.16877 10.1647 6.59821Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M5.34082 10.6198C5.60446 11.2131 6.00855 11.7333 6.51818 12.1355C7.02782 12.5377 7.62769 12.8098 8.26601 12.9283C8.90432 13.0468 9.56188 13.0081 10.1819 12.8157C10.802 12.6232 11.3658 12.2828 11.8248 11.8236C12.2839 11.3645 12.6242 10.8006 12.8166 10.1805C13.0089 9.56045 13.0474 8.90288 12.9288 8.26459C12.8102 7.6263 12.538 7.02648 12.1357 6.51692C11.7334 6.00736 11.2131 5.60337 10.6198 5.33984" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 		</svg>
+		
 		<div class="flex-col gap-2 text-start">
-			<h2 class="font-bold">Create wallet</h2>
+			<h2 class="font-bold text-nutstash">Create new wallet</h2>
 			<p class="">
 				Create a new nutstash wallet.
 			</p>
 			<p class="opacity-40">
-				If you have no cashu seed phrase or nutstash backup file, select this option
+				If you have no cashu seed phrase or nutstash backup file, select this option.
 			</p>
 		</div>
 	</button>
@@ -52,7 +43,7 @@
 		class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity opacity-70 hover:opacity-100"
 	>
 		<svg
-			class="w-10 h-10"
+			class="w-10 h-10 text text-green-500"
 			viewBox="0 0 25 23"
 			fill="currentColor"
 			xmlns="http://www.w3.org/2000/svg"
@@ -63,9 +54,9 @@
 		</svg>
 
 		<div class="flex-col gap-2 text-start">
-			<h2 class="font-bold">Restore lost nuts</h2>
-			<p class="">Recover ecash from a lost wallet with your seed phrase</p>
-			<p class="opacity-40">Select this option to recreate a lost wallet</p>
+			<h2 class="font-bold text-green-500">Restore lost nuts</h2>
+			<p class="">Recover ecash from a lost wallet with your seed phrase.</p>
+			<p class="opacity-40">Select this option to recreate a lost wallet.</p>
 		</div>
 	</a>
 
@@ -79,7 +70,7 @@
 			viewBox="0 0 24 24"
 			stroke-width="1.5"
 			stroke="currentColor"
-			class="w-10 h-10"
+			class="w-10 h-10 text-nutstashsecondary"
 		>
 			<path
 				stroke-linecap="round"
@@ -89,22 +80,12 @@
 		</svg>
 
 		<div class="flex-col gap-2 text-start">
-			<h2 class="font-bold">Import wallet file</h2>
-			<p class="">Load a wallet from a backup file</p>
+			<h2 class="font-bold text-nutstashsecondary">Import wallet file</h2>
+			<p class="">Load a wallet from a backup file.</p>
 			<p class="opacity-40">
-				Select this option if you have exported a nutstash wallet and want to import it
+				Select this option if you have exported a nutstash wallet and want to import it.
 			</p>
 		</div>
 	</a>
-	<div class="mt-4">
-		<button
-		class="font-bold hover:underline"
-		onclick={() => {
-			pop()
-		}}
-	>
-	Back
-</button>
-	</div>
 </div>
 </div>

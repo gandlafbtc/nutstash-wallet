@@ -53,7 +53,7 @@ export const getCount = (from: number, to: number): number[] => {
 
 export const getDivider = (currentUnit : string) => {
     if (currentUnit === "sat") {
-      return {divider:1, fraction: 0};
+      return {divider:100000000, fraction: 8};
 
     } else if (currentUnit === "msat") {
       return {divider:1000, fraction: 3};
@@ -64,3 +64,8 @@ export const getDivider = (currentUnit : string) => {
   }
 
   export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+ export const css = (element: HTMLElement, style: any) => {
+    for (const property in style)
+        element.style[property] = style[property];
+}

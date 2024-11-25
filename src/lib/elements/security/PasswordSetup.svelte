@@ -76,15 +76,5 @@
 				</Button>
 			</div>
 		</form>
-		<div class="mt-10">
-			<Button
-				variant="link"
-				onclick={() => {
-					pop()
-	}}
-			>
-				Back
-			</Button>
-		</div>
 	</div>
 </div>

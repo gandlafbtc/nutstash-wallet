@@ -493,7 +493,7 @@
                         <div class="w-80 py-5">
                             <Button
                                 disabled={isLoading}
-                                class="w-full border-2 border-pink-600"
+                                class="w-full border-2 border-nutstash"
                                 onclick={createQuote}
                             >
                                 {#if isLoading}
@@ -509,7 +509,6 @@
                 {:else}
                     <div>
                         <button
-                            class="rounded-full bg-pink-600 p-5 transition-all duration-300 hover:bg-pink-700 flex-shrink active:bg-pink-500"
                             onclick={() =>
                                 openScannerDrawer.update((ctx) => !ctx)}
                         >

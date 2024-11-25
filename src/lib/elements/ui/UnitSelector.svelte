@@ -40,7 +40,7 @@ let {selectedMints, currentUnit = $bindable()}: {selectedMints: Mint[], currentU
 </script>
 
 <Select.Root type="single" name="unit" bind:value={currentUnit} allowDeselect={false}>
-    <Select.Trigger class="w-28">
+    <Select.Trigger class="w-16 text-xs">
         <div class="flex-grow">
             {getUnitSymbol(currentUnit)}
         </div>
