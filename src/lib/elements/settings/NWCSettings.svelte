@@ -3,7 +3,7 @@
     import Switch from "$lib/components/ui/switch/switch.svelte";
     import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections";
     import { nwc } from "$lib/stores/session/nwc";
-    import { Copy, LoaderCircle, Trash } from "lucide-svelte";
+    import { Copy, LoaderCircle, Pen, Trash } from "lucide-svelte";
     import QrCode from "../ui/QRCode.svelte";
     import { copyTextToClipboard } from "$lib/util/utils";
     import { formatAmount } from "$lib/util/walletUtils";
@@ -11,10 +11,14 @@
     import type { NWCConnection } from "$lib/db/models/types";
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import * as Dialog  from "$lib/components/ui/dialog";
+    import Input from "$lib/components/ui/input/input.svelte";
 
     let isShow = $state(false);
     let isOpen = $state(false);
+    let isOpenAllowance = $state(false);
     let isSwitching = $state(false);
+
+    let inputAllowance = $state('')
 
     const switchActive = async (conn: NWCConnection) => {
         try {
@@ -54,9 +58,32 @@
             isSwitching = false;
         }
     }
+
+    const updateConnection = async (conn: NWCConnection) => {
+        try {
+            isSwitching = true
+            const connection = {...conn}
+            const allowanceInt = parseInt(inputAllowance)
+            if (isNaN(allowanceInt)) {
+                toast.warning('Allowance Must be a number')
+            return
+            }
+            connection.allowanceLeft = allowanceInt
+            await nwcKeysStore.addOrUpdate(connection.walletPublicKey, connection, 'walletPublicKey')
+            isOpenAllowance = false
+            toast.info('Allowance updated to '+ formatAmount(allowanceInt))
+            inputAllowance = ''
+        } catch (error) {
+            console.error(error)
+            toast.error(error.message)
+        }
+        finally {
+            isSwitching = false
+        }
+    }
 </script>
 
-<div class="flex gap-2 w-80 h-full mt-32 flex-col">
+<div class="flex gap-2 w-80 h-full flex-col">
     <Button
         onclick={nwc.generateNWCConnection}
         disabled={$nwcKeysStore.length ? true : false}
@@ -95,11 +122,18 @@
                             </p>
                         </div>
                     </button>
-                    <p class="flex gap-2 justify-center">
-                        <span class=""> Allowance </span>
-                        <Badge variant='outline'>
-                            {formatAmount(conn.allowanceLeft)}
-                        </Badge>
+                    <p class="flex flex-col gap-1 justify-center">
+                        <span class="">Allowance </span>
+                        <span class="flex gap-1">
+
+                            <Badge variant='outline'>
+                                {formatAmount(conn.allowanceLeft)}
+                            </Badge>
+                            <button class="flex items-center underline" onclick={()=> isOpenAllowance = true}>
+                                <Pen class='w-4'></Pen>
+                                change
+                            </button>
+                        </span>
                     </p>
                     <div class="flex gap-2 justify-between">
                         <div class="flex gap-2">
@@ -124,7 +158,7 @@
                 <Dialog.Root bind:open={isOpen}>
                     <Dialog.Content>
                         <Dialog.Header>
-                            <Dialog.Title class='text-destructive'
+                            <Dialog.Title 
                                 >Are you sure you want to disconnect and remove this connection?</Dialog.Title
                             >
                             <Dialog.Description>
@@ -143,6 +177,38 @@
                             </Button>
                             <Button variant='destructive' onclick={()=> removeConnection(conn)}>
                                 Remove
+                            </Button>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Root>
+                <Dialog.Root bind:open={isOpenAllowance}>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title
+                                >
+                                Set an allowance amount
+                                </Dialog.Title
+                            >
+                            <Dialog.Description>
+                                This connection will be able to access funds from your wallet, up to the amount set as the allowance.
+                            </Dialog.Description>
+                        </Dialog.Header>
+                        <Input placeholder='Allowance amount' type='number' bind:value={inputAllowance} onkeypress={(e: KeyboardEvent)=> {
+                            if (e.key === 'Enter') {
+                                updateConnection(conn) 
+                            }}}/>
+                        
+                        <Dialog.Footer>
+                            <Button
+                                variant="outline"
+                                onclick={() => {
+                                    isOpenAllowance = false;
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button  onclick={()=> updateConnection(conn)}>
+                                Confirm
                             </Button>
                         </Dialog.Footer>
                     </Dialog.Content>

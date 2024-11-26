@@ -8,6 +8,7 @@
     import * as Card from '$lib/components/ui/card';
     import { pop, push } from 'svelte-spa-router';
     import { toast } from 'svelte-sonner';
+    import OnboardingHeader from './OnboardingHeader.svelte';
 
 	let restoreSeed: Array<string> = $state(new Array(12));
 	let seedString: string = $state('');
@@ -39,9 +40,9 @@
 		push('/wallet/settings/backup/restore')
 	}
 </script>
-
-   <div class="flex m-2 h-full items-center justify-center">
-	   <Card.Root class=" lg:max-w-xl lg:h-[42em]">
+<OnboardingHeader></OnboardingHeader>
+   <div class="flex h-screen items-center justify-center">
+	   <Card.Root class="w-80">
 		   <Card.Header>
 			   <Card.Title>Restore ecash from seed phrase</Card.Title>
 			   <Card.Description>Insert your seed phrase in the correct order...</Card.Description>
@@ -59,7 +60,7 @@
 				bind:value={seedString}
 				onkeydown={(e) => {}}
 				/>
-				<div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+				<div class="grid grid-cols-2 gap-3">
 			{#each restoreSeed as input, i}
 			<div class="flex gap-1 items-center">
 				<p class="w-8">{i + 1}.</p>
@@ -76,10 +77,6 @@
 		>
 		restore
 	</Button>
-	<Button variant="link" onclick={()=> {
-		
-		pop()
-	}}> Back </Button>  
 	</Card.Footer>
 </Card.Root>
 

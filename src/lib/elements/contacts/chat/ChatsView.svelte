@@ -36,7 +36,7 @@
     let latestMessageForPubKey = $derived.by(getLatestMessages)
 </script>
 
-<div class="w-80 mt-32 h-full flex flex-col justify-start gap-3">
+<div class="w-80 h-full flex flex-col justify-start gap-3">
     <p class="font-bold">
         Recent chats
     </p>

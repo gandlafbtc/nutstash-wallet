@@ -29,7 +29,6 @@
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
     import { unit } from "$lib/stores/persistent/settings";
     import { proofsStore } from "$lib/stores/persistent/proofs";
-    import { getByMany } from "$lib/stores/persistent/helper/storeHelper";
     import TokenOptions from "./TokenOptions.svelte";
     import { toast } from "svelte-sonner";
     import {
@@ -37,7 +36,6 @@
         getFeeForProofs,
         sendEcash,
     } from "$lib/actions/actions";
-    import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import {
         openScannerDrawer,
         openSendDrawer,
@@ -45,12 +43,11 @@
     import { decode } from "@gandlaf21/bolt11-decode";
     import { copyTextToClipboard } from "$lib/util/utils";
     import type { Mint, Proof } from "$lib/db/models/types";
-    import Switch from "$lib/components/ui/switch/switch.svelte";
     import * as Tooltip from "$lib/components/ui/tooltip";
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
-    import { isValid } from "date-fns";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
+    import { selectedMint } from "$lib/stores/local/selectedMints";
     let entered: string = $state("");
 
     const getCurrentUnit = () => {
@@ -62,7 +59,7 @@
             : "sat";
     };
 
-    let mint: Mint | undefined = $state($mints[0]);
+    let mint: Mint | undefined = $state($selectedMint!==-1?$mints[$selectedMint]: $mints[0]);
     let currentUnit: string = $state(getCurrentUnit());
 
     let unitProofs: Proof[] = $derived(

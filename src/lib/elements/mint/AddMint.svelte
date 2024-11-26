@@ -34,7 +34,7 @@ import { mints } from "$lib/stores/persistent/mints";
 
 </script>
 
-<div class="flex gap-2">
+<div class="flex gap-2 w-80">
     <Input readonly={readOnly} bind:value={mintUrlToAdd} onkeypress={(e: KeyboardEvent)=> {
         if (e.key === 'Enter') {
             addMint() 

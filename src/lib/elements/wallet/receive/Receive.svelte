@@ -22,10 +22,11 @@
     import type { Mint } from "$lib/db/models/types";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
     import { toast } from "svelte-sonner";
+    import { selectedMint } from "$lib/stores/local/selectedMints";
 
     let entered: string = $state("");
 
-    let mint: Mint | undefined = $state($mints[0]);
+    let mint: Mint | undefined = $state($selectedMint!==-1?$mints[$selectedMint]: $mints[0]);
 
     let token = $state("");
     let amount = $state("");

@@ -6,7 +6,7 @@
 
 </script>
 <OnboardingHeader></OnboardingHeader>
-<div class="h-full w-full flex items-center justify-center">
+<div class="h-screen w-full flex items-center justify-center">
     <div class="w-80 flex">
         <PasswordSetup></PasswordSetup>
     </div>

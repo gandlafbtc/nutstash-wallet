@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { formatAmount, getUnitSymbol } from "$lib/util/walletUtils";
-  import { Download, Nfc, QrCode, SmartphoneNfc, Upload } from "lucide-svelte";
+  import {  getUnitSymbol } from "$lib/util/walletUtils";
+  import { Download,  QrCode,  Upload } from "lucide-svelte";
   import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
-  import MintSelectorMulti from "$lib/elements/ui/MintSelectorMulti.svelte";
-  import { selectedMints } from "$lib/stores/local/selectedMints";
+  import { selectedMint } from "$lib/stores/local/selectedMints";
   import { proofsStore } from "$lib/stores/persistent/proofs";
-  import Textarea from "$lib/components/ui/textarea/textarea.svelte";
   import { mints } from "$lib/stores/persistent/mints";
-  import { getBy, getByMany } from "$lib/stores/persistent/helper/storeHelper";
+  import { getByMany } from "$lib/stores/persistent/helper/storeHelper";
   import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
   import {
     openReceiveDrawer,
@@ -19,10 +17,9 @@
   import { css, getDivider } from "$lib/util/utils";
   import QuickPaste from "./QuickPaste.svelte";
   import NfcListenerButton from "./send/ecash/NFCListenerButton.svelte";
-  import AddMint from "../mint/AddMint.svelte";
-  import DiscoverMints from "../mint/DiscoverMints.svelte";
   import isTauri from "$lib/tauri/deviceHelper";
   import { untrack } from "svelte";
+    import MintCarousel from "../mint/mintDropdown/MintCarousel.svelte";
 
   let currentUnit = $state("sat");
 
@@ -32,7 +29,7 @@
     const numberFlowElement = untrack(() =>
       document.getElementById("number-flow"),
     );
-    if (amount !== undefined) {
+    if (amount !== undefined && currentUnit && $selectedMint!==undefined) {
       const elements = numberFlowElement?.shadowRoot?.querySelectorAll(
         ".number .number__inner .section .digit .is-current",
       );
@@ -67,10 +64,13 @@
     }
   });
 
-  let activeMints = $derived(
-    $selectedMints
-      .map((url) => getBy($mints, url, "url"))
-      .filter((m) => m !== undefined),
+  let activeMints = $derived.by(
+    ()=> {
+      if ($selectedMint === -1) {
+      return $mints  
+    }
+    return [$mints[$selectedMint]]
+  }
   );
   let keysetIds = $derived(
     activeMints
@@ -85,13 +85,13 @@
 </script>
 
 <div
-  class="flex items-center justify-start pt-20 flex-col gap-5 w-full h-full opac"
+  class="flex items-center justify-start flex-col gap-5 w-full h-full"
 >
-  <div class="w-80 h-28">
+  <div class="w-80">
     <QuickPaste></QuickPaste>
   </div>
-  <div class="w-80 flex items-start">
-    <MintSelectorMulti></MintSelectorMulti>
+  <div>
+    <MintCarousel></MintCarousel>
   </div>
   <div>
     <!-- todo fix this later -->
@@ -113,7 +113,7 @@
     </p>
     <UnitSelector
       bind:currentUnit
-      selectedMints={$mints.filter((m) => $selectedMints.includes(m.url))}
+      selectedMints={activeMints}
     ></UnitSelector>
   </div>
 
@@ -126,7 +126,7 @@
   </ScrollArea>
 </div>
 <div
-  class="w-full bottom-0 fixed bg-primary-foreground flex items-center justify-center"
+  class="z-10 bottom-bar w-full bottom-0 fixed bg-primary-foreground flex items-center justify-center shadow-lg"
 >
   <button
     onclick={() => openReceiveDrawer.set(true)}
@@ -149,3 +149,10 @@
     &nbsp; Send &nbsp;&nbsp;
   </button>
 </div>
+
+
+<style>
+  .bottom-bar {
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 1);
+  }
+</style>

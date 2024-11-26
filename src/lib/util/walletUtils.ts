@@ -162,6 +162,11 @@ export const getProofsOfMintUnit = (mint: Mint, proofs: Proof[], unit:string ='s
 	const mintUnitProofs = getByMany(proofs, keysetIds, 'id')
 	return mintUnitProofs
 }
+export const getProofsOfMintsUnit = (mints: Mint[], proofs: Proof[], unit:string ='sat'): Proof[] => {
+	let keysetIds = mints.map(m=>m.keysets.keysets).flat().filter(k=> k.unit===unit).map(k=> k.id)
+	const mintUnitProofs = getByMany(proofs, keysetIds, 'id')
+	return mintUnitProofs
+}
 
 export const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	return removeDuplicatesFromArray(

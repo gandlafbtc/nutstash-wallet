@@ -2,7 +2,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import {SquareArrowOutUpRight} from "lucide-svelte"
 </script>
-<div class="h-full flex items-center justify-center">
+<div class="h-screen flex items-center justify-center">
 <div class="flex flex-col gap-5 items-center justify-center p-3 w-80 text-center ">
 
 	<p class="flex gap-1 items-center text-yellow-500 opacity-80 font-bold">

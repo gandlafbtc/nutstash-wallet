@@ -13,7 +13,7 @@ const updateCount = async (count: KeysetCount, incr: number) => {
 </script>
 
 
-<div class="w-80 h-full mt-32 flex flex-col  gap-5">
+<div class="w-80 h-full  flex flex-col  gap-5">
 
     <p class="text-destructive">
         <span class="font-bold">

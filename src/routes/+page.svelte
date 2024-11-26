@@ -19,5 +19,4 @@
     }
   });
 </script>
-<Router {routes}></Router>
-<Loading></Loading>
+  <Router {routes}></Router>

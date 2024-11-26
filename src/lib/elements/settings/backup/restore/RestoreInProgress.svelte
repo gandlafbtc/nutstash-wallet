@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { getByMany } from "$lib/stores/persistent/helper/storeHelper";
     import { mints } from "$lib/stores/persistent/mints";
-    import { selectedMints } from "$lib/stores/local/selectedMints";
     import { onDestroy, onMount } from "svelte";
     import { Coins, Landmark, LoaderCircle } from "lucide-svelte";
     import Progress from "$lib/components/ui/progress/progress.svelte";
@@ -10,7 +8,6 @@
     import { restoredProofs } from "$lib/stores/session/restoredproofs";
     import { getAmountForTokenSet, getUnitForKeysetId, getUnitsForMints, getUnitSymbol } from "$lib/util/walletUtils";
     import type { Proof } from "@cashu/cashu-ts";
-    import { countsStore } from "$lib/stores/persistent/counts";
     import UnitDisplay from "./UnitDisplay.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
     import Divider from "$lib/elements/ui/Divider.svelte";
@@ -20,7 +17,7 @@
     import * as Dialog  from "$lib/components/ui/dialog";
     import { push } from "svelte-spa-router";
 
-    const restoreMints = $state(getByMany($mints, $selectedMints, "url"))
+    const restoreMints = $derived($mints)
 
     let isOpen = $state(false)
 
@@ -75,7 +72,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-2 h-full mt-32 w-80">
+<div class="flex flex-col gap-2 h-full  w-80">
     <div>
         <span class="text-lg font-bold flex items-center gap-2">
             Restore in progress

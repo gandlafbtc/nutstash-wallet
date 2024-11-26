@@ -10,6 +10,7 @@
 	import Input from "$lib/components/ui/input/input.svelte";
 	import { decrypt, kdf } from "$lib/actions/encryption";
     import { hexToBytes } from "@noble/hashes/utils";
+    import OnboardingHeader from "./OnboardingHeader.svelte";
 
 	let backupFileName = $state("");
 	let isLoading = $state(true);
@@ -91,8 +92,8 @@
 		return true;
 	};
 </script>
-
-<div class="h-full flex mx-2 items-center justify-center">
+<OnboardingHeader></OnboardingHeader>
+<div class="h-screen flex mx-2 items-center justify-center">
 	<div
 		class="flex w-full h-full max-h-96 justify-center gap-2 flex-col text-center"
 	>
@@ -134,9 +135,6 @@
 					</svg>
 				</div>
 			</Dropzone>
-			<div>
-				<Button variant="link" onclick={() => pop()}>Back</Button>
-			</div>
 		{/if}
 	</div>
 	<Dialog.Root bind:open={isOpen}>

@@ -61,7 +61,7 @@
 
 </script>
 
-<div class="flex flex-col items-start gap-3 w-80 h-full mt-32">
+<div class="flex flex-col items-start gap-3 w-80 h-full">
 {#if contact}
         <div class="h-20 flex items-center justify-center gap-2">
             <Avatar.Root>
@@ -77,8 +77,8 @@
             </Avatar.Root>
             {contact.alias}
         </div>
-        <div class="h-screen">
-            <div class="flex flex-col-reverse overflow-auto h-2/3">
+        <div class="w-80">
+            <div class="flex flex-col-reverse overflow-auto w-full h-2/3 pb-32">
                 {#await sortedMessages}
                     <LoaderCircle class='animate-spin'></LoaderCircle>
                 {:then sortedMessages}
@@ -95,7 +95,7 @@
                 {/each}
                 {/await}
             </div>
-            <div class="w-80 flex gap-2">
+            <div class="fixed bottom-0 py-2 w-80 flex gap-2 bg-background">
                 <Textarea bind:value={chatText}></Textarea>
                 <div class="flex gap-2 flex-col">
                     <Button onclick={sendMessage} disabled={isSending}>

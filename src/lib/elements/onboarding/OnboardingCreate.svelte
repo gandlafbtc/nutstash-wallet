@@ -9,7 +9,7 @@
 
 </script>
 <OnboardingHeader hasBack={false}></OnboardingHeader>
-<div class="flex w-full h-full items-center justify-center">
+<div class="flex w-full h-screen items-center justify-center">
 	<div class="flex flex-col gap-2 items-center p-2 w-80">
 		<h2 class="text-xl font-bold ">New Seed phrase created!</h2>
 		<Mnemonic />

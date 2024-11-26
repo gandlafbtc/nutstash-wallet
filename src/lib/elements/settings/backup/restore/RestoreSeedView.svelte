@@ -1,8 +1,6 @@
 <script lang="ts">
     import Button from "$lib/components/ui/button/button.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
-    import MintSelectorMulti from "$lib/elements/ui/MintSelectorMulti.svelte";
-    import { selectedMints } from "$lib/stores/local/selectedMints";
     import { mints } from "$lib/stores/persistent/mints";
 
 
@@ -10,40 +8,18 @@
     import { LoaderCircle, Plus } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import RestoreInProgress from "./RestoreInProgress.svelte";
+    import AddMint from "$lib/elements/mint/AddMint.svelte";
+    import DiscoverMints from "$lib/elements/mint/DiscoverMints.svelte";
+    import Divider from "$lib/elements/ui/Divider.svelte";
 
     let isInProgress = $state(false);
-    let isAddingMint = $state(false);
-    let mintUrlToAdd = $state('')
-
-    const addMint = async () => {
-        try {
-            if (!mintUrlToAdd) {
-                toast.warning('No url entered');
-                return
-            }
-            if ($mints.find((mint) => mint.url === mintUrlToAdd)) {
-                toast.warning('Mint is already added');
-                return;               
-            }
-          isAddingMint = true;
-          await  mints.fetchMint(mintUrlToAdd);
-          mintUrlToAdd = ''
-          toast.success('Mint added');
-        } catch (error) {
-			console.error(error)
-            toast.error(error.message);
-        }
-        finally {
-            isAddingMint = false;
-        }
-    }
 
     let isHide = $state(true)
 </script>
 {#if isInProgress}
     <RestoreInProgress></RestoreInProgress>
 {:else}
-<div class="h-full mt-32 flex flex-col gap-3">
+<div class="h-full  flex flex-col gap-3">
     <span class="font-bold text-lg">
         Restore from seed phrase
     </span>
@@ -55,31 +31,13 @@
         {/each}
     </button>
     <div class="mt-5 flex flex-col gap-2">
+        <Button class='mt-3' disabled={!$mints.length} onclick={()=>isInProgress=true}>Restore</Button>
+        <Divider text='or'></Divider>
         <span>
-            1. Add mints
+            Add more mints
         </span>
-        <div class="flex gap-2">
-            <Input bind:value={mintUrlToAdd} class='flex-grow' onkeypress={(e: KeyboardEvent)=> {
-                if (e.key === 'Enter') {
-                    addMint() 
-                }
-            }} />
-                <Button onclick={addMint} class="flex-shrink max-w-min" disabled={isAddingMint}>
-                    {#if isAddingMint}
-                    <LoaderCircle class="animate-spin">
-                        
-                    </LoaderCircle>
-                    {:else}
-                    <Plus></Plus>
-                    {/if}
-                    Add
-                </Button>
-            </div>
-            <span class="mt-3">
-                2. Select mints to restore
-            </span>
-            <MintSelectorMulti></MintSelectorMulti>
-            <Button class='mt-3' disabled={!$selectedMints.length} onclick={()=>isInProgress=true}>Restore</Button>
+            <AddMint></AddMint>
+            <DiscoverMints></DiscoverMints>
     </div>
 </div>
 {/if}

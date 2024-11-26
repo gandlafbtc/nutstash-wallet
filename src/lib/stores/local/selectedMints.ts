@@ -1,16 +1,16 @@
 import { browser } from "$app/environment";
 import { writable } from "svelte/store";
 
-const initialSelctedMints: Array<string> = [];
+const initialSelctedMint = -1;
 
-const initialSelctedMintsString: string = window.localStorage.getItem('selected-mints') ?? JSON.stringify(initialSelctedMints)
+const initialSelctedMintString: string = window.localStorage.getItem('selected-mint') ?? JSON.stringify(initialSelctedMint)
 	
-const initialValueSelected: Array<string> = JSON.parse(initialSelctedMintsString);
+const initialValueSelected: number = JSON.parse(initialSelctedMintString);
 
-export const selectedMints = writable<Array<string>>(initialValueSelected);
+export const selectedMint = writable<number>(initialValueSelected);
 
-selectedMints.subscribe(async (value) => {
+selectedMint.subscribe(async (value) => {
 		const stringValue = JSON.stringify(value);
-		window.localStorage.setItem('selected-mints', stringValue);
+		window.localStorage.setItem('selected-mint', stringValue);
 });
 

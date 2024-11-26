@@ -28,7 +28,7 @@ import Input from "$lib/components/ui/input/input.svelte";
 
 
 </script>
-<div class="w-80 gap-3 flex flex-col h-full items-start mt-32">
+<div class="w-80 gap-3 flex flex-col h-full items-start ">
     <div class="flex gap-2 items-center">
 
         <span class="font-bold">

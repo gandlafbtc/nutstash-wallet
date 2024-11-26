@@ -25,7 +25,7 @@ import { keysStore } from "$lib/stores/persistent/keys";
    
 </script>
 
-<div class="h-full flex mt-32 gap-5 flex-col w-80">
+<div class="h-full flex  gap-5 flex-col w-80">
     <div>
         <p class="font-bold">
             Keys

@@ -15,6 +15,7 @@ const createContactsStore = () => {
     const {addMany, addOrUpdate, remove, clear ,init: initialize,reEncrypt ,reset, getBy, getAllBy} = createDefaultStoreFunctions(encryptionHelper, store);
 
     const init = async () => {
+        await initialize()
         if(!get(store).length){
             const npub = npubEncode(NUTSTASH_PUBKEY)
             await addOrUpdate(npub, {

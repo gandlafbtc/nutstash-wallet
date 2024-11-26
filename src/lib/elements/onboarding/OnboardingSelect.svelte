@@ -14,7 +14,7 @@
 	};
 </script>
 <OnboardingHeader></OnboardingHeader>
-<div class="w-full flex justify-center h-full">
+<div class="w-full flex justify-center h-screen">
 <div class="p-2 flex w-80 flex-col items-center justify-center max-w-4xl">
 	<h1 class="font-bold text-xl mb-4">Select your way to start!</h1>
 

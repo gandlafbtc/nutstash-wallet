@@ -9,7 +9,7 @@
     let isOpen = $state(false);
 </script>
 
-<div class="h-full items-start gap-3 flex flex-col mt-32 w-80">
+<div class="h-full items-start gap-3 flex flex-col  w-80">
     <div>
         <span class="font-bold text-lg"> Backup settings </span>
     </div>

@@ -4,7 +4,7 @@
 import { DB } from "$lib/db/db";
     import { init } from "$lib/init/init";
     import { isOnboarded } from "$lib/stores/local/message";
-    import { selectedMints } from "$lib/stores/local/selectedMints";
+    import { selectedMint } from "$lib/stores/local/selectedMints";
     import { usePassword } from "$lib/stores/local/usePassword";
     import { delay } from "$lib/util/utils";
     import { toast } from "svelte-sonner";
@@ -15,7 +15,7 @@ import { DB } from "$lib/db/db";
         try {
             isOpen=false
             usePassword.set(undefined)
-            selectedMints.set([]);
+            selectedMint.set(-1);
             isOnboarded.set(false);
             DB.deleteDatabase()
             toast.promise(delay(1000), {
@@ -35,7 +35,7 @@ import { DB } from "$lib/db/db";
 </script>
 
 
-<div class="w-80 h-full mt-32 flex flex-col gap-5">
+<div class="w-80 h-full  flex flex-col gap-5">
  
     <p class="text-destructive">
         <span class="font-bold">

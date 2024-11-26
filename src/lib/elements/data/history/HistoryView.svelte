@@ -3,6 +3,4 @@
 import CompactHistory from "./CompactHistory.svelte";
 
 </script>
-<ScrollArea class='h-full mt-28'>
     <CompactHistory></CompactHistory>
-</ScrollArea>

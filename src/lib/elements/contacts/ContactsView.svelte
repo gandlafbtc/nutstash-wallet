@@ -6,9 +6,7 @@
     import { contactsStore } from "$lib/stores/persistent/contacts";
     import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import Contact from "./Contact.svelte";
-    import AddContact from "./AddContact.svelte";
     import { discoverContacts } from "$lib/actions/nostr";
-    import { discoveredContacts } from "$lib/stores/session/contactdiscover";
     import { push } from "svelte-spa-router";
     import { toast } from "svelte-sonner";
 
@@ -30,7 +28,7 @@
  
 
 </script>
-<div class="w-80 flex flex-col gap-2 h-full mt-32">
+<div class="w-80 flex flex-col gap-2 h-full">
     <div class="w-full flex gap-2">
 
         <Button onclick={() => isOpen =!isOpen}>

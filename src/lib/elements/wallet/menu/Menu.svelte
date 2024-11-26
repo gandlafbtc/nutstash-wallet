@@ -46,7 +46,7 @@
     
 </script>
 
-<Sidebar.Root>
+<Sidebar.Root class='z-20'>
     <Sidebar.Header class=" justify-between flex-row">
         <DarkModeSetting></DarkModeSetting>
         <div class="p-1">

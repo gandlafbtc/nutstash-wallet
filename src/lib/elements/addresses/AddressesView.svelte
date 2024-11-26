@@ -5,7 +5,7 @@
     import Address from "./Address.svelte";
 
 </script>
-<div class="h-full mt-32 flex flex-col gap-4">
+<div class="h-full flex flex-col gap-4">
     <p class="font-bold">My Addresses</p>
     <Carousel.Root class="w-full max-w-xs">
         <Carousel.Content>

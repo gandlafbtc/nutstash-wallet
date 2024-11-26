@@ -9,7 +9,7 @@
     import Divider from "../ui/Divider.svelte";
     let hasSelected = $state(false)
 </script>
-<div class="flex h-full w-80 flex-col gap-2 mt-32">
+<div class="flex h-full w-80 flex-col gap-2">
     <p class="font-bold">
 
         Import Contacts

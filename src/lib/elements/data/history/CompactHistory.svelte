@@ -29,7 +29,7 @@
         ...$meltQuotesStore,
     ]);
 
-    let limit = $state(5);
+    let limit = $state(2);
 
     let latest = $derived(
         [...items].sort((a, b) => b.lastChangedAt - a.lastChangedAt).slice(0, limit),
