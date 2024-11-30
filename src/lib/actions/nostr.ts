@@ -13,10 +13,19 @@ import { nostrPool } from "$lib/stores/session/nostr";
 import { discoveredMints } from "$lib/stores/session/mintdiscover";
 import { wordlist } from "@scure/bip39/wordlists/english";
 import { discoveredContacts } from "$lib/stores/session/contactdiscover";
+import type { Proof } from "@cashu/cashu-ts";
 
 export const createAlias = () => {
-  const wordlistLength  = wordlist.length
-  return wordlist[Math.floor(Math.random() * wordlistLength)]+' '+ wordlist[Math.floor(Math.random() * wordlistLength)]
+  const wordlistLength = wordlist.length
+  return wordlist[Math.floor(Math.random() * wordlistLength)] + ' ' + wordlist[Math.floor(Math.random() * wordlistLength)]
+}
+
+export const getNprofile = () => {
+  const profilePointer: ProfilePointer = {
+    pubkey: get(keysStore)[get(keysStore).length - 1].publicKey.slice(2),
+    relays: get(relaysStore).filter(r => r.isOn).map(r => r.url)
+  }
+  return nip19.nprofileEncode(profilePointer)
 }
 
 export const connectNostrRelays = async () => {
@@ -52,7 +61,7 @@ export const discoverMints = async () => {
       if (kTag[1] != "38172") {
         return
       }
-      const mintUrl = uTag[1] 
+      const mintUrl = uTag[1]
       discoveredMints.add(mintUrl)
     }
   })
@@ -61,33 +70,33 @@ export const discoverMints = async () => {
 export const discoverContacts = async (npub: string) => {
   discoveredContacts.set([])
   const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
-  const filter: Filter = { kinds: [3], limit: 1000,authors: [ nip19.decode(npub).data as string] };
+  const filter: Filter = { kinds: [3], limit: 1000, authors: [nip19.decode(npub).data as string] };
   const sub = get(nostrPool).subscribeMany(activeRelays, [filter], {
     onevent: (event: Event) => {
       console.log(event)
-      const contacts  = []
+      const contacts = []
       for (const tag of event.tags) {
         if (tag[0] !== 'p') {
           continue
         }
         contacts.push(tag[1])
-      } 
+      }
       sub.close()
       discoverContactsDetails(contacts)
     },
-    
+
   })
 }
 
 const discoverContactsDetails = async (contacts: string[]) => {
   const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
-  const filter: Filter = { kinds: [0], limit: 1000,authors: contacts };
+  const filter: Filter = { kinds: [0], limit: 1000, authors: contacts };
   const sub = get(nostrPool).subscribeMany(activeRelays, [filter], {
     onevent: (event: Event) => {
-      const content = JSON.parse(event.content) 
-      discoveredContacts.add(nip19.npubEncode(event.pubkey), content.name, content.picture )
+      const content = JSON.parse(event.content)
+      discoveredContacts.add(nip19.npubEncode(event.pubkey), content.name, content.picture)
     },
-    
+
   })
 }
 
@@ -108,7 +117,7 @@ export const publishEvent = async (content: string, tags: string[][]) => {
   const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
   const event: EventTemplate = {
     content,
-    created_at: Math.floor(Date.now()/1000),
+    created_at: Math.floor(Date.now() / 1000),
     kind: 1,
     tags,
   }
@@ -117,12 +126,12 @@ export const publishEvent = async (content: string, tags: string[][]) => {
     await get(nostrPool).publish(activeRelays, signedEvent)
     console.log(signedEvent.id)
   } catch (error) {
-    console.error(error)    
+    console.error(error)
   }
 }
 
 
-const sendNip17DirectMessage = async function (receiverPubkey: string, message: string, relays: string[] | undefined) {
+const sendNip17DirectMessage = async function (receiverPubkey: string, message: string, relays?: string[]) {
   const activeRelays = get(relaysStore).filter(r => r.isOn).map(r => r.url);
   const hexPrivKey = get(keysStore)[get(keysStore).length - 1].privateKey
   const seedSignerSecKey = hexToBytes(hexPrivKey)
@@ -132,7 +141,7 @@ const sendNip17DirectMessage = async function (receiverPubkey: string, message: 
   }
   const randomPrivateKey = generateSecretKey();
   const randomPublicKey = getPublicKey(randomPrivateKey);
-  const ndk = new NDK({ explicitRelayUrls: activeRelays, signer: new NDKPrivateKeySigner(bytesToHex(randomPrivateKey)) });
+  const ndk = new NDK({ explicitRelayUrls: [...activeRelays, ...relays ?? []], signer: new NDKPrivateKeySigner(bytesToHex(randomPrivateKey)) });
 
   const dmEvent = new NDKEvent();
   dmEvent.kind = 14;
@@ -260,10 +269,34 @@ const subscribeToNip17DirectMessages = async function () {
           const sealEvent = JSON.parse(wappedContent) as NostrEvent;
           const dmEventString = nip44.v2.decrypt(sealEvent.content, nip44.v2.utils.getConversationKey(seedSignerSecKey, sealEvent.pubkey));
           const dmEvent = JSON.parse(dmEventString) as Event;
+          let isToken = false
+          if (dmEvent.content.startsWith("{")) {
+            try {
+              const decoded = JSON.parse(dmEvent.content) as {
+                id?: string;
+                memo?: string;
+                mint: string;
+                unit: string;
+                proofs: Proof[];
+              };
+              if (decoded.proofs.length) {
+                isToken = true
+              }
+            } catch (error) { }
+          }
+          if (dmEvent.content.startsWith("cashu")) {
+            
+          }
+
+          if (isToken) {
+            
+          }
+
           const message: Message = {
             ...dmEvent,
             isRead: false,
-            wrapId: wrapEvent.id
+            wrapId: wrapEvent.id,
+            isToken
           }
           console.log(dmEvent.content)
           messagesStore.addOrUpdate(wrapEvent.id, message, 'wrapId')

@@ -1,9 +1,7 @@
 <script lang="ts">
     import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
-    import { onMount } from "svelte";
     import {MediaQuery} from 'runed'
     import MintQuoteListItem from "./MintQuoteListItem.svelte";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import * as Pagination from "$lib/components/ui/pagination";
     
     const isDesktop = new MediaQuery("(min-width: 768px)");
@@ -21,11 +19,9 @@
 <div class="h-full pt-16">
     	
    
-   <ScrollArea class='h-[90%]'>
     {#each  currentQuotes as quote}
            <MintQuoteListItem {quote}></MintQuoteListItem>
      {/each}
-     </ScrollArea>
 
   <Pagination.Root {count} {perPage} {siblingCount} bind:page>
     {#snippet children({ pages, currentPage })}

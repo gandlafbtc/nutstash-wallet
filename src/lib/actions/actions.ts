@@ -5,13 +5,15 @@ import { pendingProofsStore, proofsStore } from "$lib/stores/persistent/proofs"
 import { transactionsStore } from "$lib/stores/persistent/transactions"
 import { getCount } from "$lib/util/utils"
 import { formatAmount, getAmountForTokenSet, getAproxAmount, getExactAmount, getMintForKeysetId, getUnitForKeysetId, getWalletWithUnit } from "$lib/util/walletUtils"
-import { getDecodedToken, MeltQuoteState, MintQuoteState, type MeltQuoteResponse, type Proof, type Token } from "@cashu/cashu-ts"
+import { getDecodedToken, decodePaymentRequest, MeltQuoteState, MintQuoteState, type MeltQuoteResponse, type Proof, type Token, PaymentRequest, PaymentRequestTransportType, type PaymentRequestTransport } from "@cashu/cashu-ts"
 import { get } from "svelte/store"
 import { bytesToHex, randomBytes } from "@noble/hashes/utils"
-import { EXPIRED, TransactionStatus, TransactionType, type Mint, type StoredMeltQuote, type StoredMintQuote, type StoredTransaction } from "$lib/db/models/types"
+import { EXPIRED, TransactionStatus, TransactionType, type Mint, type StoredMeltQuote, type StoredMintQuote, type StoredPaymentRequest, type StoredTransaction } from "$lib/db/models/types"
 import { toast } from "svelte-sonner"
 import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
 import { decode } from "@gandlaf21/bolt11-decode"
+import { getNprofile } from "./nostr"
+import { cashuRequestsStore } from "$lib/stores/persistent/requests"
 
 export const createMintQuote = async (mintUrl: string, amount: number, options?: { unit?: string }) => {
     const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit)
@@ -235,10 +237,6 @@ export const getFeeForProofs = async (proofs: Proof[]): Promise<number> => {
     return wallet.getFeesForProofs(proofs)
 }
 
-const selectProofsForAmount = (amount: number, proofs: Proof[]): Proof[] => {
-    return proofs
-}
-
 export const getMinMaxFeeForAmount = (amount: number, mint: Mint, unit: string) => {
     const keyset = mint.keysets.keysets.find(ks => ks.unit === unit)
     const keys = mint.keys.keysets.find(k => k.id === keyset?.id)
@@ -246,4 +244,28 @@ export const getMinMaxFeeForAmount = (amount: number, mint: Mint, unit: string) 
 
     const feeppk = keyset?.input_fee_ppk
     const denos = Object.keys(keys?.keys ?? {})
+}
+
+export const createCashuRequest = async (amount: number, mints?: string[], unit?: string, description?: string, singleUse?: boolean) => {
+    const type = PaymentRequestTransportType.NOSTR
+    const transport: PaymentRequestTransport[] = [{
+        type,
+        target: getNprofile(),
+        tags: [["n", "17"]]
+    }]
+    const id = bytesToHex(randomBytes(8))
+    const paymentRequest = new PaymentRequest(transport, id, amount, unit, mints ,description, singleUse)
+    const storedPaymentRequest: StoredPaymentRequest = {
+        createdAt: Date.now(),
+        lastChangedAt: Date.now(),
+        transport,
+        amount,
+        description,
+        id,
+        mints,
+        singleUse,
+        unit
+    }
+    await cashuRequestsStore.add(storedPaymentRequest)
+    return paymentRequest
 }

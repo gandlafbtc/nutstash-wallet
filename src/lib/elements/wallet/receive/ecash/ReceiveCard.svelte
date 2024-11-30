@@ -23,8 +23,11 @@
     import { toast } from "svelte-sonner";
     import { keysStore } from "$lib/stores/persistent/keys";
     import { getBy } from "$lib/stores/persistent/helper/storeHelper";
+    import type { Token } from "@cashu/cashu-ts";
 
-    let {token} = $props()    
+    interface Props {token: Token}
+    
+    let {token}: Props = $props();
 
     let isKnownMint = $derived(
         $mints.find((m) => m.url === token?.mint) ? true : false,

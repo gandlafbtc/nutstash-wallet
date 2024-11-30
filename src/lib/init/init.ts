@@ -5,13 +5,15 @@ import { countsStore } from "$lib/stores/persistent/counts"
 import { keysStore } from "$lib/stores/persistent/keys"
 import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
 import { mintQuotesStore } from "$lib/stores/persistent/mintquotes"
-import { createMintsStore, mints } from "$lib/stores/persistent/mints"
+import { mints } from "$lib/stores/persistent/mints"
 import { mnemonic } from "$lib/stores/persistent/mnemonic"
 import { offlineProofsStore, pendingProofsStore, proofsStore, spentProofsStore } from "$lib/stores/persistent/proofs"
 import { transactionsStore } from "$lib/stores/persistent/transactions"
 import { relaysStore } from "$lib/stores/persistent/relays"
 import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections"
 import { nwc } from "$lib/stores/session/nwc"
+import { cashuRequestsStore } from "$lib/stores/persistent/requests"
+import { settings } from "$lib/stores/persistent/settings"
 
 export const init = async () => {
     await initStores()
@@ -24,6 +26,7 @@ const initNostrConnections = async () => {
 }
 
 const initStores = async () => {
+    await mnemonic.init()
     await mints.init()
     await transactionsStore.init()
     await mintQuotesStore.init()
@@ -35,13 +38,15 @@ const initStores = async () => {
     await keysStore.init()
     await nwcKeysStore.init()
     await countsStore.init()
-    await mnemonic.init()
     await messagesStore.init()
     await contactsStore.init()
     await relaysStore.init()
+    await cashuRequestsStore.init()
+    await settings.init()
 }
 
 export const reencrypt = async () => {
+    await mnemonic.reEncrypt()
     await mints.reEncrypt()
     await transactionsStore.reEncrypt()
     await mintQuotesStore.reEncrypt()
@@ -53,10 +58,11 @@ export const reencrypt = async () => {
     await keysStore.reEncrypt()
     await nwcKeysStore.reEncrypt()
     await countsStore.reEncrypt()
-    await mnemonic.reEncrypt()
     await messagesStore.reEncrypt()
     await contactsStore.reEncrypt()
     await relaysStore.reEncrypt()
+    await cashuRequestsStore.reEncrypt()
+    await settings.reEncrypt()
 }
 
 export const setStoresFromBackupJSON = async (obj:any) => {
@@ -75,4 +81,6 @@ export const setStoresFromBackupJSON = async (obj:any) => {
     messagesStore.set(obj.messagesStore)
     contactsStore.set(obj.contactsStore)
     relaysStore.set(obj.relaysStore)
+    cashuRequestsStore.set(obj.cashuRequestsStore)
+    settings.set(obj.setting)
 }

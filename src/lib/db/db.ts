@@ -1,7 +1,8 @@
 import { openDB, deleteDB, type IDBPDatabase } from 'idb';
 import type { NutstashDB } from './model';
 
-export const DB_VERSION = 1;
+
+export const DB_VERSION = 2;
 export const DB_NAME = 'nutstash-db';
 
 export class DB {
@@ -20,22 +21,28 @@ export class DB {
     const db = await openDB<NutstashDB>(DB_NAME, DB_VERSION, {
       upgrade:
         (db, oldVersion, newVersion, transaction, event) => {
-          db.createObjectStore('encrypted-mints')
-          db.createObjectStore('encrypted-settings')
-          db.createObjectStore('encrypted-mint-quotes')
-          db.createObjectStore('encrypted-melt-quotes')
-          db.createObjectStore('encrypted-transactions')
-          db.createObjectStore('encrypted-contacts')
-          db.createObjectStore('encrypted-messages')
-          db.createObjectStore('encrypted-counts')
-          db.createObjectStore('encrypted-proofs')
-          db.createObjectStore('encrypted-spent-proofs')
-          db.createObjectStore('encrypted-pending-proofs')
-          db.createObjectStore('encrypted-offline-proofs')
-          db.createObjectStore('encrypted-keys')
-          db.createObjectStore('encrypted-nwc-keys')
-          db.createObjectStore('encrypted-mnemonics')
-          db.createObjectStore('encrypted-relays')
+          if (!oldVersion) { 
+            db.createObjectStore('encrypted-mints')
+            db.createObjectStore('encrypted-settings')
+            db.createObjectStore('encrypted-mint-quotes')
+            db.createObjectStore('encrypted-melt-quotes')
+            db.createObjectStore('encrypted-transactions')
+            db.createObjectStore('encrypted-contacts')
+            db.createObjectStore('encrypted-messages')
+            db.createObjectStore('encrypted-counts')
+            db.createObjectStore('encrypted-proofs')
+            db.createObjectStore('encrypted-spent-proofs')
+            db.createObjectStore('encrypted-pending-proofs')
+            db.createObjectStore('encrypted-offline-proofs')
+            db.createObjectStore('encrypted-keys')
+            db.createObjectStore('encrypted-nwc-keys')
+            db.createObjectStore('encrypted-mnemonics')
+            db.createObjectStore('encrypted-relays')
+          }
+          // version 2
+          if (newVersion??0>1) {
+            db.createObjectStore('encrypted-cashu-requests')
+          }
       },
       blocked: (currentVersion, blockedVersion, event) => {
         // …

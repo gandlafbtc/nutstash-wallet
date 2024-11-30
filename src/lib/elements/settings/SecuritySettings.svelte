@@ -42,13 +42,7 @@
 </script>
 
 <div class="h-full gap-3 flex flex-col  w-80">
-    <div>
-        <span class="font-bold text-lg">
-            Security Settings
-        </span>
-    </div>
     <div class="flex flex-col gap-2">
-        
         {#if $usePassword}
             <span class="flex gap-2 text-green-600">
                 <Lock></Lock>
@@ -56,11 +50,10 @@
                     Wallet is protected by passphrase.
                 </span>
             </span>
-
-            <div class="flex gap-2">
+            <div class="flex gap-2 w-full">
                 <Dialog.Root bind:open={isOpen}>
                     <Dialog.Trigger><Button variant="destructive">
-                        Remove passphrase
+                        Remove
                     </Button></Dialog.Trigger>
                     <Dialog.Content>
                       <Dialog.Header>
@@ -84,8 +77,8 @@
                     </Dialog.Content>
                   </Dialog.Root>
                 
-                <Button href="/#/wallet/settings/security/changepass">
-                    Change passphrase
+                <Button class='w-full' href="/#/wallet/settings/security/changepass">
+                    Change
                 </Button>
             </div>
                 

@@ -19,12 +19,13 @@
         spentProofsStore,
     } from "$lib/stores/persistent/proofs";
     import { transactionsStore } from "$lib/stores/persistent/transactions";
-    import { key } from "$lib/stores/session/key";
     import { bytesToHex } from "@noble/hashes/utils";
-    import { Lock } from "lucide-svelte";
+    import { Lock, Upload } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { relaysStore } from "$lib/stores/persistent/relays";
     import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections";
+    import { cashuRequestsStore } from "$lib/stores/persistent/requests";
+    import { settings } from "$lib/stores/persistent/settings";
 
     let isEncrypt = $state(false);
 
@@ -48,6 +49,8 @@
         contactsStore: $contactsStore,
         messagesStore: $messagesStore,
         relaysStore: $relaysStore,
+        cashuRequestsStore: $cashuRequestsStore,
+        settings: $settings,
     };
 
 
@@ -105,6 +108,7 @@
         </Button>
         {:else}
         <Button class="btn btn-primary" onclick={exportFile}>
+            <Upload></Upload>
             Export Wallet
         </Button>
         {/if}
@@ -114,7 +118,7 @@
     </div>
     <span class="text-xs text-secondary">
         {#if isEncrypt}
-            Export encrypted wallet file. Will require password to import.
+            Export encrypted wallet file.
         {:else}
             Export unencrypted wallet file.
         {/if}

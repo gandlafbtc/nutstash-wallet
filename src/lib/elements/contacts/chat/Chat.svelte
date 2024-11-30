@@ -11,15 +11,13 @@
     import { nip19 } from "nostr-tools";
     import MeMessageWrapper from "./MeMessageWrapper.svelte";
     import ThemMessageWrapper from "./ThemMessageWrapper.svelte";
-    import SendEcash from "./SendEcash.svelte";
+    import SendEcashButton from "./SendEcashButton.svelte";
     import * as Avatar from "$lib/components/ui/avatar";
     import { LoaderCircle, Send } from "lucide-svelte";
     import AddContact from "../AddContact.svelte";
     import { onMount } from "svelte";
 
     let contact = $derived(getBy($contactsStore, $params?.npub ?? "", "npub"));
-
-    let scrollArea = $state();
 
     let isSending = $state(false)
 
@@ -101,8 +99,8 @@
                     <Button onclick={sendMessage} disabled={isSending}>
                         <Send></Send>
                     </Button>
-                    <SendEcash to={contact} sendCallback={sendEcashToNpub}
-                    ></SendEcash>
+                    <SendEcashButton to={contact} sendCallback={sendEcashToNpub}
+                    ></SendEcashButton>
                 </div>
             </div>
         </div>

@@ -1,7 +1,6 @@
 <script lang="ts">
     import { meltQuotesStore } from "$lib/stores/persistent/meltquotes";
     import {MediaQuery} from 'runed'
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import * as Pagination from "$lib/components/ui/pagination";
     import MeltQuoteListItem from "./MeltQuoteListItem.svelte";
     
@@ -20,11 +19,9 @@
 <div class="h-full pt-16">
     	
    
-   <ScrollArea class='h-[90%]'>
     {#each  currentQuotes as quote}
            <MeltQuoteListItem {quote}></MeltQuoteListItem>
      {/each}
-     </ScrollArea>
 
   <Pagination.Root {count} {perPage} {siblingCount} bind:page>
     {#snippet children({ pages, currentPage })}

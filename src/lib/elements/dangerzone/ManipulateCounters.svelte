@@ -1,7 +1,6 @@
 <script lang="ts">
 
     import Button from "$lib/components/ui/button/button.svelte";
-import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import type { KeysetCount } from "$lib/db/models/types";
 import { countsStore } from "$lib/stores/persistent/counts";
     import NumberFlow from "@number-flow/svelte";
@@ -22,9 +21,8 @@ const updateCount = async (count: KeysetCount, incr: number) => {
         Manipulating counters can mess up the restore process. Only proceed if you know what you are doing.
     </p>
     
-    <ScrollArea class='h-96'>
         {#each $countsStore as count}
-        <div class="my-2 p-4 flex gap-2 justify-between items-center w-full">
+        <div class="mb-2  flex gap-2 justify-between items-center w-full">
             <p class="w-32 text-sm overflow-clip text-ellipsis">
                 {count.keysetId}
             </p>
@@ -40,5 +38,4 @@ const updateCount = async (count: KeysetCount, incr: number) => {
             
         </div>
         {/each}
-    </ScrollArea>
 </div>

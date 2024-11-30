@@ -13,7 +13,6 @@
     import Divider from "$lib/elements/ui/Divider.svelte";
     import { proofsStore } from "$lib/stores/persistent/proofs";
     import { toast } from "svelte-sonner";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import * as Dialog  from "$lib/components/ui/dialog";
     import { push } from "svelte-spa-router";
 
@@ -113,13 +112,11 @@
 
     </Divider>
     
-    <ScrollArea class='h-4/6'>
         {#each restoreMints as mint, i}
         <div class="my-2">
             <RestoreMint {mint} bind:restore={restores[i]}></RestoreMint>
         </div>
         {/each}
-    </ScrollArea>
 </div>
 
 

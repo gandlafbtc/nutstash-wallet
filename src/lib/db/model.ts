@@ -66,5 +66,9 @@ export interface NutstashDB extends DBSchema {
     key: string;
     value: EncryptedStore;
   }
+  'encrypted-cashu-requests': {
+    key: string;
+    value: EncryptedStore;
+  }
 
 }

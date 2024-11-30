@@ -46,12 +46,9 @@
             </p>
         </div>
     </div>
-    <ScrollArea class='h-32'>
         <div class="flex p-2 rounded-lg bg-secondary">
-
             {mint.info.motd}
         </div>
-    </ScrollArea>
     <div class=" flex gap-1 text-lg">
         {#each getUnitsForMints([mint]) as unit}
             <p class="text-nowrap text-sm">

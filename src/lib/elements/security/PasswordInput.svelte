@@ -60,7 +60,7 @@
 </script>
 
 {#if ($usePassword && !$key) || isUnlocking}
-	<div class="w-full h-full flex items-center justify-center">
+	<div class="w-screen h-screen flex items-center justify-center">
 		<div class="w-full h-full flex items-center justify-center max-w-4xl">
 			<div class="flex flex-col items-center border rounded p-6 gap-4 w-80">
 				<div class="w-20 h-20">

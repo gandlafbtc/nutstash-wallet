@@ -8,7 +8,6 @@
     } from "$lib/stores/persistent/proofs";
     import type { Proof } from "@cashu/cashu-ts";
     import * as Select from "$lib/components/ui/select";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
 
     type ProofType = "OFFLINE" | "SPENT" | "PENDING" | "DEFAULT";
 
@@ -65,7 +64,10 @@
     let latest = $derived(items.slice(0, limit));
 </script>
 
-<div class="flex flex-col gap-2 mt-24 h-full">
+<div class="flex flex-col gap-2 h-full">
+    <p class="text-lg font-bold">
+        Ecash
+    </p>
     <Select.Root
         type="multiple"
         name="mint-single"
@@ -85,7 +87,6 @@
             </Select.Group>
         </Select.Content>
     </Select.Root>
-    <ScrollArea class="h-5/6">
         <div class="flex gap-2 w-full mt-6">
             <div class="flex gap-2 flex-col w-full">
                 {#each latest as item}
@@ -147,5 +148,4 @@
                 {/if}
             </div>
         </div>
-    </ScrollArea>
 </div>

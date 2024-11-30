@@ -38,7 +38,7 @@
             Discover Mints
     </Button>
 
-    <ScrollArea class="flex flex-col gap-2 h-96 w-full">
+    <div class="flex flex-col gap-2 w-full">
         {#each $discoveredMints.filter((m) => !$mints.find((ms) => m.url === ms.url)) as mint}
             {#if mint.url}
                 <div
@@ -64,5 +64,5 @@
                 </div>
             {/if}
         {/each}
-    </ScrollArea>
+            </div>
 </div>

@@ -43,10 +43,8 @@ import { keysStore } from "$lib/stores/persistent/keys";
     
     <div>
 
-        <ScrollArea>
             {#each $keysStore as keypair}
             <Keypair {keypair}></Keypair>
             {/each}
-        </ScrollArea>
     </div>
 </div>

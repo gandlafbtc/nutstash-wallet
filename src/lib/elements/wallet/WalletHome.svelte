@@ -20,46 +20,56 @@
   import isTauri from "$lib/tauri/deviceHelper";
   import { untrack } from "svelte";
     import MintCarousel from "../mint/mintDropdown/MintCarousel.svelte";
+    import { settings } from "$lib/stores/persistent/settings";
 
   let currentUnit = $state("sat");
 
   let { divider, fraction } = $derived(getDivider(currentUnit));
+  let isShowBalance = $state(false)
+
+  const toggleShowBalance = ()=> {
+    isShowBalance = !isShowBalance
+  }
 
   $effect(() => {
     const numberFlowElement = untrack(() =>
       document.getElementById("number-flow"),
     );
-    if (amount !== undefined && currentUnit && $selectedMint!==undefined) {
-      const elements = numberFlowElement?.shadowRoot?.querySelectorAll(
-        ".number .number__inner .section .digit .is-current",
-      );
-      if (!elements || elements.length === 0) {
-        return;
-      }
-
-      let hasNonZeroDigit = false
-      for (const [i, element] of elements.entries()) {
-        if (hasNonZeroDigit) {
-          css(element, {
-            opacity: "1",
-          });
-          continue
+    if (amount !== undefined && currentUnit && $selectedMint!==undefined && isShowBalance!==undefined) {
+      //hack: set timeout to wait for elements to show up
+      setTimeout(() => {
+        const elements = numberFlowElement?.shadowRoot?.querySelectorAll(
+          ".number .number__inner .section .digit .is-current",
+        );
+        if (!elements || elements.length === 0) {
+          return;
         }
-        const elementsBefore = [...elements]
-          .slice(0, i+1)
-          .map((e) => e.textContent);
-        if (elementsBefore.find((e) => e !== "0")) {
-          hasNonZeroDigit = true          
-          css(element, {
-            opacity: "1",
-          });
+  
+        let hasNonZeroDigit = false
+        for (const [i, element] of elements.entries()) {
+          if (hasNonZeroDigit) {
+            css(element, {
+              opacity: "1",
+            });
+            continue
+          }
+          const elementsBefore = [...elements]
+            .slice(0, i+1)
+            .map((e) => e.textContent);
+          if (elementsBefore.find((e) => e !== "0")) {
+            hasNonZeroDigit = true          
+            css(element, {
+              opacity: "1",
+            });
+          }
+          else {
+            css(element, {
+              opacity: "0.1",
+            });
+          }
         }
-        else {
-          css(element, {
-            opacity: "0.1",
-          });
-        }
-      }
+        
+      }, 1);
 
     }
   });
@@ -102,7 +112,15 @@
   <div class="flex gap-2 items-center justify-between w-full">
     <p class="text-4xl">
       {getUnitSymbol(currentUnit, false)}
-      <NumberFlow
+      <button class="h-12" onclick={toggleShowBalance}>
+      {#if $settings[0].general.hideBalance && !isShowBalance}
+        <span class="opacity-35">
+
+          **********
+        </span>
+        {:else}
+        
+        <NumberFlow
         id="number-flow"
         value={amount / divider}
         format={{
@@ -110,6 +128,8 @@
           maximumFractionDigits: fraction,
         }}
       ></NumberFlow>
+      {/if}
+    </button>
     </p>
     <UnitSelector
       bind:currentUnit

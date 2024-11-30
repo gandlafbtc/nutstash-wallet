@@ -45,6 +45,12 @@ import DonateView from "./elements/Donate/DonateView.svelte";
 import DonateAnon from "./elements/Donate/DonateAnon.svelte";
 import ManipulateCounters from "./elements/dangerzone/ManipulateCounters.svelte";
 import DeleteStuff from "./elements/dangerzone/DeleteStuff.svelte";
+import SendView from "./elements/wallet/send/SendView.svelte";
+import ReceiveCashuRequest from "./elements/wallet/receive/cashurequest/ReceiveCashuRequest.svelte";
+import CashuRequestListView from "./elements/wallet/receive/cashurequest/CashuRequestListView.svelte";
+import SendToCashuRequest from "./elements/wallet/receive/cashurequest/SendToCashuRequest.svelte";
+import CashuRequestInput from "./elements/wallet/receive/cashurequest/CashuRequestInput.svelte";
+import DataListView from "./elements/data/DataListView.svelte";
 
 export const routes = {
     '/': Loading,
@@ -97,14 +103,21 @@ export const walletRoutes = {
     '/receive/ln': MintQuoteListView,
     '/receive/ln/:quote': MintQuoteItem,
     '/receive/cashu': ReceiveCashu,
+    '/receive/cashureq/:id': ReceiveCashuRequest,
     '/receive/cashu/:token': ReceiveCashu,
     
-    '/send': Send,
+    '/send/requests': CashuRequestListView,
+    '/send/cashureq': CashuRequestInput,
+    '/send/cashureq/:creq': SendToCashuRequest,
+
+    '/send': SendView,
     '/send/cashu': TransactionsView,
     '/send/cashu/:id': TransactionItem,
     '/send/ln': SendLn,
     '/send/lnurl': SendLnurl,
     '/send/ln/:quote': MeltQuoteItem,
+
+    '/data': DataListView,
 
     '/settings': SettingsView,
     '/settings/backup': BackupSettings,

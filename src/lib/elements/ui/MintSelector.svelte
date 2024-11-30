@@ -4,9 +4,9 @@
 	import { mints } from "$lib/stores/persistent/mints";
     import { Landmark } from "lucide-svelte";
     import { toast } from "svelte-sonner";
+	type Props = {mint: Mint, onchange?: (value: string)=>void, disabled?: boolean}
 
-
-	let { mint = $bindable(), onchange}: {mint: Mint, onchange?: (value: string)=>void} = $props()
+	let { mint = $bindable(), onchange, disabled=false}: Props  = $props()
 
 	const onValueChange = (value: string) => {
 		const mintToSet = $mints.find(mint => mint.url === value)
@@ -22,7 +22,7 @@
 
 </script>
 
-<Select.Root type="single" name="mint-single" {onValueChange} allowDeselect={false}>
+<Select.Root type="single" name="mint-single" {onValueChange} allowDeselect={false} {disabled}>
 	<Select.Trigger class="">
 		<Landmark class='h-5 w-5'></Landmark>
 		{mint?.url}

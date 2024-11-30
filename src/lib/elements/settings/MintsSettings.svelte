@@ -6,7 +6,6 @@
     import { getBy } from "$lib/stores/persistent/helper/storeHelper";
     import { toast } from "svelte-sonner";
     import DiscoverMints from "../mint/DiscoverMints.svelte";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import * as Tabs from "$lib/components/ui/tabs";
     import { getHostFromUrl } from "$lib/util/utils";
     import MintDropdown from "../mint/mintDropdown/MintDropdown.svelte";
@@ -43,7 +42,6 @@
                     </div>
                     <div class="flex flex-col gap-1">
                         <span class="text-sm">Added mints</span>
-                        <ScrollArea class="h-96">
                             {#each $mints as m, i}
                                 <div
                                     class="flex gap-2 p-2 text-sm border rounded-lg my-2 items-center"
@@ -59,7 +57,6 @@
                                 <div>
                                 </div>
                                 {/each}
-                        </ScrollArea>
                     </div>
                 </div>
             {/if}

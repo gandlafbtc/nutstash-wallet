@@ -9,12 +9,12 @@
         getUnitsForMints,
         isNumeric,
     } from "$lib/util/walletUtils";
-    import { QrCode, Zap, LoaderCircle } from "lucide-svelte";
+    import { QrCode, Zap, LoaderCircle, Banknote } from "lucide-svelte";
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
     import { unit } from "$lib/stores/persistent/settings";
-    import { createMintQuote } from "$lib/actions/actions";
+    import { createCashuRequest, createMintQuote } from "$lib/actions/actions";
     import {
         openReceiveDrawer,
         openScannerDrawer,
@@ -113,6 +113,20 @@
         push("/wallet/receive/cashu/" + entered);
     };
 
+    const receiveCashuRequest = async () => {
+        try {
+            const amountInt = parseInt(amount);
+            openReceiveDrawer.set(false)
+            const req = await createCashuRequest(amountInt, mint?[mint?.url]:undefined, currentUnit, undefined,false)
+            push("/wallet/receive/cashureq/"+req.id)
+            
+        } catch (error) {
+            
+        } finally {
+
+        }
+    }
+
     const onKeypadPress = (value: string | { delete: boolean }) => {
         if (value.delete) {
             entered = entered.slice(0, -1);
@@ -141,7 +155,7 @@
             oninput={(e) => {
                 e.preventDefault();
             }}
-            placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount to mint"
+            placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount"
         ></Textarea>
     </div>
     <div>
@@ -180,7 +194,7 @@
                             ></UnitSelector>
                         </div>
                     {/if}
-                    <div class="w-80 py-5">
+                    <div class="w-80 flex flex-col gap-5 py-5">
                         <Button
                             disabled={isLoading}
                             class="w-full border-2 border-nutstash"
@@ -193,6 +207,12 @@
                                 <Zap></Zap>
                             {/if}
                             Receive via Lightning
+                        </Button>
+                        <Button variant='outline' onclick={receiveCashuRequest}
+                        class="w-full border-2"
+                        >
+                        <Banknote></Banknote>
+                          Receive via Cashu request
                         </Button>
                     </div>
                 </div>

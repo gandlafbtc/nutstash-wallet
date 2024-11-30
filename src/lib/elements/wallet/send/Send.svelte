@@ -48,7 +48,15 @@
     import Input from "$lib/components/ui/input/input.svelte";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
     import { selectedMint } from "$lib/stores/local/selectedMints";
-    let entered: string = $state("");
+    import { goto } from "$app/navigation";
+
+    interface Props {
+        input?:string
+    }
+    
+    let {input}: Props = $props();
+
+    let entered: string = $state(input??'');
 
     const getCurrentUnit = () => {
         if (!mint) {
@@ -70,12 +78,20 @@
         if (
             entered.toLowerCase().startsWith("lnbc") ||
             entered.toLowerCase().startsWith("lightning:lnbc")
-        ) {
+        )
+         {
             return entered;
         } else {
             return "";
         }
     });
+
+    $effect(()=> {
+        if (entered.startsWith('creq')){
+            openSendDrawer.set(false)
+            push('/wallet/send/cashureq/'+entered)
+        }
+    })
 
     let amount = $derived.by(() => {
         if (isNumeric(entered)) {
@@ -146,8 +162,6 @@
             isLoading = false;
         }
     };
-
-    const sendLN = async () => {};
 
     const sendCashu = async () => {
         try {
