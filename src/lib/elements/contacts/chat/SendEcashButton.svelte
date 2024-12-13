@@ -14,6 +14,7 @@
     import { toast } from "svelte-sonner";
     import type { Mint } from "$lib/db/models/types";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
     let sendEcashOpen = $state(false);
 
@@ -51,7 +52,9 @@
             sendCallback(getEncodedTokenV4(token))
             sendEcashOpen = false
         } catch (error) {
-            console.error(error)
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
         finally {
             isLoading = false

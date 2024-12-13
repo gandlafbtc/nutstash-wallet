@@ -14,6 +14,7 @@ import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections"
 import { nwc } from "$lib/stores/session/nwc"
 import { cashuRequestsStore } from "$lib/stores/persistent/requests"
 import { settings } from "$lib/stores/persistent/settings"
+import { swapsStore } from "$lib/stores/persistent/swap"
 
 export const init = async () => {
     await initStores()
@@ -42,6 +43,7 @@ const initStores = async () => {
     await contactsStore.init()
     await relaysStore.init()
     await cashuRequestsStore.init()
+    await swapsStore.init()
     await settings.init()
 }
 
@@ -62,6 +64,7 @@ export const reencrypt = async () => {
     await contactsStore.reEncrypt()
     await relaysStore.reEncrypt()
     await cashuRequestsStore.reEncrypt()
+    await swapsStore.reEncrypt()
     await settings.reEncrypt()
 }
 
@@ -82,5 +85,6 @@ export const setStoresFromBackupJSON = async (obj:any) => {
     contactsStore.set(obj.contactsStore)
     relaysStore.set(obj.relaysStore)
     cashuRequestsStore.set(obj.cashuRequestsStore)
+    swapsStore.set(obj.swapsStore)
     settings.set(obj.setting)
 }

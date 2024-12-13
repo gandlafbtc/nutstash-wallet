@@ -12,6 +12,7 @@
     import { proofsStore } from "$lib/stores/persistent/proofs";
     import { toast } from "svelte-sonner";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
 
     let {sendCallback, to, mint=$mints[0], currentUnit=$unit, amount=0, mintSelectDisabled=false, unitSelectDisabled = false} = $props()
@@ -44,7 +45,9 @@
             }
             sendCallback(token)
         } catch (error) {
-            console.error(error)
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
         finally {
             isLoading = false

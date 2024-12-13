@@ -12,6 +12,7 @@
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import * as Dialog  from "$lib/components/ui/dialog";
     import Input from "$lib/components/ui/input/input.svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
     let isShow = $state(false);
     let isOpen = $state(false);
@@ -37,8 +38,10 @@
                 toast.info("NWC connection was turned off");
             }
         } catch (error) {
-            console.error(error)
-            toast.error(error.message);
+            
+			const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
             isSwitching = false;
         }
@@ -51,8 +54,9 @@
             toast.info('NWC connection removed')
             isOpen = false
         } catch (error) {
-            console.error(error)
-            toast.error(error.message);
+			const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         }
         finally {
             isSwitching = false;
@@ -74,8 +78,9 @@
             toast.info('Allowance updated to '+ formatAmount(allowanceInt))
             inputAllowance = ''
         } catch (error) {
-            console.error(error)
-            toast.error(error.message)
+			const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         }
         finally {
             isSwitching = false

@@ -1,5 +1,7 @@
 import { openDB, deleteDB, type IDBPDatabase } from 'idb';
 import type { NutstashDB } from './model';
+import { ensureError } from '$lib/helpers/errors';
+import { toast } from 'svelte-sonner';
 
 
 export const DB_VERSION = 2;
@@ -42,6 +44,7 @@ export class DB {
           // version 2
           if (newVersion??0>1) {
             db.createObjectStore('encrypted-cashu-requests')
+            db.createObjectStore('encrypted-swaps')
           }
       },
       blocked: (currentVersion, blockedVersion, event) => {
@@ -61,7 +64,9 @@ export class DB {
     try {
       await deleteDB(DB_NAME)
     } catch (error) {
-      console.log(error)
+      const err = ensureError(error)
+      console.error(err);
+      toast.error(err.message);
     }
   }
 

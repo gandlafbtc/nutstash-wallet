@@ -36,6 +36,7 @@ import Input from "$lib/components/ui/input/input.svelte";
     <p class="font-bold">
         Nostr wallet connect
     </p>
+    Experimental NWC integration. It only works if nutstash is running in the foreground.
     <NwcSettings></NwcSettings>
     <div class="flex gap-2 items-center">
 

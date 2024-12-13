@@ -23,6 +23,7 @@
     import AddMint from "$lib/elements/mint/AddMint.svelte";
     import { toast } from "svelte-sonner";
     import { selectedMint } from "$lib/stores/local/selectedMints";
+    import { ensureError } from "$lib/helpers/errors";
 
     let entered: string = $state("");
 
@@ -100,7 +101,9 @@
             //Show QR screen
             push("/wallet/receive/ln/" + q.quote);
         } catch (error) {
-            console.error(error);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -116,12 +119,14 @@
     const receiveCashuRequest = async () => {
         try {
             const amountInt = parseInt(amount);
-            openReceiveDrawer.set(false)
             const req = await createCashuRequest(amountInt, mint?[mint?.url]:undefined, currentUnit, undefined,false)
+            openReceiveDrawer.set(false)
             push("/wallet/receive/cashureq/"+req.id)
             
         } catch (error) {
-            
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
 
         }

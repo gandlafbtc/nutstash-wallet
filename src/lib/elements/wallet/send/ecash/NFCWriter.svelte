@@ -8,6 +8,7 @@
         textRecord,
         write,
     } from "@tauri-apps/plugin-nfc";
+    import { ensureError } from "$lib/helpers/errors";
 
     let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } =
         $props();
@@ -39,7 +40,11 @@
             toast.info("Token has been written to nfc tag");
             isOpen = false;
         } catch (error) {
-            toast.error("Writing nfc tag has failed");
+            const err = ensureError(error);
+			console.error(err)
+            toast.error("Writing nfc tag has failed", {
+                description: err.message
+            });
             console.log(error);
             isOpen = false;
         }

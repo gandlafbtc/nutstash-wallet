@@ -11,6 +11,7 @@
 	import { decrypt, kdf } from "$lib/actions/encryption";
     import { hexToBytes } from "@noble/hashes/utils";
     import OnboardingHeader from "./OnboardingHeader.svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
 	let backupFileName = $state("");
 	let isLoading = $state(true);
@@ -49,7 +50,9 @@
 			isOnboarded.set(true);
 			push("/wallet/");
 		} catch (error) {
-			toast.error(error);
+			const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);   
 		}
 	};
 
@@ -61,6 +64,10 @@
 		console.log(backupObject);
 		if (!checkIsBackup(backupObject)) {
 			throw new Error("Not a backup file");
+		}
+		if (backupObject.backupVersion === 'nutstash-legacy') {
+			//todo handle legacy backups
+			return
 		}
 		if (backupObject?.isEncrypt && !decryptedObj) {
 			isOpen = true;

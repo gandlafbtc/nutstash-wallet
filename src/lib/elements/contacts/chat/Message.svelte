@@ -20,6 +20,7 @@
                 } | undefined = $state();
 
     onMount(() => {
+        //todo maybe a bit better json catcher?
         if (message.content.startsWith("{")) {
             try {
                 decoded = JSON.parse(message.content) as {
@@ -29,7 +30,9 @@
                     unit: string;
                     proofs: Proof[];
                 };
-            } catch (error) {}
+            } catch (error) {
+
+            }
         }
         if (!message.isRead) {
             messagesStore.setRead([message]);

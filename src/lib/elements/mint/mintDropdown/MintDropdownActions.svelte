@@ -1,6 +1,7 @@
 <script>
 
     import * as DropdownMenu  from "$lib/components/ui/dropdown-menu";
+    import { ensureError } from "$lib/helpers/errors";
     import { mints } from "$lib/stores/persistent/mints";
     import { Landmark, Loader, Trash } from "lucide-svelte";
     import { toast } from "svelte-sonner";
@@ -16,7 +17,9 @@ const fetchMint = async () => {
      })
  } catch (error) {
   console.error(error)
-  toast.error('Problem updating mint: '+ error.message)
+  const err = ensureError(error)
+            console.error(err);
+  toast.error('Problem updating mint: '+err.message)
  }
  finally {
      isLoading = false

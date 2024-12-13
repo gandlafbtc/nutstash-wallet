@@ -71,6 +71,9 @@
         }
     };
 </script>
+<div class="h-full">
+
+<p class="text-lg font-bold">Lightning payment</p>
 
 <Card.Root
     class="w-80 m-3 {quote.state === EXPIRED.EXPIRED
@@ -154,7 +157,7 @@
             <Button variant="outline" href="/#/wallet/">Close</Button>
         {/if}
 
-        {#if quote.state === MeltQuoteState.UNPAID}
+        {#if !quote.in?.length}
             <Button disabled={isLoading} onclick={confirmPayment}>
                 {#if isLoading}
                     <LoaderCircle class="animate-spin"></LoaderCircle>
@@ -172,3 +175,4 @@
         {/if}
     </Card.Footer>
 </Card.Root>
+</div>

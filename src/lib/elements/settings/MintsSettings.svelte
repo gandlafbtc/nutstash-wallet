@@ -9,6 +9,8 @@
     import * as Tabs from "$lib/components/ui/tabs";
     import { getHostFromUrl } from "$lib/util/utils";
     import MintDropdown from "../mint/mintDropdown/MintDropdown.svelte";
+    import MintSwap from "../mint/MintSwap.svelte";
+    import Button from "$lib/components/ui/button/button.svelte";
 
     let defaultMint: Mint | undefined = $derived($mints[0]);
 
@@ -26,7 +28,7 @@
     <div>
         <span class="font-bold text-lg"> Mint Settings </span>
     </div>
-    <Tabs.Root value={$mints.length ? "manage" : "add"} class="w-full">
+        <Tabs.Root value={$mints.length ? "manage" : "add"} class="w-full">
         <Tabs.List>
             <Tabs.Trigger value="manage">Manage</Tabs.Trigger>
             <Tabs.Trigger value="add">Add Mint</Tabs.Trigger>
@@ -36,12 +38,22 @@
                 <!-- content here -->
                 <div class="flex gap-6 flex-col mt-4">
                     <div class="flex flex-col gap-3">
-                        <span class="text-sm">Default mint</span>
+                        <span class="text-sm font-bold">Default mint</span>
                         <MintSelector mint={defaultMint} onchange={onMintChange}
                         ></MintSelector>
                     </div>
+                    <div class="flex flex-col gap-3">
+                        <span class="text-sm font-bold">Mint swap</span>
+                        <span class="text-sm">
+                            
+                        </span>
+                        <Button href='/#/wallet/settings/mints/swap'>
+                            Swap
+                        </Button>
+                    </div>
+                    
                     <div class="flex flex-col gap-1">
-                        <span class="text-sm">Added mints</span>
+                        <span class="text-sm font-bold">Added mints</span>
                             {#each $mints as m, i}
                                 <div
                                     class="flex gap-2 p-2 text-sm border rounded-lg my-2 items-center"
@@ -64,12 +76,10 @@
         <Tabs.Content value="add">
             <div class="flex gap-6 flex-col mt-4">
                 <div class="flex flex-col gap-1">
-                    <span class="text-sm">Add mint</span>
                     <AddMint></AddMint>
                 </div>
 
                 <div class="flex flex-col gap-1 w-full">
-                    <span class="text-sm">Discover Mints</span>
                     <DiscoverMints></DiscoverMints>
                 </div>
             </div>

@@ -2,11 +2,16 @@ import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token, 
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 import type { Event } from "nostr-tools";
 
-export enum EXPIRED  {
+export enum EXPIRED {
     EXPIRED = "EXPIRED"
-    }
+}
 
-export type StoredMintQuote = Omit<MintQuoteResponse,'state'> & {
+export type StoredSwap = {
+    mintQuoteId: string,
+    meltQuoteId: string
+}
+
+export type StoredMintQuote = Omit<MintQuoteResponse, 'state'> & {
     state: MintQuoteState | EXPIRED
     mintUrl: string,
     unit: string,
@@ -15,11 +20,12 @@ export type StoredMintQuote = Omit<MintQuoteResponse,'state'> & {
     lastChangedAt: number
     type: 'mint'
     out?: Proof[]
-    counts?: {keysetId: string, counts:number[]
-    } 
+    counts?: {
+        keysetId: string, counts: number[]
+    }
 };
 
-export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & { 
+export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
     state: MeltQuoteState | EXPIRED
     mintUrl: string,
     unit: string,
@@ -30,7 +36,8 @@ export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
     out?: Proof[]
     request: string
     fees?: number
-    counts?: {keysetId: string, counts:number[]} };
+    counts?: { keysetId: string, counts: number[] }
+};
 
 export type StoredTransaction = {
     id: string;
@@ -44,11 +51,11 @@ export type StoredTransaction = {
     lastChangedAt: number
     amount: number
     unit?: string
-    counts?: {keysetId: string, counts:number[]}
+    counts?: { keysetId: string, counts: number[] }
     address?: string
     fees?: number
     memo?: string
- };
+};
 
 export type SimplePaymentRequest = {
     transport: Array<PaymentRequestTransport>,
@@ -56,7 +63,7 @@ export type SimplePaymentRequest = {
     amount?: number,
     unit?: string,
     mints?: Array<string>,
-    description?: string, 
+    description?: string,
     singleUse?: boolean
 }
 
@@ -65,15 +72,15 @@ export type StoredPaymentRequest = SimplePaymentRequest & {
     lastChangedAt: number,
 }
 
- export enum TransactionType {
-    SEND="send",
-    RECEIVE="receive",
- }
+export enum TransactionType {
+    SEND = "send",
+    RECEIVE = "receive",
+}
 
- export enum TransactionStatus {
-    PENDING="pending",
-    COMPLETED="completed",
- }
+export enum TransactionStatus {
+    PENDING = "pending",
+    COMPLETED = "completed",
+}
 
 export type Contact = {
     npub: string
@@ -86,7 +93,7 @@ export type KeysetCount = { keysetId: string; count: number }
 export type Proof = CashuProof
 
 export type StoredSeed = {
-    mnemonic : string;
+    mnemonic: string;
 }
 
 export type Relay = {
@@ -104,8 +111,8 @@ export type NWCConnection = {
     connectionSecret: string,
     connectionPublicKey: string,
     allowanceLeft: number
-  }
-  
+}
+
 
 export type EncryptedStore = {
     cypher: Uint8Array
@@ -133,7 +140,6 @@ export type NostrRelay = {
     isActive: boolean;
 }
 
-export type AutoClaimPolicy = 'known' | 'swap' | 'none'
 export type Settings = {
     id: string
     mints: {
@@ -146,12 +152,11 @@ export type Settings = {
 
     }
     nostr: {
-        autoClaimPolicy: AutoClaimPolicy
     }
     tokens: {
-
+        autoReceive: boolean
     }
-    contacts: {
+    contact: {
 
     },
     general: {

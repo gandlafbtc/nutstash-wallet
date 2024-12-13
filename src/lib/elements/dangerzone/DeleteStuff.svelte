@@ -2,6 +2,7 @@
     import Button from "$lib/components/ui/button/button.svelte";
     import * as Dialog  from "$lib/components/ui/dialog";
 import { DB } from "$lib/db/db";
+    import { ensureError } from "$lib/helpers/errors";
     import { init } from "$lib/init/init";
     import { isOnboarded } from "$lib/stores/local/message";
     import { selectedMint } from "$lib/stores/local/selectedMints";
@@ -28,8 +29,9 @@ import { DB } from "$lib/db/db";
             toast.error('Restart has failed. Please restart the app manually.');
             
         } catch (error) {
-			console.error(error)
-            toast.error(error.message);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
     }
 </script>

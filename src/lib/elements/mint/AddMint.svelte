@@ -1,6 +1,7 @@
 <script lang="ts">
     import Button from "$lib/components/ui/button/button.svelte";
 import Input from "$lib/components/ui/input/input.svelte";
+    import { ensureError } from "$lib/helpers/errors";
 import { mints } from "$lib/stores/persistent/mints";
     import { LoaderCircle, Plus } from "lucide-svelte";
     import { toast } from "svelte-sonner";
@@ -24,8 +25,9 @@ import { mints } from "$lib/stores/persistent/mints";
           mintUrlToAdd = ''
           toast.success('Mint added');
         } catch (error) {
-			console.error(error)
-            toast.error(error.message);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
         finally {
             isAddingMint = false;

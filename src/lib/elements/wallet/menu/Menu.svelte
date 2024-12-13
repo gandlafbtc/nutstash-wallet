@@ -10,6 +10,7 @@
     import { messagesStore } from "$lib/stores/persistent/message";
     import { push } from "svelte-spa-router";
     import { onMount } from "svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -35,8 +36,9 @@
           mintUrlToAdd = ''
           toast.success('Mint added');
         } catch (error) {
-			console.error(error)
-            toast.error(error.message);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         }
         finally {
             isAddingMint = false;

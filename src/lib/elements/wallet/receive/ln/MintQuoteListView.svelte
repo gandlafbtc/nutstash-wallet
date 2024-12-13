@@ -15,10 +15,10 @@
     
 
 </script>
-{#if $mintQuotesStore.length}
-<div class="h-full pt-16">
+<div class="h-full">
+  <p class="text-lg font-bold">Lightning invoices</p>
+  {#if $mintQuotesStore.length}
     	
-   
     {#each  currentQuotes as quote}
            <MintQuoteListItem {quote}></MintQuoteListItem>
      {/each}
@@ -52,9 +52,9 @@
   
     
 
+  {:else}
+  <div class="h-20">
+      <p>No invoices created yet.</p>
+  </div>
+  {/if}
 </div>
-{:else}
-<div class="h-20">
-    <p>No invoices created yet.</p>
-</div>
-{/if}

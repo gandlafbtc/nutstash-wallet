@@ -15,10 +15,10 @@
     
 
 </script>
-{#if $meltQuotesStore.length}
-<div class="h-full pt-16">
+<div class="h-full">
+  <p class="text-lg font-bold">Lightning payments</p>
+  {#if $meltQuotesStore.length}
     	
-   
     {#each  currentQuotes as quote}
            <MeltQuoteListItem {quote}></MeltQuoteListItem>
      {/each}
@@ -52,9 +52,9 @@
   
     
 
+  {:else}
+  <div class="h-20">
+      <p>No payments yet.</p>
+  </div>
+  {/if}
 </div>
-{:else}
-<div class="h-20">
-    <p>No payments created yet.</p>
-</div>
-{/if}

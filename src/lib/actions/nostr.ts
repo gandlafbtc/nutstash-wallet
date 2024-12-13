@@ -5,7 +5,7 @@ import NDK, { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 
 import { get } from "svelte/store";
 import { messagesStore } from "$lib/stores/persistent/message";
-import type { Message } from "$lib/db/models/types";
+import { TokenCheckMode, type Message } from "$lib/db/models/types";
 import type { NPub, ProfilePointer } from "nostr-tools/nip19";
 import { relaysStore } from "$lib/stores/persistent/relays";
 import { toast } from "svelte-sonner";
@@ -13,7 +13,11 @@ import { nostrPool } from "$lib/stores/session/nostr";
 import { discoveredMints } from "$lib/stores/session/mintdiscover";
 import { wordlist } from "@scure/bip39/wordlists/english";
 import { discoveredContacts } from "$lib/stores/session/contactdiscover";
-import type { Proof } from "@cashu/cashu-ts";
+import { getDecodedToken, type Proof, type Token } from "@cashu/cashu-ts";
+import { ensureError } from "$lib/helpers/errors";
+import { settings } from "$lib/stores/persistent/settings";
+import { mints } from "$lib/stores/persistent/mints";
+import { receiveEcash } from "./actions";
 
 export const createAlias = () => {
   const wordlistLength = wordlist.length
@@ -126,7 +130,9 @@ export const publishEvent = async (content: string, tags: string[][]) => {
     await get(nostrPool).publish(activeRelays, signedEvent)
     console.log(signedEvent.id)
   } catch (error) {
-    console.error(error)
+    const err = ensureError(error)
+    console.error(err);
+    toast.error(err.message);
   }
 }
 
@@ -215,7 +221,9 @@ const sendNip17DirectMessage = async function (receiverPubkey: string, message: 
     console.log('events published')
 
   } catch (e) {
-    console.error(e);
+    const err = ensureError(e)
+    console.error(err);
+    toast.error(err.message);
   }
 }
 const subscribeToNip17DirectMessages = async function () {
@@ -269,7 +277,7 @@ const subscribeToNip17DirectMessages = async function () {
           const sealEvent = JSON.parse(wappedContent) as NostrEvent;
           const dmEventString = nip44.v2.decrypt(sealEvent.content, nip44.v2.utils.getConversationKey(seedSignerSecKey, sealEvent.pubkey));
           const dmEvent = JSON.parse(dmEventString) as Event;
-          let isToken = false
+          let token: Token | undefined = undefined
           if (dmEvent.content.startsWith("{")) {
             try {
               const decoded = JSON.parse(dmEvent.content) as {
@@ -280,23 +288,36 @@ const subscribeToNip17DirectMessages = async function () {
                 proofs: Proof[];
               };
               if (decoded.proofs.length) {
-                isToken = true
+                token = {
+                  mint: decoded.mint,
+                  proofs: decoded.proofs,
+                  memo: decoded.memo,
+                  unit: decoded.unit
+                }
               }
-            } catch (error) { }
+            } catch (error) {
+              //not a token
+            }
           }
           if (dmEvent.content.startsWith("cashu")) {
-            
+            try {
+
+              token = getDecodedToken(dmEvent.content)
+
+            } catch (error) {
+              //not a token
+            }
           }
 
-          if (isToken) {
-            
+          if (token && get(settings)[0].tokens.autoReceive && get(mints).find((m)=> m.url === token.mint)) {
+            receiveEcash(token)
           }
 
           const message: Message = {
             ...dmEvent,
             isRead: false,
             wrapId: wrapEvent.id,
-            isToken
+            isToken: token?true:false
           }
           console.log(dmEvent.content)
           messagesStore.addOrUpdate(wrapEvent.id, message, 'wrapId')

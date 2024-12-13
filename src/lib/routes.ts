@@ -51,6 +51,8 @@ import CashuRequestListView from "./elements/wallet/receive/cashurequest/CashuRe
 import SendToCashuRequest from "./elements/wallet/receive/cashurequest/SendToCashuRequest.svelte";
 import CashuRequestInput from "./elements/wallet/receive/cashurequest/CashuRequestInput.svelte";
 import DataListView from "./elements/data/DataListView.svelte";
+import MintSwap from "./elements/mint/MintSwap.svelte";
+import ConfirmMintSwap from "./elements/mint/ConfirmMintSwap.svelte";
 
 export const routes = {
     '/': Loading,
@@ -127,6 +129,8 @@ export const walletRoutes = {
     '/settings/ecash': EcashSettings,
     '/settings/keys': KeysSettings,
     '/settings/mints': MintsSettings,
+    '/settings/mints/swap': MintSwap,
+    '/settings/mints/swap/:mintquote': ConfirmMintSwap,
     '/settings/nostr': NostrSettings,
     '/settings/security': SecuritySettings,
     '/settings/security/changepass': ChangePassword,

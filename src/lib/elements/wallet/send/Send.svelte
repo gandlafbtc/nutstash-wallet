@@ -49,6 +49,7 @@
     import AddMint from "$lib/elements/mint/AddMint.svelte";
     import { selectedMint } from "$lib/stores/local/selectedMints";
     import { goto } from "$app/navigation";
+    import { ensureError } from "$lib/helpers/errors";
 
     interface Props {
         input?:string
@@ -157,7 +158,9 @@
             openSendDrawer.set(false);
             push("/wallet/send/ln/" + quote);
         } catch (error) {
-            console.error(error);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -201,7 +204,9 @@
             openSendDrawer.set(false);
             push("/wallet/send/cashu/" + txId);
         } catch (error) {
-            console.error(error);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -513,7 +518,7 @@
                                 {:else}
                                     <Zap></Zap>
                                 {/if}
-                                Create Lightning payment
+                                Prepare payment
                             </Button>
                         </div>
                     </div>

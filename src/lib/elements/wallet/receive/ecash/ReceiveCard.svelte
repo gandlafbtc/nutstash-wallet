@@ -24,6 +24,7 @@
     import { keysStore } from "$lib/stores/persistent/keys";
     import { getBy } from "$lib/stores/persistent/helper/storeHelper";
     import type { Token } from "@cashu/cashu-ts";
+    import { ensureError } from "$lib/helpers/errors";
 
     interface Props {token: Token}
     
@@ -67,8 +68,9 @@
                 push('/wallet/');
             }
         } catch (error) {
-            console.error(error);
-            toast.error(error.message);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -82,7 +84,9 @@
             }
             await mints.fetchMint(token?.mint)   
         } catch (error) {
-            console.error(error)
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
         finally {
             isLoading = false;

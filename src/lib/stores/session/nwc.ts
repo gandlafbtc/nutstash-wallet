@@ -38,6 +38,8 @@ const NWCKind = {
   NWCResponse: 23195
 }
 
+//todo - rework on how errors are handled
+
 const createNWC = () => {
   const supportedMethods = ["pay_invoice", "get_balance", "get_info", "list_transactions"]
   let ndk = new NDK()

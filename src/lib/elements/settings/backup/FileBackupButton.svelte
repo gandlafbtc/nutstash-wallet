@@ -26,6 +26,7 @@
     import { nwcKeysStore } from "$lib/stores/persistent/nwcConnections";
     import { cashuRequestsStore } from "$lib/stores/persistent/requests";
     import { settings } from "$lib/stores/persistent/settings";
+    import { swapsStore } from "$lib/stores/persistent/swap";
 
     let isEncrypt = $state(false);
 
@@ -50,6 +51,7 @@
         messagesStore: $messagesStore,
         relaysStore: $relaysStore,
         cashuRequestsStore: $cashuRequestsStore,
+        swapsStore: $swapsStore,
         settings: $settings,
     };
 

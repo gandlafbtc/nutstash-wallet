@@ -43,6 +43,7 @@
             status = 'done'
             progress = 100
         } catch (error) {
+            // todo - improve how errors are collected
             status = 'error'
             statusMessage = error.message
             statusMessage2 = ''

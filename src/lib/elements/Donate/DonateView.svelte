@@ -26,6 +26,7 @@
     import { getEncodedTokenV4 } from "@cashu/cashu-ts";
     import Divider from "../ui/Divider.svelte";
     import { copyTextToClipboard } from "$lib/util/utils";
+    import { ensureError } from "$lib/helpers/errors";
 
     let mint = $state($mints[0]);
     let currentUnit = $state($unit);
@@ -95,7 +96,9 @@
                 `Thank you for your donation of ${formatAmount(getAmountForTokenSet(send), currentUnit)}!`,
             );
         } catch (error) {
-            console.error(error);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -122,7 +125,9 @@
                 `Thank you for your donation of ${formatAmount(getAmountForTokenSet(send), currentUnit)}!`,
             );
         } catch (error) {
-            console.error(error);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         } finally {
             isLoading = false;
         }

@@ -31,10 +31,9 @@ const DEFAULT_SETTINGS: Settings = {
 
 	},
 	nostr: {
-		autoClaimPolicy: 'none'
 	},
 	tokens: {
-
+		autoReceive: false
 	},
 	general: {
 		hideBalance: false
@@ -66,7 +65,13 @@ const createSettingsStore = () => {
 		await addOrUpdate('0',s, 'id')
 	} 
 
-	return { ...store, init, reset, clear, reEncrypt, setHideBalance };
+	const setAutoReceive = async (value: boolean) => {
+		const s = get(store)[0]
+		s.tokens.autoReceive = value
+		await addOrUpdate('0',s, 'id')
+	} 
+
+	return { ...store, init, reset, clear, reEncrypt, setHideBalance, setAutoReceive };
 }
 export const settings = createSettingsStore();
 

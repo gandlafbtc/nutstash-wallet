@@ -9,9 +9,10 @@
         textRecord,
         scan,
     } from "@tauri-apps/plugin-nfc";
+    import { ensureError } from "$lib/helpers/errors";
     let scanned = $state("");
-    const abortController = new AbortController()
-    abortController.signal.onabort = event => {
+    const abortController = new AbortController();
+    abortController.signal.onabort = (event) => {
         // toast.info("Aborted nfc scan");
     };
     const colors = ["green", "yellow", "blue"];
@@ -29,17 +30,20 @@
                 if (!(await isAvailable())) {
                     throw new Error("NFC not available");
                 }
-                const tag = await scan({type:'tag'}, {keepSessionAlive:false});
+                const tag = await scan(
+                    { type: "tag" },
+                    { keepSessionAlive: false },
+                );
                 const decoder = new TextDecoder();
-                const records  = tag.records
+                const records = tag.records;
                 for (const record of records) {
-                        scanned = scanned + decoder.decode(new Uint8Array(record.payload));
-                    }
-            }
-            else {
-
+                    scanned =
+                        scanned +
+                        decoder.decode(new Uint8Array(record.payload));
+                }
+            } else {
                 const ndef = new NDEFReader();
-                await ndef.scan({signal: abortController.signal})
+                await ndef.scan({ signal: abortController.signal });
                 toast.info("Scanning for NFC tag");
                 ndef.onreadingerror = () => {
                     toast.error("Error reading from tag");
@@ -49,8 +53,8 @@
                     const message = event.message;
                     for (const record of message.records) {
                         if (record.recordType !== "text") {
-                        continue;
-                    }
+                            continue;
+                        }
                         const textDecoder = new TextDecoder(record.encoding);
                         const decoded = textDecoder.decode(record.data);
                         scanned = scanned + decoded;
@@ -65,20 +69,20 @@
                     }
                 };
             }
-            } 
-            catch (error) {
-                toast.error(error.message);
-                console.log(`Error! Scan failed to start: ${error}.`);
-            
+        } catch (error) {
+            const err = ensureError(error);
+            console.error(err);
+            toast.error(err.message);
+            console.log(`Error! Scan failed to start: ${err.message}.`);
         }
     });
 
-    onDestroy(()=> {
+    onDestroy(() => {
         if (interval) {
             clearInterval(interval);
         }
-        abortController.abort()
-    })
+        abortController.abort();
+    });
 </script>
 
 <div

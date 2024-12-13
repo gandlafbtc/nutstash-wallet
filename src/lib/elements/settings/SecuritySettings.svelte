@@ -10,6 +10,7 @@
     import { toast } from "svelte-sonner";
     import { DEFAULT_PASS } from "$lib/stores/static/pass";
     import { reencrypt } from "$lib/init/init";
+    import { ensureError } from "$lib/helpers/errors";
 
     let isOpen =$state(false)
     let isLoading = $state(false)
@@ -32,7 +33,9 @@
             isOpen = false
             toast.info('Encryption disabled')
         } catch (error) {
-            
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         }
         finally {
             isLoading = false
