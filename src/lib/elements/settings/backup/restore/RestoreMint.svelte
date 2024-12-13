@@ -9,6 +9,7 @@
     import { LoaderCircle } from "lucide-svelte";
     import {hashToCurve} from '@cashu/crypto/modules/common'
     import { countsStore } from "$lib/stores/persistent/counts";
+    import { toast } from "svelte-sonner";
 
     const INCREMENT = 25
 
@@ -32,7 +33,12 @@
             progress = 5
 
             const ksLen = allKeysets.keysets.length
+            const hexDigitsRegex = /^[0-9A-Fa-f]+$/;
             for (const [i,ks] of allKeysets.keysets.entries()) {
+                if (!hexDigitsRegex.test(ks.id)) {
+                    toast.info(`Skipping ${ks.id}. Not a hex keyset.`)
+                    continue
+                }
                 statusMessage = `Keyset ${i+1} of ${ksLen} (${ks.id} / ${getUnitSymbol(ks.unit)}):`
                 statusMessage2 = 'loading keys...'
                 await restoreKeyset(cashuMint, ks)

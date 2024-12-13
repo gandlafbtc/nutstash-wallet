@@ -4,8 +4,11 @@
     import CashuRequestCard from "./CashuRequestCard.svelte";
 
 </script>
-<div>
+<div class="flex flex-col gap-2 w-80 justify-start">
+    <p class="font-bold text-lg">
+        Requests
+    </p>
     {#each $cashuRequestsStore as request}
-     <CashuRequestCard {request}></CashuRequestCard>
+     <CashuRequestCard isListView={true} {request}></CashuRequestCard>
     {/each}
 </div>

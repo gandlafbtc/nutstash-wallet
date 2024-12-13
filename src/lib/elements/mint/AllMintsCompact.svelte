@@ -16,7 +16,7 @@
 >
     <div class="flex gap-2">
         <div class="flex items-center justify-center pb-1 h-12 w-12 rounded-full bg-background">
-            <Landmark></Landmark>
+            <Landmark class='text-secondary-foreground'></Landmark>
         </div>
         <div class="flex flex-col gap-1">
             <p class="overflow-clip text-ellipsis w-52 font-bold">

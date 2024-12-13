@@ -53,6 +53,7 @@ import CashuRequestInput from "./elements/wallet/receive/cashurequest/CashuReque
 import DataListView from "./elements/data/DataListView.svelte";
 import MintSwap from "./elements/mint/MintSwap.svelte";
 import ConfirmMintSwap from "./elements/mint/ConfirmMintSwap.svelte";
+import ProofChecker from "./elements/settings/ProofChecker.svelte";
 
 export const routes = {
     '/': Loading,
@@ -105,6 +106,7 @@ export const walletRoutes = {
     '/receive/ln': MintQuoteListView,
     '/receive/ln/:quote': MintQuoteItem,
     '/receive/cashu': ReceiveCashu,
+    '/receive/cashureq/': CashuRequestListView,
     '/receive/cashureq/:id': ReceiveCashuRequest,
     '/receive/cashu/:token': ReceiveCashu,
     
@@ -123,6 +125,7 @@ export const walletRoutes = {
 
     '/settings': SettingsView,
     '/settings/backup': BackupSettings,
+    '/settings/checkproofs': ProofChecker,
     '/settings/nwc': NwcSettings,
     '/settings/backup/restore': RestoreSeedView,
     '/settings/currency': CurrencySettings,

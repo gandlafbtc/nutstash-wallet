@@ -8,7 +8,7 @@
         getProofsOfMintUnit,
     } from "$lib/util/walletUtils";
     import * as Card from "$lib/components/ui/card";
-    import { Check, LoaderCircle } from "lucide-svelte";
+    import { Check, LoaderCircle, RotateCcw } from "lucide-svelte";
     import { copyTextToClipboard, getHostFromUrl } from "$lib/util/utils";
     import { decode } from "@gandlaf21/bolt11-decode";
     import {
@@ -18,6 +18,7 @@
     } from "$lib/db/models/types";
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import {
+        checkMeltQuote,
         getFeeForProofs,
         meltProofs,
         mintProofs,
@@ -72,8 +73,6 @@
     };
 </script>
 <div class="h-full">
-
-<p class="text-lg font-bold">Lightning payment</p>
 
 <Card.Root
     class="w-80 m-3 {quote.state === EXPIRED.EXPIRED
@@ -169,7 +168,12 @@
         {:else if quote.state === MeltQuoteState.PAID}
             <Badge variant="outline" class="text-green-600">Confirmed</Badge>
         {:else if quote.state === MeltQuoteState.PENDING}
+        <div class="flex gap-1 items-center">
             <Badge variant="outline" class="text-secondary">Pending...</Badge>
+            <button onclick={()=> checkMeltQuote(quote)}>
+                <RotateCcw></RotateCcw>
+            </button>
+        </div>
         {:else if quote.state === EXPIRED.EXPIRED}
             <Badge variant="destructive" class="text-secondary">Expired</Badge>
         {/if}

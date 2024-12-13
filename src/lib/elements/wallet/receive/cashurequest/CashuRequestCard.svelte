@@ -8,9 +8,9 @@ import * as Card from "$lib/components/ui/card/index.js";
     import { formatAmount } from "$lib/util/walletUtils";
     import { PaymentRequest } from "@cashu/cashu-ts";
     import { Copy } from "lucide-svelte";
-  interface Props {request: StoredPaymentRequest}
+  interface Props {request: StoredPaymentRequest, isListView?: boolean}
   
-  let {request}: Props = $props();
+  let {request, isListView = false}: Props = $props();
 
   let encodedRequest = $derived(new PaymentRequest(request.transport, request.id, request.amount, request.unit, request.mints, request.description, request.singleUse).toEncodedRequest())
 
@@ -42,8 +42,11 @@ import * as Card from "$lib/components/ui/card/index.js";
         </div>
     </Card.Content>
     <Card.Footer>
+      {#if !isListView}
+      
       <Button href='/#/wallet/'>
         Close
       </Button>
+      {/if}
     </Card.Footer>
   </Card.Root>

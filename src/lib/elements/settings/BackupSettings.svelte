@@ -11,8 +11,8 @@
     let isOpen = $state(false);
 </script>
 
-<div class="h-full items-start gap-3 flex flex-col">
-    <div class="w-full flex items-start flex-col gap-5">
+<div class="h-full items-start gap-3 flex flex-col pt-2">
+    <div class="w-full flex items-start flex-col gap-10">
         <div class="flex gap-1 justify-between items-center w-full">
             <Label>Export</Label>
             <FileBackupButton></FileBackupButton>

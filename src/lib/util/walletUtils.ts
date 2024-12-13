@@ -341,3 +341,20 @@ export const resolveNip05 = async (nostrAddr: string) => {
 		throw new Error('could not fetch nip-05');
 	}
 };
+
+export const separateProofsById = (proofs: Proof[]): {id:string,proofs:Proof[]}[] => {
+	const proofBuckets: {id:string,proofs:Proof[]}[]  = []
+	for (const proof of proofs) {
+		const proofBucket = proofBuckets.find(pb=> pb.id===proof.id)
+		if (proofBucket) {
+			proofBucket.proofs.push(proof)
+		}
+		else {
+			proofBuckets.push({
+				id: proof.id,
+				proofs: [proof]
+			})
+		}
+	}
+	return proofBuckets
+}

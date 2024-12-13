@@ -1,7 +1,7 @@
 <script>
     import CardContent from "$lib/components/ui/card/card-content.svelte";
     import Card from "$lib/components/ui/card/card.svelte";
-    import { ArrowLeftRight, Coins, CreditCard, Database, History, ReceiptText } from "lucide-svelte";
+    import { ArrowLeftRight, Coins, CreditCard, Database, HandCoins, History, ReceiptText } from "lucide-svelte";
     
 </script>
 <div class="flex w-80 flex-col gap-2">
@@ -59,6 +59,16 @@
                 <div class="flex gap-2 items-center font-bold">
                     <CreditCard></CreditCard>
                     Payments
+                </div>
+            </CardContent>
+        </Card>
+    </a>    
+    <a href="/#/wallet/receive/cashureq">
+        <Card>
+            <CardContent >
+                <div class="flex gap-2 items-center font-bold">
+                    <HandCoins></HandCoins>
+                    Requests
                 </div>
             </CardContent>
         </Card>

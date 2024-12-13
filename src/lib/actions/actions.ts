@@ -1,11 +1,11 @@
 import { countsStore } from "$lib/stores/persistent/counts"
 import { mintQuotesStore } from "$lib/stores/persistent/mintquotes"
 import { mints } from "$lib/stores/persistent/mints"
-import { pendingProofsStore, proofsStore } from "$lib/stores/persistent/proofs"
+import { pendingProofsStore, proofsStore, spentProofsStore } from "$lib/stores/persistent/proofs"
 import { transactionsStore } from "$lib/stores/persistent/transactions"
 import { getCount } from "$lib/util/utils"
-import { formatAmount, getAmountForTokenSet, getAproxAmount, getExactAmount, getMintForKeysetId, getUnitForKeysetId, getWalletWithUnit } from "$lib/util/walletUtils"
-import { getDecodedToken, decodePaymentRequest, MeltQuoteState, MintQuoteState, type MeltQuoteResponse, type Proof, type Token, PaymentRequest, PaymentRequestTransportType, type PaymentRequestTransport } from "@cashu/cashu-ts"
+import { formatAmount, getAmountForTokenSet, getAproxAmount, getExactAmount, getMintForKeysetId, getUnitForKeysetId, getWalletWithUnit, separateProofsById } from "$lib/util/walletUtils"
+import { getDecodedToken, decodePaymentRequest, MeltQuoteState, MintQuoteState, type MeltQuoteResponse, type Proof, type Token, PaymentRequest, PaymentRequestTransportType, type PaymentRequestTransport, CashuMint, CashuWallet, CheckStateEnum } from "@cashu/cashu-ts"
 import { get } from "svelte/store"
 import { bytesToHex, randomBytes } from "@noble/hashes/utils"
 import { EXPIRED, TransactionStatus, TransactionType, type Mint, type StoredMeltQuote, type StoredMintQuote, type StoredPaymentRequest, type StoredTransaction } from "$lib/db/models/types"
@@ -14,6 +14,8 @@ import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
 import { decode } from "@gandlaf21/bolt11-decode"
 import { getNprofile } from "./nostr"
 import { cashuRequestsStore } from "$lib/stores/persistent/requests"
+import { sortProofsById } from "@cashu/cashu-ts/dist/lib/es5/utils"
+import { hashToCurve } from "@cashu/crypto/modules/common"
 
 export const createMintQuote = async (mintUrl: string, amount: number, options?: { unit?: string }) => {
     const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit)
@@ -208,7 +210,46 @@ export const sendEcash = async (mintUrl: string, amount: number, options?:{unit?
     return { send, keep, txId: transactionToAdd.id }
 }
 
-
+export const checkProofs = async (proofs: Proof[], type: "pending"|"active"): Promise<{pending: Proof[], spent: Proof[], unspent: Proof[]}> => {
+    const proofBuckets = separateProofsById(proofs)
+    const pending: Proof[] = []
+    const spent: Proof[] = []
+    const unspent: Proof[] = []
+    const enc = new TextEncoder()
+    for (const pb of proofBuckets) {
+        const mint = getMintForKeysetId(get(mints),pb.id)
+        if (!mint) {
+            //todo toast?
+            continue
+        }
+        const cashuMint = new CashuMint(mint.url)
+        const cashuWallet = new CashuWallet(cashuMint)
+        const proofStates = await cashuWallet.checkProofsStates(pb.proofs)
+        const unspentProofStateYs = proofStates.filter(ps=> ps.state===CheckStateEnum.UNSPENT).map(ps=> ps.Y)
+        const pendingProofStateYs = proofStates.filter(ps=> ps.state===CheckStateEnum.PENDING).map(ps=> ps.Y)
+        const spentProofStateYs = proofStates.filter(ps=> ps.state===CheckStateEnum.SPENT).map(ps=> ps.Y)
+        const unspentKeysetProofs = pb.proofs.filter(p=> unspentProofStateYs.includes(hashToCurve(enc.encode(p.secret)).toHex(true)))
+        const pendingKeysetProofs = pb.proofs.filter(p=> pendingProofStateYs.includes(hashToCurve(enc.encode(p.secret)).toHex(true)))
+        const spentKeysetProofs = pb.proofs.filter(p=> spentProofStateYs.includes(hashToCurve(enc.encode(p.secret)).toHex(true)))
+        if (type==='pending') {
+            await proofsStore.addMany(unspentKeysetProofs)
+            await spentProofsStore.addMany(spentKeysetProofs)
+            await pendingProofsStore.removeMany([...unspentKeysetProofs,...spentKeysetProofs,...pendingKeysetProofs].map(p=> p.id),"id")
+            await pendingProofsStore.addMany(pendingKeysetProofs)
+        }
+        else if (type==='active') {
+            await spentProofsStore.addMany(spentKeysetProofs)
+            await pendingProofsStore.addMany(pendingKeysetProofs)
+            await proofsStore.removeMany([...unspentKeysetProofs,...spentKeysetProofs,...pendingKeysetProofs].map(p=> p.id),"id")
+            await proofsStore.addMany(unspentKeysetProofs)
+        }
+        pending.push(...pendingKeysetProofs)
+        spent.push(...spentKeysetProofs)
+        unspent.push(...unspentKeysetProofs)
+    }
+    return {pending, spent, unspent}
+}
+ 
 
 const getCurrentCount = (ksId: string) => {
     const countStart = countsStore.getBy(ksId, 'keysetId')
