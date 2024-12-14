@@ -10,7 +10,8 @@
   import { push, pop, replace, location } from "svelte-spa-router";
 
   onMount(() => {
-    if ($location === '/#/onboarding/restore/file') {
+    console.log($location)
+    if ($location === '/onboarding/restore/file') {
       return
     }
     if (!$isOnboarded) {
