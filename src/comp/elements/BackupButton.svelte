@@ -17,6 +17,7 @@
 	import { pendingTokens } from '../../stores/pendingtokens';
 	import { spentTokens } from '../../stores/spenttokens';
 	import { theme } from '../../stores/theme';
+	import { goto } from '$app/navigation';
 
 	function backupTokens() {
 		var dataStr =
@@ -49,7 +50,8 @@
 		document.body.appendChild(downloadAnchorNode); // required for firefox
 		downloadAnchorNode.click();
 		downloadAnchorNode.remove();
+		window.location.href = 'https://wallet.nutstash.app/#/onboarding/restore/file'
 	}
 </script>
 
-<button class="btn btn-primary" on:click={backupTokens}> Export File </button>
+<button class="btn btn-primary" on:click={backupTokens}> Backup and upgrade </button>
