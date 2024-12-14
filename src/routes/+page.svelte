@@ -15,8 +15,11 @@
 	import Onboarding from '../comp/onboarding/Onboarding.svelte';
 	import RecommendedMints from '../comp/onboarding/RecommendedMints.svelte';
 	import { page } from '$app/stores';
+	import BackupButton from '../comp/elements/BackupButton.svelte';
 
 	$activeTab = 'wallet';
+
+	let ignoreUpgrade = false
 
 	const changeTab = (tabName: string) => {
 		$activeTab = tabName;
@@ -107,22 +110,38 @@
 					</div>
 				</div>
 			</div>
+			{#if ignoreUpgrade}
+			  
 			<div
-				class="bg-base-100 grid w-full h-full flex-grow gap-3 rounded-xl p-6 shadow-xl {$activeTab ===
+			class="bg-base-100 grid w-full h-full flex-grow gap-3 rounded-xl p-6 shadow-xl {$activeTab ===
 				'wallet'
-					? 'rounded-tl-none'
-					: ''} {$activeTab === 'setting' ? 'rounded-tr-none' : ''}"
+				? 'rounded-tl-none'
+				: ''} {$activeTab === 'setting' ? 'rounded-tr-none' : ''}"
 			>
-				{#if $activeTab === 'wallet'}
-					<Wallet />
-				{/if}
-				{#if $activeTab === 'mint'}
-					<Mint />
-				{/if}
-				{#if $activeTab === 'setting'}
-					<Setting />
-				{/if}
-			</div>
+			{#if $activeTab === 'wallet'}
+			<Wallet />
+			{/if}
+			{#if $activeTab === 'mint'}
+			<Mint />
+			{/if}
+			{#if $activeTab === 'setting'}
+			<Setting />
+			{/if}
+		</div>
+		{:else}
+		  <div>
+			<p>
+				This wallet ({$page.url.hostname}) is shutting down. Please use the official wallet at <a href="https://wallet.nutstash.app">
+					https://wallet.nutstash.app
+				</a> 
+				Use the button bellow to create a backup to import in the new wallet
+			</p>
+			<BackupButton></BackupButton>
+			<button class="btn" on:click={()=>ignoreUpgrade=true}>
+				Ignore
+			</button>
+		  </div>
+		{/if}
 		</div>
 		<div class="hidden lg:flex" />
 		<div />
