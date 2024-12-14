@@ -17,7 +17,8 @@
 	let isLoading = $state(false);
 	onMount(() => {
 		const localstorageProofs = localStorage.getItem("proofs");
-		if (localstorageProofs?.length) {
+		const localstorageTokens = localStorage.getItem("tokens");
+		if (localstorageProofs?.length || localstorageTokens?.length) {
 			isLegacyWallet = true;
 			backup();
 		}
