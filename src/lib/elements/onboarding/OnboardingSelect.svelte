@@ -45,11 +45,15 @@
 				proofs = JSON.parse(proofsString);
 			}
 			if (oldMints.length) {
-				await Promise.all(
-					oldMints?.map((m: { mintURL: string }) =>
-						mints.fetchMint(m.mintURL),
-					),
-				);
+				for (const m of oldMints) {
+					try {
+						await mints.fetchMint(m.mintURL);
+					} catch (error) {
+						toast.warning('Could not load mint', {
+							description: `${m.mintURL}`
+						})
+					}
+				}
 			}
 			if (proofs.length) {
 				await proofsStore.addMany(proofs);
