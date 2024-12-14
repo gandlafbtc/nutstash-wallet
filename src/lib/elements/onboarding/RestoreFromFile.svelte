@@ -56,6 +56,7 @@
 			setStoresFromBackupJSON(backupObject);
 			await reencrypt();
 			isOnboarded.set(true);
+			toast.success('Wallet imported')
 			push("/wallet/");
 		} catch (error) {
 			const err = ensureError(error)

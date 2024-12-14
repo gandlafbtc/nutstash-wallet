@@ -1,6 +1,14 @@
 <script lang="ts">
+    import { page } from "$app/stores";
 	import { Button } from "$lib/components/ui/button";
 	import {SquareArrowOutUpRight} from "lucide-svelte"
+    import { onMount } from "svelte";
+	onMount(async () => {
+        if ($page.url.hostname === "v2.nutstash.app") {
+        // if ($page.url.hostname === "localhost") {
+            window.location.href = 'https://wallet.nutstash.app';
+        }
+  });
 </script>
 <div class="h-screen flex items-center justify-center">
 <div class="flex flex-col gap-5 items-center justify-center p-3 w-80 text-center ">

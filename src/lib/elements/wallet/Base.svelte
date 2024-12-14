@@ -17,15 +17,51 @@
 	import { AlignJustify, ChevronsLeft } from "lucide-svelte";
 	import Button from "$lib/components/ui/button/button.svelte";
 	import { page } from "$app/stores";
+    import { isOnboarded } from "$lib/stores/local/message";
+    import FileBackupButton from "../settings/backup/FileBackupButton.svelte";
 
 	let sidebar = $state("");
 
-	onMount(async () => {
-		setTimeout(async () => {}, 300);
-	});
+
+	let isMigrate = $state(false);
+  onMount(async () => {
+        if ($page.url.hostname === "v2.nutstash.app") {
+        // if ($page.url.hostname === "localhost") {
+            if ($isOnboarded) {
+              isMigrate = true;
+            }
+        }
+  });
 </script>
 
 <PasswordInput>
+	{#if isMigrate}
+<div class="w-full flex flex-col gap-2 items-center h-screen justify-center">
+	<img src="/nutstash_app.svg" alt="logo" class="w-32">
+<p class="font-bold">
+  Thank you for trying out the nutstash 2 alpha!
+</p>
+  <p>
+    Nutstash 2 has now entered beta phase, and is moved to the primary domain at https://wallet.nutstash.app
+  </p>
+  <p>
+    If you wish to continue using this nutstash wallet, please create a backup and import it at the new domain.
+  </p>
+  <div class="flex flex-col gap-5 pt-8">
+
+	  <p class="font-bold">
+		  1. Export your existing wallet
+		</p>
+		<FileBackupButton></FileBackupButton>
+		<p class="font-bold">
+			2. After exporting, click on the link bellow to import your wallet on the new domain
+		</p>
+		<a class="underline" href="https://wallet.nutstash.app/#/onboarding/restore/file">
+			Go to new wallet
+		</a>
+	</div>
+</div>
+{:else} 
 	{#if $mints.length}
 		<Sidebar.Provider class="h-full">
 			<Menu bind:sidebar></Menu>
@@ -98,5 +134,6 @@
 				<DiscoverMints></DiscoverMints>
 			</div>
 		</div>
+	{/if}
 	{/if}
 </PasswordInput>
