@@ -8,7 +8,7 @@ import type { Mint } from '$lib/db/models/types';
 import { DB } from '$lib/db/db';
 import { createEncryptionHelper, type EncryptionHelper } from './helper/encryptionHelper';
 import { createDefaultStoreFunctions, getBy } from './helper/storeHelper';
-import { selectedMints } from '../local/selectedMints';
+import { selectedMint } from '../local/selectedMints';
 import { getHostFromUrl } from '$lib/util/utils';
 
 
@@ -44,12 +44,6 @@ export const createMintsStore = (encryptionHelper: EncryptionHelper<Mint>) => {
 }
 
 export const mints = createMintsStore(encryptionHelper)
-
-mints.subscribe((mints)=> {
-	const urls = mints.map(m=> m.url)
-	
-	selectedMints.set(urls)
-})
 
 const loadMint = async (mintUrl: string): Promise<Mint> => {
 	try {

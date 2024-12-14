@@ -58,6 +58,7 @@
 			push('/wallet/settings/security')
 		} catch (error) {
 			const err = ensureError(error);
+			console.error(err)
 			toast.error(err.message);
 		} finally {
 			isLoading = false;

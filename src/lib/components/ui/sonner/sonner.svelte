@@ -18,3 +18,47 @@
 	}}
 	{...restProps}
 />
+
+
+<!-- hack: makes it work in build -->
+<style lang="postcss">
+	:global([data-rich-colors='true'] [data-sonner-toast][data-type='success']) {
+		background: var(--success-bg) !important;
+		border: 1px solid var(--success-border) !important;
+		color: var(--success-text) !important;
+	}
+	:global([data-theme='dark'] [data-sonner-toast][data-type='default'] [data-close-button]) {
+		background: var(--normal-bg) !important;
+		border: 1px solid var(--normal-border) !important;
+		color: var(--normal-text) !important;
+	}
+	:global([data-rich-colors='true'] [data-sonner-toast][data-type='success'] [data-close-button]) {
+		background: var(--success-bg) !important;
+		border: 1px solid var(--success-border) !important;
+		color: var(--success-text) !important;
+	}
+	:global(
+			[data-rich-colors='true'] [data-sonner-toast][data-type='info'],
+			[data-rich-colors='true'] [data-sonner-toast][data-type='info'] [data-close-button]
+		) {
+		background: var(--info-bg) !important;
+		border: 1px solid var(--info-border) !important;
+		color: var(--info-text) !important;
+	}
+	:global(
+			[data-rich-colors='true'] [data-sonner-toast][data-type='warning'],
+			[data-rich-colors='true'] [data-sonner-toast][data-type='warning'] [data-close-button]
+		) {
+		background: var(--warning-bg) !important;
+		border: 1px solid var(--warning-border) !important;
+		color: var(--warning-text) !important;
+	}
+	:global(
+			[data-rich-colors='true'] [data-sonner-toast][data-type='error'],
+			[data-rich-colors='true'] [data-sonner-toast][data-type='error'] [data-close-button]
+		) {
+		background: var(--error-bg) !important;
+		border: 1px solid var(--error-border) !important;
+		color: var(--error-text) !important;
+	}
+</style>

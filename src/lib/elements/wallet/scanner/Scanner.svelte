@@ -96,14 +96,27 @@
             if (result.data.startsWith("//")) {
                 result.data = result.data.slice(2);
             }
+            if (result.data.toLowerCase().startsWith('creq')) {
+                cashuRequestScanned(result.data)
+                return 
+            }
             const scannedToken = result.data;
             cashuTokenScanned(scannedToken);
-        } else if (result.data.toLowerCase().startsWith("npub")) {
+            return
+        }
+        else if (result.data.toLowerCase().startsWith('creq')) {
+            cashuRequestScanned(result.data)
+            return 
+        }        
+        else if (result.data.toLowerCase().startsWith("npub")) {
             npubScanned(result.data);
+            return
         } else if (result.data.toLowerCase().startsWith("lnurl")) {
             lnurlScanned(result.data);
+            return
         } else if (result.data.includes("@") && result.data.includes(".")) {
             lnAddressScanned(result.data);
+            return
         }
     };
 
@@ -127,13 +140,19 @@
     const lnInvoiceScanned = (invoice: string) => {
         closeDrawers();
         scanresultStore.set(invoice);
-        push("/wallet/receive/ln");
+        push("/wallet/send/");
     };
 
     const cashuTokenScanned = (token: string) => {
         closeDrawers();
         scanresultStore.set(token);
         push("/wallet/receive/cashu");
+    };
+
+    const cashuRequestScanned = (request: string) => {
+        closeDrawers();
+        scanresultStore.set(request);
+        push("/wallet/send/cashureq/"+request);
     };
 
     const closeDrawers = () => {

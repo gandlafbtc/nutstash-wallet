@@ -74,7 +74,7 @@
 		</Button>
 	</div>
 	<div class="w-full flex justify-center">
-		<div class="grid grid-rows-6 grid-flow-col lg:grid-rows-4 gap-3 max-w-4xl">
+		<div class="grid grid-rows-6 grid-flow-col gap-3 max-w-4xl">
 			{#each $mnemonic[0]?.mnemonic?.split(' ') as word, i}
 				<div class="flex gap-1 items-center">
 					<p class="w-8">{i + 1}.</p>

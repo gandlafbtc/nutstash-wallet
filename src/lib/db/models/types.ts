@@ -1,12 +1,17 @@
-import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token, MintQuoteState, MeltQuoteState } from "@cashu/cashu-ts";
+import type { MeltQuoteResponse, MintQuoteResponse, Proof as CashuProof, Token, MintQuoteState, MeltQuoteState, PaymentRequest, RawPaymentRequest, PaymentRequestTransport } from "@cashu/cashu-ts";
 import type { GetInfoResponse, MintActiveKeys, MintAllKeysets, MintKeys, MintKeyset } from '@cashu/cashu-ts';
 import type { Event } from "nostr-tools";
 
-export enum EXPIRED  {
+export enum EXPIRED {
     EXPIRED = "EXPIRED"
-    }
+}
 
-export type StoredMintQuote = Omit<MintQuoteResponse,'state'> & {
+export type StoredSwap = {
+    mintQuoteId: string,
+    meltQuoteId: string
+}
+
+export type StoredMintQuote = Omit<MintQuoteResponse, 'state'> & {
     state: MintQuoteState | EXPIRED
     mintUrl: string,
     unit: string,
@@ -15,11 +20,12 @@ export type StoredMintQuote = Omit<MintQuoteResponse,'state'> & {
     lastChangedAt: number
     type: 'mint'
     out?: Proof[]
-    counts?: {keysetId: string, counts:number[]
-    } 
+    counts?: {
+        keysetId: string, counts: number[]
+    }
 };
 
-export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & { 
+export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
     state: MeltQuoteState | EXPIRED
     mintUrl: string,
     unit: string,
@@ -30,7 +36,8 @@ export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
     out?: Proof[]
     request: string
     fees?: number
-    counts?: {keysetId: string, counts:number[]} };
+    counts?: { keysetId: string, counts: number[] }
+};
 
 export type StoredTransaction = {
     id: string;
@@ -44,21 +51,36 @@ export type StoredTransaction = {
     lastChangedAt: number
     amount: number
     unit?: string
-    counts?: {keysetId: string, counts:number[]}
+    counts?: { keysetId: string, counts: number[] }
     address?: string
     fees?: number
     memo?: string
- };
+};
 
- export enum TransactionType {
-    SEND="send",
-    RECEIVE="receive",
- }
+export type SimplePaymentRequest = {
+    transport: Array<PaymentRequestTransport>,
+    id?: string,
+    amount?: number,
+    unit?: string,
+    mints?: Array<string>,
+    description?: string,
+    singleUse?: boolean
+}
 
- export enum TransactionStatus {
-    PENDING="pending",
-    COMPLETED="completed",
- }
+export type StoredPaymentRequest = SimplePaymentRequest & {
+    createdAt: number,
+    lastChangedAt: number,
+}
+
+export enum TransactionType {
+    SEND = "send",
+    RECEIVE = "receive",
+}
+
+export enum TransactionStatus {
+    PENDING = "pending",
+    COMPLETED = "completed",
+}
 
 export type Contact = {
     npub: string
@@ -71,7 +93,7 @@ export type KeysetCount = { keysetId: string; count: number }
 export type Proof = CashuProof
 
 export type StoredSeed = {
-    mnemonic : string;
+    mnemonic: string;
 }
 
 export type Relay = {
@@ -89,8 +111,8 @@ export type NWCConnection = {
     connectionSecret: string,
     connectionPublicKey: string,
     allowanceLeft: number
-  }
-  
+}
+
 
 export type EncryptedStore = {
     cypher: Uint8Array
@@ -102,6 +124,8 @@ export type EncryptedStore = {
 export type Message = Event & {
     wrapId: string
     isRead?: boolean
+    isToken?: boolean
+    isReceived?: boolean
 }
 
 export type Mint = {
@@ -117,35 +141,29 @@ export type NostrRelay = {
 }
 
 export type Settings = {
-    mintSettings: MintSettings;
-    currencySettings: CurrencySettings;
-    keySettings: KeySettings;
-    nostrSettings: NostrSettings;
-    tokenSettings: TokenSettings;
-    contactSettings: ContactSettings;
+    id: string
+    mints: {
+
+    }
+    currency: {
+        prefferedUnit: string
+    }
+    keys: {
+
+    }
+    nostr: {
+    }
+    tokens: {
+        autoReceive: boolean
+    }
+    contact: {
+
+    },
+    general: {
+        hideBalance: boolean
+    }
 }
 
-export type MintSettings = {
-    fetchMintsOnStartup: boolean;
-}
-
-export type CurrencySettings = {
-    preferedCurrency: string;
-}
-
-export type KeySettings = {
-    useSingleReceiveKey: boolean;
-    useSingleSendKey: boolean;
-}
-
-export type NostrSettings = {
-    useNostr: boolean;
-    useExternalNostr: boolean;
-}
-
-export type TokenSettings = {
-    tokenCheckMode: TokenCheckMode
-}
 
 export type KeyPair = {
     counter: number;

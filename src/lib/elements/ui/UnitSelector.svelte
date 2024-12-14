@@ -4,9 +4,9 @@
     import { unit } from "$lib/stores/persistent/settings";
     import { getUnitsForMints, getUnitSymbol } from "$lib/util/walletUtils";
     import { onMount } from "svelte";
+    type Props = {selectedMints: Mint[], currentUnit: string, disabled?:boolean}
 
-
-let {selectedMints, currentUnit = $bindable()}: {selectedMints: Mint[], currentUnit: string} =  $props()
+let {selectedMints, currentUnit = $bindable(), disabled = false}: Props =  $props()
 
     onMount(()=>{
         currentUnit = getDefaultUnit()
@@ -39,8 +39,8 @@ let {selectedMints, currentUnit = $bindable()}: {selectedMints: Mint[], currentU
 
 </script>
 
-<Select.Root type="single" name="unit" bind:value={currentUnit} allowDeselect={false}>
-    <Select.Trigger class="w-28">
+<Select.Root {disabled} type="single" name="unit" bind:value={currentUnit} allowDeselect={false}>
+    <Select.Trigger class="w-16 text-xs">
         <div class="flex-grow">
             {getUnitSymbol(currentUnit)}
         </div>

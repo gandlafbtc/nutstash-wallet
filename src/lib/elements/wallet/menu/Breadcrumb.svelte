@@ -27,13 +27,14 @@
     })
 
   </script>
-   
-  <Breadcrumb.Root>
-    <Breadcrumb.List>
-        {#each crumbs as crumb,i}
-             <!-- content here -->
-             <Breadcrumb.Separator />
-             <Breadcrumb.Item >
+
+<div class="flex items-center">
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            {#each crumbs as crumb,i}
+            <!-- content here -->
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item >
                 <Breadcrumb.Page  >
                     <a href={getCrumbLink(i)}>
                         {getShortened(crumb)}
@@ -42,6 +43,7 @@
             </Breadcrumb.Item>
             {/each}
         </Breadcrumb.List>
-  </Breadcrumb.Root>
-  
-  
+    </Breadcrumb.Root>
+    
+    
+</div>

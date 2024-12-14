@@ -1,8 +1,11 @@
 <script>
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
 import CompactHistory from "./CompactHistory.svelte";
 
 </script>
-<ScrollArea class='h-full mt-28'>
+<div class="flex flex-col gap-2">
+
+    <p class="font-bold text-lg">
+        History
+    </p>
     <CompactHistory></CompactHistory>
-</ScrollArea>
+</div>

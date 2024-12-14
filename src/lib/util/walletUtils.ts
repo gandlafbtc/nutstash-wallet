@@ -162,6 +162,11 @@ export const getProofsOfMintUnit = (mint: Mint, proofs: Proof[], unit:string ='s
 	const mintUnitProofs = getByMany(proofs, keysetIds, 'id')
 	return mintUnitProofs
 }
+export const getProofsOfMintsUnit = (mints: Mint[], proofs: Proof[], unit:string ='sat'): Proof[] => {
+	let keysetIds = mints.map(m=>m.keysets.keysets).flat().filter(k=> k.unit===unit).map(k=> k.id)
+	const mintUnitProofs = getByMany(proofs, keysetIds, 'id')
+	return mintUnitProofs
+}
 
 export const getKeysetsOfTokens = (tokens: Array<Proof>) => {
 	return removeDuplicatesFromArray(
@@ -336,3 +341,20 @@ export const resolveNip05 = async (nostrAddr: string) => {
 		throw new Error('could not fetch nip-05');
 	}
 };
+
+export const separateProofsById = (proofs: Proof[]): {id:string,proofs:Proof[]}[] => {
+	const proofBuckets: {id:string,proofs:Proof[]}[]  = []
+	for (const proof of proofs) {
+		const proofBucket = proofBuckets.find(pb=> pb.id===proof.id)
+		if (proofBucket) {
+			proofBucket.proofs.push(proof)
+		}
+		else {
+			proofBuckets.push({
+				id: proof.id,
+				proofs: [proof]
+			})
+		}
+	}
+	return proofBuckets
+}

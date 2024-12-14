@@ -23,8 +23,12 @@
     import { toast } from "svelte-sonner";
     import { keysStore } from "$lib/stores/persistent/keys";
     import { getBy } from "$lib/stores/persistent/helper/storeHelper";
+    import type { Token } from "@cashu/cashu-ts";
+    import { ensureError } from "$lib/helpers/errors";
 
-    let {token} = $props()    
+    interface Props {token: Token}
+    
+    let {token}: Props = $props();
 
     let isKnownMint = $derived(
         $mints.find((m) => m.url === token?.mint) ? true : false,
@@ -64,8 +68,9 @@
                 push('/wallet/');
             }
         } catch (error) {
-            console.error(error);
-            toast.error(error.message);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -79,7 +84,9 @@
             }
             await mints.fetchMint(token?.mint)   
         } catch (error) {
-            console.error(error)
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
         finally {
             isLoading = false;

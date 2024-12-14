@@ -1,26 +1,25 @@
 <script lang="ts">
     import * as Sidebar from "$lib/components/ui/sidebar";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import DarkModeSetting from "$lib/elements/settings/DarkModeSetting.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import { version } from "$lib/stores/static/version";
-    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore, RefreshCcw, Unplug, FileQuestion } from "lucide-svelte";
+    import { AlertCircle, ShieldCheck , ArrowLeftRight, Delete, CreditCard, ReceiptText,  House, Bitcoin, Coins, Contact , Database,  Heart, History, Key, Landmark, LifeBuoy, LoaderCircle, Megaphone, Network, Plus, Save, Send, Settings, Trash, X, Wallet, ExternalLink, Scan, QrCode, MessageCircleMore, RefreshCcw, Unplug, FileQuestion, Skull, Tally5, Import, User, NetworkIcon } from "lucide-svelte";
   import MintMenuIetm from "./MintMenuIetm.svelte";
-    import Divider from "$lib/elements/ui/Divider.svelte";
-    import Button from "$lib/components/ui/button/button.svelte";
-    import { usePassword } from "$lib/stores/local/usePassword";
-    import { selectedMints } from "$lib/stores/local/selectedMints";
-    import { isOnboarded } from "$lib/stores/local/message";
-    import { DB } from "$lib/db/db";
     import { toast } from "svelte-sonner";
     import { reconnect } from "$lib/actions/nostr";
     import { messagesStore } from "$lib/stores/persistent/message";
     import { push } from "svelte-spa-router";
+    import { onMount } from "svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
     let mintUrlToAdd = $state('') 
-    const sidebar = Sidebar.useSidebar()
+    let {sidebar = $bindable(Sidebar.useSidebar())} = $props()
+
+    onMount(() => {
+        sidebar = Sidebar.useSidebar()
+    })
 
     const addMint = async () => {
         try {
@@ -37,39 +36,35 @@
           mintUrlToAdd = ''
           toast.success('Mint added');
         } catch (error) {
-			console.error(error)
-            toast.error(error.message);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         }
         finally {
             isAddingMint = false;
         }
     }
 
-    const deleteAll = async () => {
-        try {
-            usePassword.set(undefined)
-            selectedMints.set([]);
-            isOnboarded.set(false);
-            await DB.deleteDatabase()
-            toast.success('Database deleted');
-        } catch (error) {
-			console.error(error)
-            toast.error(error.message);
-        }
-    }
+    
 </script>
 
-<Sidebar.Root>
+<Sidebar.Root class='z-20'>
     <Sidebar.Header class=" justify-between flex-row">
-        <DarkModeSetting></DarkModeSetting>
-        <Sidebar.Trigger></Sidebar.Trigger>
+        <div class="flex gap-1 w-full justify-between items-center">
+
+            <DarkModeSetting></DarkModeSetting>
+            <div class="p-1">
+                <button  onclick={()=>sidebar.toggle()}>
+                    <X class='w-4 h-4'>
+                    </X>
+                </button>
+            </div>
+        </div>
+
     </Sidebar.Header>
 
     <Sidebar.Content>
     <Sidebar.Group>
-        <Sidebar.GroupLabel class='gap-2'>
-            <House></House>
-            Home</Sidebar.GroupLabel>
             <Sidebar.GroupContent>
                 <Sidebar.Menu>
                     <Sidebar.MenuItem>
@@ -103,7 +98,7 @@
                                 </a>
                                 {/snippet}
                         </Sidebar.MenuButton>
-                        <Sidebar.MenuBadge>
+                        <Sidebar.MenuBadge class='{$messagesStore.filter(m=> !m.isRead).length?'text-destructive':''}'>
                             {$messagesStore.filter(m=> !m.isRead).length}
                         </Sidebar.MenuBadge>
                     </Sidebar.MenuItem>
@@ -113,8 +108,8 @@
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
                                 <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/address"} {...props}>
-                                    <QrCode></QrCode>
-                                    My address
+                                    <User></User>
+                                    Account
                                 </a>
                                 {/snippet}
                         </Sidebar.MenuButton>
@@ -122,14 +117,45 @@
                     <Sidebar.MenuItem>
                         <Sidebar.MenuButton>
                             {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/scan"} {...props}>
-                                    <Scan></Scan>
-                                    Scan
-                                </a>
-                                {/snippet}
+                            <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/mints"} {...props}>
+                                <Landmark></Landmark>
+                                Mints
+                            </a>
+                            {/snippet}
+                        </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                    <Sidebar.MenuItem>
+                        <Sidebar.MenuButton>
+                            {#snippet child({ props })}
+                            <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/nostr"} {...props}>
+                                <NetworkIcon></NetworkIcon>
+                                Nostr
+                            </a>
+                            {/snippet}
+                        </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                    <Sidebar.MenuItem>
+                        <Sidebar.MenuButton>
+                            {#snippet child({ props })}
+                            <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings"} {...props}>
+                                <Settings></Settings>
+                                Settings
+                            </a>
+                            {/snippet}
+                        </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                    <Sidebar.MenuItem>
+                        <Sidebar.MenuButton>
+                            {#snippet child({ props })}
+                            <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/data"} {...props}>
+                                <Database></Database>
+                                Data
+                            </a>
+                            {/snippet}
                         </Sidebar.MenuButton>
                     </Sidebar.MenuItem>
                 </Sidebar.Menu>
+                
             </Sidebar.GroupContent>
         </Sidebar.Group>
         <Sidebar.Group>
@@ -175,106 +201,10 @@
                     </Sidebar.Menu>
                   </Sidebar.GroupContent>
             </Sidebar.GroupContent>
-
         </Sidebar.Group>
-        <Sidebar.Group>
-            <Sidebar.GroupLabel class='gap-2'>
-                <Settings></Settings>
-                Settings</Sidebar.GroupLabel>
-                <Sidebar.GroupContent>
-                    <Sidebar.Menu>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/mints"} {...props}>
-                                    <Landmark></Landmark>
-                                    Mints
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/currency"} {...props}>
-                                    <Bitcoin></Bitcoin>
-                                    Currencies
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/security"} {...props}>
-                                    <ShieldCheck></ShieldCheck>
-                                    Security
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                        
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/keys"} {...props}>
-                                    <Key></Key>
-                                    Keys
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/nwc"} {...props}>
-                                    <Unplug></Unplug>
-                                    NWC
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                        <Sidebar.MenuItem class='flex items-center'>
-                            <Sidebar.MenuButton class='flex-grow w-full'>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/nostr"} {...props}>
-                                    <Network></Network>
-                                    Nostr
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                            <Sidebar.GroupAction onclick={reconnect}>
-                                <RefreshCcw></RefreshCcw>
-                            </Sidebar.GroupAction>
-                        </Sidebar.MenuItem>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/ecash"} {...props}>
-                                    <Coins></Coins>
-                                    Ecash settings
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                        <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
-                                {#snippet child({ props })}
-                                <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/settings/backup"} {...props}>
-                                    <Save></Save>
-                                    Backup
-                                </a>
-                                {/snippet}
-                            </Sidebar.MenuButton>
-                        </Sidebar.MenuItem>
-                    </Sidebar.Menu>
-                </Sidebar.GroupContent>
-        </Sidebar.Group>
-
         <Sidebar.Group>
             <Sidebar.GroupContent>
                 <Sidebar.Menu>
-
                     <Sidebar.GroupLabel class="gap-2">
                         <LifeBuoy></LifeBuoy>
                         Help</Sidebar.GroupLabel>
@@ -331,87 +261,11 @@
                     </Sidebar.Menu>
                     </Sidebar.GroupContent>
                 </Sidebar.Group>
-                
-        <Sidebar.Group>
-        <Sidebar.GroupContent>
-            <Sidebar.Menu>
-
-                <Sidebar.GroupLabel class="gap-2">
-                    <Database></Database>
-                    Data</Sidebar.GroupLabel>
-                    <Sidebar.MenuItem>
-                        <Sidebar.MenuButton>
-                            {#snippet child({ props })}
-                            <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/ecash"} {...props}>
-                                <Coins></Coins>
-                                Ecash
-                            </a>
-                            {/snippet}
-                        </Sidebar.MenuButton>
-                    </Sidebar.MenuItem>
-                    <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/history"} {...props}>
-                            <History></History>
-                            History
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/receive/ln"} {...props}>
-                            <ReceiptText></ReceiptText>
-                            Invoices
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/send/ln"} {...props}>
-                            <CreditCard></CreditCard>
-                            Payments
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <a onclick={()=>sidebar.isMobile?sidebar .toggle():''} href={"/#/wallet/send/cashu"} {...props}>
-                            <ArrowLeftRight></ArrowLeftRight>
-                            Transactions
-                        </a>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-                <!-- <Divider></Divider>
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                        {#snippet child({ props })}
-                        <Button onclick={deleteAll} {...props} variant='destructive'>
-                            <Delete></Delete>
-                            Delete all data
-                        </Button>
-                        {/snippet}
-                    </Sidebar.MenuButton>
-                </Sidebar.MenuItem> -->
-                
-            </Sidebar.Menu>
-            </Sidebar.GroupContent>
-            
-        </Sidebar.Group>
     </Sidebar.Content>
     <Sidebar.Footer class="h-[3.25em] flex flex-col gap-1 items-center bg-gradient-to-b from-secondary to-transparent">
         <div class="flex gap-2">
             <div>
-
                 <Sidebar.MenuButton onclick={()=>push('/wallet/donate')} variant='outline'>
-                    
                     <Heart></Heart>
                 </Sidebar.MenuButton>
             </div>

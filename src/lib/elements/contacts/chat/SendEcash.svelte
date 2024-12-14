@@ -1,7 +1,6 @@
 <script lang="ts">
     import Button from "$lib/components/ui/button/button.svelte";
-    import { Banknote, LoaderCircle, Send } from "lucide-svelte";
-    import * as Dialog  from "$lib/components/ui/dialog";
+    import { LoaderCircle, Send } from "lucide-svelte";
     import MintSelector from "$lib/elements/ui/MintSelector.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import UnitSelector from "$lib/elements/ui/UnitSelector.svelte";
@@ -12,17 +11,13 @@
     import { getEncodedTokenV4, type Token } from "@cashu/cashu-ts";
     import { proofsStore } from "$lib/stores/persistent/proofs";
     import { toast } from "svelte-sonner";
-    import type { Mint } from "$lib/db/models/types";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
+    import { ensureError } from "$lib/helpers/errors";
 
 
-    let {sendCallback, to} = $props()
+    let {sendCallback, to, mint=$mints[0], currentUnit=$unit, amount=0, mintSelectDisabled=false, unitSelectDisabled = false} = $props()
     let isLoading = $state(false)
-    let mint: Mint | undefined = $state($mints[0])
-    let currentUnit = $state($unit)
     let balance = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit))
-    let amount = $state(0)
-    let sendEcashOpen = $state(false);
 
 
     const send = async () => {
@@ -48,10 +43,11 @@
                 unit: currentUnit,
                 mint: mint.url
             }
-            sendCallback(getEncodedTokenV4(token))
-            sendEcashOpen = false
+            sendCallback(token)
         } catch (error) {
-            console.error(error)
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         }
         finally {
             isLoading = false
@@ -60,44 +56,40 @@
 
 </script>
 
-<Dialog.Root bind:open={sendEcashOpen}>
-    <Dialog.Content>
-      <Dialog.Header>
-        <Dialog.Title>Send Ecash to {to.alias}</Dialog.Title>
-        <Dialog.Description>
-        </Dialog.Description>
-      </Dialog.Header>
-      {#if !mint}
-      <p class="text-destructive">No mint added to wallet! add a mint first:</p>
-      <AddMint>
 
-      </AddMint>
-      {:else}
-      <MintSelector bind:mint={mint}></MintSelector>
-      <div class="flex gap-2 items-center">
-          
-          <UnitSelector bind:currentUnit={currentUnit} selectedMints={[mint]}></UnitSelector>
-          {formatAmount(getAmountForTokenSet(balance), currentUnit)} available
+      <div class="flex flex-col gap-4">
+
+          {#if !mint}
+          <p class="text-destructive">No mint added to wallet! add a mint first:</p>
+          <AddMint>
+              
+        </AddMint>
+        {:else}
+        <MintSelector bind:mint={mint} disabled={mintSelectDisabled}></MintSelector>
+        <div class="flex gap-2 items-center justify-between">
+            
+            {formatAmount(getAmountForTokenSet(balance), currentUnit)} available
+            <UnitSelector bind:currentUnit={currentUnit} selectedMints={[mint]} disabled={unitSelectDisabled}></UnitSelector>
         </div>
         <Input type='number' bind:value={amount}></Input>
-        send {formatAmount(amount, currentUnit)} to {to.alias}
-        {/if}
-      <Dialog.Footer class='flex gap-2'>
-          <Button variant="outline" onclick={()=> {sendEcashOpen=false}}>
-              Cancel
-          </Button>
-          <Button onclick={send} disabled={isLoading}>
+        <div class="flex gap-2 flex-col">
+
+            <p>
+                
+                send {formatAmount(amount, currentUnit)} to 
+            </p>
+            <p class="w-72 overflow-clip text-ellipsis">
+                
+                {to}
+            </p>
+        </div>
+            {/if}
+        <Button onclick={send} disabled={isLoading || getAmountForTokenSet(balance)<amount}>
             {#if isLoading}
-                <LoaderCircle class='animate-spin'></LoaderCircle>
+            <LoaderCircle class='animate-spin'></LoaderCircle>
             {:else}
             <Send></Send>
             {/if}  
-              Send
-          </Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-</Dialog.Root>
-
-<Button onclick={()=> {sendEcashOpen = true}}>
-    <Banknote></Banknote>
-</Button>
+            Send
+        </Button>
+    </div>

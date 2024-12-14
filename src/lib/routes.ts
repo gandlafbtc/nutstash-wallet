@@ -42,8 +42,18 @@ import OnboardingPass from "./elements/onboarding/OnboardingPass.svelte";
 import SendLnurl from "./elements/wallet/send/ln/SendLNURL.svelte";
 import AddNewContact from "./elements/contacts/AddNewContact.svelte";
 import DonateView from "./elements/Donate/DonateView.svelte";
-import DonatePublic from "./elements/Donate/DonatePublic.svelte";
 import DonateAnon from "./elements/Donate/DonateAnon.svelte";
+import ManipulateCounters from "./elements/dangerzone/ManipulateCounters.svelte";
+import DeleteStuff from "./elements/dangerzone/DeleteStuff.svelte";
+import SendView from "./elements/wallet/send/SendView.svelte";
+import ReceiveCashuRequest from "./elements/wallet/receive/cashurequest/ReceiveCashuRequest.svelte";
+import CashuRequestListView from "./elements/wallet/receive/cashurequest/CashuRequestListView.svelte";
+import SendToCashuRequest from "./elements/wallet/receive/cashurequest/SendToCashuRequest.svelte";
+import CashuRequestInput from "./elements/wallet/receive/cashurequest/CashuRequestInput.svelte";
+import DataListView from "./elements/data/DataListView.svelte";
+import MintSwap from "./elements/mint/MintSwap.svelte";
+import ConfirmMintSwap from "./elements/mint/ConfirmMintSwap.svelte";
+import ProofChecker from "./elements/settings/ProofChecker.svelte";
 
 export const routes = {
     '/': Loading,
@@ -71,9 +81,8 @@ export const WALLET_ROUTE_PREFIX = '/wallet'
 
 export const walletRoutes = {
     '/': WalletHome,
-    
+
     '/donate':DonateView,
-    '/donate/public':DonatePublic,
     '/donate/anon':DonateAnon,
 
     "/mint/:url": MintView,
@@ -97,26 +106,42 @@ export const walletRoutes = {
     '/receive/ln': MintQuoteListView,
     '/receive/ln/:quote': MintQuoteItem,
     '/receive/cashu': ReceiveCashu,
+    '/receive/cashureq/': CashuRequestListView,
+    '/receive/cashureq/:id': ReceiveCashuRequest,
     '/receive/cashu/:token': ReceiveCashu,
     
-    '/send': Send,
+    '/send/requests': CashuRequestListView,
+    '/send/cashureq': CashuRequestInput,
+    '/send/cashureq/:creq': SendToCashuRequest,
+
+    '/send': SendView,
     '/send/cashu': TransactionsView,
     '/send/cashu/:id': TransactionItem,
     '/send/ln': SendLn,
     '/send/lnurl': SendLnurl,
     '/send/ln/:quote': MeltQuoteItem,
 
+    '/data': DataListView,
+
     '/settings': SettingsView,
     '/settings/backup': BackupSettings,
+    '/settings/checkproofs': ProofChecker,
     '/settings/nwc': NwcSettings,
     '/settings/backup/restore': RestoreSeedView,
     '/settings/currency': CurrencySettings,
     '/settings/ecash': EcashSettings,
     '/settings/keys': KeysSettings,
     '/settings/mints': MintsSettings,
+    '/settings/mints/swap': MintSwap,
+    '/settings/mints/swap/:mintquote': ConfirmMintSwap,
     '/settings/nostr': NostrSettings,
     '/settings/security': SecuritySettings,
     '/settings/security/changepass': ChangePassword,
+
+
+    //dangerzone
+    '/counters': ManipulateCounters,
+    '/delete': DeleteStuff,
 
     '*': NotFound
 }

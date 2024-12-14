@@ -2,6 +2,7 @@
     import Button from "$lib/components/ui/button/button.svelte";
     import * as Dialog  from "$lib/components/ui/dialog";
     import Input from "$lib/components/ui/input/input.svelte";
+    import { ensureError } from "$lib/helpers/errors";
     import { keysStore } from "$lib/stores/persistent/keys";
     import { add } from "date-fns";
     import { Plus } from "lucide-svelte";
@@ -21,8 +22,9 @@
             await keysStore.addKey(inputKey);
             isOpen = false
         } catch (error) {
-            toast.error(error.message)
-            console.error(error);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
             isLoading = false;
         }

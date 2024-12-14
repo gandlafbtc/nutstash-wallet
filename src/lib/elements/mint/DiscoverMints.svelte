@@ -8,6 +8,8 @@
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import { mints } from "$lib/stores/persistent/mints";
     import { delay } from "$lib/util/utils";
+    import { ensureError } from "$lib/helpers/errors";
+    import { toast } from "svelte-sonner";
 
     let isLoading = $state(false)
 
@@ -17,7 +19,9 @@
             discoverMints()
             await delay(500)
         } catch (error) {
-            console.error(error)            
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);        
         }
         finally {
             isLoading = false
@@ -38,7 +42,7 @@
             Discover Mints
     </Button>
 
-    <ScrollArea class="flex flex-col gap-2 h-96 w-full">
+    <div class="flex flex-col gap-2 w-full">
         {#each $discoveredMints.filter((m) => !$mints.find((ms) => m.url === ms.url)) as mint}
             {#if mint.url}
                 <div
@@ -64,5 +68,5 @@
                 </div>
             {/if}
         {/each}
-    </ScrollArea>
+            </div>
 </div>

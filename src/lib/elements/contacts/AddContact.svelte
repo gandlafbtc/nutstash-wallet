@@ -2,6 +2,7 @@
     import { createAlias } from "$lib/actions/nostr";
     import Button from "$lib/components/ui/button/button.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
+    import { ensureError } from "$lib/helpers/errors";
     import { contactsStore } from "$lib/stores/persistent/contacts";
     import { wordlist } from "@scure/bip39/wordlists/english";
     import { Plus } from "lucide-svelte";
@@ -32,7 +33,9 @@
             toast.success("Added contact " + alias);
             push("/wallet/contacts/chat/" + npub);
         } catch (error) {
-            console.log(error);
+            const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);
         } finally {
             isLoading = false;
         }

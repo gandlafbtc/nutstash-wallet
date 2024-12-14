@@ -9,12 +9,12 @@
         getUnitsForMints,
         isNumeric,
     } from "$lib/util/walletUtils";
-    import { QrCode, Zap, LoaderCircle } from "lucide-svelte";
+    import { QrCode, Zap, LoaderCircle, Banknote } from "lucide-svelte";
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
     import { unit } from "$lib/stores/persistent/settings";
-    import { createMintQuote } from "$lib/actions/actions";
+    import { createCashuRequest, createMintQuote } from "$lib/actions/actions";
     import {
         openReceiveDrawer,
         openScannerDrawer,
@@ -22,10 +22,12 @@
     import type { Mint } from "$lib/db/models/types";
     import AddMint from "$lib/elements/mint/AddMint.svelte";
     import { toast } from "svelte-sonner";
+    import { selectedMint } from "$lib/stores/local/selectedMints";
+    import { ensureError } from "$lib/helpers/errors";
 
     let entered: string = $state("");
 
-    let mint: Mint | undefined = $state($mints[0]);
+    let mint: Mint | undefined = $state($selectedMint!==-1?$mints[$selectedMint]: $mints[0]);
 
     let token = $state("");
     let amount = $state("");
@@ -99,7 +101,9 @@
             //Show QR screen
             push("/wallet/receive/ln/" + q.quote);
         } catch (error) {
-            console.error(error);
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
         } finally {
             isLoading = false;
         }
@@ -111,6 +115,22 @@
         openReceiveDrawer.set(false);
         push("/wallet/receive/cashu/" + entered);
     };
+
+    const receiveCashuRequest = async () => {
+        try {
+            const amountInt = parseInt(amount);
+            const req = await createCashuRequest(amountInt, mint?[mint?.url]:undefined, currentUnit, undefined,false)
+            openReceiveDrawer.set(false)
+            push("/wallet/receive/cashureq/"+req.id)
+            
+        } catch (error) {
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
+        } finally {
+
+        }
+    }
 
     const onKeypadPress = (value: string | { delete: boolean }) => {
         if (value.delete) {
@@ -140,7 +160,7 @@
             oninput={(e) => {
                 e.preventDefault();
             }}
-            placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount to mint"
+            placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount"
         ></Textarea>
     </div>
     <div>
@@ -179,10 +199,10 @@
                             ></UnitSelector>
                         </div>
                     {/if}
-                    <div class="w-80 py-5">
+                    <div class="w-80 flex flex-col gap-5 py-5">
                         <Button
                             disabled={isLoading}
-                            class="w-full border-2 border-pink-600"
+                            class="w-full border-2 border-nutstash"
                             onclick={receiveLN}
                         >
                             {#if isLoading}
@@ -193,12 +213,18 @@
                             {/if}
                             Receive via Lightning
                         </Button>
+                        <Button variant='outline' onclick={receiveCashuRequest}
+                        class="w-full border-2"
+                        >
+                        <Banknote></Banknote>
+                          Receive via Cashu request
+                        </Button>
                     </div>
                 </div>
             {:else}
                 <div>
                     <button
-                        class="rounded-full bg-pink-600 p-8 transition-all duration-300 hover:bg-pink-700 hover:p-10 flex-shrink active:bg-pink-500"
+                        class=""
                         onclick={() => openScannerDrawer.update((ctx) => !ctx)}
                     >
                         <QrCode></QrCode>

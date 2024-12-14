@@ -10,7 +10,7 @@
     }
 
 </script>
-<div class="flex flex-col gap-4 h-full w-80 mt-32">
+<div class="flex flex-col gap-4 h-full w-80 ">
     <div>
         <span class="font-bold text-lg">
             Currency settings

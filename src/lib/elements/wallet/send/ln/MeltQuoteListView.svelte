@@ -1,7 +1,6 @@
 <script lang="ts">
     import { meltQuotesStore } from "$lib/stores/persistent/meltquotes";
     import {MediaQuery} from 'runed'
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import * as Pagination from "$lib/components/ui/pagination";
     import MeltQuoteListItem from "./MeltQuoteListItem.svelte";
     
@@ -16,15 +15,13 @@
     
 
 </script>
-{#if $meltQuotesStore.length}
-<div class="h-full pt-16">
+<div class="h-full">
+  <p class="text-lg font-bold">Lightning payments</p>
+  {#if $meltQuotesStore.length}
     	
-   
-   <ScrollArea class='h-[90%]'>
     {#each  currentQuotes as quote}
            <MeltQuoteListItem {quote}></MeltQuoteListItem>
      {/each}
-     </ScrollArea>
 
   <Pagination.Root {count} {perPage} {siblingCount} bind:page>
     {#snippet children({ pages, currentPage })}
@@ -55,9 +52,9 @@
   
     
 
+  {:else}
+  <div class="h-20">
+      <p>No payments yet.</p>
+  </div>
+  {/if}
 </div>
-{:else}
-<div class="h-20">
-    <p>No payments created yet.</p>
-</div>
-{/if}

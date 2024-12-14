@@ -5,7 +5,6 @@
     import { messagesStore } from "$lib/stores/persistent/message";
     import { keysStore } from "$lib/stores/persistent/keys";
     import RecentChat from "./RecentChat.svelte";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
 
     const getLatestMessages = () => {
@@ -36,22 +35,19 @@
     let latestMessageForPubKey = $derived.by(getLatestMessages)
 </script>
 
-<div class="w-80 mt-32 h-full flex flex-col justify-start gap-3">
-    <p class="font-bold">
-        Recent chats
+<div class="w-80 h-full flex flex-col justify-start gap-2">
+    <p class="font-bold text-lg">
+        Chats
     </p>
     <div>
         <Button href='/#/wallet/contacts'>
             Start a new chat
         </Button>
     </div>
-    <ScrollArea>
 
         {#each latestMessageForPubKey.entries() as message}
         <div class="my-2">
-
             <RecentChat {message}></RecentChat>
         </div>
         {/each}
-    </ScrollArea>
 </div>

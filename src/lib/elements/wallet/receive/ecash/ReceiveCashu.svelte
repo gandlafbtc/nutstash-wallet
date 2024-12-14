@@ -4,6 +4,8 @@
     import { params } from "svelte-spa-router";
     import Input from "$lib/components/ui/input/input.svelte";
     import ReceiveCard from "./ReceiveCard.svelte";
+    import { ensureError } from "$lib/helpers/errors";
+    import { toast } from "svelte-sonner";
 
 
     let enteredToken: string = $state('');
@@ -20,7 +22,9 @@
                 return getDecodedToken($scanresultStore);
             } else return null;
         } catch (error) {
-			console.error(error)
+            const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
             return null;
         }
     };
