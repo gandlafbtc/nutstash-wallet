@@ -86,5 +86,5 @@ export const setStoresFromBackupJSON = async (obj:any) => {
     relaysStore.set(obj.relaysStore)
     cashuRequestsStore.set(obj.cashuRequestsStore)
     swapsStore.set(obj.swapsStore)
-    settings.set(obj.setting)
+    settings.set(obj.settings)
 }

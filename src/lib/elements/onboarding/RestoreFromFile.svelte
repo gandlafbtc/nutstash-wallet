@@ -12,11 +12,19 @@
     import { hexToBytes } from "@noble/hashes/utils";
     import OnboardingHeader from "./OnboardingHeader.svelte";
     import { ensureError } from "$lib/helpers/errors";
+    import Page from "../../../routes/+page.svelte";
+    import { mints } from "$lib/stores/persistent/mints";
+    import { proofsStore } from "$lib/stores/persistent/proofs";
+    import { mnemonic, seed } from "$lib/stores/persistent/mnemonic";
+    import { generateMnemonic } from "@scure/bip39";
+    import { wordlist } from "@scure/bip39/wordlists/english";
+    import { LoaderCircle } from "lucide-svelte";
 
 	let backupFileName = $state("");
 	let isLoading = $state(true);
 	let pass = $state("");
 	let isOpen = $state(false);
+	let isOpenLegacy = $state(false);
 	let backupObject = $state();
 	let decryptedObj = $state();
 
@@ -65,8 +73,8 @@
 		if (!checkIsBackup(backupObject)) {
 			throw new Error("Not a backup file");
 		}
-		if (backupObject.backupVersion === 'nutstash-legacy') {
-			//todo handle legacy backups
+		if (backupObject?.backupVersion === 'nutstash-legacy' || backupObject?.backupVersion === 'nutstash-2') {
+			isOpenLegacy = true
 			return
 		}
 		if (backupObject?.isEncrypt && !decryptedObj) {
@@ -75,6 +83,33 @@
 		}
 		await handleRestore()
 	};
+
+	const importLegacy = async ()=> {
+		try {
+			isLoading = true
+			await Promise.all(backupObject.mints?.map((m:{mintURL:string})=> mints.fetchMint(m.mintURL)))
+			if (backupObject.proofs) {
+				await proofsStore.addMany(backupObject.proofs)
+			}
+			if (backupObject.token) {
+				await proofsStore.addMany(backupObject.token)
+			}
+			const m = generateMnemonic(wordlist, 128);
+			await mnemonic.reset()
+			await mnemonic.add({mnemonic: m})
+			await reencrypt();
+			isOnboarded.set(true);
+			toast.success('Wallet migrated')
+			push('/onboarding/new/secure')
+		} catch (error) {
+			const err = ensureError(error)
+            console.error(err);
+            toast.error(err.message);   
+		}
+		finally {
+			isLoading = false
+		}
+	}
 
 	const decryptFile = async () => {
 		console.log(backupObject)
@@ -144,6 +179,35 @@
 			</Dropzone>
 		{/if}
 	</div>
+	<Dialog.Root bind:open={isOpenLegacy}>
+		<Dialog.Content>
+			<Dialog.Header>
+				<Dialog.Title
+					>This backup is from a legacy wallet.</Dialog.Title
+				>
+				<Dialog.Description>
+					Only mints and tokens will be imported.
+				</Dialog.Description>
+			</Dialog.Header>
+
+			<Dialog.Footer>
+				<Button
+					variant="outline"
+					onclick={() => {
+						isOpen = false;
+					}}
+				>
+					Cancel
+				</Button>
+				<Button disabled={isLoading} variant="destructive" onclick={importLegacy}>
+					{#if isLoading}
+						<LoaderCircle class='animate-spin'></LoaderCircle>
+					{/if}
+					Import
+				</Button>
+			</Dialog.Footer>
+		</Dialog.Content>
+	</Dialog.Root>
 	<Dialog.Root bind:open={isOpen}>
 		<Dialog.Content>
 			<Dialog.Header>
