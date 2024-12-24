@@ -279,7 +279,7 @@
             <p class="text-xs opacity-85">
                 version
                 <a
-                href="https://github.com/gandlafbtc/nutstash-app"
+                href="https://github.com/gandlafbtc/nutstash-wallet"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 class="underline"
