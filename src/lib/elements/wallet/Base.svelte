@@ -70,11 +70,13 @@
 								</Button>
 								{/if}
 							</div>
-							<img
-							src="/nutstash-written.svg"
-							alt="logo text"
-							class="w-32 transition-all duration-500"
-							/>
+							<a href="/#/wallet/">
+								<img
+								src="/nutstash-written.svg"
+								alt="logo text"
+								class="w-32 transition-all duration-500"
+								/>
+							</a>
 							<div class="hidden sm:block w-20"></div>
 						</div>
 					</div>
