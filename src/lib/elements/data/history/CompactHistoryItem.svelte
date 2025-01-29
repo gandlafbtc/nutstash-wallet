@@ -43,12 +43,12 @@
 </script>
 
 <a
-    class="border rounded-xl p-5 w-full flex justify-between items-center"
+    class="border rounded-xl p-3 w-full flex justify-between items-center"
     class:opacity-50={isExpired}
     href={getUrlForItem(item)}
 >
+<div class="relative">
     {#if item.type === "mint"}
-        <div class="relative">
             <Zap class="text-yellow-500"></Zap>
             <div class="absolute -top-1 -left-2">
                 <ArrowDownRight class="w-4 h-4 text-green-600"
@@ -69,9 +69,7 @@
                 </div>
             {/if}
 
-        </div>
     {:else if item.type === "melt"}
-        <div class="relative">
             <Zap class="text-yellow-500"></Zap>
             <div class="absolute -top-1 -left-2">
                 <ArrowUpRight class="w-4 h-4 text-red-600"
@@ -95,39 +93,34 @@
                     <Timer class="w-4 h-4 text-red-600"></Timer>
                 </div>
             {/if}
-        </div>
     {:else if item.type === "send"}
-        <div class="relative">
             <Banknote class="text-violet-600"></Banknote>
             <div class="absolute -top-1 -left-2">
                 <ArrowUpRight class="w-4 h-4 text-red-600"
                 ></ArrowUpRight>
             </div>
-        </div>
     {:else if item.type === "receive"}
-        <div class="relative">
             <Banknote class="text-violet-600"></Banknote>
             <div class="absolute -top-1 -left-2">
                 <ArrowDownRight class="w-4 h-4 text-green-600"
                 ></ArrowDownRight>
             </div>
-        </div>
     {/if}
-    <div class="flex flex-col gap-1 items-center">
-
+</div>
+    <div class="flex flex-col gap-1 items-start">
         <span class="text-sm">
             {formatDistance($now, item.lastChangedAt)} ago
         </span>
-        <span class="text-xs text-secondary overflow-clip text-ellipsis">
+        <p class="text-xs w-44 overflow-clip text-ellipsis text-nowrap text-muted-foreground">
             {item.mintUrl}
-        </span>
+        </p>
     </div>
     <div class="flex flex-col gap-1 items-end">
         <span>
             {formatAmount(item.amount, item.unit)}
         </span>
         {#if item.type==='send' || item.type==='receive' || item.type==='melt'}
-        <span class="text-xs text-secondary">
+        <span class="text-xs text-muted-foreground">
             {formatAmount(item.fees ?? 0, item.unit)} fee
         </span>
         {/if}
