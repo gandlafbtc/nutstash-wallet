@@ -22,24 +22,29 @@
     });
   </script>
    
-   <div class="w-80">
+   <div class="w-80 ">
        <Carousel.Root opts={{startIndex: $selectedMint+1, duration:10,}} setApi={(emblaApi) => (api = emblaApi)}>
            <Carousel.Previous class='hidden sm:flex' />
-           <Carousel.Content class='ml-4  mr-4'>
-            <Carousel.Item class='-pl-4'>
-                <div class="p-1">
-                    <AllMintsCompact> </AllMintsCompact>
-                </div>
-            </Carousel.Item>
-            
-               {#each $mints as mint}
-               <Carousel.Item class='-pl-4'>
-                <div class="p-1">
-                    <MintCompact {mint}> </MintCompact>
-                </div>
-              </Carousel.Item>
-               {/each}
-            </Carousel.Content>
+           <div class="from-background flex
+  after:bg-gradient-to-r after:z-10 after:absolute after:w-5 after:h-full after:left-0 after:pointer-events-none
+  before:bg-gradient-to-l before:z-10 before:absolute before:w-5 before:h-full before:right-0 before:pointer-events-none">
+
+               <Carousel.Content class='ml-4  mr-4'>
+                   <Carousel.Item class='-pl-4'>
+                       <div class="p-1">
+                           <AllMintsCompact> </AllMintsCompact>
+                        </div>
+                    </Carousel.Item>
+                    
+                    {#each $mints as mint}
+                    <Carousel.Item class='-pl-4'>
+                        <div class="p-1">
+                            <MintCompact {mint}> </MintCompact>
+                        </div>
+                    </Carousel.Item>
+                    {/each}
+                </Carousel.Content>
+            </div>
             <Carousel.Next class='hidden sm:flex'/>
         </Carousel.Root>
     </div>
