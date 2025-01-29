@@ -8,6 +8,7 @@
         openSendDrawer,
     } from "$lib/stores/session/drawer";
     import { scanresultStore } from "$lib/stores/session/transitionstores";
+    import { ClipboardPaste } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { push } from "svelte-spa-router";
 
@@ -85,7 +86,7 @@
     const cashuRequestScanned = (request: string) => {
         closeDrawers();
         scanresultStore.set(request);
-        push("/wallet/send/cashureq/"+request);
+        push("/wallet/send/cashureq/" + request);
     };
 
     const closeDrawers = () => {
@@ -95,10 +96,19 @@
     };
 </script>
 
-<Input
-    bind:value={pasted}
-    onpaste={(e) => onPaste()}
-    class="w-80 border-dashed resize-none rounded-none focus-visible:outline-transparent focus:outline-transparent"
-    inputmode="none"
-    placeholder="Quickpaste: paste token, invoice etc."
-></Input>
+<div class="relative h-10">
+    <div class="text-muted-foreground absolute top-2 left-2">
+        <ClipboardPaste></ClipboardPaste>
+    </div>
+    <div class="absolute">
+
+        <Input
+        bind:value={pasted}
+        onpaste={(e) => onPaste()}
+        class="w-80 border-dashed resize-none focus-visible:outline-transparent focus:outline-transparent rounded-sm bg-opacity-5 "
+        inputmode="none"
+        placeholder="        Paste something from clipboard..."
+        ></Input>
+    </div>
+    </div>
+    

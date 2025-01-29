@@ -25,7 +25,7 @@
    <div class="w-80">
        <Carousel.Root opts={{startIndex: $selectedMint+1, duration:10,}} setApi={(emblaApi) => (api = emblaApi)}>
            <Carousel.Previous class='hidden sm:flex' />
-           <Carousel.Content class='ml-2  mr-4'>
+           <Carousel.Content class='ml-4  mr-4'>
             <Carousel.Item class='-pl-4'>
                 <div class="p-1">
                     <AllMintsCompact> </AllMintsCompact>
