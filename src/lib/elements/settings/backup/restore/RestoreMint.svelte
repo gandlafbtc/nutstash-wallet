@@ -59,8 +59,8 @@
     const restoreKeyset = async (cashuMint: CashuMint, ks: MintKeyset) => {
         try {
             const keys = await cashuMint.getKeys(ks.id)
-            const cashuWallet = new CashuWallet(cashuMint, {keys: keys.keysets, bip39seed: $seed, unit: ks.unit})
-            const {keysetProofs, count} = await restoreBatch(cashuWallet, 0)
+            const cashuWallet = new CashuWallet(cashuMint, {keys: keys.keysets, keysets: [ks], bip39seed: $seed})
+            const {keysetProofs, count} = await restoreBatch(cashuWallet, 0, ks.id)
             await countsStore.addOrUpdate(ks.id, {count: count+1, keysetId:ks.id}, 'keysetId')
             statusMessage2 = `checking proof states`
             const proofStates = await cashuWallet.checkProofsStates(keysetProofs)
@@ -78,19 +78,31 @@
         }
      }
 
-     const restoreBatch = async (cashuWallet: CashuWallet, from: number) => {
+     const restoreBatch = async (cashuWallet: CashuWallet, from: number, keysetId: string) => {
          let keysetProofs: Proof[] = []
         try {
             let newProofs: Proof[] = []
+            let lastFound = 0
+            let noProofsFoundCounter = 0
+            const noProofsFoundLimit = 3
+
             do {
                 newProofs = []
                 statusMessage2 = `restore ${from}...${from+INCREMENT}`
-                const {proofs} = await cashuWallet.restore(from, INCREMENT)
+                const {proofs} = await cashuWallet.restore(from, INCREMENT, {keysetId})
                 newProofs =[...proofs]
                 keysetProofs.push(...proofs)
                 from = from + INCREMENT
-            } while (newProofs.length);
-            return {keysetProofs, count: from+INCREMENT}
+                if (newProofs.length) {
+                    noProofsFoundCounter=0
+                    lastFound = from
+                }
+                else {
+                    noProofsFoundCounter++
+                }
+            } while (noProofsFoundCounter<noProofsFoundLimit);
+
+            return {keysetProofs, count: lastFound+1}
         } catch (error) {
             statusMessage2 = ''
             statusMessage = error.message

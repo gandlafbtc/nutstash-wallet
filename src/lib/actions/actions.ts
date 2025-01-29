@@ -14,7 +14,6 @@ import { meltQuotesStore } from "$lib/stores/persistent/meltquotes"
 import { decode } from "@gandlaf21/bolt11-decode"
 import { getNprofile } from "./nostr"
 import { cashuRequestsStore } from "$lib/stores/persistent/requests"
-import { sortProofsById } from "@cashu/cashu-ts/dist/lib/es5/utils"
 import { hashToCurve } from "@cashu/crypto/modules/common"
 
 export const createMintQuote = async (mintUrl: string, amount: number, options?: { unit?: string }) => {

@@ -313,8 +313,11 @@ export const getWalletWithUnit = async (mints: Mint[], mintUrl: string, unit = '
 	if (!mint) {
 		throw new Error(`Mint ${mintUrl} not found`)
 	}
-	const keys = mint.keys.keysets.find(ks => ks.unit)
 	const keysets = mint.keysets.keysets.filter(ks => ks.unit === unit)
+	const keys = mint.keys.keysets.find(ks => ks.unit===unit)
+	if (!keys) {
+		throw new Error(`No keys for this unit: ${unit} [${mintUrl}]`)
+	}
 	const wallet = new CashuWallet(new CashuMint(mintUrl), { bip39seed: get(seed), mintInfo: mint.info, unit: unit, keys, keysets })
 	await wallet.getKeys()
 	return wallet;
