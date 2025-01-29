@@ -11,6 +11,7 @@
     import MintDropdown from "../mint/mintDropdown/MintDropdown.svelte";
     import MintSwap from "../mint/MintSwap.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
+    import { discoverMints } from "$lib/actions/nostr";
 
     let defaultMint: Mint | undefined = $derived($mints[0]);
 
@@ -31,7 +32,7 @@
         <Tabs.Root value={$mints.length ? "manage" : "add"} class="w-full">
         <Tabs.List>
             <Tabs.Trigger value="manage">Manage</Tabs.Trigger>
-            <Tabs.Trigger value="add">Add Mint</Tabs.Trigger>
+            <Tabs.Trigger value="add" onclick={()=> discoverMints()}>Add Mint</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="manage">
             {#if defaultMint}
