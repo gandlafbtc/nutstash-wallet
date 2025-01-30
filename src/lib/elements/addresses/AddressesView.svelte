@@ -13,7 +13,7 @@
     <p class="flex gap-1">
         <span>
             Your nostr address is used to send and receive messages over
-            nostr. It is linked to the first key with the checkmark bellow.
+            nostr. It is linked to the first key with the checkmark below.
     </p>
     {#if $keysStore.length}
         <Address {pub}></Address>
