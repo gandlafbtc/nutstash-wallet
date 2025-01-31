@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --force",
     "dev:host": "vite dev --host",
     "build": "vite build",
     "preview": "vite preview",
