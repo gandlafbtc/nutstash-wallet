@@ -11,6 +11,7 @@
     import { push } from "svelte-spa-router";
     import { onMount } from "svelte";
     import { ensureError } from "$lib/helpers/errors";
+    import { get } from "svelte/store";
 
     let showAddMint = $state(false);
     let isAddingMint = $state(false);
@@ -164,7 +165,14 @@
                 Mints</Sidebar.GroupLabel>
             <Sidebar.GroupAction
                 title="Add Mint"
-                onclick={() => (showAddMint = !showAddMint)}
+                onclick={() => {
+                    showAddMint = !showAddMint
+                    setTimeout(() => {
+                        if (showAddMint) {
+                            document?.getElementById('menu-mint-input')?.focus()
+                        }
+                    }, 50);
+                }}
             >
                 {#if showAddMint}
                     <X></X>
@@ -177,7 +185,7 @@
                     <Sidebar.Menu>
                         {#if showAddMint}
                          <Sidebar.MenuItem class="flex gap-2 w-full">
-                         <Sidebar.Input bind:value={mintUrlToAdd} class='flex-grow' onkeypress={(e: KeyboardEvent)=> {
+                         <Sidebar.Input id='menu-mint-input' bind:value={mintUrlToAdd} class='flex-grow' onkeypress={(e: KeyboardEvent)=> {
                             if (e.key === 'Enter') {
                                 addMint() 
                             }
