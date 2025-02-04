@@ -3,12 +3,12 @@
 	import { validateMnemonic } from '@scure/bip39';
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
 	import { isOnboarded } from '$lib/stores/local/message';
-    import Input from '$lib/components/ui/input/input.svelte';
-    import Button from '$lib/components/ui/button/button.svelte';
-    import * as Card from '$lib/components/ui/card';
-    import { pop, push } from 'svelte-spa-router';
-    import { toast } from 'svelte-sonner';
-    import OnboardingHeader from './OnboardingHeader.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as Card from '$lib/components/ui/card';
+	import { pop, push } from 'svelte-spa-router';
+	import { toast } from 'svelte-sonner';
+	import OnboardingHeader from './OnboardingHeader.svelte';
 
 	let restoreSeed: Array<string> = $state(new Array(12));
 	let seedString: string = $state('');
@@ -19,11 +19,11 @@
 			seedString = '';
 			const splitted = seedStringCopy.split(' ');
 			if (splitted.length !== 12) {
-				toast.warning( 'The seed phrase must be 12 words');
+				toast.warning('The seed phrase must be 12 words');
 				return;
 			}
 			if (!validateMnemonic(seedStringCopy, wordlist)) {
-				toast.warning( 'The seed phrase is not valid');
+				toast.warning('The seed phrase is not valid');
 				return;
 			}
 			restoreSeed = splitted;
@@ -35,50 +35,43 @@
 			toast.error('Invalid seed phrase');
 			return;
 		}
-		mnemonic.add({mnemonic:restoreSeed.join(' ')});
+		mnemonic.add({ mnemonic: restoreSeed.join(' ') });
 		isOnboarded.set(true);
-		push('/wallet/settings/backup/restore')
+		push('/wallet/settings/backup/restore');
 	}
 </script>
+
 <OnboardingHeader></OnboardingHeader>
-   <div class="flex h-screen items-center justify-center">
-	   <Card.Root class="w-80">
-		   <Card.Header>
-			   <Card.Title>Restore ecash from seed phrase</Card.Title>
-			   <Card.Description>Insert your seed phrase in the correct order...</Card.Description>
-			</Card.Header>
-			<Card.Content class="flex gap-2 flex-col justify-center items-center max-w-max">
-				<div class="w-20">
-					<img src="/icons/coin.gif" alt="loading" class="" />
-				</div>
-				<p></p>
-				<Input
+<div class="flex h-screen items-center justify-center">
+	<Card.Root class="w-80">
+		<Card.Header>
+			<Card.Title>Restore ecash from seed phrase</Card.Title>
+			<Card.Description>Insert your seed phrase in the correct order...</Card.Description>
+		</Card.Header>
+		<Card.Content class="flex max-w-max flex-col items-center justify-center gap-2">
+			<div class="w-20">
+				<img src="/icons/coin.gif" alt="loading" class="" />
+			</div>
+			<p></p>
+			<Input
 				class="flex-grow"
 				type="text"
 				placeholder="...or paste seed here"
 				onpaste={populateSeed}
 				bind:value={seedString}
 				onkeydown={(e) => {}}
-				/>
-				<div class="grid grid-cols-2 gap-3">
-			{#each restoreSeed as input, i}
-			<div class="flex gap-1 items-center">
-				<p class="w-8">{i + 1}.</p>
-				<Input type="text" class="input input-sm flex-grow" bind:value={restoreSeed[i]} />
+			/>
+			<div class="grid grid-cols-2 gap-3">
+				{#each restoreSeed as input, i}
+					<div class="flex items-center gap-1">
+						<p class="w-8">{i + 1}.</p>
+						<Input type="text" class="input input-sm flex-grow" bind:value={restoreSeed[i]} />
+					</div>
+				{/each}
 			</div>
-			{/each}
-		</div>
-			
-	</Card.Content>
-	<Card.Footer class='flex gap-4 flex-col'>
-		<Button
-		disabled={restoreSeed.includes(undefined)}
-		onclick={startRestore}
-		>
-		restore
-	</Button>
-	</Card.Footer>
-</Card.Root>
-
-
+		</Card.Content>
+		<Card.Footer class="flex flex-col gap-4">
+			<Button disabled={restoreSeed.includes(undefined)} onclick={startRestore}>restore</Button>
+		</Card.Footer>
+	</Card.Root>
 </div>

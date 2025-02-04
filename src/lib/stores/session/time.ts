@@ -1,14 +1,13 @@
-import { writable } from "svelte/store";
-
+import { writable } from 'svelte/store';
 
 const createNowStore = () => {
-   const store =  writable(Date.now())
+	const store = writable(Date.now());
 
-   setInterval(()=> {
-        store.set(Date.now())
-   }, 1000)
+	setInterval(() => {
+		store.set(Date.now());
+	}, 1000);
 
-   return store
+	return store;
 };
 
-export const now = createNowStore()
+export const now = createNowStore();

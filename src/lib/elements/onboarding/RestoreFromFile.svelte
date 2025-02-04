@@ -1,42 +1,42 @@
 <script lang="ts">
 	// @ts-ignore
-	import Dropzone from "svelte-file-dropzone";
-	import { isOnboarded } from "$lib/stores/local/message";
-	import Button from "$lib/components/ui/button/button.svelte";
-	import { pop, push } from "svelte-spa-router";
-	import { toast } from "svelte-sonner";
-	import { reencrypt, setStoresFromBackupJSON } from "$lib/init/init";
-	import * as Dialog from "$lib/components/ui/dialog";
-	import Input from "$lib/components/ui/input/input.svelte";
-	import { decrypt, kdf } from "$lib/actions/encryption";
-    import { hexToBytes } from "@noble/hashes/utils";
-    import OnboardingHeader from "./OnboardingHeader.svelte";
-    import { ensureError } from "$lib/helpers/errors";
-    import Page from "../../../routes/+page.svelte";
-    import { mints } from "$lib/stores/persistent/mints";
-    import { proofsStore } from "$lib/stores/persistent/proofs";
-    import { mnemonic, seed } from "$lib/stores/persistent/mnemonic";
-    import { generateMnemonic } from "@scure/bip39";
-    import { wordlist } from "@scure/bip39/wordlists/english";
-    import { LoaderCircle } from "lucide-svelte";
+	import Dropzone from 'svelte-file-dropzone';
+	import { isOnboarded } from '$lib/stores/local/message';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { pop, push } from 'svelte-spa-router';
+	import { toast } from 'svelte-sonner';
+	import { reencrypt, setStoresFromBackupJSON } from '$lib/init/init';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import { decrypt, kdf } from '$lib/actions/encryption';
+	import { hexToBytes } from '@noble/hashes/utils';
+	import OnboardingHeader from './OnboardingHeader.svelte';
+	import { ensureError } from '$lib/helpers/errors';
+	import Page from '../../../routes/+page.svelte';
+	import { mints } from '$lib/stores/persistent/mints';
+	import { proofsStore } from '$lib/stores/persistent/proofs';
+	import { mnemonic, seed } from '$lib/stores/persistent/mnemonic';
+	import { generateMnemonic } from '@scure/bip39';
+	import { wordlist } from '@scure/bip39/wordlists/english';
+	import { LoaderCircle } from 'lucide-svelte';
 
-	let backupFileName = $state("");
+	let backupFileName = $state('');
 	let isLoading = $state(true);
-	let pass = $state("");
+	let pass = $state('');
 	let isOpen = $state(false);
 	let isOpenLegacy = $state(false);
 	let backupObject = $state();
 	let decryptedObj = $state();
 
 	const handleDragEnter = () => {
-		console.log("enter");
+		console.log('enter');
 	};
 	const handleDragLeave = () => {
-		console.log("leave");
+		console.log('leave');
 	};
 
 	const handleDropRejected = () => {
-		toast.warning("File is no a valid nutstash_backup.json");
+		toast.warning('File is no a valid nutstash_backup.json');
 	};
 
 	const handleDropAccepted = async (file) => {
@@ -56,11 +56,11 @@
 			setStoresFromBackupJSON(backupObject);
 			await reencrypt();
 			isOnboarded.set(true);
-			push("/wallet/");
+			push('/wallet/');
 		} catch (error) {
-			const err = ensureError(error)
-            console.error(err);
-            toast.error(err.message);   
+			const err = ensureError(error);
+			console.error(err);
+			toast.error(err.message);
 		}
 	};
 
@@ -71,74 +71,73 @@
 		backupObject = JSON.parse(jsonString);
 		console.log(backupObject);
 		if (!checkIsBackup(backupObject)) {
-			throw new Error("Not a backup file");
+			throw new Error('Not a backup file');
 		}
-		if (backupObject?.backupVersion === 'nutstash-legacy' || backupObject?.backupVersion === 'nutstash-2') {
-			isOpenLegacy = true
-			return
+		if (
+			backupObject?.backupVersion === 'nutstash-legacy' ||
+			backupObject?.backupVersion === 'nutstash-2'
+		) {
+			isOpenLegacy = true;
+			return;
 		}
 		if (backupObject?.isEncrypt && !decryptedObj) {
 			isOpen = true;
 			return;
 		}
-		await handleRestore()
+		await handleRestore();
 	};
 
-	const importLegacy = async ()=> {
+	const importLegacy = async () => {
 		try {
-			isLoading = true
-			await Promise.all(backupObject.mints?.map((m:{mintURL:string})=> mints.fetchMint(m.mintURL)))
+			isLoading = true;
+			await Promise.all(
+				backupObject.mints?.map((m: { mintURL: string }) => mints.fetchMint(m.mintURL))
+			);
 			if (backupObject.proofs) {
-				await proofsStore.addMany(backupObject.proofs)
+				await proofsStore.addMany(backupObject.proofs);
 			}
 			if (backupObject.token) {
-				await proofsStore.addMany(backupObject.token)
+				await proofsStore.addMany(backupObject.token);
 			}
 			const m = generateMnemonic(wordlist, 128);
-			await mnemonic.reset()
-			await mnemonic.add({mnemonic: m})
+			await mnemonic.reset();
+			await mnemonic.add({ mnemonic: m });
 			await reencrypt();
 			isOnboarded.set(true);
-			toast.success('Wallet migrated')
-			push('/onboarding/new/secure')
+			toast.success('Wallet migrated');
+			push('/onboarding/new/secure');
 		} catch (error) {
-			const err = ensureError(error)
-            console.error(err);
-            toast.error(err.message);   
+			const err = ensureError(error);
+			console.error(err);
+			toast.error(err.message);
+		} finally {
+			isLoading = false;
 		}
-		finally {
-			isLoading = false
-		}
-	}
+	};
 
 	const decryptFile = async () => {
-		console.log(backupObject)
-		backupObject = await decrypt(
-			hexToBytes(backupObject.blob),
-			await kdf(pass),
-			backupObject.iv,
-		);
-		await handleRestore()
+		console.log(backupObject);
+		backupObject = await decrypt(hexToBytes(backupObject.blob), await kdf(pass), backupObject.iv);
+		await handleRestore();
 	};
 
 	const checkIsBackup = (obj: any) => {
 		if (!obj.backupVersion) {
 			return false;
 		}
-		if (typeof obj.backupVersion !== "string") {
+		if (typeof obj.backupVersion !== 'string') {
 			return false;
 		}
-		if (!obj.backupVersion.startsWith("nutstash")) {
+		if (!obj.backupVersion.startsWith('nutstash')) {
 			return false;
 		}
 		return true;
 	};
 </script>
+
 <OnboardingHeader></OnboardingHeader>
-<div class="h-screen flex mx-2 items-center justify-center">
-	<div
-		class="flex w-full h-full max-h-96 justify-center gap-2 flex-col text-center"
-	>
+<div class="mx-2 flex h-screen items-center justify-center">
+	<div class="flex h-full max-h-96 w-full flex-col justify-center gap-2 text-center">
 		{#if backupFileName}
 			<p class="text-success inline-flex items-center justify-center">
 				{backupFileName}
@@ -148,7 +147,7 @@
 			<Dropzone
 				containerClasses="bg-base-200 h-full w-full rounded-lg border border-dashed flex items-center justify-center flex-col gap-10"
 				disableDefaultStyles={true}
-				accept={"application/json"}
+				accept={'application/json'}
 				multiple={false}
 				on:dragenter={handleDragEnter}
 				on:dragleave={handleDragLeave}
@@ -156,9 +155,8 @@
 				on:dropaccepted={handleDropAccepted}
 			>
 				<p class="text-lg font-bold">
-					Drop the <code class="text-warning"
-						>nutstash_backup.json</code
-					> file here, or click to select a file
+					Drop the <code class="text-warning">nutstash_backup.json</code> file here, or click to select
+					a file
 				</p>
 				<div class="flex w-full items-center justify-center">
 					<svg
@@ -167,7 +165,7 @@
 						viewBox="0 0 24 24"
 						stroke-width="1.5"
 						stroke="currentColor"
-						class="w-20 h-20"
+						class="h-20 w-20"
 					>
 						<path
 							stroke-linecap="round"
@@ -182,12 +180,8 @@
 	<Dialog.Root bind:open={isOpenLegacy}>
 		<Dialog.Content>
 			<Dialog.Header>
-				<Dialog.Title
-					>This backup is from a legacy wallet.</Dialog.Title
-				>
-				<Dialog.Description>
-					Only mints and tokens will be imported.
-				</Dialog.Description>
+				<Dialog.Title>This backup is from a legacy wallet.</Dialog.Title>
+				<Dialog.Description>Only mints and tokens will be imported.</Dialog.Description>
 			</Dialog.Header>
 
 			<Dialog.Footer>
@@ -201,7 +195,7 @@
 				</Button>
 				<Button disabled={isLoading} variant="destructive" onclick={importLegacy}>
 					{#if isLoading}
-						<LoaderCircle class='animate-spin'></LoaderCircle>
+						<LoaderCircle class="animate-spin"></LoaderCircle>
 					{/if}
 					Import
 				</Button>
@@ -211,21 +205,14 @@
 	<Dialog.Root bind:open={isOpen}>
 		<Dialog.Content>
 			<Dialog.Header>
-				<Dialog.Title
-					>This wallet backup has been protected with a passphrase.</Dialog.Title
-				>
+				<Dialog.Title>This wallet backup has been protected with a passphrase.</Dialog.Title>
 				<Dialog.Description>
-					Enter the passphrase to decrypt and restore from this wallet
-					file.
+					Enter the passphrase to decrypt and restore from this wallet file.
 				</Dialog.Description>
 			</Dialog.Header>
 			<div class="flex flex-col gap-2">
 				<span>Enter passphrase</span>
-				<Input
-					type="password"
-					placeholder="Current passphrase"
-					bind:value={pass}
-				/>
+				<Input type="password" placeholder="Current passphrase" bind:value={pass} />
 			</div>
 			<Dialog.Footer>
 				<Button
@@ -236,9 +223,7 @@
 				>
 					Cancel
 				</Button>
-				<Button variant="destructive" onclick={decryptFile}>
-					Decrypt
-				</Button>
+				<Button variant="destructive" onclick={decryptFile}>Decrypt</Button>
 			</Dialog.Footer>
 		</Dialog.Content>
 	</Dialog.Root>

@@ -1,7 +1,5 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-export type StatusMessage = {
+export type StatusMessage = {};
 
-}
-
-export const  statusMessage = writable<StatusMessage | undefined>();
+export const statusMessage = writable<StatusMessage | undefined>();

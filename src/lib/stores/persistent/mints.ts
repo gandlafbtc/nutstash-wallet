@@ -11,28 +11,25 @@ import { createDefaultStoreFunctions, getBy } from './helper/storeHelper';
 import { selectedMint } from '../local/selectedMints';
 import { getHostFromUrl } from '$lib/util/utils';
 
-
-const encryptionHelper = createEncryptionHelper<Mint>('encrypted-mints')
+const encryptionHelper = createEncryptionHelper<Mint>('encrypted-mints');
 
 export const createMintsStore = (encryptionHelper: EncryptionHelper<Mint>) => {
 	const store = writable<Mint[]>([]);
 	const defaults = createDefaultStoreFunctions(encryptionHelper, store);
 
-
 	const fetchMint = async (url: string) => {
-		const mint = await loadMint(url)
-		defaults.addOrUpdate(url, mint, 'url')
-	}
+		const mint = await loadMint(url);
+		defaults.addOrUpdate(url, mint, 'url');
+	};
 
 	const makeDefaultMint = async (mint: Mint) => {
-		await defaults.remove(mint.url, 'url')
-		await defaults.addOrUpdate(mint.url, mint, 'url')
-	}
-
+		await defaults.remove(mint.url, 'url');
+		await defaults.addOrUpdate(mint.url, mint, 'url');
+	};
 
 	const getByHost = (host: string): Mint | undefined => {
-		return get(store).find((m)=> host === getHostFromUrl(m.url));
-	}
+		return get(store).find((m) => host === getHostFromUrl(m.url));
+	};
 
 	return {
 		...store,
@@ -41,33 +38,31 @@ export const createMintsStore = (encryptionHelper: EncryptionHelper<Mint>) => {
 		getByHost,
 		makeDefaultMint
 	};
-}
+};
 
-export const mints = createMintsStore(encryptionHelper)
+export const mints = createMintsStore(encryptionHelper);
 
 const loadMint = async (mintUrl: string): Promise<Mint> => {
 	try {
-		const cashuMint = new CashuMint(mintUrl)
-		const mintInfo = await cashuMint.getInfo()
-		const mintAllKeysets = await cashuMint.getKeySets()
-		const mintActiveKeys: MintActiveKeys = await cashuMint.getKeys()
+		const cashuMint = new CashuMint(mintUrl);
+		const mintInfo = await cashuMint.getInfo();
+		const mintAllKeysets = await cashuMint.getKeySets();
+		const mintActiveKeys: MintActiveKeys = await cashuMint.getKeys();
 		const mint = {
 			info: mintInfo,
 			keys: mintActiveKeys,
 			keysets: mintAllKeysets,
-			url: mintUrl,
-		}
+			url: mintUrl
+		};
 
-		return mint
+		return mint;
 	} catch (error) {
 		const err = ensureError(error);
 		throw new ContextError(`Could not load mint`, {
 			cause: err,
 			context: {
-				url: mintUrl,
-			},
+				url: mintUrl
+			}
 		});
 	}
-}
-
-
+};

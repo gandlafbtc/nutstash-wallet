@@ -1,5 +1,5 @@
 <script>
-    import Scanner from "./Scanner.svelte";
+	import Scanner from './Scanner.svelte';
 </script>
 
 <Scanner></Scanner>

@@ -22,8 +22,8 @@ importers:
         version: 2.0.1
     devDependencies:
       '@cashu/cashu-ts':
-        specifier: 2.0.0-rc3
-        version: 2.0.0-rc3
+        specifier: 2.1.0
+        version: 2.1.0
       '@cashu/crypto':
         specifier: ^0.3.4
         version: 0.3.4
@@ -108,6 +108,15 @@ importers:
       nostr-tools:
         specifier: ^2.10.1
         version: 2.10.1(typescript@5.6.3)
+      prettier:
+        specifier: ^3.4.2
+        version: 3.4.2
+      prettier-plugin-svelte:
+        specifier: ^3.3.3
+        version: 3.3.3(prettier@3.4.2)(svelte@5.1.13)
+      prettier-plugin-tailwindcss:
+        specifier: ^0.6.11
+        version: 0.6.11(prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.1.13))(prettier@3.4.2)
       qr-scanner:
         specifier: ^1.4.2
         version: 1.4.2
@@ -189,8 +198,8 @@ packages:
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
     engines: {node: '>=6.9.0'}
 
-  '@cashu/cashu-ts@2.0.0-rc3':
-    resolution: {integrity: sha512-KXH3Zi9JZe5Ylc6PyfO2OxErjKzu7pwTudYQ/3tsunLmqaTQadtlf2JPTcpGOo/O2yLhleryx7l4JgoitWvgSw==}
+  '@cashu/cashu-ts@2.1.0':
+    resolution: {integrity: sha512-qFfFz1dx9keJxumjk5FyTvI1j0Yp/P5LXDy0cGO4Xlp3WYKOI1nykNOTPd+bTY9vSkvIM+xuXRer9BtQxqHtwA==}
 
   '@cashu/crypto@0.3.4':
     resolution: {integrity: sha512-mfv1Pj4iL1PXzUj9NKIJbmncCLMqYfnEDqh/OPxAX0nNBt6BOnVJJLjLWFlQeYxlnEfWABSNkrqPje1t5zcyhA==}
@@ -1636,6 +1645,72 @@ packages:
     resolution: {integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  prettier-plugin-svelte@3.3.3:
+    resolution: {integrity: sha512-yViK9zqQ+H2qZD1w/bH7W8i+bVfKrD8GIFjkFe4Thl6kCT9SlAsXVNmt3jCvQOCsnOhcvYgsoVlRV/Eu6x5nNw==}
+    peerDependencies:
+      prettier: ^3.0.0
+      svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
+
+  prettier-plugin-tailwindcss@0.6.11:
+    resolution: {integrity: sha512-YxaYSIvZPAqhrrEpRtonnrXdghZg1irNg4qrjboCXrpybLWVs55cW2N3juhspVJiO0JBvYJT8SYsJpc8OQSnsA==}
+    engines: {node: '>=14.21.3'}
+    peerDependencies:
+      '@ianvs/prettier-plugin-sort-imports': '*'
+      '@prettier/plugin-pug': '*'
+      '@shopify/prettier-plugin-liquid': '*'
+      '@trivago/prettier-plugin-sort-imports': '*'
+      '@zackad/prettier-plugin-twig': '*'
+      prettier: ^3.0
+      prettier-plugin-astro: '*'
+      prettier-plugin-css-order: '*'
+      prettier-plugin-import-sort: '*'
+      prettier-plugin-jsdoc: '*'
+      prettier-plugin-marko: '*'
+      prettier-plugin-multiline-arrays: '*'
+      prettier-plugin-organize-attributes: '*'
+      prettier-plugin-organize-imports: '*'
+      prettier-plugin-sort-imports: '*'
+      prettier-plugin-style-order: '*'
+      prettier-plugin-svelte: '*'
+    peerDependenciesMeta:
+      '@ianvs/prettier-plugin-sort-imports':
+        optional: true
+      '@prettier/plugin-pug':
+        optional: true
+      '@shopify/prettier-plugin-liquid':
+        optional: true
+      '@trivago/prettier-plugin-sort-imports':
+        optional: true
+      '@zackad/prettier-plugin-twig':
+        optional: true
+      prettier-plugin-astro:
+        optional: true
+      prettier-plugin-css-order:
+        optional: true
+      prettier-plugin-import-sort:
+        optional: true
+      prettier-plugin-jsdoc:
+        optional: true
+      prettier-plugin-marko:
+        optional: true
+      prettier-plugin-multiline-arrays:
+        optional: true
+      prettier-plugin-organize-attributes:
+        optional: true
+      prettier-plugin-organize-imports:
+        optional: true
+      prettier-plugin-sort-imports:
+        optional: true
+      prettier-plugin-style-order:
+        optional: true
+      prettier-plugin-svelte:
+        optional: true
+
+  prettier@3.4.2:
+    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   property-expr@2.0.6:
     resolution: {integrity: sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==}
 
@@ -2155,7 +2230,7 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
-  '@cashu/cashu-ts@2.0.0-rc3':
+  '@cashu/cashu-ts@2.1.0':
     dependencies:
       '@cashu/crypto': 0.3.4
       '@noble/curves': 1.6.0
@@ -3479,6 +3554,19 @@ snapshots:
       nanoid: 3.3.7
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.1.13):
+    dependencies:
+      prettier: 3.4.2
+      svelte: 5.1.13
+
+  prettier-plugin-tailwindcss@0.6.11(prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.1.13))(prettier@3.4.2):
+    dependencies:
+      prettier: 3.4.2
+    optionalDependencies:
+      prettier-plugin-svelte: 3.3.3(prettier@3.4.2)(svelte@5.1.13)
+
+  prettier@3.4.2: {}
 
   property-expr@2.0.6:
     optional: true
