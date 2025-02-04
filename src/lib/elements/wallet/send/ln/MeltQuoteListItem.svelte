@@ -175,7 +175,12 @@
             </button>
         </div>
         {:else if quote.state === EXPIRED.EXPIRED}
+        <div class="flex gap-1 items-center">
             <Badge variant="destructive" class="text-secondary">Expired</Badge>
+            <button onclick={()=> checkMeltQuote(quote)}>
+                <RotateCcw></RotateCcw>
+            </button>
+        </div>
         {/if}
     </Card.Footer>
 </Card.Root>
