@@ -1,33 +1,39 @@
 <script lang="ts">
-    import Button from "$lib/components/ui/button/button.svelte";
-    import { onMount } from "svelte";
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { onMount } from 'svelte';
 
+	import NfcWriteDrawer from './NFCWriteDrawer.svelte';
+	let { token }: { token: string } = $props();
+	let isOpen = $state(false);
 
-    import NfcWriteDrawer from "./NFCWriteDrawer.svelte";
-    let {token}: {token: string} = $props()
-    let isOpen = $state(false)
+	let hasNdef = $state(false);
 
-    let hasNdef = $state(false)
-
-    onMount(()=> {
-        try {
-            const ndef = new NDEFReader()
-            if (!ndef) {
-                throw new Error("no ndef");
-                
-            }
-            hasNdef = true
-        } catch (error) {
-            hasNdef = false
-        }
-    })
-
+	onMount(() => {
+		try {
+			const ndef = new NDEFReader();
+			if (!ndef) {
+				throw new Error('no ndef');
+			}
+			hasNdef = true;
+		} catch (error) {
+			hasNdef = false;
+		}
+	});
 </script>
 
 {#if hasNdef}
-<Button onclick={()=> isOpen = true}>
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 20h16V4H4v16z" fill="none"/><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM18 6h-5c-1.1 0-2 .9-2 2v2.28c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V8h3v8H8V8h2V6H6v12h12V6z"/></svg>
-</Button>
+	<Button onclick={() => (isOpen = true)}>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			height="24px"
+			viewBox="0 0 24 24"
+			width="24px"
+			fill="currentColor"
+			><path d="M0 0h24v24H0z" fill="none" /><path d="M4 20h16V4H4v16z" fill="none" /><path
+				d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM18 6h-5c-1.1 0-2 .9-2 2v2.28c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V8h3v8H8V8h2V6H6v12h12V6z"
+			/></svg
+		>
+	</Button>
 
-<NfcWriteDrawer bind:isOpen {token}></NfcWriteDrawer>
+	<NfcWriteDrawer bind:isOpen {token}></NfcWriteDrawer>
 {/if}

@@ -1,13 +1,13 @@
 <script>
-    import Button from "$lib/components/ui/button/button.svelte";
-    import { pop } from "svelte-spa-router";
-    import PasswordSetup from "../security/PasswordSetup.svelte";
-    import OnboardingHeader from "./OnboardingHeader.svelte";
-
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { pop } from 'svelte-spa-router';
+	import PasswordSetup from '../security/PasswordSetup.svelte';
+	import OnboardingHeader from './OnboardingHeader.svelte';
 </script>
+
 <OnboardingHeader></OnboardingHeader>
-<div class="h-screen w-full flex items-center justify-center">
-    <div class="w-80 flex">
-        <PasswordSetup></PasswordSetup>
-    </div>
+<div class="flex h-screen w-full items-center justify-center">
+	<div class="flex w-80">
+		<PasswordSetup></PasswordSetup>
+	</div>
 </div>

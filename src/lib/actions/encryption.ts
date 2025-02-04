@@ -1,8 +1,11 @@
-import { bytesToHex, hexToBytes, randomBytes } from "@noble/hashes/utils";
+import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils';
 
-export const encrypt = async <T>(payload: T, k: CryptoKey): Promise<{ cypher: Uint8Array, iv: string }> => {
+export const encrypt = async <T>(
+	payload: T,
+	k: CryptoKey
+): Promise<{ cypher: Uint8Array; iv: string }> => {
 	try {
-		const iv = randomBytes(16)
+		const iv = randomBytes(16);
 		const encrypted = await window.crypto.subtle.encrypt(
 			{ name: 'AES-CBC', iv },
 			k,
@@ -15,14 +18,14 @@ export const encrypt = async <T>(payload: T, k: CryptoKey): Promise<{ cypher: Ui
 	}
 };
 
-export const decrypt = async <T>(payload: Uint8Array, k: CryptoKey, ivString: string): Promise<T> => {
+export const decrypt = async <T>(
+	payload: Uint8Array,
+	k: CryptoKey,
+	ivString: string
+): Promise<T> => {
 	try {
 		const iv = hexToBytes(ivString);
-		const decrypted = await window.crypto.subtle.decrypt(
-			{ name: 'AES-CBC', iv },
-			k,
-			payload
-		);
+		const decrypted = await window.crypto.subtle.decrypt({ name: 'AES-CBC', iv }, k, payload);
 		return JSON.parse(new TextDecoder().decode(new Uint8Array(decrypted))) as T;
 	} catch (error) {
 		console.error(error);
@@ -30,20 +33,20 @@ export const decrypt = async <T>(payload: Uint8Array, k: CryptoKey, ivString: st
 	}
 };
 
-export const checkIfKeysMatch = async ( key1: CryptoKey, key2: CryptoKey ) => {
+export const checkIfKeysMatch = async (key1: CryptoKey, key2: CryptoKey) => {
 	try {
-		type test = {test: string}
-		const encrypted = await encrypt({test:'test'}, key1)
-		const decrypted = (await decrypt(encrypted.cypher, key1, encrypted.iv)) as test
-		const decrypted2 = (await decrypt(encrypted.cypher, key2, encrypted.iv)) as test
+		type test = { test: string };
+		const encrypted = await encrypt({ test: 'test' }, key1);
+		const decrypted = (await decrypt(encrypted.cypher, key1, encrypted.iv)) as test;
+		const decrypted2 = (await decrypt(encrypted.cypher, key2, encrypted.iv)) as test;
 		if (decrypted?.test !== decrypted2?.test) {
-			return false
+			return false;
 		}
-		return true
+		return true;
 	} catch (error) {
-		return false
+		return false;
 	}
-}
+};
 
 export const kdf = async (password: string): Promise<CryptoKey> => {
 	return await window.crypto.subtle

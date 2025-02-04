@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { params } from "svelte-spa-router";
-    import { mintQuotesStore } from "$lib/stores/persistent/mintquotes";
-    import { onMount } from "svelte";
-    import MintQuoteListItem from "./MintQuoteListItem.svelte";
-    
-    let quoteId = $derived($params?.quote);
+	import { params } from 'svelte-spa-router';
+	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
+	import { onMount } from 'svelte';
+	import MintQuoteListItem from './MintQuoteListItem.svelte';
 
-    let quote = $derived($mintQuotesStore.find((q) => q.quote === quoteId))
+	let quoteId = $derived($params?.quote);
 
-    $effect(() => {
-        $mintQuotesStore
-    });
-   
+	let quote = $derived($mintQuotesStore.find((q) => q.quote === quoteId));
+
+	$effect(() => {
+		$mintQuotesStore;
+	});
 </script>
+
 {#if quote}
-    <MintQuoteListItem isListView={false} {quote}></MintQuoteListItem>
+	<MintQuoteListItem isListView={false} {quote}></MintQuoteListItem>
 {:else}
-    Quote not found
+	Quote not found
 {/if}

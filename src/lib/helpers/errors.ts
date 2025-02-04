@@ -13,11 +13,11 @@ export const ensureContextError = (err: unknown): ContextError => {
 };
 
 export class ContextError extends Error {
-    context?: unknown;
-    cause?: Error
-    constructor(message: string, options?: {cause?: Error, context?: unknown}) {
-        super(message, options);
-        this.name = 'ContextError';
-        this.context = this.context;
-    }
-};
+	context?: unknown;
+	cause?: Error;
+	constructor(message: string, options?: { cause?: Error; context?: unknown }) {
+		super(message, options);
+		this.name = 'ContextError';
+		this.context = this.context;
+	}
+}

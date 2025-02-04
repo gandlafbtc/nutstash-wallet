@@ -1,9 +1,9 @@
 <script lang="ts">
-    const { children } = $props();
+	const { children } = $props();
 </script>
 
-<div class="w-full flex justify-end">
-    <div class="m-1 p-2 rounded-xl bg-secondary w-64 ">
-        {@render children?.()}
-    </div>
+<div class="flex w-full justify-end">
+	<div class="m-1 w-64 rounded-xl bg-secondary p-2">
+		{@render children?.()}
+	</div>
 </div>

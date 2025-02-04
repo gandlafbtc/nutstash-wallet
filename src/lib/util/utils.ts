@@ -1,4 +1,4 @@
-import { toast } from "svelte-sonner";
+import { toast } from 'svelte-sonner';
 
 function fallbackCopyTextToClipboard(text: string) {
 	var textArea = document.createElement('textarea');
@@ -16,7 +16,7 @@ function fallbackCopyTextToClipboard(text: string) {
 	try {
 		var successful = document.execCommand('copy');
 		if (successful) {
-			toast.info( 'copied!');
+			toast.info('copied!');
 		}
 	} catch (err) {
 		console.error('Fallback: Oops, unable to copy', err);
@@ -31,7 +31,7 @@ export function copyTextToClipboard(text: string) {
 	}
 	navigator.clipboard.writeText(text).then(
 		function () {
-			toast.info( 'copied!');
+			toast.info('copied!');
 		},
 		function (err) {
 			console.error('Async: Could not copy text: ', err);
@@ -40,8 +40,8 @@ export function copyTextToClipboard(text: string) {
 }
 
 export const getHostFromUrl = (url: string) => {
-	return url?.split(":")[1].split('/').join("")
-}
+	return url?.split(':')[1].split('/').join('');
+};
 
 export const getCount = (from: number, to: number): number[] => {
 	const count = [];
@@ -49,23 +49,20 @@ export const getCount = (from: number, to: number): number[] => {
 		count.push(i);
 	}
 	return count;
-}
+};
 
-export const getDivider = (currentUnit : string) => {
-    if (currentUnit === "sat") {
-      return {divider:100000000, fraction: 8};
+export const getDivider = (currentUnit: string) => {
+	if (currentUnit === 'sat') {
+		return { divider: 100000000, fraction: 8 };
+	} else if (currentUnit === 'msat') {
+		return { divider: 1000, fraction: 3 };
+	} else {
+		return { divider: 100, fraction: 2 };
+	}
+};
 
-    } else if (currentUnit === "msat") {
-      return {divider:1000, fraction: 3};
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-    } else {
-      return {divider:100, fraction: 2};
-    }
-  }
-
-  export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
- export const css = (element: HTMLElement, style: any) => {
-    for (const property in style)
-        element.style[property] = style[property];
-}
+export const css = (element: HTMLElement, style: any) => {
+	for (const property in style) element.style[property] = style[property];
+};

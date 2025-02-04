@@ -1,5 +1,5 @@
 interface Toast {
-	level?: "success" | "info" | "warning" | "error" | "secondary";
+	level?: 'success' | 'info' | 'warning' | 'error' | 'secondary';
 	message: string;
 	messageTitle?: string;
 }

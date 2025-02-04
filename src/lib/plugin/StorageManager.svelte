@@ -22,11 +22,11 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed w-screen h-screen bg-black bg-opacity-90 z-50 flex items-center justify-center">
-		<div class="bg-base-100 p-2 rounded-md flex flex-col gap-2 w-80 h-40">
+	<div class="fixed z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-90">
+		<div class="bg-base-100 flex h-40 w-80 flex-col gap-2 rounded-md p-2">
 			<p class="font-bold">Nutstash is already open in another tab</p>
-			<p class="pt-3 text-center h-full">please close this window</p>
-			<button class="pt-3 text-center h-full link link-primary" on:click={reload}> reload </button>
+			<p class="h-full pt-3 text-center">please close this window</p>
+			<button class="link link-primary h-full pt-3 text-center" on:click={reload}> reload </button>
 		</div>
 	</div>
 {:else}

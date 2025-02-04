@@ -15,63 +15,59 @@ unit.subscribe((value) => {
 	}
 });
 
-
 const DEFAULT_SETTINGS: Settings = {
 	id: '0',
-	contact: {
-
-	},
+	contact: {},
 	currency: {
 		prefferedUnit: 'sat'
 	},
-	keys: {
-
-	},
-	mints: {
-
-	},
-	nostr: {
-	},
+	keys: {},
+	mints: {},
+	nostr: {},
 	tokens: {
 		autoReceive: false
 	},
 	general: {
 		hideBalance: false
 	}
+};
 
-}
-
-const encryptionHelper = createEncryptionHelper<Settings>("encrypted-settings")
+const encryptionHelper = createEncryptionHelper<Settings>('encrypted-settings');
 
 const createSettingsStore = () => {
 	const initialSettings: Array<Settings> = [];
 	const store = writable<Array<Settings>>(initialSettings);
-	const { addOrUpdate, clear, init: initialize, reEncrypt, reset } = createDefaultStoreFunctions(encryptionHelper, store);
+	const {
+		addOrUpdate,
+		clear,
+		init: initialize,
+		reEncrypt,
+		reset
+	} = createDefaultStoreFunctions(encryptionHelper, store);
 
 	const addDefaultSettings = async () => {
-		await addOrUpdate(DEFAULT_SETTINGS.id, DEFAULT_SETTINGS, 'id')
-	}
+		await addOrUpdate(DEFAULT_SETTINGS.id, DEFAULT_SETTINGS, 'id');
+	};
 
 	const init = async () => {
-		await initialize()
+		await initialize();
 		if (!get(store).length) {
-			await addDefaultSettings()
+			await addDefaultSettings();
 		}
-	}
-	
+	};
+
 	const setHideBalance = async (value: boolean) => {
-		const s = get(store)[0]
-		s.general.hideBalance = value
-		await addOrUpdate('0',s, 'id')
-	} 
+		const s = get(store)[0];
+		s.general.hideBalance = value;
+		await addOrUpdate('0', s, 'id');
+	};
 
 	const setAutoReceive = async (value: boolean) => {
-		const s = get(store)[0]
-		s.tokens.autoReceive = value
-		await addOrUpdate('0',s, 'id')
-	} 
+		const s = get(store)[0];
+		s.tokens.autoReceive = value;
+		await addOrUpdate('0', s, 'id');
+	};
 
 	return { ...store, init, reset, clear, reEncrypt, setHideBalance, setAutoReceive };
-}
+};
 export const settings = createSettingsStore();
-

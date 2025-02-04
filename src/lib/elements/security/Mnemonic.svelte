@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-    import Button from '$lib/components/ui/button/button.svelte';
-    import Input from '$lib/components/ui/input/input.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
 
 	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-    import { toast } from 'svelte-sonner';
+	import { toast } from 'svelte-sonner';
 	const copyMnemonic = () => {
-		const text = $mnemonic[0].mnemonic
+		const text = $mnemonic[0].mnemonic;
 		if (browser) {
 			copyTextToClipboard(text);
 		}
@@ -30,7 +30,7 @@
 				toast.info('Copied mnemonic to clipboard');
 			}
 		} catch (err) {
-			console.error(err)
+			console.error(err);
 			toast.warning('Could not copy text');
 		}
 
@@ -46,7 +46,7 @@
 				toast.info('Copied mnemonic to clipboard');
 			},
 			function (err) {
-			toast.warning('Could not copy text');
+				toast.warning('Could not copy text');
 			}
 		);
 	}
@@ -54,7 +54,7 @@
 
 <div class="flex flex-col gap-6">
 	<p>Write down these 12 words in the correct order and store them securely</p>
-	<div class="flex flex-col gap-1 items-center justify-center rounded-xl">
+	<div class="flex flex-col items-center justify-center gap-1 rounded-xl">
 		<Button onclick={copyMnemonic} class="w"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@
 				viewBox="0 0 24 24"
 				stroke-width="1.5"
 				stroke="currentColor"
-				class="w-6 h-6"
+				class="h-6 w-6"
 			>
 				<path
 					stroke-linecap="round"
@@ -73,10 +73,10 @@
 			Or copy it
 		</Button>
 	</div>
-	<div class="w-full flex justify-center">
-		<div class="grid grid-rows-6 grid-flow-col gap-3 max-w-4xl">
+	<div class="flex w-full justify-center">
+		<div class="grid max-w-4xl grid-flow-col grid-rows-6 gap-3">
 			{#each $mnemonic[0]?.mnemonic?.split(' ') as word, i}
-				<div class="flex gap-1 items-center">
+				<div class="flex items-center gap-1">
 					<p class="w-8">{i + 1}.</p>
 					<Input type="text" readonly class="" value={word} />
 				</div>

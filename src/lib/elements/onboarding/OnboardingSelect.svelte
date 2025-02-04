@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { mnemonic } from "$lib/stores/persistent/mnemonic";
-	import { pop, push } from "svelte-spa-router";
-	import { wordlist } from "@scure/bip39/wordlists/english";
-	import { generateMnemonic } from "@scure/bip39";
-	import OnboardingHeader from "./OnboardingHeader.svelte";
+	import { mnemonic } from '$lib/stores/persistent/mnemonic';
+	import { pop, push } from 'svelte-spa-router';
+	import { wordlist } from '@scure/bip39/wordlists/english';
+	import { generateMnemonic } from '@scure/bip39';
+	import OnboardingHeader from './OnboardingHeader.svelte';
 
-	import { onMount } from "svelte";
-	import { toast } from "svelte-sonner";
-	import { mints } from "$lib/stores/persistent/mints";
-	import { proofsStore } from "$lib/stores/persistent/proofs";
-	import { reencrypt } from "$lib/init/init";
-	import { isOnboarded } from "$lib/stores/local/message";
-	import { ensureError } from "$lib/helpers/errors";
-	import { LoaderCircle } from "lucide-svelte";
+	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import { mints } from '$lib/stores/persistent/mints';
+	import { proofsStore } from '$lib/stores/persistent/proofs';
+	import { reencrypt } from '$lib/init/init';
+	import { isOnboarded } from '$lib/stores/local/message';
+	import { ensureError } from '$lib/helpers/errors';
+	import { LoaderCircle } from 'lucide-svelte';
 	let isLegacyWallet = $state(false);
 	let isLoading = $state(false);
 	onMount(() => {
-		const localstorageProofs = localStorage.getItem("proofs");
-		const localstorageTokens = localStorage.getItem("tokens");
+		const localstorageProofs = localStorage.getItem('proofs');
+		const localstorageTokens = localStorage.getItem('tokens');
 		if (localstorageProofs?.length || localstorageTokens?.length) {
 			isLegacyWallet = true;
 			backup();
@@ -28,18 +28,18 @@
 		const m = generateMnemonic(wordlist, 128);
 		await mnemonic.reset();
 		await mnemonic.add({ mnemonic: m });
-		push("/onboarding/new/secure");
+		push('/onboarding/new/secure');
 	};
 
 	const migrateWallet = async () => {
 		try {
 			isLoading = true;
-			const mintsString = localStorage.getItem("mints");
+			const mintsString = localStorage.getItem('mints');
 			let oldMints;
 			if (mintsString?.length) {
 				oldMints = JSON.parse(mintsString);
 			}
-			const proofsString = localStorage.getItem("tokens");
+			const proofsString = localStorage.getItem('tokens');
 			let proofs;
 			if (proofsString?.length) {
 				proofs = JSON.parse(proofsString);
@@ -51,7 +51,7 @@
 					} catch (error) {
 						toast.warning('Could not load mint', {
 							description: `${m.mintURL}`
-						})
+						});
 					}
 				}
 			}
@@ -63,28 +63,28 @@
 			await mnemonic.add({ mnemonic: m });
 			await reencrypt();
 
-			localStorage.removeItem("contacts");
-			localStorage.removeItem("history");
-			localStorage.removeItem("message");
-			localStorage.removeItem("mint-requests");
-			localStorage.removeItem("mints");
-			localStorage.removeItem("nostr-messages");
-			localStorage.removeItem("nostr-privkey");
-			localStorage.removeItem("nostr-pubkey");
-			localStorage.removeItem("nostr-relays");
-			localStorage.removeItem("pending-tokens");
-			localStorage.removeItem("selfhosted-sync-tokens");
-			localStorage.removeItem("setting-check-non-pending");
-			localStorage.removeItem("setting-check-pending");
-			localStorage.removeItem("setting-check-token-auto");
-			localStorage.removeItem("theme");
-			localStorage.removeItem("tokens");
-			localStorage.removeItem("use-external-nostr");
-			localStorage.removeItem("use-nostr");
+			localStorage.removeItem('contacts');
+			localStorage.removeItem('history');
+			localStorage.removeItem('message');
+			localStorage.removeItem('mint-requests');
+			localStorage.removeItem('mints');
+			localStorage.removeItem('nostr-messages');
+			localStorage.removeItem('nostr-privkey');
+			localStorage.removeItem('nostr-pubkey');
+			localStorage.removeItem('nostr-relays');
+			localStorage.removeItem('pending-tokens');
+			localStorage.removeItem('selfhosted-sync-tokens');
+			localStorage.removeItem('setting-check-non-pending');
+			localStorage.removeItem('setting-check-pending');
+			localStorage.removeItem('setting-check-token-auto');
+			localStorage.removeItem('theme');
+			localStorage.removeItem('tokens');
+			localStorage.removeItem('use-external-nostr');
+			localStorage.removeItem('use-nostr');
 
 			isOnboarded.set(true);
-			toast.success("Wallet migrated");
-			push("/onboarding/new/secure");
+			toast.success('Wallet migrated');
+			push('/onboarding/new/secure');
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -109,46 +109,38 @@
 		doExport(ls);
 	};
 	const doExport = async (backupObj: any) => {
-		let dataStr =
-			"data:text/json;charset=utf-8," +
-			encodeURIComponent(JSON.stringify(backupObj));
-		let downloadAnchorNode = document.createElement("a");
-		downloadAnchorNode.setAttribute("href", dataStr);
-		downloadAnchorNode.setAttribute(
-			"download",
-			"nutstash_legacy_backup.json",
-		);
+		let dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backupObj));
+		let downloadAnchorNode = document.createElement('a');
+		downloadAnchorNode.setAttribute('href', dataStr);
+		downloadAnchorNode.setAttribute('download', 'nutstash_legacy_backup.json');
 		document.body.appendChild(downloadAnchorNode); // required for firefox
 		downloadAnchorNode.click();
 		downloadAnchorNode.remove();
-		toast.success("Exported legacy backup");
+		toast.success('Exported legacy backup');
 	};
 </script>
 
 <OnboardingHeader></OnboardingHeader>
 
 {#if isLegacyWallet}
-	<div class="w-full flex justify-center h-screen">
-		<div
-			class="p-2 flex w-80 flex-col items-center justify-center max-w-4xl"
-		>
-			<h1 class="font-bold text-xl mb-4">Upgrading nutstash</h1>
+	<div class="flex h-screen w-full justify-center">
+		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2">
+			<h1 class="mb-4 text-xl font-bold">Upgrading nutstash</h1>
 			{#if isLoading}
 				<LoaderCircle class="animate-spin"></LoaderCircle>
 			{:else}
-				<p class="text-sm mb-4">
-					Looks like you were using an older nutstash version. In
-					order to keep using nutstash, we need to migrate your
-					wallet. We've already exported a backup for you, so go ahead
-					whenever you feel ready.
+				<p class="mb-4 text-sm">
+					Looks like you were using an older nutstash version. In order to keep using nutstash, we
+					need to migrate your wallet. We've already exported a backup for you, so go ahead whenever
+					you feel ready.
 				</p>
 
 				<button
 					onclick={migrateWallet}
-					class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity sm:opacity-70 hover:opacity-100"
+					class="m-2 flex w-full max-w-4xl cursor-pointer items-center gap-3 rounded-lg border p-2 transition-opacity duration-300 hover:opacity-100 sm:opacity-70"
 				>
 					<svg
-						class="w-10 h-10 text-nutstash"
+						class="h-10 w-10 text-nutstash"
 						viewBox="0 0 24 24"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
@@ -172,27 +164,23 @@
 					<div class="flex-col gap-2 text-start">
 						<h2 class="font-bold text-nutstash">Migrate now</h2>
 						<p class="">Migrate ecash and mints</p>
-						<p class="opacity-40">
-							Only ecash and mints will be migrated.
-						</p>
+						<p class="opacity-40">Only ecash and mints will be migrated.</p>
 					</div>
 				</button>
 			{/if}
 		</div>
 	</div>
 {:else}
-	<div class="w-full flex justify-center h-screen">
-		<div
-			class="p-2 flex w-80 flex-col items-center justify-center max-w-4xl"
-		>
-			<h1 class="font-bold text-xl mb-4">Select your way to start!</h1>
+	<div class="flex h-screen w-full justify-center">
+		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2">
+			<h1 class="mb-4 text-xl font-bold">Select your way to start!</h1>
 
 			<button
 				onclick={create}
-				class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity sm:opacity-70 hover:opacity-100"
+				class="m-2 flex w-full max-w-4xl cursor-pointer items-center gap-3 rounded-lg border p-2 transition-opacity duration-300 hover:opacity-100 sm:opacity-70"
 			>
 				<svg
-					class="w-10 h-10 text-nutstash"
+					class="h-10 w-10 text-nutstash"
 					viewBox="0 0 24 24"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
@@ -217,17 +205,16 @@
 					<h2 class="font-bold text-nutstash">Create new wallet</h2>
 					<p class="">Create a new nutstash wallet.</p>
 					<p class="opacity-40">
-						If you have no cashu seed phrase or nutstash backup
-						file, select this option.
+						If you have no cashu seed phrase or nutstash backup file, select this option.
 					</p>
 				</div>
 			</button>
 			<a
 				href="/#/onboarding/restore/seed"
-				class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity opacity-70 hover:opacity-100"
+				class="m-2 flex w-full max-w-4xl cursor-pointer items-center gap-3 rounded-lg border p-2 opacity-70 transition-opacity duration-300 hover:opacity-100"
 			>
 				<svg
-					class="w-10 h-10 text text-green-500"
+					class="text h-10 w-10 text-green-500"
 					viewBox="0 0 25 23"
 					fill="currentColor"
 					xmlns="http://www.w3.org/2000/svg"
@@ -239,18 +226,14 @@
 
 				<div class="flex-col gap-2 text-start">
 					<h2 class="font-bold text-green-500">Restore lost nuts</h2>
-					<p class="">
-						Recover ecash from a lost wallet with your seed phrase.
-					</p>
-					<p class="opacity-40">
-						Select this option to recreate a lost wallet.
-					</p>
+					<p class="">Recover ecash from a lost wallet with your seed phrase.</p>
+					<p class="opacity-40">Select this option to recreate a lost wallet.</p>
 				</div>
 			</a>
 
 			<a
 				href="/#/onboarding/restore/file"
-				class="items-center gap-3 flex rounded-lg border p-2 w-full max-w-4xl m-2 duration-300 cursor-pointer transition-opacity opacity-70 hover:opacity-100"
+				class="m-2 flex w-full max-w-4xl cursor-pointer items-center gap-3 rounded-lg border p-2 opacity-70 transition-opacity duration-300 hover:opacity-100"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -258,7 +241,7 @@
 					viewBox="0 0 24 24"
 					stroke-width="1.5"
 					stroke="currentColor"
-					class="w-10 h-10 text-nutstashsecondary"
+					class="h-10 w-10 text-nutstashsecondary"
 				>
 					<path
 						stroke-linecap="round"
@@ -268,13 +251,10 @@
 				</svg>
 
 				<div class="flex-col gap-2 text-start">
-					<h2 class="font-bold text-nutstashsecondary">
-						Import wallet file
-					</h2>
+					<h2 class="font-bold text-nutstashsecondary">Import wallet file</h2>
 					<p class="">Load a wallet from a backup file.</p>
 					<p class="opacity-40">
-						Select this option if you have exported a nutstash
-						wallet and want to import it.
+						Select this option if you have exported a nutstash wallet and want to import it.
 					</p>
 				</div>
 			</a>

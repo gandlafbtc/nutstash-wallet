@@ -1,3 +1,3 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-export const scanresultStore= writable<string|undefined>()
+export const scanresultStore = writable<string | undefined>();
