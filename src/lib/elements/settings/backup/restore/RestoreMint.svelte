@@ -16,6 +16,7 @@
 	import { hashToCurve } from '@cashu/crypto/modules/common';
 	import { countsStore } from '$lib/stores/persistent/counts';
 	import { toast } from 'svelte-sonner';
+	import { NMCMint } from '@gandlaf21/nmc';
 
 	const INCREMENT = 25;
 
@@ -34,7 +35,13 @@
 	const restoreMint = async () => {
 		try {
 			statusMessage = 'Loading mint keysets...';
-			const cashuMint = new CashuMint(mint.url);
+			let cashuMint
+			if (mint.url.startsWith('http')) {
+				cashuMint = new CashuMint(mint.url);
+			}
+			else {
+				cashuMint = new NMCMint(mint.url);
+			}
 			const allKeysets = await cashuMint.getKeySets();
 			progress = 5;
 

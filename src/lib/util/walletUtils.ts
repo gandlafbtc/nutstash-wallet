@@ -13,6 +13,7 @@ import { get } from 'svelte/store';
 import { seed } from '$lib/stores/persistent/mnemonic';
 import type { Mint } from '$lib/db/models/types';
 import { nip05, nip19 } from 'nostr-tools';
+import { NMCMint } from "@gandlaf21/nmc";
 // import { parseSecret } from '@cashu/crypto/modules/client/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -355,7 +356,14 @@ export const getWalletWithUnit = async (
 	if (!keys) {
 		throw new Error(`No keys for this unit: ${unit} [${mintUrl}]`);
 	}
-	const wallet = new CashuWallet(new CashuMint(mintUrl), {
+	let cashuMint
+	if (mintUrl.startsWith('http')){
+		cashuMint = new CashuMint(mintUrl)
+	}
+	else {
+		cashuMint = new NMCMint(mintUrl, ['wss://ploofa.gandlaf.com'])
+	}
+	const wallet = new CashuWallet(cashuMint, {
 		bip39seed: get(seed),
 		mintInfo: mint.info,
 		unit: unit,

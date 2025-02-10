@@ -40,6 +40,9 @@ export function copyTextToClipboard(text: string) {
 }
 
 export const getHostFromUrl = (url: string) => {
+	if (!url.startsWith("http")) {
+		return url
+	}
 	return url?.split(':')[1].split('/').join('');
 };
 

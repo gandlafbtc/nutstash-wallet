@@ -47,6 +47,7 @@ import { decode } from '@gandlaf21/bolt11-decode';
 import { getNprofile } from './nostr';
 import { cashuRequestsStore } from '$lib/stores/persistent/requests';
 import { hashToCurve } from '@cashu/crypto/modules/common';
+import { NMCMint } from "@gandlaf21/nmc";
 
 export const createMintQuote = async (
 	mintUrl: string,
@@ -326,7 +327,13 @@ export const checkProofs = async (
 			//todo toast?
 			continue;
 		}
-		const cashuMint = new CashuMint(mint.url);
+		let cashuMint
+		if (mint.url.startsWith('http')) {
+			cashuMint = new CashuMint(mint.url);
+		}
+		else {
+			cashuMint = new NMCMint(mint.url);
+		}
 		const cashuWallet = new CashuWallet(cashuMint);
 		const proofStates = await cashuWallet.checkProofsStates(pb.proofs);
 		const unspentProofStateYs = proofStates

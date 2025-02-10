@@ -10,6 +10,7 @@ import { createEncryptionHelper, type EncryptionHelper } from './helper/encrypti
 import { createDefaultStoreFunctions, getBy } from './helper/storeHelper';
 import { selectedMint } from '../local/selectedMints';
 import { getHostFromUrl } from '$lib/util/utils';
+import { NMCMint } from "@gandlaf21/nmc";
 
 const encryptionHelper = createEncryptionHelper<Mint>('encrypted-mints');
 
@@ -44,7 +45,14 @@ export const mints = createMintsStore(encryptionHelper);
 
 const loadMint = async (mintUrl: string): Promise<Mint> => {
 	try {
-		const cashuMint = new CashuMint(mintUrl);
+		let cashuMint
+		if (mintUrl.startsWith('http')) {
+			cashuMint = new CashuMint(mintUrl);
+		}
+		else {
+			console.log('adding nmc mint', mintUrl)
+			cashuMint = new NMCMint(mintUrl, ['wss://ploofa.gandlaf.com'])
+		}
 		const mintInfo = await cashuMint.getInfo();
 		const mintAllKeysets = await cashuMint.getKeySets();
 		const mintActiveKeys: MintActiveKeys = await cashuMint.getKeys();

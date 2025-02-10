@@ -18,8 +18,12 @@
 	let { mint }: { mint: Mint } = $props();
 	import * as Accordion from '$lib/components/ui/accordion';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { AlertTriangle, Check } from 'lucide-svelte';
+	import { AlertTriangle, Check, Share } from 'lucide-svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import ShareMintDialog from './mintDropdown/ShareMintDialog.svelte';
 	console.log(mint);
+
+	let isOpen = $state(false)
 </script>
 
 <div class="flex w-80 flex-col gap-2 rounded-lg border p-4 shadow-md">
@@ -32,6 +36,12 @@
 				</AvatarFallback>
 			</Avatar>
 		</a>
+		<Button class="" onclick={() => isOpen=!isOpen}>
+			<Share></Share>
+			Share
+		</Button>
+	<ShareMintDialog url={mint.url} bind:isOpen></ShareMintDialog>
+
 		<div class="flex flex-col gap-1">
 			<p class="w-52 overflow-clip text-ellipsis text-lg font-bold">
 				{mint.info.name}

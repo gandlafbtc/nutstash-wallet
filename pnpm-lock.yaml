@@ -33,6 +33,9 @@ importers:
       '@gandlaf21/bolt11-decode':
         specifier: ^3.1.1
         version: 3.1.1
+      '@gandlaf21/nmc':
+        specifier: ^0.1.0
+        version: 0.1.0(typescript@5.6.3)
       '@noble/curves':
         specifier: ^1.6.0
         version: 1.6.0
@@ -200,6 +203,9 @@ packages:
 
   '@cashu/cashu-ts@2.1.0':
     resolution: {integrity: sha512-qFfFz1dx9keJxumjk5FyTvI1j0Yp/P5LXDy0cGO4Xlp3WYKOI1nykNOTPd+bTY9vSkvIM+xuXRer9BtQxqHtwA==}
+
+  '@cashu/cashu-ts@2.2.0':
+    resolution: {integrity: sha512-7b6pGyjjpm3uAJvmOL+ztpRxqp1qnmzGpydp+Pu30pOjxj93EhejPTJVrZMDJ0P35y6u5+5jIjHF4k0fpovvmg==}
 
   '@cashu/crypto@0.3.4':
     resolution: {integrity: sha512-mfv1Pj4iL1PXzUj9NKIJbmncCLMqYfnEDqh/OPxAX0nNBt6BOnVJJLjLWFlQeYxlnEfWABSNkrqPje1t5zcyhA==}
@@ -508,6 +514,9 @@ packages:
 
   '@gandlaf21/bolt11-decode@3.1.1':
     resolution: {integrity: sha512-uorLVc3FAWO6USCaBHGixwUd7B86z4IVRa/TdLicsWi3Vm7QngYDIuUkOBemut0Qh/Qtsx47EjWMXS4WHel98A==}
+
+  '@gandlaf21/nmc@0.1.0':
+    resolution: {integrity: sha512-0Q2ln+0+pDQ2NnsmsdbaEpkyg4S8IdCjWBsgLiRo6M24Qcfnp6LZ+vPPO6NS2mdcqPqgCSvEIwx513YjRXUaMA==}
 
   '@gcornut/valibot-json-schema@0.31.0':
     resolution: {integrity: sha512-3xGptCurm23e7nuPQkdrE5rEs1FeTPHhAUsBuwwqG4/YeZLwJOoYZv+fmsppUEfo5y9lzUwNQrNqLS/q7HMc7g==}
@@ -1544,6 +1553,14 @@ packages:
       typescript:
         optional: true
 
+  nostr-tools@2.10.4:
+    resolution: {integrity: sha512-biU7sk+jxHgVASfobg2T5ttxOGGSt69wEVBC51sHHOEaKAAdzHBLV/I2l9Rf61UzClhliZwNouYhqIso4a3HYg==}
+    peerDependencies:
+      typescript: '>=5.0.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   nostr-wasm@0.1.0:
     resolution: {integrity: sha512-78BTryCLcLYv96ONU8Ws3Q1JzjlAt+43pWQhIl86xZmWeegYCNLPml7yQ+gG3vR6V5h4XGj+TxO+SS5dsThQIA==}
 
@@ -2238,6 +2255,13 @@ snapshots:
       '@scure/bip32': 1.5.0
       buffer: 6.0.3
 
+  '@cashu/cashu-ts@2.2.0':
+    dependencies:
+      '@cashu/crypto': 0.3.4
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      buffer: 6.0.3
+
   '@cashu/crypto@0.3.4':
     dependencies:
       '@noble/curves': 1.6.0
@@ -2422,6 +2446,13 @@ snapshots:
       bech32: 1.1.4
       bn.js: 4.12.0
       buffer: 6.0.3
+
+  '@gandlaf21/nmc@0.1.0(typescript@5.6.3)':
+    dependencies:
+      '@cashu/cashu-ts': 2.2.0
+      nostr-tools: 2.10.4(typescript@5.6.3)
+    transitivePeerDependencies:
+      - typescript
 
   '@gcornut/valibot-json-schema@0.31.0':
     dependencies:
@@ -3464,6 +3495,18 @@ snapshots:
     optional: true
 
   nostr-tools@2.10.1(typescript@5.6.3):
+    dependencies:
+      '@noble/ciphers': 0.5.3
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.1
+      '@scure/base': 1.1.1
+      '@scure/bip32': 1.3.1
+      '@scure/bip39': 1.2.1
+    optionalDependencies:
+      nostr-wasm: 0.1.0
+      typescript: 5.6.3
+
+  nostr-tools@2.10.4(typescript@5.6.3):
     dependencies:
       '@noble/ciphers': 0.5.3
       '@noble/curves': 1.2.0

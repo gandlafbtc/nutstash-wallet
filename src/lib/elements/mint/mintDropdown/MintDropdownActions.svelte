@@ -1,12 +1,15 @@
 <script>
+	
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { ensureError } from '$lib/helpers/errors';
 	import { mints } from '$lib/stores/persistent/mints';
-	import { Landmark, Loader, Trash } from 'lucide-svelte';
+	import { Landmark, Loader, Share, Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
+	import ShareMintDialog from './ShareMintDialog.svelte';
 	let { mint } = $props();
 
 	let isLoading = $state(false);
+	let isOpen = $state(false);
 	const fetchMint = async () => {
 		try {
 			isLoading = true;
