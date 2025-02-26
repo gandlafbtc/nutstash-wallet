@@ -13,7 +13,7 @@ import { get } from 'svelte/store';
 import { seed } from '$lib/stores/persistent/mnemonic';
 import type { Mint } from '$lib/db/models/types';
 import { nip05, nip19 } from 'nostr-tools';
-import { NMCMint } from "@gandlaf21/nmc";
+import { createKind23338Request } from '@gandlaf21/cashu-ts-nostr-req';
 // import { parseSecret } from '@cashu/crypto/modules/client/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -361,7 +361,9 @@ export const getWalletWithUnit = async (
 		cashuMint = new CashuMint(mintUrl)
 	}
 	else {
-		cashuMint = new NMCMint(mintUrl, ['wss://ploofa.gandlaf.com'])
+		const [url, params] = mintUrl.split("?")
+		const relays = params?.split("relays=")[1]?.split(",")
+		cashuMint = new CashuMint(url, await createKind23338Request(relays));
 	}
 	const wallet = new CashuWallet(cashuMint, {
 		bip39seed: get(seed),

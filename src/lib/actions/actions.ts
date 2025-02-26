@@ -4,6 +4,7 @@ import { mints } from '$lib/stores/persistent/mints';
 import { pendingProofsStore, proofsStore, spentProofsStore } from '$lib/stores/persistent/proofs';
 import { transactionsStore } from '$lib/stores/persistent/transactions';
 import { getCount } from '$lib/util/utils';
+import { createKind23338Request } from "@gandlaf21/cashu-ts-nostr-req";
 import {
 	formatAmount,
 	getAmountForTokenSet,
@@ -47,7 +48,6 @@ import { decode } from '@gandlaf21/bolt11-decode';
 import { getNprofile } from './nostr';
 import { cashuRequestsStore } from '$lib/stores/persistent/requests';
 import { hashToCurve } from '@cashu/crypto/modules/common';
-import { NMCMint } from "@gandlaf21/nmc";
 
 export const createMintQuote = async (
 	mintUrl: string,
@@ -332,7 +332,9 @@ export const checkProofs = async (
 			cashuMint = new CashuMint(mint.url);
 		}
 		else {
-			cashuMint = new NMCMint(mint.url);
+			const [url, params] = mint.url.split("?")
+			const relays = params?.split("relays=")[1]?.split(",")
+			cashuMint = new CashuMint(url, await createKind23338Request(relays));
 		}
 		const cashuWallet = new CashuWallet(cashuMint);
 		const proofStates = await cashuWallet.checkProofsStates(pb.proofs);

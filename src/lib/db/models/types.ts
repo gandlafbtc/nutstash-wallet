@@ -148,6 +148,7 @@ export type Mint = {
 	keys: MintActiveKeys;
 	keysets: MintAllKeysets;
 	info: GetInfoResponse;
+	relays?: string []
 };
 
 export type NostrRelay = {

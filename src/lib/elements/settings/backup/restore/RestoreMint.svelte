@@ -16,7 +16,7 @@
 	import { hashToCurve } from '@cashu/crypto/modules/common';
 	import { countsStore } from '$lib/stores/persistent/counts';
 	import { toast } from 'svelte-sonner';
-	import { NMCMint } from '@gandlaf21/nmc';
+	import { createKind23338Request } from "@gandlaf21/cashu-ts-nostr-req";
 
 	const INCREMENT = 25;
 
@@ -40,8 +40,10 @@
 				cashuMint = new CashuMint(mint.url);
 			}
 			else {
-				cashuMint = new NMCMint(mint.url);
-			}
+			const [url, params] = mint.url.split("?")
+			const relays = params?.split("relays=")[1]?.split(",")
+			cashuMint = new CashuMint(url, await createKind23338Request(relays));
+		}
 			const allKeysets = await cashuMint.getKeySets();
 			progress = 5;
 
