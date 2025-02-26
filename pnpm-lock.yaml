@@ -45,6 +45,9 @@ importers:
       '@number-flow/svelte':
         specifier: ^0.1.2
         version: 0.1.2(svelte@5.1.13)
+      '@paulmillr/qr':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@scure/bip32':
         specifier: ^1.5.0
         version: 1.5.0
@@ -120,9 +123,6 @@ importers:
       qr-scanner:
         specifier: ^1.4.2
         version: 1.4.2
-      qrcanvas:
-        specifier: ^3.1.2
-        version: 3.1.2
       runed:
         specifier: ^0.15.3
         version: 0.15.3(svelte@5.1.13)
@@ -592,6 +592,9 @@ packages:
     resolution: {integrity: sha512-lq+Mcg5ErqTNWVh3bflXNfG7+cSiRRj+QWmeZmkyEfbE5khMtWS/6DaMhmQCbT7lyXVeeFBiulS4ES5wTAZdaw==}
     peerDependencies:
       svelte: ^4 || ^5
+
+  '@paulmillr/qr@0.3.0':
+    resolution: {integrity: sha512-3s/cagXuoXTA2gWSfSfJNanNgm2ifmqgoX8WLOs5//3qrIJ3WWHFjqFqCxvYGf46Afwv6PctT9eAOXLDGwp96Q==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -1724,12 +1727,6 @@ packages:
   qr-scanner@1.4.2:
     resolution: {integrity: sha512-kV1yQUe2FENvn59tMZW6mOVfpq9mGxGf8l6+EGaXUOd4RBOLg7tRC83OrirM5AtDvZRpdjdlXURsHreAOSPOUw==}
 
-  qrcanvas@3.1.2:
-    resolution: {integrity: sha512-lNcAyCHN0Eno/mJ5eBc7lHV/5ejAJxII0UELthG3bNnlLR+u8hCc7CR+hXBawbYUf96kNIosXfG2cJzx92ZWKg==}
-
-  qrcode-generator@1.4.4:
-    resolution: {integrity: sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==}
-
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -2229,6 +2226,7 @@ snapshots:
   '@babel/runtime@7.26.0':
     dependencies:
       regenerator-runtime: 0.14.1
+    optional: true
 
   '@cashu/cashu-ts@2.1.0':
     dependencies:
@@ -2525,6 +2523,8 @@ snapshots:
     dependencies:
       number-flow: 0.3.5
       svelte: 5.1.13
+
+  '@paulmillr/qr@0.3.0': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -3580,13 +3580,6 @@ snapshots:
     dependencies:
       '@types/offscreencanvas': 2019.7.3
 
-  qrcanvas@3.1.2:
-    dependencies:
-      '@babel/runtime': 7.26.0
-      qrcode-generator: 1.4.4
-
-  qrcode-generator@1.4.4: {}
-
   queue-microtask@1.2.3: {}
 
   read-cache@1.0.0:
@@ -3599,7 +3592,8 @@ snapshots:
 
   readdirp@4.0.2: {}
 
-  regenerator-runtime@0.14.1: {}
+  regenerator-runtime@0.14.1:
+    optional: true
 
   regexparam@2.0.2: {}
 

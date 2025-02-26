@@ -59,7 +59,7 @@
 					{#if encodedToken.length > 300}
 						<BigTokenQr size={[3]} speed={[3]} token={encodedToken}></BigTokenQr>
 					{:else}
-						<QrCode data={encodedToken} QRsize="medium"></QrCode>
+						<QrCode data={encodedToken}></QrCode>
 					{/if}
 				{/if}
 			{/if}

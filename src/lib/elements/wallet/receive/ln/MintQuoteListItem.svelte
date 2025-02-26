@@ -39,7 +39,7 @@
 			</div>
 			{#if isListView}
 				<button onclick={() => (isListView = !isListView)} class="absolute -right-2 -top-2">
-					<QrCode data={quote.request} QRsize="small"></QrCode>
+					<QrCode data={quote.request}></QrCode>
 				</button>
 			{/if}
 		</Card.Title>
@@ -54,7 +54,7 @@
 	<Card.Content class="flex flex-col gap-3">
 		{#if !isListView}
 			<button onclick={() => (isListView = !isListView)}>
-				<QrCode data={quote.request} QRsize="medium"></QrCode>
+				<QrCode data={quote.request}></QrCode>
 			</button>
 		{/if}
 		<div class="flex items-center gap-2">
