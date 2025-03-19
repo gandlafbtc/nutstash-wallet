@@ -51,6 +51,7 @@
 	import { ensureError } from '$lib/helpers/errors';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
 	import SimpleScanner from '../scanner/simple_scanner/SimpleScanner.svelte';
+	import { nip19 } from 'nostr-tools';
 
 	interface Props {
 		input?: string;
@@ -193,6 +194,9 @@
 				isOffline: tokenOptions.isOffline
 			};
 			if (tokenOptions.p2pk) {
+				if (tokenOptions.pubkey.startsWith('npub')) {
+					tokenOptions.pubkey = "02"+ nip19.decode(tokenOptions.pubkey).data as string
+				}
 				if (!checkValidPubkey(tokenOptions.pubkey)) {
 					toast('Invalid public key');
 					return;
