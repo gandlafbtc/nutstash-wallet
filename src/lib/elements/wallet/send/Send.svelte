@@ -22,7 +22,10 @@
 		HandCoins,
 		Check,
 		X,
-		Coins
+		Coins,
+
+		WifiOff
+
 	} from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';
@@ -43,6 +46,7 @@
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { goto } from '$app/navigation';
 	import { ensureError } from '$lib/helpers/errors';
+	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
 
 	interface Props {
 		input?: string;
@@ -91,6 +95,7 @@
 	let tokenOptions = $state({
 		p2pk: false,
 		pubkey: '',
+		isOffline: false,
 		isValidPubkey: false,
 		customIn: false,
 		customOut: false,
@@ -169,9 +174,11 @@
 				unit: string;
 				includeFees: boolean;
 				pubkey?: string;
+				isOffline?: boolean
 			} = {
 				unit: currentUnit,
-				includeFees: tokenOptions.includeReceiverFees
+				includeFees: tokenOptions.includeReceiverFees,
+				isOffline: tokenOptions.isOffline
 			};
 			if (tokenOptions.p2pk) {
 				if (!checkValidPubkey(tokenOptions.pubkey)) {
@@ -251,7 +258,7 @@
 							>
 								{formatAmount(amount, currentUnit)}
 							</button>
-							<TokenOptions bind:tokenOptions></TokenOptions>
+							<TokenOptions {mint} bind:tokenOptions></TokenOptions>
 						</div>
 
 						<div class="flex h-4 w-full items-start justify-start gap-5 text-xs">
@@ -357,7 +364,7 @@
 								<span class="text-green-500"> Token can be sent offline </span>
 							{/if}
 						</div>
-						<div class="h-10 w-full">
+						<div class="h-10 w-full flex gap-2">
 							{#if tokenOptions.p2pk}
 								<!-- content here -->
 								<Input
@@ -366,6 +373,11 @@
 									oninput={() =>
 										(tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey))}
 								/>
+								{#if mint.info.nuts[12]?.supported}
+								<Toggle bind:pressed={tokenOptions.isOffline}>
+									<WifiOff></WifiOff>
+								</Toggle>
+								{/if}
 							{/if}
 						</div>
 						<Button
@@ -388,6 +400,9 @@
 								{/if}
 								{#if tokenOptions.p2pk}
 									<span> locked </span>
+									{#if tokenOptions.isOffline}
+										offline
+									{/if}
 								{/if}
 
 								cashu token

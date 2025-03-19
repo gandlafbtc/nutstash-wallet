@@ -84,4 +84,9 @@ export interface NutstashDB extends DBSchema {
 		key: string;
 		value: EncryptedStore;
 	};
+	//DB version 3
+	'encrypted-offline-transactions': {
+		key: string;
+		value: EncryptedStore;
+	};
 }

@@ -1,11 +1,12 @@
 import {
 	CashuMint,
 	CashuWallet,
+	hasValidDleq,
 	type Keys,
 	type MintActiveKeys,
 	type MintKeys
 } from '@cashu/cashu-ts';
-import type { Proof } from '@cashu/cashu-ts';
+import type { Proof, Token } from '@cashu/cashu-ts';
 import { bech32 } from 'bech32';
 import { Buffer } from 'buffer';
 import { getBy, getByMany } from '$lib/stores/persistent/helper/storeHelper';
@@ -13,6 +14,8 @@ import { get } from 'svelte/store';
 import { seed } from '$lib/stores/persistent/mnemonic';
 import type { Mint } from '$lib/db/models/types';
 import { nip05, nip19 } from 'nostr-tools';
+import { parseSecret } from '@cashu/crypto/modules/common/NUT11';
+import { mints } from '$lib/stores/persistent/mints';
 // import { parseSecret } from '@cashu/crypto/modules/client/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -403,3 +406,65 @@ export const separateProofsById = (proofs: Proof[]): { id: string; proofs: Proof
 	}
 	return proofBuckets;
 };
+
+
+export const parseSecrets = (token: Token) => {
+	const pubs: string[] = [];
+	let locktime: number = Infinity
+	let isKnownMint = false
+	let allDLEQsValid = false
+	let validDLEQsCount = 0
+	let mint = mints.getBy(token.mint, 'url')
+	token?.proofs.forEach((t) => {
+		//check secrets for lock
+		try {
+			const secret = parseSecret(t.secret);
+			if (secret[0] === 'P2PK') {
+				pubs.push(secret[1].data);
+				//check for locktime
+				for (const tag of secret[1].tags??[]) {
+					if (tag[0]==='locktime') {
+						let locktimeInt = Infinity 
+						try {
+							locktimeInt = parseInt(tag[1])
+						} catch (error) {
+							//do nothing
+						}
+						if (!locktime || (locktimeInt<locktime)) {
+							locktime = locktimeInt
+						}
+					}
+				}
+			}
+
+			if (!mint) {
+				return
+			}
+			else {
+				isKnownMint = true
+			}
+
+			const mintKeys = mint.keys.keysets
+			const mintKeysOfId = getKeysForKeysetId(mintKeys, t.id)
+
+			if (!mintKeysOfId) {
+				return
+			}
+			if (hasValidDleq(t, mintKeysOfId)) {
+				validDLEQsCount++
+			}
+			
+		} catch {
+			// do nothing
+		}
+	});
+	
+	if (validDLEQsCount === token?.proofs.length) {
+		allDLEQsValid = true
+	}
+	// if no locktime has been set, set it to 0
+	// if (locktime === Infinity) {
+	// 	locktime = 0
+	// }
+	return {lockPubs: pubs, allDLEQsValid: allDLEQsValid, timelock: locktime, isKnownMint};
+}

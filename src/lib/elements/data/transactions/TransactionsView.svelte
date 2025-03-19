@@ -17,8 +17,6 @@
 
 	let time = $state(new Date());
 
-	let millisNow = $derived(time.getTime());
-
 	onMount(() => {
 		const interval = setInterval(() => {
 			time = new Date();

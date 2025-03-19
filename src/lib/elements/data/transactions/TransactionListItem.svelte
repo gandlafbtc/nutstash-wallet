@@ -5,7 +5,7 @@
 	import { Copy, Banknote, CircleCheck, RefreshCcw } from 'lucide-svelte';
 	import { copyTextToClipboard, getHostFromUrl } from '$lib/util/utils';
 	import { decode } from '@gandlaf21/bolt11-decode';
-	import type { StoredTransaction } from '$lib/db/models/types';
+	import { TransactionType, type StoredTransaction } from '$lib/db/models/types';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { getEncodedTokenV4, type Token } from '@cashu/cashu-ts';
@@ -13,6 +13,7 @@
 	import BigTokenQr from '$lib/elements/ui/BigTokenQR.svelte';
 	import SendViaNfcButton from '$lib/elements/wallet/send/ecash/SendViaNFCButton.svelte';
 	import isTauri from '$lib/tauri/deviceHelper';
+	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 
 	let {
 		tx,
@@ -52,10 +53,9 @@
 		</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-3">
-		<button>
 			{#if !isListView}
 				<!-- content here -->
-				{#if encodedToken}
+				{#if encodedToken && tx.type === TransactionType.SEND}
 					{#if encodedToken.length > 300}
 						<BigTokenQr size={[3]} speed={[3]} token={encodedToken}></BigTokenQr>
 					{:else}
@@ -63,23 +63,18 @@
 					{/if}
 				{/if}
 			{/if}
-		</button>
+		<div class="w-64">
+			<CopiableToken token={encodedToken}></CopiableToken>
+		</div>
 		<div class="flex flex-col items-center justify-center gap-2">
-			<Badge variant="outline" class="text-2xl">
+			<Badge variant="outline" class="text-2xl w-full items-center flex justify-center">
 				{formatAmount(tx.amount, 'sat')}
 			</Badge>
 			<Badge variant="outline" class="">
 				{formatAmount(tx.fees ?? 0, 'sat')} fee
 			</Badge>
 		</div>
-		<button class="flex gap-2" onclick={() => copyTextToClipboard(encodedToken)}>
-			<div class="h-5 overflow-clip">
-				<p class="w-52 overflow-clip text-ellipsis text-sm">
-					{encodedToken}
-				</p>
-			</div>
-			<Copy class="h-5 w-5"></Copy>
-		</button>
+
 	</Card.Content>
 	<Card.Footer class="flex h-12 justify-between">
 		{#if isListView}

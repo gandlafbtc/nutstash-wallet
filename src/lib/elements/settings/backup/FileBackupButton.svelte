@@ -27,6 +27,7 @@
 	import { cashuRequestsStore } from '$lib/stores/persistent/requests';
 	import { settings } from '$lib/stores/persistent/settings';
 	import { swapsStore } from '$lib/stores/persistent/swap';
+	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
 
 	let isEncrypt = $state(false);
 
@@ -41,6 +42,7 @@
 		offlineProofsStore: $offlineProofsStore,
 		mints: $mints,
 		transactionsStore: $transactionsStore,
+		offlineTransactionsStore: $offlineTransactionsStore,
 		mintQuotesStore: $mintQuotesStore,
 		meltQuotesStore: $meltQuotesStore,
 		countsStore: $countsStore,

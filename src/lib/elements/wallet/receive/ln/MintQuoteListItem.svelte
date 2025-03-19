@@ -11,6 +11,7 @@
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { now } from '$lib/stores/session/time';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 
 	let {
 		quote,
@@ -57,6 +58,11 @@
 				<QrCode data={quote.request}></QrCode>
 			</button>
 		{/if}
+		<div>
+			<CopiableToken token={quote.request}>
+
+			</CopiableToken>
+		</div>
 		<div class="flex items-center gap-2">
 			<p class="text-xs">Pay</p>
 			<Badge variant="outline">
@@ -65,12 +71,6 @@
 			<p class="text-xs">to get</p>
 			<Badge variant="outline">{formatAmount(quote.amount, quote.unit)}</Badge>
 		</div>
-		<button class="flex gap-2" onclick={() => copyTextToClipboard(quote.request)}>
-			<p class="w-52 overflow-clip text-ellipsis text-sm">
-				{quote.request}
-			</p>
-			<Copy class="h-5 w-5"></Copy>
-		</button>
 	</Card.Content>
 	<Card.Footer class="flex h-12 justify-between">
 		{#if !isListView}
