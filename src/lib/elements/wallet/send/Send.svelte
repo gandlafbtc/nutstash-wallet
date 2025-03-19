@@ -24,7 +24,10 @@
 		X,
 		Coins,
 
-		WifiOff
+		WifiOff,
+
+		Scan
+
 
 	} from 'lucide-svelte';
 	import { onMount } from 'svelte';
@@ -47,6 +50,7 @@
 	import { goto } from '$app/navigation';
 	import { ensureError } from '$lib/helpers/errors';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
+	import SimpleScanner from '../scanner/simple_scanner/SimpleScanner.svelte';
 
 	interface Props {
 		input?: string;
@@ -55,6 +59,7 @@
 	let { input }: Props = $props();
 
 	let entered: string = $state(input ?? '');
+	let scanPubKey = $state(false);
 
 	const getCurrentUnit = () => {
 		if (!mint) {
@@ -155,6 +160,13 @@
 		}
 	};
 
+	$effect(()=> {
+		// default to offline token when p2pk is selected
+		if(tokenOptions.p2pk) {
+			tokenOptions.isOffline = true;
+		}
+	})
+
 	const sendCashu = async () => {
 		try {
 			if (!mint) {
@@ -211,6 +223,9 @@
 	};
 </script>
 
+{#if scanPubKey}
+<SimpleScanner whatToScan={"pubkey or npub"} bind:isScanning={scanPubKey} bind:scannedResult={tokenOptions.pubkey}></SimpleScanner>
+{:else}
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	class="flex h-full w-full flex-col items-center justify-center gap-3"
@@ -262,7 +277,8 @@
 						</div>
 
 						<div class="flex h-4 w-full items-start justify-start gap-5 text-xs">
-							<span>
+							<!-- Include receiver fee icon disabled for now -->
+							<!-- <span>
 								{#if tokenOptions.includeReceiverFees}
 									<Tooltip.Provider>
 										<Tooltip.Root>
@@ -301,43 +317,45 @@
 										</Tooltip.Root>
 									</Tooltip.Provider>
 								{/if}
-							</span>
+							</span> -->
 
-							{#if getAmountForTokenSet(selectedProofs) > amount + (tokenOptions.includeReceiverFees ? 1 : 0) || tokenOptions.p2pk}
-								<span>
-									<Tooltip.Provider>
-										<Tooltip.Root>
-											<Tooltip.Trigger>
-												<div class="relative">
-													<Coins class="h-4 w-4"></Coins>
-													<div class="absolute -right-3 top-0">
-														<X class="h-3 w-3 text-yellow-500"></X>
-													</div>
+							{#if getAmountForTokenSet(selectedProofs) < amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
+							<span class="text-red-500"> Not enough funds </span>
+							{:else if getAmountForTokenSet(selectedProofs) > amount + (tokenOptions.includeReceiverFees ? 1 : 0) || tokenOptions.p2pk}
+							<span>
+								<Tooltip.Provider>
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<div class="relative">
+												<Coins class="h-4 w-4"></Coins>
+												<div class="absolute -right-3 top-0">
+													<X class="h-3 w-3 text-yellow-500"></X>
 												</div>
-											</Tooltip.Trigger>
-											<Tooltip.Content>
-												<div class="flex items-center gap-1 text-xs">
-													Selected coins:
-													{#each selectedProofs.map((p) => p.amount) as amount}
-														<!-- content here -->
-														<Badge variant="outline" class="p-1 text-xs">
-															{amount}
-														</Badge>
-													{/each}
-												</div>
-											</Tooltip.Content>
-										</Tooltip.Root>
-									</Tooltip.Provider>
-								</span>
-								<span class="text-yellow-500">
-									{#await getFeeForProofs(selectedProofs)}
-										<LoaderCircle class="h-2 w-2 animate-spin"></LoaderCircle>
-									{:then fee}
-										{formatAmount(fee, currentUnit)} swap fee
-									{/await}
-								</span>
-							{:else if getAmountForTokenSet(selectedProofs) < amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
-								<span class="text-red-500"> Not enough funds </span>
+											</div>
+										</Tooltip.Trigger>
+										<Tooltip.Content>
+											<div class="flex items-center gap-1 text-xs">
+												Selected coins:
+												{#each selectedProofs.map((p) => p.amount) as amount}
+													<!-- content here -->
+													<Badge variant="outline" class="p-1 text-xs">
+														{amount}
+													</Badge>
+												{/each}
+											</div>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								</Tooltip.Provider>
+							</span>
+							<span class="text-yellow-500">
+								{#await getFeeForProofs(selectedProofs)}
+									<LoaderCircle class="h-2 w-2 animate-spin"></LoaderCircle>
+								{:then fee}
+									<span class="{fee?"":"text-green-500"}">
+										Swap required ({formatAmount(fee, currentUnit)} swap fee)
+									</span>
+								{/await}
+							</span>
 							{:else}
 								<span>
 									<Tooltip.Provider>
@@ -364,14 +382,18 @@
 								<span class="text-green-500"> Token can be sent offline </span>
 							{/if}
 						</div>
-						<div class="h-10 w-full flex gap-2">
+						<div class="h-10 w-full flex gap-2 relative">
 							{#if tokenOptions.p2pk}
+								<button class="absolute right-16 top-2" onclick={()=>scanPubKey=true}>
+									<Scan></Scan>
+								</button>
 								<!-- content here -->
 								<Input
-									placeholder="pubkey"
+									placeholder="npub... or pubkey..."
 									bind:value={tokenOptions.pubkey}
 									oninput={() =>
-										(tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey))}
+										(tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey))	
+									}
 								/>
 								{#if mint.info.nuts[12]?.supported}
 								<Toggle bind:pressed={tokenOptions.isOffline}>
@@ -383,7 +405,7 @@
 						<Button
 							class="w-full"
 							onclick={sendCashu}
-							disabled={(tokenOptions.p2pk && !tokenOptions.isValidPubkey) ||
+							disabled={(tokenOptions.p2pk && (!tokenOptions.isValidPubkey && !tokenOptions.pubkey.startsWith('npub'))) ||
 								isLoading ||
 								getAmountForTokenSet(selectedProofs) <
 									amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
@@ -454,3 +476,5 @@
 		</div>
 	{/if}
 </div>
+
+{/if}

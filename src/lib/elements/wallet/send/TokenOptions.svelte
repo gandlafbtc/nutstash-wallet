@@ -26,9 +26,10 @@
 	</Toggle>
 	{/if}
 
-	<Toggle aria-label="toggle bold" bind:pressed={tokenOptions.includeReceiverFees}>
+	<!-- Receiver fee disabled for now  -->
+	<!-- <Toggle aria-label="toggle bold" bind:pressed={tokenOptions.includeReceiverFees}>
 		<HandCoins class="h-4 w-4"></HandCoins>
-	</Toggle>
+	</Toggle> -->
 
 	<!-- <Toggle aria-label="toggle bold" bind:pressed={tokenOptions.customIn}>
         <FileInput class='w-4 h-4'>
