@@ -9,7 +9,8 @@
 	import { URDecoder } from '@gandlaf21/bc-ur';
 	import ScannerDrawer from './ScannerDrawer.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
-	import { getInvoiceFromAddress } from '$lib/util/walletUtils';
+	import { checkValidPubkey, getInvoiceFromAddress } from '$lib/util/walletUtils';
+	import { sendInput } from '$lib/stores/session/sendInput';
 
 	let videoElem: HTMLVideoElement | undefined = $state();
 	let qrScanner: QrScanner | undefined = $state();
@@ -112,13 +113,22 @@
 			lnAddressScanned(result.data);
 			return;
 		}
+		else if (checkValidPubkey(result.data)) {
+					pubkeyScanned(result.data);
+			}
 	};
 
 	const npubScanned = (npub: string) => {
 		closeDrawers();
-		push('/wallet/contacts/chat/' + npub);
+		$openSendDrawer=true
+		sendInput.set(npub)
 	};
 
+	const pubkeyScanned = (pubkey: string) => {
+		closeDrawers();
+		openSendDrawer.set(true)
+		sendInput.set(pubkey)
+	};
 	const lnAddressScanned = (lnAddress: string) => {
 		closeDrawers();
 		scanresultStore.set(lnAddress);

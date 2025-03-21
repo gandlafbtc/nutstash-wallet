@@ -52,6 +52,7 @@
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
 	import SimpleScanner from '../scanner/simple_scanner/SimpleScanner.svelte';
 	import { nip19 } from 'nostr-tools';
+	import { sendInput } from '$lib/stores/session/sendInput';
 
 	interface Props {
 		input?: string;
@@ -86,6 +87,12 @@
 	});
 
 	$effect(() => {
+		if (entered.startsWith('npub') || checkValidPubkey(entered)) {
+			tokenOptions.pubkey = entered;
+			entered = "1"
+			tokenOptions.p2pk = true;
+			tokenOptions.isValidPubkey = true;
+		}
 		if (entered.startsWith('creq')) {
 			openSendDrawer.set(false);
 			push('/wallet/send/cashureq/' + entered);
@@ -117,6 +124,10 @@
 	let isLoading = $state(false);
 
 	onMount(() => {
+		if($sendInput) {
+			entered = $sendInput
+			sendInput.set("")
+		}
 		setTimeout(() => {
 			thisDrawer?.addEventListener('keydown', (e: KeyboardEvent) => {
 				e.preventDefault();
@@ -166,6 +177,7 @@
 		if(tokenOptions.p2pk) {
 			tokenOptions.isOffline = true;
 		}
+
 	})
 
 	const sendCashu = async () => {
