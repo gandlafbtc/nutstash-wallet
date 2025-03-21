@@ -17,10 +17,7 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@tauri-apps/api": "^2.1.0",
-		"@tauri-apps/plugin-barcode-scanner": "~2",
-		"@tauri-apps/plugin-nfc": "~2",
-		"@tauri-apps/plugin-shell": "^2.0.1"
+		"@tauri-apps/api": "^2.1.0"
 	},
 	"devDependencies": {
 		"@cashu/cashu-ts": "2.4.0",
