@@ -94,7 +94,7 @@ import { Scan, SwitchCamera } from 'lucide-svelte';
 	<div class="pt-4">
 
 	</div>
-	<div class="w-80">
+	<div class="w-80 pb-10">
 
 		<Button class='w-full' onclick={()=> isScanning=false}>
 			Stop scanning
