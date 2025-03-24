@@ -11,19 +11,10 @@ importers:
       '@tauri-apps/api':
         specifier: ^2.1.0
         version: 2.1.0
-      '@tauri-apps/plugin-barcode-scanner':
-        specifier: ~2
-        version: 2.0.0
-      '@tauri-apps/plugin-nfc':
-        specifier: ~2
-        version: 2.0.0
-      '@tauri-apps/plugin-shell':
-        specifier: ^2.0.1
-        version: 2.0.1
     devDependencies:
       '@cashu/cashu-ts':
-        specifier: link:../cashu-ts
-        version: link:../cashu-ts
+        specifier: 2.4.0
+        version: 2.4.0
       '@cashu/crypto':
         specifier: ^0.3.4
         version: 0.3.4
@@ -197,6 +188,9 @@ packages:
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
     engines: {node: '>=6.9.0'}
+
+  '@cashu/cashu-ts@2.4.0':
+    resolution: {integrity: sha512-RnH4P1Mnij2WMPDYRjlrn3jP8Tl4uqywi3fCWyEP6sN6ZgpNSfXT3g+2kbVPye2YvilD4h6heYRPyv6/maLkTQ==}
 
   '@cashu/crypto@0.3.4':
     resolution: {integrity: sha512-mfv1Pj4iL1PXzUj9NKIJbmncCLMqYfnEDqh/OPxAX0nNBt6BOnVJJLjLWFlQeYxlnEfWABSNkrqPje1t5zcyhA==}
@@ -828,15 +822,6 @@ packages:
     resolution: {integrity: sha512-K2VhcKqBhAeS5pNOVdnR/xQRU6jwpgmkSL2ejHXcl0m+kaTggT0WRDQnFtPq6NljA7aE03cvwsbCAoFG7vtkJw==}
     engines: {node: '>= 10'}
     hasBin: true
-
-  '@tauri-apps/plugin-barcode-scanner@2.0.0':
-    resolution: {integrity: sha512-7kSU8C03YJkLbxjEHBwm/rffTwT3gSRXeOz9NVO7HEHuqNujnNjCoUd+VCxemI1HhRCzJSDFoAkeXRWFxUN3jg==}
-
-  '@tauri-apps/plugin-nfc@2.0.0':
-    resolution: {integrity: sha512-7XebxEEcEZFmrReG2svMMBFL+8h5ZqS2SL3gJnEpfEQTDSmDF2jRMmJ5m6kI99pbqL7kWrHeKFiR47Vt5nqYqQ==}
-
-  '@tauri-apps/plugin-shell@2.0.1':
-    resolution: {integrity: sha512-akU1b77sw3qHiynrK0s930y8zKmcdrSD60htjH+mFZqv5WaakZA/XxHR3/sF1nNv9Mgmt/Shls37HwnOr00aSw==}
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -2225,6 +2210,13 @@ snapshots:
       regenerator-runtime: 0.14.1
     optional: true
 
+  '@cashu/cashu-ts@2.4.0':
+    dependencies:
+      '@cashu/crypto': 0.3.4
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      buffer: 6.0.3
+
   '@cashu/crypto@0.3.4':
     dependencies:
       '@noble/curves': 1.6.0
@@ -2717,18 +2709,6 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.1.0
       '@tauri-apps/cli-win32-ia32-msvc': 2.1.0
       '@tauri-apps/cli-win32-x64-msvc': 2.1.0
-
-  '@tauri-apps/plugin-barcode-scanner@2.0.0':
-    dependencies:
-      '@tauri-apps/api': 2.1.0
-
-  '@tauri-apps/plugin-nfc@2.0.0':
-    dependencies:
-      '@tauri-apps/api': 2.1.0
-
-  '@tauri-apps/plugin-shell@2.0.1':
-    dependencies:
-      '@tauri-apps/api': 2.1.0
 
   '@types/cookie@0.6.0': {}
 
