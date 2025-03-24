@@ -17,6 +17,7 @@
 	import { untrack } from 'svelte';
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
 	import { settings } from '$lib/stores/persistent/settings';
+	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
 
 	let currentUnit = $state('sat');
 
@@ -98,7 +99,7 @@
 		{/if}
 	</div>
 	<div class="flex w-full items-center justify-between gap-2">
-		<p class="text-4xl">
+		<p class="text-4xl flex-grow">
 			{getUnitSymbol(currentUnit, false)}
 			<button class="h-12" onclick={toggleShowBalance}>
 				{#if $settings[0].general.hideBalance && !isShowBalance}
@@ -115,7 +116,8 @@
 				{/if}
 			</button>
 		</p>
-		<UnitSelector bind:currentUnit selectedMints={activeMints}></UnitSelector>
+		<!-- <UnitSelector bind:currentUnit selectedMints={activeMints}></UnitSelector> -->
+		<UnitSelectorScroll bind:currentUnit selectedMints={activeMints}></UnitSelectorScroll>
 	</div>
 
 	<ScrollArea
