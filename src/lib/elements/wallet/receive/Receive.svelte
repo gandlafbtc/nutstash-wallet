@@ -37,7 +37,9 @@
 	onMount(() => {
 		setTimeout(() => {
 			thisDrawer?.addEventListener('keydown', (e: KeyboardEvent) => {
-				e.preventDefault();
+				if (!(e.ctrlKey && e.key === 'v')) {
+					e.preventDefault();
+				}
 				if (e.key === 'Escape') {
 					openReceiveDrawer.set(false);
 				}
@@ -124,9 +126,12 @@
 		}
 	};
 
-	const onKeypadPress = (value: string | { delete: boolean }) => {
-		if (value.delete) {
+	const onKeypadPress = (value: string) => {
+		if (value === "delete") {
 			entered = entered.slice(0, -1);
+		}
+		else if (value === "clear") {
+			entered = "";
 		} else {
 			entered = entered + value;
 		}
@@ -139,16 +144,24 @@
 	bind:this={thisDrawer}
 	tabindex="0"
 >
-	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden">
+	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden relative">
+		<div class="text-muted absolute h-20 w-full items-center justify-center flex-col flex pointer-events-none">
+			<p>
+				Enter amount to create invoice
+			</p>
+			<p>
+				Paste token to receive ecash
+			</p>
+		</div>
 		<Textarea
-			class="w-80 xl:w-[600px] resize-none rounded-none border-dashed"
+			class="w-80 xl:w-[600px] resize-none rounded-md border-dashed"
 			inputmode="none"
 			bind:value={entered}
 			bind:ref={inputFocus}
 			oninput={(e) => {
 				e.preventDefault();
 			}}
-			placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount"
+			placeholder=""
 		></Textarea>
 	</div>
 	<div>
@@ -199,15 +212,15 @@
 					</div>
 				</div>
 			{:else}
-				<div>
+				<!-- <div>
 					<button class="" onclick={() => openScannerDrawer.update((ctx) => !ctx)}>
 						<QrCode></QrCode>
 					</button>
-				</div>
+				</div> -->
 			{/if}
 		</div>
 	</div>
 	<div class="h-64 w-80 xl:w-[600px]">
-		<NumericKeys onkeypressed={onKeypadPress} isDecimal={false}></NumericKeys>
+		<NumericKeys onkeypressed={onKeypadPress}></NumericKeys>
 	</div>
 </div>

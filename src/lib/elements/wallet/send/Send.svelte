@@ -130,12 +130,14 @@
 		}
 		setTimeout(() => {
 			thisDrawer?.addEventListener('keydown', (e: KeyboardEvent) => {
-				e.preventDefault();
+				if (!(e.ctrlKey && e.key === 'v')) {
+					e.preventDefault();
+				}
 				if (e.key === 'Escape') {
-					openScannerDrawer.set(false);
+					openSendDrawer.set(false);
 				}
 				if (e.key === 'Backspace') {
-					if (invoice) {
+					if (isNaN(parseInt(entered))) {
 						entered = '';
 					}
 					entered = entered.slice(0, -1);
@@ -227,12 +229,12 @@
 		}
 	};
 
-	const onKeypadPress = (value: string | { delete: boolean }) => {
-		if (typeof value !== 'string' && value.delete) {
-			if (invoice) {
-				entered = '';
-			}
+	const onKeypadPress = (value: string) => {
+		if (value === "delete") {
 			entered = entered.slice(0, -1);
+		}
+		else if (value === "clear") {
+			entered = "";
 		} else {
 			entered = entered + value;
 		}
@@ -265,16 +267,24 @@
 		</div>
 		{#if !invoice}
 			<!-- content here -->
-			<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden">
+			<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden relative">
+				<div class="text-muted absolute h-20 w-full items-center justify-center flex-col flex pointer-events-none">
+					<p>
+						Enter amount to send ecash
+					</p>
+					<p>
+						Paste invoice to send via lightning
+					</p>
+				</div>
 				<Textarea
-					class="w-80 xl:w-[600px] resize-none rounded-none border-dashed"
+					class="w-80 xl:w-[600px] resize-none rounded-md border-dashed h-20"
 					inputmode="none"
 					bind:value={entered}
 					bind:ref={inputFocus}
 					oninput={(e) => {
 						e.preventDefault();
 					}}
-					placeholder="- Paste invoice or address (lnbc... , lnurl... )                           - Or enter amount to send"
+					placeholder=""
 				></Textarea>
 			</div>
 		{/if}
@@ -479,11 +489,11 @@
 						</div>
 					</div>
 				{:else}
-					<div>
+					<!-- <div>
 						<button onclick={() => openScannerDrawer.update((ctx) => !ctx)}>
 							<QrCode></QrCode>
 						</button>
-					</div>
+					</div> -->
 				{/if}
 			</div>
 		</div>

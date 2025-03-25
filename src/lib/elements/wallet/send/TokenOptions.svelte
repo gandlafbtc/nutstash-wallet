@@ -22,7 +22,7 @@
 <div class="flex gap-2">
 	{#if mint.info.nuts[10]?.supported}
 	<Toggle aria-label="toggle bold" bind:pressed={tokenOptions.p2pk}>
-		<Lock class="h-4 w-4"></Lock>
+		Lock
 	</Toggle>
 	{/if}
 
