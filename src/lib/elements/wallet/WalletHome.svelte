@@ -121,7 +121,7 @@
 	</div>
 
 	<ScrollArea
-		class="relative mb-20 flex h-full w-80 flex-col gap-5 overflow-y-hidden from-background p-2
+		class="relative mb-20 flex h-full w-80 flex-col gap-5 overflow-y-hidden from-background
   before:pointer-events-none before:absolute before:bottom-0 before:top-0 before:z-10  before:h-10 before:w-full
   before:bg-gradient-to-b after:pointer-events-none after:absolute after:bottom-0 after:z-10 after:h-10 after:w-full after:bg-gradient-to-t"
 	>
