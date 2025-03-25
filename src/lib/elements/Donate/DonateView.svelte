@@ -149,7 +149,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 xl:w-[600px] flex-col gap-4">
+<div class="flex h-full w-80 flex-col gap-4 xl:w-[600px]">
 	<p class="font-bold">Hello dear anon!</p>
 	<span>
 		Thank you for using nutstash, an open source Cashu wallet, developed by <a

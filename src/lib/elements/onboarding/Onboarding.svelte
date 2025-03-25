@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex h-screen items-center justify-center">
-	<div class="flex w-80 xl:w-[600px] flex-col items-center justify-center gap-5 p-3 text-center">
+	<div class="flex w-80 flex-col items-center justify-center gap-5 p-3 text-center xl:w-[600px]">
 		<p class="flex items-center gap-1 font-bold text-yellow-500 opacity-80">
 			<span>
 				<svg

@@ -41,11 +41,10 @@
 	<Card.Content>
 		<div class="flex flex-col items-center gap-2">
 			<div class="w-64">
-
 				<QrCode data={encodedRequest}></QrCode>
 			</div>
 			<div class="w-64">
-				 <CopiableToken token={encodedRequest}></CopiableToken>
+				<CopiableToken token={encodedRequest}></CopiableToken>
 			</div>
 			<Badge variant="outline" class="text-xl">
 				{formatAmount(request.amount ?? 0, request.unit)}

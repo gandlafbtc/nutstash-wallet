@@ -20,7 +20,9 @@
 		<Scanner></Scanner>
 		<!-- {/if} -->
 		<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-			<Drawer.Close class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}>Cancel</Drawer.Close>
+			<Drawer.Close class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
+				>Cancel</Drawer.Close
+			>
 		</Drawer.Footer>
 	</Drawer.Content>
 </Drawer.Root>

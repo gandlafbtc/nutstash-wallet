@@ -37,7 +37,7 @@
 	};
 </script>
 
-<div class="flex w-80 xl:w-[600px] gap-2">
+<div class="flex w-80 gap-2 xl:w-[600px]">
 	<Input
 		readonly={readOnly}
 		bind:value={mintUrlToAdd}

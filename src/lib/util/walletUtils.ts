@@ -407,14 +407,13 @@ export const separateProofsById = (proofs: Proof[]): { id: string; proofs: Proof
 	return proofBuckets;
 };
 
-
 export const parseSecrets = (token: Token) => {
 	const pubs: string[] = [];
-	let locktime: number = Infinity
-	let isKnownMint = false
-	let allDLEQsValid = false
-	let validDLEQsCount = 0
-	let mint = mints.getBy(token.mint, 'url')
+	let locktime: number = Infinity;
+	let isKnownMint = false;
+	let allDLEQsValid = false;
+	let validDLEQsCount = 0;
+	let mint = mints.getBy(token.mint, 'url');
 	token?.proofs.forEach((t) => {
 		//check secrets for lock
 		try {
@@ -422,49 +421,47 @@ export const parseSecrets = (token: Token) => {
 			if (secret[0] === 'P2PK') {
 				pubs.push(secret[1].data);
 				//check for locktime
-				for (const tag of secret[1].tags??[]) {
-					if (tag[0]==='locktime') {
-						let locktimeInt = Infinity 
+				for (const tag of secret[1].tags ?? []) {
+					if (tag[0] === 'locktime') {
+						let locktimeInt = Infinity;
 						try {
-							locktimeInt = parseInt(tag[1])
+							locktimeInt = parseInt(tag[1]);
 						} catch (error) {
 							//do nothing
 						}
-						if (!locktime || (locktimeInt<locktime)) {
-							locktime = locktimeInt
+						if (!locktime || locktimeInt < locktime) {
+							locktime = locktimeInt;
 						}
 					}
 				}
 			}
 
 			if (!mint) {
-				return
-			}
-			else {
-				isKnownMint = true
+				return;
+			} else {
+				isKnownMint = true;
 			}
 
-			const mintKeys = mint.keys.keysets
-			const mintKeysOfId = getKeysForKeysetId(mintKeys, t.id)
+			const mintKeys = mint.keys.keysets;
+			const mintKeysOfId = getKeysForKeysetId(mintKeys, t.id);
 
 			if (!mintKeysOfId) {
-				return
+				return;
 			}
 			if (hasValidDleq(t, mintKeysOfId)) {
-				validDLEQsCount++
+				validDLEQsCount++;
 			}
-			
 		} catch {
 			// do nothing
 		}
 	});
-	
+
 	if (validDLEQsCount === token?.proofs.length) {
-		allDLEQsValid = true
+		allDLEQsValid = true;
 	}
 	// if no locktime has been set, set it to 0
 	// if (locktime === Infinity) {
 	// 	locktime = 0
 	// }
-	return {lockPubs: pubs, allDLEQsValid: allDLEQsValid, timelock: locktime, isKnownMint};
-}
+	return { lockPubs: pubs, allDLEQsValid: allDLEQsValid, timelock: locktime, isKnownMint };
+};

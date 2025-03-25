@@ -92,7 +92,7 @@ export type StoredPaymentRequest = SimplePaymentRequest & {
 export enum TransactionType {
 	SEND = 'send',
 	RECEIVE = 'receive',
-	OFFLINE =  'offline'
+	OFFLINE = 'offline'
 }
 
 export enum TransactionStatus {

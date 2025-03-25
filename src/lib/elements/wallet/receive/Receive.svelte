@@ -127,11 +127,10 @@
 	};
 
 	const onKeypadPress = (value: string) => {
-		if (value === "delete") {
+		if (value === 'delete') {
 			entered = entered.slice(0, -1);
-		}
-		else if (value === "clear") {
-			entered = "";
+		} else if (value === 'clear') {
+			entered = '';
 		} else {
 			entered = entered + value;
 		}
@@ -144,17 +143,15 @@
 	bind:this={thisDrawer}
 	tabindex="0"
 >
-	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden relative">
-		<div class="text-muted absolute h-20 w-full items-center justify-center flex-col flex pointer-events-none">
-			<p>
-				Enter amount to create invoice
-			</p>
-			<p>
-				Paste token to receive ecash
-			</p>
+	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} relative overflow-hidden">
+		<div
+			class="pointer-events-none absolute flex h-20 w-full flex-col items-center justify-center text-muted"
+		>
+			<p>Enter amount to create invoice</p>
+			<p>Paste token to receive ecash</p>
 		</div>
 		<Textarea
-			class="w-80 xl:w-[600px] resize-none rounded-md border-dashed"
+			class="w-80 resize-none rounded-md border-dashed xl:w-[600px]"
 			inputmode="none"
 			bind:value={entered}
 			bind:ref={inputFocus}
@@ -182,7 +179,7 @@
 						<div class="w-80 xl:w-[600px]">
 							<MintSelector bind:mint></MintSelector>
 						</div>
-						<div class="flex w-80 xl:w-[600px] items-center justify-between gap-2">
+						<div class="flex w-80 items-center justify-between gap-2 xl:w-[600px]">
 							<button
 								class="w-full cursor-text break-all text-start text-2xl"
 								onclick={() => inputFocus?.focus()}
@@ -192,7 +189,7 @@
 							<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
 						</div>
 					{/if}
-					<div class="flex w-80 xl:w-[600px] flex-col gap-5 py-5">
+					<div class="flex w-80 flex-col gap-5 py-5 xl:w-[600px]">
 						<Button
 							disabled={isLoading}
 							class="w-full border-2 border-nutstash"

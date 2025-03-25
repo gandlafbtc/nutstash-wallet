@@ -22,7 +22,7 @@
 	<div class="flex h-full flex-col gap-3">
 		<span class="text-lg font-bold"> Restore from seed phrase </span>
 		<button
-			class=" grid w-80 xl:w-[600px] grid-cols-3 rounded-lg border border-dashed p-2 text-start transition-colors duration-200 hover:bg-secondary"
+			class=" grid w-80 grid-cols-3 rounded-lg border border-dashed p-2 text-start transition-colors duration-200 hover:bg-secondary xl:w-[600px]"
 			onclick={() => (isHide = !isHide)}
 		>
 			{#each $mnemonic[0]?.mnemonic.split(' ') as word, i}

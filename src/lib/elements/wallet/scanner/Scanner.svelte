@@ -112,22 +112,21 @@
 		} else if (result.data.includes('@') && result.data.includes('.')) {
 			lnAddressScanned(result.data);
 			return;
+		} else if (checkValidPubkey(result.data)) {
+			pubkeyScanned(result.data);
 		}
-		else if (checkValidPubkey(result.data)) {
-					pubkeyScanned(result.data);
-			}
 	};
 
 	const npubScanned = (npub: string) => {
 		closeDrawers();
-		$openSendDrawer=true
-		sendInput.set(npub)
+		$openSendDrawer = true;
+		sendInput.set(npub);
 	};
 
 	const pubkeyScanned = (pubkey: string) => {
 		closeDrawers();
-		openSendDrawer.set(true)
-		sendInput.set(pubkey)
+		openSendDrawer.set(true);
+		sendInput.set(pubkey);
 	};
 	const lnAddressScanned = (lnAddress: string) => {
 		closeDrawers();
@@ -172,8 +171,8 @@
 			<Progress value={completion - 5} max={100} class="w-full" />
 		{/if}
 	</div>
-	<div class="relative flex h-full w-80 xl:w-[600px] items-center justify-center">
-		<div class="video-wrapper h-80 w-80 xl:w-[600px] rounded-lg border bg-black p-2">
+	<div class="relative flex h-full w-80 items-center justify-center xl:w-[600px]">
+		<div class="video-wrapper h-80 w-80 rounded-lg border bg-black p-2 xl:w-[600px]">
 			{#if cams === undefined}
 				loading camera ...
 			{:else if cams?.length === 0}

@@ -3,7 +3,9 @@ import { writable } from 'svelte/store';
 import { createDefaultStoreFunctions } from './helper/storeHelper';
 import { createEncryptionHelper } from './helper/encryptionHelper';
 
-const encryptionHelper = createEncryptionHelper<StoredTransaction>('encrypted-offline-transactions');
+const encryptionHelper = createEncryptionHelper<StoredTransaction>(
+	'encrypted-offline-transactions'
+);
 
 const createTransactionsStore = () => {
 	const initialTransactions: Array<StoredTransaction> = [];

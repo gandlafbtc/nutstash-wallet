@@ -56,7 +56,9 @@
 
 <div class="h-full">
 	<Card.Root
-		class="m-3 w-80 xl:w-[600px] {quote.state === EXPIRED.EXPIRED ? 'bg-red-700 bg-opacity-20 opacity-40' : ''}"
+		class="m-3 w-80 xl:w-[600px] {quote.state === EXPIRED.EXPIRED
+			? 'bg-red-700 bg-opacity-20 opacity-40'
+			: ''}"
 	>
 		<Card.Header>
 			<Card.Title class="relative flex flex-col justify-start text-nowrap">

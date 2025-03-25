@@ -1,7 +1,6 @@
 <script lang="ts">
-
 	import Button from '$lib/components/ui/button/button.svelte';
-import { Scan, SwitchCamera } from 'lucide-svelte';
+	import { Scan, SwitchCamera } from 'lucide-svelte';
 	import QrScanner from 'qr-scanner';
 	import { onDestroy, onMount } from 'svelte';
 
@@ -10,7 +9,7 @@ import { Scan, SwitchCamera } from 'lucide-svelte';
 		whatToScan?: string; // 'pubkey' | 'npub'
 		scannedResult?: string;
 	}
-	
+
 	let { isScanning = $bindable(true), scannedResult = $bindable(), whatToScan }: Props = $props();
 
 	let videoElem: HTMLVideoElement | undefined = $state();
@@ -55,15 +54,14 @@ import { Scan, SwitchCamera } from 'lucide-svelte';
 		scannedResult = result.data;
 		isScanning = false;
 	};
-
 </script>
 
 <div class="flex min-h-96 w-full flex-col items-center justify-center">
 	<p>
-		Please scan a {whatToScan??''} QR to continue.
+		Please scan a {whatToScan ?? ''} QR to continue.
 	</p>
-	<div class="relative flex h-full w-80 xl:w-[600px] items-center justify-center">
-		<div class="video-wrapper h-80 w-80 xl:w-[600px] rounded-lg border bg-black p-2">
+	<div class="relative flex h-full w-80 items-center justify-center xl:w-[600px]">
+		<div class="video-wrapper h-80 w-80 rounded-lg border bg-black p-2 xl:w-[600px]">
 			{#if cams === undefined}
 				loading camera ...
 			{:else if cams?.length === 0}
@@ -91,14 +89,9 @@ import { Scan, SwitchCamera } from 'lucide-svelte';
 			<Scan color="rgb(219 39 119)" size={220} strokeWidth={1}></Scan>
 		</div>
 	</div>
-	<div class="pt-4">
-
-	</div>
-	<div class="w-80 xl:w-[600px] pb-10">
-
-		<Button class='w-full' onclick={()=> isScanning=false}>
-			Stop scanning
-		</Button>
+	<div class="pt-4"></div>
+	<div class="w-80 pb-10 xl:w-[600px]">
+		<Button class="w-full" onclick={() => (isScanning = false)}>Stop scanning</Button>
 	</div>
 </div>
 

@@ -20,24 +20,20 @@
 	<div class="flex w-full flex-col gap-2">
 		{#if $offlineTransactionsStore.length}
 			<a
-			href="/#/wallet/receive-offline-tokens"
-	class="gap-2 flex w-full items-center justify-between rounded-xl border border-nutstash p-3"
-	>
-		<div  class="flex-shrink">
-			<AlertCircle class='text-nutstash'></AlertCircle>
-		</div>
-		<div  class="flex-grow">
-			<div class="text-sm">
-				Unclaimed ecash
-			</div>
-			<div class="text-xs text-muted-foreground text-start flex-grow">
-				Redeem now!
-			</div>
-		</div>
-		<div>
-			{ formatAmount($offlineTransactionsStore.reduce((acc, curr) => acc + curr.amount, 0))}
-		</div>
-</a>
+				href="/#/wallet/receive-offline-tokens"
+				class="flex w-full items-center justify-between gap-2 rounded-xl border border-nutstash p-3"
+			>
+				<div class="flex-shrink">
+					<AlertCircle class="text-nutstash"></AlertCircle>
+				</div>
+				<div class="flex-grow">
+					<div class="text-sm">Unclaimed ecash</div>
+					<div class="flex-grow text-start text-xs text-muted-foreground">Redeem now!</div>
+				</div>
+				<div>
+					{formatAmount($offlineTransactionsStore.reduce((acc, curr) => acc + curr.amount, 0))}
+				</div>
+			</a>
 		{/if}
 		{#each latest as item}
 			<CompactHistoryItem {item}></CompactHistoryItem>

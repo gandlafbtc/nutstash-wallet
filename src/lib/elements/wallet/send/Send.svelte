@@ -23,12 +23,8 @@
 		Check,
 		X,
 		Coins,
-
 		WifiOff,
-
 		Scan
-
-
 	} from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';
@@ -89,7 +85,7 @@
 	$effect(() => {
 		if (entered.startsWith('npub') || checkValidPubkey(entered)) {
 			tokenOptions.pubkey = entered;
-			entered = "1"
+			entered = '1';
 			tokenOptions.p2pk = true;
 			tokenOptions.isValidPubkey = true;
 		}
@@ -124,9 +120,9 @@
 	let isLoading = $state(false);
 
 	onMount(() => {
-		if($sendInput) {
-			entered = $sendInput
-			sendInput.set("")
+		if ($sendInput) {
+			entered = $sendInput;
+			sendInput.set('');
 		}
 		setTimeout(() => {
 			thisDrawer?.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -174,13 +170,12 @@
 		}
 	};
 
-	$effect(()=> {
+	$effect(() => {
 		// default to offline token when p2pk is selected
-		if(tokenOptions.p2pk) {
+		if (tokenOptions.p2pk) {
 			tokenOptions.isOffline = true;
 		}
-
-	})
+	});
 
 	const sendCashu = async () => {
 		try {
@@ -201,7 +196,7 @@
 				unit: string;
 				includeFees: boolean;
 				pubkey?: string;
-				isOffline?: boolean
+				isOffline?: boolean;
 			} = {
 				unit: currentUnit,
 				includeFees: tokenOptions.includeReceiverFees,
@@ -209,7 +204,7 @@
 			};
 			if (tokenOptions.p2pk) {
 				if (tokenOptions.pubkey.startsWith('npub')) {
-					tokenOptions.pubkey = "02"+ nip19.decode(tokenOptions.pubkey).data as string
+					tokenOptions.pubkey = ('02' + nip19.decode(tokenOptions.pubkey).data) as string;
 				}
 				if (!checkValidPubkey(tokenOptions.pubkey)) {
 					toast('Invalid public key');
@@ -230,11 +225,10 @@
 	};
 
 	const onKeypadPress = (value: string) => {
-		if (value === "delete") {
+		if (value === 'delete') {
 			entered = entered.slice(0, -1);
-		}
-		else if (value === "clear") {
-			entered = "";
+		} else if (value === 'clear') {
+			entered = '';
 		} else {
 			entered = entered + value;
 		}
@@ -242,69 +236,73 @@
 </script>
 
 {#if scanPubKey}
-<SimpleScanner whatToScan={"pubkey or npub"} bind:isScanning={scanPubKey} bind:scannedResult={tokenOptions.pubkey}></SimpleScanner>
+	<SimpleScanner
+		whatToScan={'pubkey or npub'}
+		bind:isScanning={scanPubKey}
+		bind:scannedResult={tokenOptions.pubkey}
+	></SimpleScanner>
 {:else}
-<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-<div
-	class="flex h-full w-full flex-col items-center justify-center gap-3"
-	bind:this={thisDrawer}
-	tabindex="0"
->
-	{#if !mint}
-		<p class="text-destructive">No mint added to wallet! add a mint first:</p>
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div
+		class="flex h-full w-full flex-col items-center justify-center gap-3"
+		bind:this={thisDrawer}
+		tabindex="0"
+	>
+		{#if !mint}
+			<p class="text-destructive">No mint added to wallet! add a mint first:</p>
 
-		<AddMint></AddMint>
-	{:else}
-		<div class="w-80 xl:w-[600px]">
-			<MintSelector bind:mint></MintSelector>
-		</div>
-		<div class="flex w-80 xl:w-[600px] items-center justify-between gap-2">
-			<span>
-				{formatAmount(balance, currentUnit)}
-				<span class="text-xs italic text-secondary"> available </span>
-			</span>
-			<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
-		</div>
-		{#if !invoice}
-			<!-- content here -->
-			<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden relative">
-				<div class="text-muted absolute h-20 w-full items-center justify-center flex-col flex pointer-events-none">
-					<p>
-						Enter amount to send ecash
-					</p>
-					<p>
-						Paste invoice to send via lightning
-					</p>
-				</div>
-				<Textarea
-					class="w-80 xl:w-[600px] resize-none rounded-md border-dashed h-20"
-					inputmode="none"
-					bind:value={entered}
-					bind:ref={inputFocus}
-					oninput={(e) => {
-						e.preventDefault();
-					}}
-					placeholder=""
-				></Textarea>
+			<AddMint></AddMint>
+		{:else}
+			<div class="w-80 xl:w-[600px]">
+				<MintSelector bind:mint></MintSelector>
 			</div>
-		{/if}
-		<div>
-			<div class="flex items-start justify-center {invoice || amount ? 'h-40' : 'h-20'}">
-				{#if amount}
-					<div class="flex w-80 xl:w-[600px] flex-col items-center justify-between gap-2">
-						<div class="flex w-full items-center justify-between gap-2 rounded-lg border">
-							<button
-								class="w-full cursor-text break-all pl-2 text-start text-2xl"
-								onclick={() => inputFocus?.focus()}
-							>
-								{formatAmount(amount, currentUnit)}
-							</button>
-							<TokenOptions {mint} bind:tokenOptions></TokenOptions>
-						</div>
+			<div class="flex w-80 items-center justify-between gap-2 xl:w-[600px]">
+				<span>
+					{formatAmount(balance, currentUnit)}
+					<span class="text-xs italic text-secondary"> available </span>
+				</span>
+				<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
+			</div>
+			{#if !invoice}
+				<!-- content here -->
+				<div
+					class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} relative overflow-hidden"
+				>
+					<div
+						class="pointer-events-none absolute flex h-20 w-full flex-col items-center justify-center text-muted"
+					>
+						<p>Enter amount to send ecash</p>
+						<p>Paste invoice to send via lightning</p>
+					</div>
+					<Textarea
+						class="h-20 w-80 resize-none rounded-md border-dashed xl:w-[600px]"
+						inputmode="none"
+						bind:value={entered}
+						bind:ref={inputFocus}
+						oninput={(e) => {
+							e.preventDefault();
+						}}
+						placeholder=""
+					></Textarea>
+				</div>
+			{/if}
+			<div>
+				<div class="flex items-start justify-center {invoice || amount ? 'h-40' : 'h-20'}">
+					{#if amount}
+						<div class="flex w-80 flex-col items-center justify-between gap-2 xl:w-[600px]">
+							<div class="flex w-full items-center justify-between gap-2 rounded-lg border">
+								<button
+									class="w-full cursor-text break-all pl-2 text-start text-2xl"
+									onclick={() => inputFocus?.focus()}
+								>
+									{formatAmount(amount, currentUnit)}
+								</button>
+								<TokenOptions {mint} bind:tokenOptions></TokenOptions>
+							</div>
 
-						<div class="flex h-4 w-full items-start justify-start gap-5 text-xs">
-							<!-- Include receiver fee icon disabled for now -->
-							<!-- <span>
+							<div class="flex h-4 w-full items-start justify-start gap-5 text-xs">
+								<!-- Include receiver fee icon disabled for now -->
+								<!-- <span>
 								{#if tokenOptions.includeReceiverFees}
 									<Tooltip.Provider>
 										<Tooltip.Root>
@@ -345,162 +343,162 @@
 								{/if}
 							</span> -->
 
-							{#if getAmountForTokenSet(selectedProofs) < amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
-							<span class="text-red-500"> Not enough funds </span>
-							{:else if getAmountForTokenSet(selectedProofs) > amount + (tokenOptions.includeReceiverFees ? 1 : 0) || tokenOptions.p2pk}
-							<span>
-								<Tooltip.Provider>
-									<Tooltip.Root>
-										<Tooltip.Trigger>
-											<div class="relative">
-												<Coins class="h-4 w-4"></Coins>
-												<div class="absolute -right-3 top-0">
-													<X class="h-3 w-3 text-yellow-500"></X>
-												</div>
-											</div>
-										</Tooltip.Trigger>
-										<Tooltip.Content>
-											<div class="flex items-center gap-1 text-xs">
-												Selected coins:
-												{#each selectedProofs.map((p) => p.amount) as amount}
-													<!-- content here -->
-													<Badge variant="outline" class="p-1 text-xs">
-														{amount}
-													</Badge>
-												{/each}
-											</div>
-										</Tooltip.Content>
-									</Tooltip.Root>
-								</Tooltip.Provider>
-							</span>
-							<span class="text-yellow-500">
-								{#await getFeeForProofs(selectedProofs)}
-									<LoaderCircle class="h-2 w-2 animate-spin"></LoaderCircle>
-								{:then fee}
-									<span class="{fee?"":"text-green-500"}">
-										Swap required ({formatAmount(fee, currentUnit)} swap fee)
-									</span>
-								{/await}
-							</span>
-							{:else}
-								<span>
-									<Tooltip.Provider>
-										<Tooltip.Root>
-											<Tooltip.Trigger>
-												<div class="relative">
-													<Coins class="h-4 w-4"></Coins>
-													<div class="absolute -right-3 top-0">
-														<Check class="h-3 w-3 text-green-500"></Check>
+								{#if getAmountForTokenSet(selectedProofs) < amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
+									<span class="text-red-500"> Not enough funds </span>
+								{:else if getAmountForTokenSet(selectedProofs) > amount + (tokenOptions.includeReceiverFees ? 1 : 0) || tokenOptions.p2pk}
+									<span>
+										<Tooltip.Provider>
+											<Tooltip.Root>
+												<Tooltip.Trigger>
+													<div class="relative">
+														<Coins class="h-4 w-4"></Coins>
+														<div class="absolute -right-3 top-0">
+															<X class="h-3 w-3 text-yellow-500"></X>
+														</div>
 													</div>
-												</div>
-											</Tooltip.Trigger>
-											<Tooltip.Content>
-												<div class="flex items-center gap-1 text-xs">
-													Selected coins:
-													<Badge variant="outline" class="p-1 text-xs">
-														{selectedProofs.map((p) => p.amount).join(', ')}
-													</Badge>
-												</div>
-											</Tooltip.Content>
-										</Tooltip.Root>
-									</Tooltip.Provider>
-								</span>
-								<span class="text-green-500"> Token can be sent offline </span>
-							{/if}
-						</div>
-						<div class="h-10 w-full flex gap-2 relative">
-							{#if tokenOptions.p2pk}
-								<button class="absolute right-16 top-2" onclick={()=>scanPubKey=true}>
-									<Scan></Scan>
-								</button>
-								<!-- content here -->
-								<Input
-									placeholder="npub... or pubkey..."
-									bind:value={tokenOptions.pubkey}
-									oninput={() =>
-										(tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey))	
-									}
-								/>
-								{#if mint.info.nuts[12]?.supported}
-								<Toggle bind:pressed={tokenOptions.isOffline}>
-									<WifiOff></WifiOff>
-								</Toggle>
+												</Tooltip.Trigger>
+												<Tooltip.Content>
+													<div class="flex items-center gap-1 text-xs">
+														Selected coins:
+														{#each selectedProofs.map((p) => p.amount) as amount}
+															<!-- content here -->
+															<Badge variant="outline" class="p-1 text-xs">
+																{amount}
+															</Badge>
+														{/each}
+													</div>
+												</Tooltip.Content>
+											</Tooltip.Root>
+										</Tooltip.Provider>
+									</span>
+									<span class="text-yellow-500">
+										{#await getFeeForProofs(selectedProofs)}
+											<LoaderCircle class="h-2 w-2 animate-spin"></LoaderCircle>
+										{:then fee}
+											<span class={fee ? '' : 'text-green-500'}>
+												Swap required ({formatAmount(fee, currentUnit)} swap fee)
+											</span>
+										{/await}
+									</span>
+								{:else}
+									<span>
+										<Tooltip.Provider>
+											<Tooltip.Root>
+												<Tooltip.Trigger>
+													<div class="relative">
+														<Coins class="h-4 w-4"></Coins>
+														<div class="absolute -right-3 top-0">
+															<Check class="h-3 w-3 text-green-500"></Check>
+														</div>
+													</div>
+												</Tooltip.Trigger>
+												<Tooltip.Content>
+													<div class="flex items-center gap-1 text-xs">
+														Selected coins:
+														<Badge variant="outline" class="p-1 text-xs">
+															{selectedProofs.map((p) => p.amount).join(', ')}
+														</Badge>
+													</div>
+												</Tooltip.Content>
+											</Tooltip.Root>
+										</Tooltip.Provider>
+									</span>
+									<span class="text-green-500"> Token can be sent offline </span>
 								{/if}
-							{/if}
-						</div>
-						<Button
-							class="w-full"
-							onclick={sendCashu}
-							disabled={(tokenOptions.p2pk && (!tokenOptions.isValidPubkey && !tokenOptions.pubkey.startsWith('npub'))) ||
-								isLoading ||
-								getAmountForTokenSet(selectedProofs) <
-									amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
-						>
-							{#if isLoading}
-								<LoaderCircle class="animate-spin"></LoaderCircle>
-							{:else}
-								<Banknote></Banknote>
-							{/if}
-							<span>
-								Create
-								{#if tokenOptions.customOut}
-									<span> custom </span>
-								{/if}
+							</div>
+							<div class="relative flex h-10 w-full gap-2">
 								{#if tokenOptions.p2pk}
-									<span> locked </span>
-									{#if tokenOptions.isOffline}
-										offline
+									<button class="absolute right-16 top-2" onclick={() => (scanPubKey = true)}>
+										<Scan></Scan>
+									</button>
+									<!-- content here -->
+									<Input
+										placeholder="npub... or pubkey..."
+										bind:value={tokenOptions.pubkey}
+										oninput={() =>
+											(tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey))}
+									/>
+									{#if mint.info.nuts[12]?.supported}
+										<Toggle bind:pressed={tokenOptions.isOffline}>
+											<WifiOff></WifiOff>
+										</Toggle>
 									{/if}
 								{/if}
-
-								cashu token
-							</span>
-						</Button>
-					</div>
-				{:else if invoice.length}
-					<div class="flex h-40 flex-col items-center justify-center gap-2">
-						<button
-							class=" text-xs italic text-secondary"
-							onclick={() => copyTextToClipboard(invoice)}
-						>
-							<div class="flex w-80 xl:w-[600px] items-center justify-center gap-1">
-								<Copy class="h-4 w-4"></Copy>
-								<span class="w-60 overflow-clip text-ellipsis">
-									{invoice}
-								</span>
 							</div>
-						</button>
-						<span>
-							{formatAmount(decode(invoice).sections[2].value / 1000, 'sat')}
-						</span>
-						<div class="w-80 xl:w-[600px] py-5">
 							<Button
-								disabled={isLoading}
-								class="w-full border-2 border-nutstash"
-								onclick={createQuote}
+								class="w-full"
+								onclick={sendCashu}
+								disabled={(tokenOptions.p2pk &&
+									!tokenOptions.isValidPubkey &&
+									!tokenOptions.pubkey.startsWith('npub')) ||
+									isLoading ||
+									getAmountForTokenSet(selectedProofs) <
+										amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
 							>
 								{#if isLoading}
 									<LoaderCircle class="animate-spin"></LoaderCircle>
 								{:else}
-									<Zap></Zap>
+									<Banknote></Banknote>
 								{/if}
-								Prepare payment
+								<span>
+									Create
+									{#if tokenOptions.customOut}
+										<span> custom </span>
+									{/if}
+									{#if tokenOptions.p2pk}
+										<span> locked </span>
+										{#if tokenOptions.isOffline}
+											offline
+										{/if}
+									{/if}
+
+									cashu token
+								</span>
 							</Button>
 						</div>
-					</div>
-				{:else}
-					<!-- <div>
+					{:else if invoice.length}
+						<div class="flex h-40 flex-col items-center justify-center gap-2">
+							<button
+								class=" text-xs italic text-secondary"
+								onclick={() => copyTextToClipboard(invoice)}
+							>
+								<div class="flex w-80 items-center justify-center gap-1 xl:w-[600px]">
+									<Copy class="h-4 w-4"></Copy>
+									<span class="w-60 overflow-clip text-ellipsis">
+										{invoice}
+									</span>
+								</div>
+							</button>
+							<span>
+								{formatAmount(decode(invoice).sections[2].value / 1000, 'sat')}
+							</span>
+							<div class="w-80 py-5 xl:w-[600px]">
+								<Button
+									disabled={isLoading}
+									class="w-full border-2 border-nutstash"
+									onclick={createQuote}
+								>
+									{#if isLoading}
+										<LoaderCircle class="animate-spin"></LoaderCircle>
+									{:else}
+										<Zap></Zap>
+									{/if}
+									Prepare payment
+								</Button>
+							</div>
+						</div>
+					{:else}
+						<!-- <div>
 						<button onclick={() => openScannerDrawer.update((ctx) => !ctx)}>
 							<QrCode></QrCode>
 						</button>
 					</div> -->
-				{/if}
+					{/if}
+				</div>
 			</div>
-		</div>
-		<div class="h-64 w-80 xl:w-[600px]">
-			<NumericKeys onkeypressed={onKeypadPress} isDecimal={false}></NumericKeys>
-		</div>
-	{/if}
-</div>
-
+			<div class="h-64 w-80 xl:w-[600px]">
+				<NumericKeys onkeypressed={onKeypadPress} isDecimal={false}></NumericKeys>
+			</div>
+		{/if}
+	</div>
 {/if}

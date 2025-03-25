@@ -53,28 +53,27 @@
 		</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-3">
-			{#if !isListView}
-				<!-- content here -->
-				{#if encodedToken && tx.type === TransactionType.SEND}
-					{#if encodedToken.length > 300}
-						<BigTokenQr size={[3]} speed={[3]} token={encodedToken}></BigTokenQr>
-					{:else}
-						<QrCode data={encodedToken}></QrCode>
-					{/if}
+		{#if !isListView}
+			<!-- content here -->
+			{#if encodedToken && tx.type === TransactionType.SEND}
+				{#if encodedToken.length > 300}
+					<BigTokenQr size={[3]} speed={[3]} token={encodedToken}></BigTokenQr>
+				{:else}
+					<QrCode data={encodedToken}></QrCode>
 				{/if}
 			{/if}
+		{/if}
 		<div>
 			<CopiableToken token={encodedToken}></CopiableToken>
 		</div>
 		<div class="flex flex-col items-center justify-center gap-2">
-			<Badge variant="outline" class="text-2xl w-full items-center flex justify-center">
+			<Badge variant="outline" class="flex w-full items-center justify-center text-2xl">
 				{formatAmount(tx.amount, 'sat')}
 			</Badge>
 			<Badge variant="outline" class="">
 				{formatAmount(tx.fees ?? 0, 'sat')} fee
 			</Badge>
 		</div>
-
 	</Card.Content>
 	<Card.Footer class="flex h-12 justify-between">
 		{#if isListView}

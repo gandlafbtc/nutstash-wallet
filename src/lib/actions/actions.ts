@@ -244,7 +244,13 @@ export const receiveEcash = async (
 const doSend = async (
 	mintUrl: string,
 	amount: number,
-	options?: { unit?: string; includeFees?: boolean; pubkey?: string; privkey?: string, isOffline?: boolean }
+	options?: {
+		unit?: string;
+		includeFees?: boolean;
+		pubkey?: string;
+		privkey?: string;
+		isOffline?: boolean;
+	}
 ) => {
 	const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit);
 	const mintUnitProofs = proofsStore.getByKeysetIds(wallet.keysets.map((ks) => ks.id));
@@ -258,7 +264,7 @@ const doSend = async (
 		includeFees: options?.includeFees,
 		privkey: options?.privkey,
 		pubkey: options?.pubkey,
-		includeDleq: options?.isOffline,
+		includeDleq: options?.isOffline
 	});
 	const mintUnitProofIds = mintUnitProofs.map((p) => p.secret);
 	await proofsStore.removeMany(
@@ -284,7 +290,14 @@ const doSend = async (
 export const sendEcash = async (
 	mintUrl: string,
 	amount: number,
-	options?: { unit?: string; includeFees?: boolean; pubkey?: string; privkey?: string, isOffline?: boolean, isRefundable?: boolean }
+	options?: {
+		unit?: string;
+		includeFees?: boolean;
+		pubkey?: string;
+		privkey?: string;
+		isOffline?: boolean;
+		isRefundable?: boolean;
+	}
 ) => {
 	const { send, keep, aproxProofs, endCount, keysetId, currentCount } = await doSend(
 		mintUrl,
@@ -408,23 +421,21 @@ export const getMinMaxFeeForAmount = (amount: number, mint: Mint, unit: string) 
 	const denos = Object.keys(keys?.keys ?? {});
 };
 
-export const processUnclaimedTokens = async (id?:string) => {
-	const tokensToClaim: StoredTransaction[] = []
+export const processUnclaimedTokens = async (id?: string) => {
+	const tokensToClaim: StoredTransaction[] = [];
 	if (id) {
-		const tx = offlineTransactionsStore.getBy(id, "id")
+		const tx = offlineTransactionsStore.getBy(id, 'id');
 		if (!tx) {
-			throw new Error("Invalid transaction ID");
+			throw new Error('Invalid transaction ID');
 		}
-		tokensToClaim.push(tx)
-	}
-	else {
-		tokensToClaim.push(...get(offlineTransactionsStore))
+		tokensToClaim.push(tx);
+	} else {
+		tokensToClaim.push(...get(offlineTransactionsStore));
 	}
 
 	for (const token of tokensToClaim) {
-			// await receiveEcash()
+		// await receiveEcash()
 	}
-
 };
 
 export const createCashuRequest = async (

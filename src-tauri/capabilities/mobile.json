@@ -2,7 +2,5 @@
 	"identifier": "mobile-capability",
 	"platforms": ["android", "iOS"],
 	"windows": ["main"],
-	"permissions": [
-
-	]
+	"permissions": []
 }

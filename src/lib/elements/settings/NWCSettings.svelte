@@ -81,7 +81,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 xl:w-[600px] flex-col gap-2">
+<div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
 	<Button onclick={nwc.generateNWCConnection} disabled={$nwcKeysStore.length ? true : false}>
 		{#if $nwcKeysStore.length}
 			Max connections reached (1)

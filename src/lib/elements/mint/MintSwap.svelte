@@ -65,7 +65,7 @@
 	};
 </script>
 
-<div class="flex w-80 xl:w-[600px] flex-col gap-2">
+<div class="flex w-80 flex-col gap-2 xl:w-[600px]">
 	<p class="font-bold">Mint swap</p>
 
 	<p class="pt-2 text-sm font-bold opacity-35">From</p>

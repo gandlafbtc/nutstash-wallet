@@ -8,7 +8,7 @@
 		tokenOptions = $bindable(),
 		mint
 	}: {
-		mint: Mint
+		mint: Mint;
 		tokenOptions: {
 			p2pk: boolean;
 			customIn: boolean;
@@ -16,14 +16,11 @@
 			includeReceiverFees: boolean;
 		};
 	} = $props();
-	
 </script>
 
 <div class="flex gap-2">
 	{#if mint.info.nuts[10]?.supported}
-	<Toggle aria-label="toggle bold" bind:pressed={tokenOptions.p2pk}>
-		Lock
-	</Toggle>
+		<Toggle aria-label="toggle bold" bind:pressed={tokenOptions.p2pk}>Lock</Toggle>
 	{/if}
 
 	<!-- Receiver fee disabled for now  -->

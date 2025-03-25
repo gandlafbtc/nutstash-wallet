@@ -99,7 +99,7 @@
 		{/if}
 	</div>
 	<div class="flex w-full items-center justify-between gap-2">
-		<p class="text-4xl flex-grow">
+		<p class="flex-grow text-4xl">
 			{getUnitSymbol(currentUnit, false)}
 			<button class="h-12" onclick={toggleShowBalance}>
 				{#if $settings[0].general.hideBalance && !isShowBalance}
@@ -121,9 +121,9 @@
 	</div>
 
 	<ScrollArea
-		class="relative mb-20 flex h-full w-80 xl:w-[600px] flex-col gap-5 overflow-y-hidden from-background
-  before:pointer-events-none before:absolute before:bottom-0 before:top-0 before:z-10  before:h-10 before:w-full
-  before:bg-gradient-to-b after:pointer-events-none after:absolute after:bottom-0 after:z-10 after:h-10 after:w-full after:bg-gradient-to-t"
+		class="relative mb-20 flex h-full w-80 flex-col gap-5 overflow-y-hidden from-background before:pointer-events-none
+  before:absolute before:bottom-0 before:top-0 before:z-10 before:h-10  before:w-full before:bg-gradient-to-b
+  after:pointer-events-none after:absolute after:bottom-0 after:z-10 after:h-10 after:w-full after:bg-gradient-to-t xl:w-[600px]"
 	>
 		<CompactHistory></CompactHistory>
 	</ScrollArea>

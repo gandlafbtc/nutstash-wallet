@@ -9,7 +9,7 @@
 	let hasSelected = $state(false);
 </script>
 
-<div class="flex h-full w-80 xl:w-[600px] flex-col gap-2">
+<div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
 	<p class="font-bold">Import Contacts</p>
 	{#if $discoveredContacts.length}
 		<Button
@@ -23,7 +23,7 @@
 		<Divider text="Or select"></Divider>
 		<ScrollArea class="h-96">
 			{#each $discoveredContacts as contact}
-				<div class="relative my-2 flex w-80 xl:w-[600px] gap-2">
+				<div class="relative my-2 flex w-80 gap-2 xl:w-[600px]">
 					<Contact {contact}></Contact>
 					{#if $contactsStore.find((c) => c.npub === contact.npub)}
 						<Button disabled={true} class="absolute right-2 m-1">
