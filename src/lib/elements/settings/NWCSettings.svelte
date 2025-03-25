@@ -81,7 +81,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-2">
+<div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
 	<Button onclick={nwc.generateNWCConnection} disabled={$nwcKeysStore.length ? true : false}>
 		{#if $nwcKeysStore.length}
 			Max connections reached (1)
@@ -98,7 +98,7 @@
 				<div class="my-2 flex flex-col gap-4 rounded-lg border p-4">
 					<button onclick={() => (isShow = !isShow)}>
 						<div class:blur-sm={!isShow}>
-							<QrCode data={connectionString} QRsize="medium"></QrCode>
+							<QrCode data={connectionString}></QrCode>
 						</div>
 					</button>
 					<button

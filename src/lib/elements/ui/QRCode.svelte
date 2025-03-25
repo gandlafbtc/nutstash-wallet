@@ -1,43 +1,15 @@
 <script lang="ts">
-	import { qrcanvas } from 'qrcanvas';
-	import { onMount } from 'svelte';
+	import { encodeQR } from '@paulmillr/qr';
 
-	let canvasWrapper: HTMLDivElement | undefined = $state();
-	let { data, QRsize = 'medium' }: { data: string; QRsize?: 'large' | 'medium' | 'small' } =
-		$props();
+	interface Props {
+		data: string;
+	}
 
-	const getSize = (size: 'large' | 'medium' | 'small') => {
-		switch (size) {
-			case 'large':
-				return { padding: 15, size: 300 };
-			case 'medium':
-				return { padding: 10, size: 250 };
-			case 'small':
-				return { padding: 3, size: 75 };
-			default:
-				return { padding: 10, size: 250 };
-		}
-	};
+	let { data }: Props = $props();
 
-	const paintCanvas = (data: string, s: 'large' | 'medium' | 'small') => {
-		const { padding, size } = getSize(s);
-		const canvas = qrcanvas({
-			data,
-			padding,
-			size
-		});
-		for (const child of canvasWrapper?.children ?? []) {
-			canvasWrapper?.removeChild(child);
-		}
-		canvasWrapper?.appendChild(canvas);
-	};
-
-	$effect(() => paintCanvas(data, QRsize));
-	onMount(() => {
-		paintCanvas(data, QRsize);
-	});
+	let qrSVG = $derived(encodeQR(data, 'svg'));
 </script>
 
-<div class="flex items-center justify-center rounded-sm bg-white p-1" bind:this={canvasWrapper}>
-	<canvas> </canvas>
+<div class="min-h-20 min-w-20 rounded-md bg-white p-1">
+	{@html qrSVG}
 </div>

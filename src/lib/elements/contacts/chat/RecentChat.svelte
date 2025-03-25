@@ -13,7 +13,10 @@
 	let alias = $derived(getBy($contactsStore, npub, 'npub')?.alias ?? '?');
 </script>
 
-<a href={`/#/wallet/contacts/chat/${npub}`} class="flex w-80 flex-col gap-3 rounded-xl border p-2">
+<a
+	href={`/#/wallet/contacts/chat/${npub}`}
+	class="flex w-80 flex-col gap-3 rounded-xl border p-2 xl:w-[600px]"
+>
 	<div class="flex items-center gap-4">
 		<Avatar.Root>
 			<Avatar.Image src={$contactsStore.find((c) => c.npub === npub)?.picture ?? ''} alt={alias} />

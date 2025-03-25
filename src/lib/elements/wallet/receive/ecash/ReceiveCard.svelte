@@ -14,16 +14,27 @@
 		Lock
 	} from 'lucide-svelte';
 	import { mints } from '$lib/stores/persistent/mints';
-	import { formatAmount } from '$lib/util/walletUtils';
+	import { formatAmount, getKeysForKeysetId, parseSecrets } from '$lib/util/walletUtils';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { receiveEcash } from '$lib/actions/actions';
-	import { params, push } from 'svelte-spa-router';
+	import { push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
-	import type { Token } from '@cashu/cashu-ts';
+	import { type Token } from '@cashu/cashu-ts';
+	import { hasValidDleq } from '@cashu/cashu-ts';
 	import { ensureError } from '$lib/helpers/errors';
+	import {
+		offlineProofsStore,
+		pendingProofsStore,
+		proofsStore,
+		spentProofsStore
+	} from '$lib/stores/persistent/proofs';
+	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
+	import { randDBKey } from '$lib/db/helper';
+	import { TransactionStatus, TransactionType } from '$lib/db/models/types';
+	import ProgressSuccess from '$lib/components/ui/progress/progressSuccess.svelte';
 
 	interface Props {
 		token: Token;
@@ -31,25 +42,58 @@
 
 	let { token }: Props = $props();
 
-	let isKnownMint = $derived($mints.find((m) => m.url === token?.mint) ? true : false);
+	let mint = $derived($mints.find((m) => m.url === token?.mint));
 
-	let lockPubs = $derived.by(() => {
-		const pubs: string[] = [];
-		token?.proofs.forEach((t) => {
-			//check secrets for lock
-			try {
-				const secret = parseSecret(t.secret);
-				if (secret[0] === 'P2PK') {
-					pubs.push(secret[1].data);
-				}
-			} catch {
-				// do nothing
-			}
-		});
-		return pubs;
-	});
+	let isKnownMint = $derived(mint ? true : false);
 
 	let isLoading = $state(false);
+
+	//offline checks
+	let { lockPubs, allDLEQsValid, timelock } = $derived(parseSecrets(token));
+	let isLockedToMe = $derived(
+		lockPubs.filter((lp) => !$keysStore.map((ks) => ks.publicKey).includes(lp)).length
+			? false
+			: true
+	);
+	let noDuplicatesInStorage = $derived(
+		![...$offlineProofsStore, ...$proofsStore, ...$pendingProofsStore, ...$spentProofsStore]
+			.map((p) => p.secret)
+			.filter((s) => token.proofs.map((tp) => tp.secret).includes(s)).length
+	);
+	let is1WeekTimelock = $derived(timelock > Date.now() / 1000 + 60 * 60 * 24 * 7);
+	let noDuplicatesInToken = $derived(
+		!token.proofs.filter((num) => token.proofs.indexOf(num) !== token.proofs.lastIndexOf(num))
+			.length
+	);
+	let trustScore = $derived.by(() => {
+		let score = 0;
+		if (lockPubs.length) {
+			score += 15;
+		}
+		if (lockPubs.length && isLockedToMe) {
+			score += 15;
+		}
+		if (allDLEQsValid) {
+			score += 30;
+		}
+		if (noDuplicatesInStorage) {
+			score += 10;
+		}
+		if (is1WeekTimelock) {
+			score += 10;
+		}
+		if (noDuplicatesInToken) {
+			score += 20;
+		}
+		return score;
+	});
+	let trustVerdict = $derived.by(() => {
+		if (trustScore >= 100) {
+			return 'Can be received offline without trusting the sender';
+		} else {
+			return 'Offline receiving requires trusting the sender';
+		}
+	});
 
 	const receive = async () => {
 		if (!token) {
@@ -59,6 +103,7 @@
 			isLoading = true;
 			let privkey;
 			if (lockPubs.length) {
+				//todo make this work with multiple lock pubs
 				privkey = getBy($keysStore, lockPubs[0], 'publicKey')?.privateKey;
 			}
 			const { proofs } = await receiveEcash(token, { privkey });
@@ -94,6 +139,29 @@
 		scanresultStore.set(undefined);
 		push('/wallet/');
 	};
+
+	const receiveOffline = () => {
+		offlineProofsStore.addMany(token.proofs);
+		const id = randDBKey();
+		offlineTransactionsStore.addOrUpdate(
+			id,
+			{
+				id,
+				amount: token.proofs.reduce((acc, proof) => acc + proof.amount, 0),
+				in: token.proofs,
+				out: token.proofs,
+				createdAt: Date.now(),
+				lastChangedAt: Date.now(),
+				type: TransactionType.OFFLINE,
+				state: TransactionStatus.PENDING,
+				mintUrl: token.mint,
+				unit: token.unit ?? 'sat'
+			},
+			'id'
+		);
+		toast.info("Offline token received, don't forget to claim it when you're online!");
+		push('/wallet/');
+	};
 </script>
 
 <Card.Root class="">
@@ -116,11 +184,7 @@
 				<Accordion.Trigger>
 					<div>
 						{#if lockPubs.length}
-							<Lock
-								class={$keysStore.find((ks) => ks.publicKey === lockPubs[0])
-									? 'text-green-500'
-									: 'text-red-500'}
-							></Lock>
+							<Lock class={isLockedToMe ? 'text-green-500' : 'text-red-500'}></Lock>
 						{/if}
 					</div>
 					<p class="w-full text-3xl">
@@ -157,14 +221,76 @@
 	</Card.Content>
 	<Card.Footer class="flex gap-2">
 		{#if isKnownMint}
-			<Button class="w-full" onclick={receive} disabled={isLoading}>
-				{#if isLoading}
-					<LoaderCircle class="animate-spin"></LoaderCircle>
-				{:else}
-					<Download></Download>
-				{/if}
-				Receive
-			</Button>
+			<div class="flex w-full flex-col gap-2">
+				<Button class="w-full" onclick={receive} disabled={isLoading}>
+					{#if isLoading}
+						<LoaderCircle class="animate-spin"></LoaderCircle>
+					{:else}
+						<Download></Download>
+					{/if}
+					Receive
+				</Button>
+				<Accordion.Root type="single">
+					<Accordion.Item value="item-1">
+						<Accordion.Trigger>
+							<div>Offline options</div>
+						</Accordion.Trigger>
+						<Accordion.Content>
+							<div class="mt-4 flex flex-col gap-1 rounded-md border border-muted-foreground p-2">
+								<p class="text-sm font-bold italic text-muted-foreground">Offline summary</p>
+								<div>
+									<p class={trustScore >= 100 ? 'text-green-500' : 'text-red-500'}>
+										{trustVerdict}
+									</p>
+								</div>
+								<p class="text-sm text-muted-foreground">Validated mint signatures</p>
+								{#if allDLEQsValid}
+									<p class="text-green-500">All signatures valid</p>
+								{:else}
+									<p class="text-red-500">Verifiable Signatures were not included</p>
+								{/if}
+								<p class="text-sm text-muted-foreground">Locked to my wallet</p>
+								{#if lockPubs.length && isLockedToMe}
+									<p class="text-green-500">Locked to me</p>
+									<p class="text-sm text-muted-foreground">Timelocked</p>
+									{#if is1WeekTimelock}
+										<p class="text-green-500">Locked for at least 7 days</p>
+									{:else}
+										<p class="text-red-500">Timelock expires</p>
+									{/if}
+								{:else}
+									<p class="text-red-500">Not locked to me</p>
+								{/if}
+								<p class="text-sm text-muted-foreground">Unique</p>
+								{#if noDuplicatesInStorage}
+									<p class="text-green-500">Nothing found</p>
+								{:else}
+									<p class="text-red-500">Found duplicates in storage</p>
+								{/if}
+								<p class="text-sm text-muted-foreground">Duplicates</p>
+								{#if noDuplicatesInToken}
+									<p class="text-green-500">Nothing found</p>
+								{:else}
+									<p class="text-red-500">Found duplicates</p>
+								{/if}
+								<Button
+									variant="outline"
+									class="w-full"
+									onclick={receiveOffline}
+									disabled={isLoading}
+								>
+									{#if isLoading}
+										<LoaderCircle class="animate-spin"></LoaderCircle>
+									{:else}
+										<Download></Download>
+									{/if}
+									Receive offline
+								</Button>
+							</div>
+						</Accordion.Content>
+					</Accordion.Item>
+				</Accordion.Root>
+			</div>
 		{:else}
 			<Button class="w-full" variant="outline" onclick={discard} disabled={isLoading}
 				>Discard</Button

@@ -22,7 +22,7 @@
 	console.log(mint);
 </script>
 
-<div class="flex w-80 flex-col gap-2 rounded-lg border p-4 shadow-md">
+<div class="flex w-80 flex-col gap-2 rounded-lg border p-4 shadow-md xl:w-[600px]">
 	<div class="flex items-center gap-2">
 		<a href={`/#/wallet/mint/${getHostFromUrl(mint.url)}`}>
 			<Avatar>

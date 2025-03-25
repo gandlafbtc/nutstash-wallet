@@ -19,7 +19,9 @@
 			<NfcListener></NfcListener>
 		{/if}
 		<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-			<Drawer.Close class={buttonVariants({ variant: 'outline' }) + ' w-80'}>Close</Drawer.Close>
+			<Drawer.Close class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
+				>Close</Drawer.Close
+			>
 		</Drawer.Footer>
 	</Drawer.Content>
 </Drawer.Root>

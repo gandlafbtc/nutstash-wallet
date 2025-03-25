@@ -32,7 +32,7 @@
 	let latestMessageForPubKey = $derived.by(getLatestMessages);
 </script>
 
-<div class="flex h-full w-80 flex-col justify-start gap-2">
+<div class="flex h-full w-80 flex-col justify-start gap-2 xl:w-[600px]">
 	<p class="text-lg font-bold">Chats</p>
 	<div>
 		<Button href="/#/wallet/contacts">Start a new chat</Button>

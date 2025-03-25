@@ -11,6 +11,7 @@
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { now } from '$lib/stores/session/time';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 
 	let {
 		quote,
@@ -28,7 +29,9 @@
 </script>
 
 <Card.Root
-	class="m-3 w-80 {quote.state === EXPIRED.EXPIRED ? 'bg-red-700 bg-opacity-20 opacity-40' : ''}"
+	class="m-3 w-80 xl:w-[600px] {quote.state === EXPIRED.EXPIRED
+		? 'bg-red-700 bg-opacity-20 opacity-40'
+		: ''}"
 >
 	<Card.Header>
 		<Card.Title class="relative flex flex-col justify-start text-nowrap">
@@ -39,7 +42,7 @@
 			</div>
 			{#if isListView}
 				<button onclick={() => (isListView = !isListView)} class="absolute -right-2 -top-2">
-					<QrCode data={quote.request} QRsize="small"></QrCode>
+					<QrCode data={quote.request}></QrCode>
 				</button>
 			{/if}
 		</Card.Title>
@@ -54,9 +57,12 @@
 	<Card.Content class="flex flex-col gap-3">
 		{#if !isListView}
 			<button onclick={() => (isListView = !isListView)}>
-				<QrCode data={quote.request} QRsize="medium"></QrCode>
+				<QrCode data={quote.request}></QrCode>
 			</button>
 		{/if}
+		<div>
+			<CopiableToken token={quote.request}></CopiableToken>
+		</div>
 		<div class="flex items-center gap-2">
 			<p class="text-xs">Pay</p>
 			<Badge variant="outline">
@@ -65,12 +71,6 @@
 			<p class="text-xs">to get</p>
 			<Badge variant="outline">{formatAmount(quote.amount, quote.unit)}</Badge>
 		</div>
-		<button class="flex gap-2" onclick={() => copyTextToClipboard(quote.request)}>
-			<p class="w-52 overflow-clip text-ellipsis text-sm">
-				{quote.request}
-			</p>
-			<Copy class="h-5 w-5"></Copy>
-		</button>
 	</Card.Content>
 	<Card.Footer class="flex h-12 justify-between">
 		{#if !isListView}

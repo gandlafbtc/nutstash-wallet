@@ -41,7 +41,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-3">
+<div class="flex h-full w-80 flex-col gap-3 xl:w-[600px]">
 	<div class="flex flex-col gap-2">
 		{#if $usePassword}
 			<span class="flex gap-2 text-green-600">

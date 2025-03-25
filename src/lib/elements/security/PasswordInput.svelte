@@ -61,7 +61,7 @@
 {#if ($usePassword && !$key) || isUnlocking}
 	<div class="flex h-screen w-screen items-center justify-center">
 		<div class="flex h-full w-full max-w-4xl items-center justify-center">
-			<div class="flex w-80 flex-col items-center gap-4 rounded border p-6">
+			<div class="flex w-80 flex-col items-center gap-4 rounded border p-6 xl:w-[600px]">
 				<div class="h-20 w-20">
 					<img src="/nutstash_app.svg" alt="" />
 				</div>

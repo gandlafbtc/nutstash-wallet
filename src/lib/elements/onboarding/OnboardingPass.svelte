@@ -7,7 +7,7 @@
 
 <OnboardingHeader></OnboardingHeader>
 <div class="flex h-screen w-full items-center justify-center">
-	<div class="flex w-80">
+	<div class="flex w-80 xl:w-[600px]">
 		<PasswordSetup></PasswordSetup>
 	</div>
 </div>

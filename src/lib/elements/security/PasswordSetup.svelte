@@ -46,7 +46,7 @@
 	};
 </script>
 
-<div class="flex h-full items-center justify-center">
+<div class="flex h-full w-full items-center justify-center">
 	<div class="bg-base-100 flex w-full max-w-4xl flex-col gap-3 rounded-lg p-5 text-center lg:p-10">
 		<div class="flex flex-col gap-5">
 			<p class="text-lg font-bold">Encrypt wallet storage</p>

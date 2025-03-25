@@ -1,6 +1,6 @@
 [package]
 name = "nutstash"
-version = "2.0.3"
+version = "2.0.4"
 description = "Cashu ecash wallet"
 authors = ["gandlaf21"]
 edition = "2021"
@@ -19,11 +19,7 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
-tauri-plugin-shell = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 [target.'cfg(any(target_os = "android", target_os = "ios"))'.dependencies]
-tauri-plugin-barcode-scanner = "2.0.0"
-tauri-plugin-nfc = "2"
-
