@@ -86,7 +86,7 @@
 </script>
 
 <div class="flex h-full w-full flex-col items-center justify-start gap-5">
-	<div class="w-80">
+	<div class="w-80 xl:w-[600px]">
 		<QuickPaste></QuickPaste>
 	</div>
 	<div>
@@ -121,7 +121,7 @@
 	</div>
 
 	<ScrollArea
-		class="relative mb-20 flex h-full w-80 flex-col gap-5 overflow-y-hidden from-background
+		class="relative mb-20 flex h-full w-80 xl:w-[600px] flex-col gap-5 overflow-y-hidden from-background
   before:pointer-events-none before:absolute before:bottom-0 before:top-0 before:z-10  before:h-10 before:w-full
   before:bg-gradient-to-b after:pointer-events-none after:absolute after:bottom-0 after:z-10 after:h-10 after:w-full after:bg-gradient-to-t"
 	>

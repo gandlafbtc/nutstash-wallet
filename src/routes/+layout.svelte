@@ -47,7 +47,7 @@
 				<Receive></Receive>
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Close
-						class={buttonVariants({ variant: 'outline' }) + ' w-80'}
+						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
 						onclick={() => openReceiveDrawer.set(false)}>Cancel</Drawer.Close
 					>
 				</Drawer.Footer>
@@ -65,7 +65,7 @@
 				<Send></Send>
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Close
-						class={buttonVariants({ variant: 'outline' }) + ' w-80'}
+						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
 						onclick={() => openSendDrawer.set(false)}>Cancel</Drawer.Close
 					>
 				</Drawer.Footer>

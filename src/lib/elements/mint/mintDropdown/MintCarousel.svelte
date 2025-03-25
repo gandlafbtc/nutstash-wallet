@@ -21,7 +21,7 @@
 	});
 </script>
 
-<div class="w-80">
+<div class="w-80 xl:w-[600px]">
 	<Carousel.Root
 		opts={{ startIndex: $selectedMint + 1, duration: 10 }}
 		setApi={(emblaApi) => (api = emblaApi)}

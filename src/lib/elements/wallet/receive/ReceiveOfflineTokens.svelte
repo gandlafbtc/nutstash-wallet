@@ -118,11 +118,11 @@
                 </Button>
             </div>
             {:else}
-            <button class="w-64" onclick={() => showQR = false}>
+            <button class="" onclick={() => showQR = false}>
                 <QrCode data={tkn}></QrCode>
             </button>
             {/if}
-            <div class="max-w-64">
+            <div class="">
                <CopiableToken token={tkn}></CopiableToken>
             </div>
             <div class="flex flex-col gap-2">

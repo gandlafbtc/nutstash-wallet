@@ -10,8 +10,12 @@
 	let tx = $derived($transactionsStore.find((q) => q.id === txId));
 </script>
 
-{#if tx}
+<div class="flex h-full w-80 xl:w-[600px] flex-col gap-2">
+
+	{#if tx}
 	<TransactionListItem isListView={false} {tx}></TransactionListItem>
-{:else}
+	{:else}
 	Transaction not found
-{/if}
+	{/if}
+	
+</div>

@@ -25,7 +25,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-4">
+<div class="flex h-full w-80 xl:w-[600px] flex-col gap-4">
 	<div>
 		<span class="text-lg font-bold"> Mint Settings </span>
 	</div>

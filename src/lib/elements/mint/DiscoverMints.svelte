@@ -28,7 +28,7 @@
 	};
 </script>
 
-<div class="flex w-80 flex-col gap-2">
+<div class="flex w-80 xl:w-[600px] flex-col gap-2">
 	<Button disabled={isLoading} class="w-full" onclick={doDiscoverMints}>
 		{#if isLoading}
 			<LoaderCircle class="animate-spin"></LoaderCircle>

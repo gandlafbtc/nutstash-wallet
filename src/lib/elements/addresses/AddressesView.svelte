@@ -9,7 +9,7 @@
 	const pub = $keysStore.map((ks) => ks.publicKey)[$keysStore.length - 1];
 </script>
 
-<div class="flex h-full w-80 flex-col gap-2">
+<div class="flex h-full w-80 xl:w-[600px] flex-col gap-2">
 	<p class="text-lg font-bold">Address</p>
 	<p class="flex gap-1">
 		<span>

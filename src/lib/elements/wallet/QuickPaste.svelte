@@ -110,7 +110,7 @@
 		<Input
 			bind:value={pasted}
 			onpaste={(e) => onPaste()}
-			class="w-80 resize-none rounded-sm border-dashed bg-opacity-5 focus:outline-transparent focus-visible:outline-transparent "
+			class="w-80 xl:w-[600px] resize-none rounded-sm border-dashed bg-opacity-5 focus:outline-transparent focus-visible:outline-transparent "
 			inputmode="none"
 			placeholder="        Paste something from clipboard..."
 		></Input>

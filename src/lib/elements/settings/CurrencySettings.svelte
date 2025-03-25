@@ -10,14 +10,14 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-4">
+<div class="flex h-full w-80 xl:w-[600px] flex-col gap-4">
 	<div>
 		<span class="text-lg font-bold"> Currency settings </span>
 	</div>
-	<div class="flex w-80 flex-col gap-1">
+	<div class="flex w-80 xl:w-[600px] flex-col gap-1">
 		<span class="text-sm">Preferred currency: </span>
 		<Select.Root type="single" name="unit" value={$unit} {onValueChange} allowDeselect={false}>
-			<Select.Trigger class="w-80">
+			<Select.Trigger class="w-80 xl:w-[600px]">
 				<div class="flex-grow">
 					{getUnitSymbol($unit)}
 				</div>

@@ -13,7 +13,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-5">
+<div class="flex h-full w-80 xl:w-[600px] flex-col gap-5">
 	<p class="text-destructive">
 		<span class="font-bold"> Warning! </span>
 		Manipulating counters can mess up the restore process. Only proceed if you know what you are doing.

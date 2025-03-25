@@ -167,13 +167,13 @@
 </script>
 
 <div class="flex min-h-96 w-full flex-col items-center justify-center">
-	<div class="h-10 w-80">
+	<div class="h-10 w-80 xl:w-[600px]">
 		{#if cams?.length && completion}
 			<Progress value={completion - 5} max={100} class="w-full" />
 		{/if}
 	</div>
-	<div class="relative flex h-full w-80 items-center justify-center">
-		<div class="video-wrapper h-80 w-80 rounded-lg border bg-black p-2">
+	<div class="relative flex h-full w-80 xl:w-[600px] items-center justify-center">
+		<div class="video-wrapper h-80 w-80 xl:w-[600px] rounded-lg border bg-black p-2">
 			{#if cams === undefined}
 				loading camera ...
 			{:else if cams?.length === 0}

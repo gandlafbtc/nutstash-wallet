@@ -28,7 +28,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col items-start gap-3">
+<div class="flex h-full w-80 xl:w-[600px] flex-col items-start gap-3">
 	<p class="text-lg font-bold">Nostr settings</p>
 	<p class="font-bold">Nostr wallet connect</p>
 	Experimental NWC integration. It only works if nutstash is running in the foreground.

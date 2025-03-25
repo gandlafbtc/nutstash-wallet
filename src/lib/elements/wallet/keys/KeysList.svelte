@@ -27,7 +27,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-5">
+<div class="flex h-full w-80 xl:w-[600px] flex-col gap-5">
 	<div class="flex flex-col gap-2">
 		<p>
 			Keys are used to unlock locked ecash tokens. The pubkey that is used for locking will be

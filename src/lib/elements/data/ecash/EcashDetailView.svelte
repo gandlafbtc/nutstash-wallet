@@ -50,7 +50,7 @@
 </script>
 
 {#if proof}
-	<div class="flex w-80 flex-col gap-2 rounded-xl border p-5">
+	<div class="flex w-80 xl:w-[600px] flex-col gap-2 rounded-xl border p-5">
 		<div class="flex items-center justify-between">
 			<div class="relative">
 				<Coins class="text-yellow-500"></Coins>

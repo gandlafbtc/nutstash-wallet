@@ -63,7 +63,7 @@
 					{/if}
 				{/if}
 			{/if}
-		<div class="w-64">
+		<div>
 			<CopiableToken token={encodedToken}></CopiableToken>
 		</div>
 		<div class="flex flex-col items-center justify-center gap-2">

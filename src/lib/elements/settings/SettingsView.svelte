@@ -13,7 +13,7 @@
 	import EcashSettings from './EcashSettings.svelte';
 </script>
 
-<div class="flex w-80 flex-col gap-2">
+<div class="flex w-80 xl:w-[600px] flex-col gap-2">
 	<Accordion.Root type="single">
 		<Accordion.Item value="item-1">
 			<Accordion.Trigger

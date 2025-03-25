@@ -253,10 +253,10 @@
 
 		<AddMint></AddMint>
 	{:else}
-		<div class="w-80">
+		<div class="w-80 xl:w-[600px]">
 			<MintSelector bind:mint></MintSelector>
 		</div>
-		<div class="flex w-80 items-center justify-between gap-2">
+		<div class="flex w-80 xl:w-[600px] items-center justify-between gap-2">
 			<span>
 				{formatAmount(balance, currentUnit)}
 				<span class="text-xs italic text-secondary"> available </span>
@@ -267,7 +267,7 @@
 			<!-- content here -->
 			<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden">
 				<Textarea
-					class="w-80 resize-none rounded-none border-dashed"
+					class="w-80 xl:w-[600px] resize-none rounded-none border-dashed"
 					inputmode="none"
 					bind:value={entered}
 					bind:ref={inputFocus}
@@ -281,7 +281,7 @@
 		<div>
 			<div class="flex items-start justify-center {invoice || amount ? 'h-40' : 'h-20'}">
 				{#if amount}
-					<div class="flex w-80 flex-col items-center justify-between gap-2">
+					<div class="flex w-80 xl:w-[600px] flex-col items-center justify-between gap-2">
 						<div class="flex w-full items-center justify-between gap-2 rounded-lg border">
 							<button
 								class="w-full cursor-text break-all pl-2 text-start text-2xl"
@@ -453,7 +453,7 @@
 							class=" text-xs italic text-secondary"
 							onclick={() => copyTextToClipboard(invoice)}
 						>
-							<div class="flex w-80 items-center justify-center gap-1">
+							<div class="flex w-80 xl:w-[600px] items-center justify-center gap-1">
 								<Copy class="h-4 w-4"></Copy>
 								<span class="w-60 overflow-clip text-ellipsis">
 									{invoice}
@@ -463,7 +463,7 @@
 						<span>
 							{formatAmount(decode(invoice).sections[2].value / 1000, 'sat')}
 						</span>
-						<div class="w-80 py-5">
+						<div class="w-80 xl:w-[600px] py-5">
 							<Button
 								disabled={isLoading}
 								class="w-full border-2 border-nutstash"
@@ -487,7 +487,7 @@
 				{/if}
 			</div>
 		</div>
-		<div class="h-64 w-80">
+		<div class="h-64 w-80 xl:w-[600px]">
 			<NumericKeys onkeypressed={onKeypadPress} isDecimal={false}></NumericKeys>
 		</div>
 	{/if}

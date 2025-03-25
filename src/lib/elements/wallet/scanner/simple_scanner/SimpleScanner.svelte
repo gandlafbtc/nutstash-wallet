@@ -62,8 +62,8 @@ import { Scan, SwitchCamera } from 'lucide-svelte';
 	<p>
 		Please scan a {whatToScan??''} QR to continue.
 	</p>
-	<div class="relative flex h-full w-80 items-center justify-center">
-		<div class="video-wrapper h-80 w-80 rounded-lg border bg-black p-2">
+	<div class="relative flex h-full w-80 xl:w-[600px] items-center justify-center">
+		<div class="video-wrapper h-80 w-80 xl:w-[600px] rounded-lg border bg-black p-2">
 			{#if cams === undefined}
 				loading camera ...
 			{:else if cams?.length === 0}
@@ -94,7 +94,7 @@ import { Scan, SwitchCamera } from 'lucide-svelte';
 	<div class="pt-4">
 
 	</div>
-	<div class="w-80 pb-10">
+	<div class="w-80 xl:w-[600px] pb-10">
 
 		<Button class='w-full' onclick={()=> isScanning=false}>
 			Stop scanning

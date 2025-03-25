@@ -141,7 +141,7 @@
 >
 	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden">
 		<Textarea
-			class="w-80 resize-none rounded-none border-dashed"
+			class="w-80 xl:w-[600px] resize-none rounded-none border-dashed"
 			inputmode="none"
 			bind:value={entered}
 			bind:ref={inputFocus}
@@ -166,10 +166,10 @@
 
 						<AddMint></AddMint>
 					{:else}
-						<div class="w-80">
+						<div class="w-80 xl:w-[600px]">
 							<MintSelector bind:mint></MintSelector>
 						</div>
-						<div class="flex w-80 items-center justify-between gap-2">
+						<div class="flex w-80 xl:w-[600px] items-center justify-between gap-2">
 							<button
 								class="w-full cursor-text break-all text-start text-2xl"
 								onclick={() => inputFocus?.focus()}
@@ -179,7 +179,7 @@
 							<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
 						</div>
 					{/if}
-					<div class="flex w-80 flex-col gap-5 py-5">
+					<div class="flex w-80 xl:w-[600px] flex-col gap-5 py-5">
 						<Button
 							disabled={isLoading}
 							class="w-full border-2 border-nutstash"
@@ -207,7 +207,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="h-64 w-80">
+	<div class="h-64 w-80 xl:w-[600px]">
 		<NumericKeys onkeypressed={onKeypadPress} isDecimal={false}></NumericKeys>
 	</div>
 </div>
