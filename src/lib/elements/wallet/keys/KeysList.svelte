@@ -27,9 +27,8 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col gap-5">
+<div class="flex h-full w-80 flex-col gap-5 xl:w-[600px]">
 	<div class="flex flex-col gap-2">
-		<p class="font-bold">Keys</p>
 		<p>
 			Keys are used to unlock locked ecash tokens. The pubkey that is used for locking will be
 			revealed to the mint when the ecash is unlocked.

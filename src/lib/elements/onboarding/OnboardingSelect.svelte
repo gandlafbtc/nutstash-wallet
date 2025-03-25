@@ -124,7 +124,7 @@
 
 {#if isLegacyWallet}
 	<div class="flex h-screen w-full justify-center">
-		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2">
+		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2 xl:w-[600px]">
 			<h1 class="mb-4 text-xl font-bold">Upgrading nutstash</h1>
 			{#if isLoading}
 				<LoaderCircle class="animate-spin"></LoaderCircle>
@@ -172,7 +172,7 @@
 	</div>
 {:else}
 	<div class="flex h-screen w-full justify-center">
-		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2">
+		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2 xl:w-[600px]">
 			<h1 class="mb-4 text-xl font-bold">Select your way to start!</h1>
 
 			<button

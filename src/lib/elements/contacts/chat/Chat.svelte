@@ -56,7 +56,7 @@
 	};
 </script>
 
-<div class="flex h-full w-80 flex-col items-start gap-3">
+<div class="flex h-full w-80 flex-col items-start gap-3 xl:w-[600px]">
 	{#if contact}
 		<div class="flex h-20 items-center justify-center gap-2">
 			<Avatar.Root>
@@ -69,7 +69,7 @@
 			</Avatar.Root>
 			{contact.alias}
 		</div>
-		<div class="w-80">
+		<div class="w-80 xl:w-[600px]">
 			<div class="flex h-2/3 w-full flex-col-reverse overflow-auto pb-32">
 				{#await sortedMessages}
 					<LoaderCircle class="animate-spin"></LoaderCircle>
@@ -87,7 +87,7 @@
 					{/each}
 				{/await}
 			</div>
-			<div class="fixed bottom-0 flex w-80 gap-2 bg-background py-2">
+			<div class="fixed bottom-0 flex w-80 gap-2 bg-background py-2 xl:w-[600px]">
 				<Textarea bind:value={chatText}></Textarea>
 				<div class="flex flex-col gap-2">
 					<Button onclick={sendMessage} disabled={isSending}>
@@ -100,7 +100,7 @@
 	{:else}
 		<p class="font-bold">Add contact</p>
 
-		<p class="w-80 overflow-clip text-ellipsis"></p>
+		<p class="w-80 overflow-clip text-ellipsis xl:w-[600px]"></p>
 		<AddContact npubToAdd={$params?.npub}></AddContact>
 	{/if}
 </div>

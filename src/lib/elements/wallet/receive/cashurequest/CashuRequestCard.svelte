@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import type { StoredPaymentRequest } from '$lib/db/models/types';
+	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { copyTextToClipboard } from '$lib/util/utils';
 	import { formatAmount } from '$lib/util/walletUtils';
@@ -39,14 +40,11 @@
 	</Card.Header>
 	<Card.Content>
 		<div class="flex flex-col items-center gap-2">
-			<QrCode data={encodedRequest}></QrCode>
-			<div class="flex items-center gap-1 opacity-35">
-				<button onclick={() => copyTextToClipboard(encodedRequest)}>
-					<Copy class="h-4"></Copy>
-				</button>
-				<p class="w-72 overflow-clip text-ellipsis text-sm">
-					{encodedRequest}
-				</p>
+			<div class="w-64">
+				<QrCode data={encodedRequest}></QrCode>
+			</div>
+			<div class="w-64">
+				<CopiableToken token={encodedRequest}></CopiableToken>
 			</div>
 			<Badge variant="outline" class="text-xl">
 				{formatAmount(request.amount ?? 0, request.unit)}

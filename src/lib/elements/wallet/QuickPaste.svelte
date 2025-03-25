@@ -3,8 +3,11 @@
 
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
+	import { sendInput } from '$lib/stores/session/sendInput';
 	import { scanresultStore } from '$lib/stores/session/transitionstores';
+	import { checkValidPubkey } from '$lib/util/walletUtils';
 	import { ClipboardPaste } from 'lucide-svelte';
+	import { nip19 } from 'nostr-tools';
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';
 
@@ -42,6 +45,8 @@
 				lnurlScanned(pasted);
 			} else if (pasted.includes('@') && pasted.includes('.')) {
 				lnAddressScanned(pasted);
+			} else if (checkValidPubkey(pasted)) {
+				pubkeyScanned(pasted);
 			} else {
 				toast.warning('No known action available for pasted informaion');
 			}
@@ -51,7 +56,14 @@
 
 	const npubScanned = (npub: string) => {
 		closeDrawers();
-		push('/wallet/contacts/chat/' + npub);
+		$openSendDrawer = true;
+		sendInput.set(npub);
+	};
+
+	const pubkeyScanned = (pubkey: string) => {
+		closeDrawers();
+		openSendDrawer.set(true);
+		sendInput.set(pubkey);
 	};
 
 	const lnAddressScanned = (lnAddress: string) => {
@@ -98,7 +110,7 @@
 		<Input
 			bind:value={pasted}
 			onpaste={(e) => onPaste()}
-			class="w-80 resize-none rounded-sm border-dashed bg-opacity-5 focus:outline-transparent focus-visible:outline-transparent "
+			class="w-80 resize-none rounded-sm border-dashed bg-opacity-5 focus:outline-transparent focus-visible:outline-transparent xl:w-[600px] "
 			inputmode="none"
 			placeholder="        Paste something from clipboard..."
 		></Input>

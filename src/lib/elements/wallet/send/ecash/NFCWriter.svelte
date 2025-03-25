@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { isTauriMobile } from '$lib/tauri/deviceHelper';
-	import { isAvailable, record, textRecord, write } from '@tauri-apps/plugin-nfc';
+	// import { isAvailable, record, textRecord, write } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '$lib/helpers/errors';
 
 	let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } = $props();
@@ -19,10 +19,10 @@
 				nfcColor = colors[colorI];
 			}, 1000);
 			if (isTauriMobile) {
-				if (!(await isAvailable())) {
-					throw new Error('NFC not available');
-				}
-				await write([textRecord(token)]);
+				// if (!(await isAvailable())) {
+				// 	throw new Error('NFC not available');
+				// }
+				// await write([textRecord(token)]);
 			} else {
 				const record = {
 					recordType: 'text',

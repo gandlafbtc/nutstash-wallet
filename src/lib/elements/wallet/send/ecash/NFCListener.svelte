@@ -3,7 +3,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';
-	import { isAvailable, record, textRecord, scan } from '@tauri-apps/plugin-nfc';
+	// import { isAvailable, record, textRecord, scan } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '$lib/helpers/errors';
 	let scanned = $state('');
 	const abortController = new AbortController();
@@ -22,15 +22,15 @@
 				nfcColor = colors[colorI];
 			}, 1000);
 			if (isTauriMobile) {
-				if (!(await isAvailable())) {
-					throw new Error('NFC not available');
-				}
-				const tag = await scan({ type: 'tag' }, { keepSessionAlive: false });
-				const decoder = new TextDecoder();
-				const records = tag.records;
-				for (const record of records) {
-					scanned = scanned + decoder.decode(new Uint8Array(record.payload));
-				}
+				// if (!(await isAvailable())) {
+				// 	throw new Error('NFC not available');
+				// }
+				// const tag = await scan({ type: 'tag' }, { keepSessionAlive: false });
+				// const decoder = new TextDecoder();
+				// const records = tag.records;
+				// for (const record of records) {
+				// 	scanned = scanned + decoder.decode(new Uint8Array(record.payload));
+				// }
 			} else {
 				const ndef = new NDEFReader();
 				await ndef.scan({ signal: abortController.signal });

@@ -61,7 +61,7 @@
 <div class="flex h-full flex-col gap-2">
 	<p class="text-lg font-bold">Ecash</p>
 	<Select.Root type="multiple" name="mint-single" bind:value={selectedStores} allowDeselect={false}>
-		<Select.Trigger class="w-80">
+		<Select.Trigger class="w-80 xl:w-[600px]">
 			<Type class="h-5 w-5"></Type>
 			{selectedStores.join(', ')}
 		</Select.Trigger>

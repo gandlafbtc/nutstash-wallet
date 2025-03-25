@@ -43,7 +43,7 @@
 
 <OnboardingHeader></OnboardingHeader>
 <div class="flex h-screen items-center justify-center">
-	<Card.Root class="w-80">
+	<Card.Root class="w-80 xl:w-[600px]">
 		<Card.Header>
 			<Card.Title>Restore ecash from seed phrase</Card.Title>
 			<Card.Description>Insert your seed phrase in the correct order...</Card.Description>

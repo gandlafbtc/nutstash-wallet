@@ -20,6 +20,7 @@ import { nwc } from '$lib/stores/session/nwc';
 import { cashuRequestsStore } from '$lib/stores/persistent/requests';
 import { settings } from '$lib/stores/persistent/settings';
 import { swapsStore } from '$lib/stores/persistent/swap';
+import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
 
 export const init = async () => {
 	await initStores();
@@ -35,6 +36,7 @@ const initStores = async () => {
 	await mnemonic.init();
 	await mints.init();
 	await transactionsStore.init();
+	await offlineTransactionsStore.init();
 	await mintQuotesStore.init();
 	await meltQuotesStore.init();
 	await proofsStore.init();
@@ -56,6 +58,7 @@ export const reencrypt = async () => {
 	await mnemonic.reEncrypt();
 	await mints.reEncrypt();
 	await transactionsStore.reEncrypt();
+	await offlineTransactionsStore.reEncrypt();
 	await mintQuotesStore.reEncrypt();
 	await meltQuotesStore.reEncrypt();
 	await proofsStore.reEncrypt();
@@ -76,6 +79,7 @@ export const reencrypt = async () => {
 export const setStoresFromBackupJSON = async (obj: any) => {
 	mints.set(obj.mints);
 	transactionsStore.set(obj.transactionsStore);
+	offlineTransactionsStore.set(obj.offlineTransactionsStore);
 	mintQuotesStore.set(obj.mintQuotesStore);
 	meltQuotesStore.set(obj.meltQuotesStore);
 	proofsStore.set(obj.proofsStore);

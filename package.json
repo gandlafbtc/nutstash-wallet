@@ -1,6 +1,6 @@
 {
 	"name": "nutstash",
-	"version": "2.0.3",
+	"version": "2.0.4",
 	"description": "",
 	"type": "module",
 	"scripts": {
@@ -17,13 +17,10 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@tauri-apps/api": "^2.1.0",
-		"@tauri-apps/plugin-barcode-scanner": "~2",
-		"@tauri-apps/plugin-nfc": "~2",
-		"@tauri-apps/plugin-shell": "^2.0.1"
+		"@tauri-apps/api": "^2.1.0"
 	},
 	"devDependencies": {
-		"@cashu/cashu-ts": "2.1.0",
+		"@cashu/cashu-ts": "2.4.0",
 		"@cashu/crypto": "^0.3.4",
 		"@gandlaf21/bc-ur": "^1.1.12",
 		"@gandlaf21/bolt11-decode": "^3.1.1",
@@ -31,6 +28,7 @@
 		"@noble/hashes": "^1.5.0",
 		"@nostr-dev-kit/ndk": "^2.10.6",
 		"@number-flow/svelte": "^0.1.2",
+		"@paulmillr/qr": "^0.3.0",
 		"@scure/bip32": "^1.5.0",
 		"@scure/bip39": "^1.4.0",
 		"@sveltejs/adapter-static": "^3.0.6",
@@ -56,7 +54,6 @@
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"qr-scanner": "^1.4.2",
-		"qrcanvas": "^3.1.2",
 		"runed": "^0.15.3",
 		"svelte": "^5.1.13",
 		"svelte-check": "^4.0.6",

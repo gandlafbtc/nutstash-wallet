@@ -10,7 +10,7 @@
 
 <OnboardingHeader hasBack={false}></OnboardingHeader>
 <div class="flex h-screen w-full items-center justify-center">
-	<div class="flex w-80 flex-col items-center gap-2 p-2">
+	<div class="flex w-80 flex-col items-center gap-2 p-2 xl:w-[600px]">
 		<h2 class="text-xl font-bold">New Seed phrase created!</h2>
 		<Mnemonic />
 		<div class="card-actions flex w-full flex-col items-center justify-center gap-5 pt-3">

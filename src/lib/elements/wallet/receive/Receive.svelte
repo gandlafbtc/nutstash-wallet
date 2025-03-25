@@ -37,7 +37,9 @@
 	onMount(() => {
 		setTimeout(() => {
 			thisDrawer?.addEventListener('keydown', (e: KeyboardEvent) => {
-				e.preventDefault();
+				if (!(e.ctrlKey && e.key === 'v')) {
+					e.preventDefault();
+				}
 				if (e.key === 'Escape') {
 					openReceiveDrawer.set(false);
 				}
@@ -124,9 +126,11 @@
 		}
 	};
 
-	const onKeypadPress = (value: string | { delete: boolean }) => {
-		if (value.delete) {
+	const onKeypadPress = (value: string) => {
+		if (value === 'delete') {
 			entered = entered.slice(0, -1);
+		} else if (value === 'clear') {
+			entered = '';
 		} else {
 			entered = entered + value;
 		}
@@ -139,16 +143,22 @@
 	bind:this={thisDrawer}
 	tabindex="0"
 >
-	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} overflow-hidden">
+	<div class="{entered.length && isNumeric(entered) ? 'h-0' : 'h-20'} relative overflow-hidden">
+		<div
+			class="pointer-events-none absolute flex h-20 w-full flex-col items-center justify-center text-muted"
+		>
+			<p>Enter amount to create invoice</p>
+			<p>Paste token to receive ecash</p>
+		</div>
 		<Textarea
-			class="w-80 resize-none rounded-none border-dashed"
+			class="w-80 resize-none rounded-md border-dashed xl:w-[600px]"
 			inputmode="none"
 			bind:value={entered}
 			bind:ref={inputFocus}
 			oninput={(e) => {
 				e.preventDefault();
 			}}
-			placeholder="- Paste a Cashu token (cashuA... , cashuB... )                           - Or enter amount"
+			placeholder=""
 		></Textarea>
 	</div>
 	<div>
@@ -166,10 +176,10 @@
 
 						<AddMint></AddMint>
 					{:else}
-						<div class="w-80">
+						<div class="w-80 xl:w-[600px]">
 							<MintSelector bind:mint></MintSelector>
 						</div>
-						<div class="flex w-80 items-center justify-between gap-2">
+						<div class="flex w-80 items-center justify-between gap-2 xl:w-[600px]">
 							<button
 								class="w-full cursor-text break-all text-start text-2xl"
 								onclick={() => inputFocus?.focus()}
@@ -179,7 +189,7 @@
 							<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
 						</div>
 					{/if}
-					<div class="flex w-80 flex-col gap-5 py-5">
+					<div class="flex w-80 flex-col gap-5 py-5 xl:w-[600px]">
 						<Button
 							disabled={isLoading}
 							class="w-full border-2 border-nutstash"
@@ -199,15 +209,15 @@
 					</div>
 				</div>
 			{:else}
-				<div>
+				<!-- <div>
 					<button class="" onclick={() => openScannerDrawer.update((ctx) => !ctx)}>
 						<QrCode></QrCode>
 					</button>
-				</div>
+				</div> -->
 			{/if}
 		</div>
 	</div>
-	<div class="h-64 w-80">
-		<NumericKeys onkeypressed={onKeypadPress} isDecimal={false}></NumericKeys>
+	<div class="h-64 w-80 xl:w-[600px]">
+		<NumericKeys onkeypressed={onKeypadPress}></NumericKeys>
 	</div>
 </div>

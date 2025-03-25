@@ -17,8 +17,6 @@
 
 	let time = $state(new Date());
 
-	let millisNow = $derived(time.getTime());
-
 	onMount(() => {
 		const interval = setInterval(() => {
 			time = new Date();
@@ -30,7 +28,7 @@
 	});
 </script>
 
-<div class="flex h-full w-80 flex-col gap-2">
+<div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
 	<p class="text-lg font-bold">Ecash transactions</p>
 	{#if $transactionsStore.length}
 		{#each currentTxs as tx}
