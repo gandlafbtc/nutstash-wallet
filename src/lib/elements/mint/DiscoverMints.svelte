@@ -4,12 +4,12 @@
 	import { discoveredMints } from '$lib/stores/session/mintdiscover';
 	import { LoaderCircle, Search } from 'lucide-svelte';
 	import AddMint from './AddMint.svelte';
-	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { delay } from '$lib/util/utils';
 	import { ensureError } from '$lib/helpers/errors';
 	import { toast } from 'svelte-sonner';
+	import { discover_mints } from '$lib/paraglide/messages';
 
 	let isLoading = $state(false);
 
@@ -35,7 +35,7 @@
 		{:else}
 			<Search></Search>
 		{/if}
-		Discover Mints
+		{discover_mints()}
 	</Button>
 
 	<div class="flex w-full flex-col gap-2">

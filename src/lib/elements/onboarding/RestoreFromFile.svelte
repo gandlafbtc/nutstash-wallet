@@ -19,6 +19,7 @@
 	import { generateMnemonic } from '@scure/bip39';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { LoaderCircle } from 'lucide-svelte';
+	import { backup_file_legacy_wallet, drop_or_select_backup, enter_passphrase, enter_passphrase_to_decrypt_file, only_mints_will_be_imported, t_cancel, t_decrypt, t_import, wallet_backup_protected } from '$lib/paraglide/messages';
 
 	let backupFileName = $state('');
 	let isLoading = $state(true);
@@ -155,8 +156,7 @@
 				on:dropaccepted={handleDropAccepted}
 			>
 				<p class="text-lg font-bold">
-					Drop the <code class="text-warning">nutstash_backup.json</code> file here, or click to select
-					a file
+					{drop_or_select_backup()}
 				</p>
 				<div class="flex w-full items-center justify-center">
 					<svg
@@ -180,8 +180,8 @@
 	<Dialog.Root bind:open={isOpenLegacy}>
 		<Dialog.Content>
 			<Dialog.Header>
-				<Dialog.Title>This backup is from a legacy wallet.</Dialog.Title>
-				<Dialog.Description>Only mints and tokens will be imported.</Dialog.Description>
+				<Dialog.Title>{backup_file_legacy_wallet()}</Dialog.Title>
+				<Dialog.Description>{only_mints_will_be_imported()}</Dialog.Description>
 			</Dialog.Header>
 
 			<Dialog.Footer>
@@ -191,13 +191,13 @@
 						isOpen = false;
 					}}
 				>
-					Cancel
+					{t_cancel()}
 				</Button>
 				<Button disabled={isLoading} variant="destructive" onclick={importLegacy}>
 					{#if isLoading}
 						<LoaderCircle class="animate-spin"></LoaderCircle>
 					{/if}
-					Import
+					{t_import()}
 				</Button>
 			</Dialog.Footer>
 		</Dialog.Content>
@@ -205,13 +205,13 @@
 	<Dialog.Root bind:open={isOpen}>
 		<Dialog.Content>
 			<Dialog.Header>
-				<Dialog.Title>This wallet backup has been protected with a passphrase.</Dialog.Title>
+				<Dialog.Title>{wallet_backup_protected()}</Dialog.Title>
 				<Dialog.Description>
-					Enter the passphrase to decrypt and restore from this wallet file.
+					{enter_passphrase_to_decrypt_file()}
 				</Dialog.Description>
 			</Dialog.Header>
 			<div class="flex flex-col gap-2">
-				<span>Enter passphrase</span>
+				<span>{enter_passphrase()}</span>
 				<Input type="password" placeholder="Current passphrase" bind:value={pass} />
 			</div>
 			<Dialog.Footer>
@@ -221,9 +221,9 @@
 						isOpen = false;
 					}}
 				>
-					Cancel
+					{t_cancel()}
 				</Button>
-				<Button variant="destructive" onclick={decryptFile}>Decrypt</Button>
+				<Button variant="destructive" onclick={decryptFile}>{t_decrypt()}</Button>
 			</Dialog.Footer>
 		</Dialog.Content>
 	</Dialog.Root>

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
 	import { onMount } from 'svelte';
 	import { MediaQuery } from 'runed';
 	import * as Pagination from '$lib/components/ui/pagination';
 	import { transactionsStore } from '$lib/stores/persistent/transactions';
 	import TransactionListItem from './TransactionListItem.svelte';
+	import { ecash_transactions, nothing_here_yet } from '$lib/paraglide/messages';
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
@@ -29,7 +29,7 @@
 </script>
 
 <div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
-	<p class="text-lg font-bold">Ecash transactions</p>
+	<p class="text-lg font-bold">{ecash_transactions()}</p>
 	{#if $transactionsStore.length}
 		{#each currentTxs as tx}
 			<TransactionListItem {tx}></TransactionListItem>
@@ -62,7 +62,7 @@
 		</Pagination.Root>
 	{:else}
 		<div class="h-20">
-			<p>No transactions yet.</p>
+			<p>{nothing_here_yet()}</p>
 		</div>
 	{/if}
 </div>

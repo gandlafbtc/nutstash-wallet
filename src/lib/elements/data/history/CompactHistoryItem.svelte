@@ -9,6 +9,7 @@
 		type StoredMintQuote,
 		type StoredTransaction
 	} from '$lib/db/models/types';
+	import { t_ago, t_fee } from '$lib/paraglide/messages';
 	interface Props {
 		item: StoredTransaction | StoredMeltQuote | StoredMintQuote;
 	}
@@ -93,7 +94,7 @@
 	</div>
 	<div class="flex flex-col items-start gap-1">
 		<span class="text-sm">
-			{formatDistance($now, item.lastChangedAt)} ago
+			{formatDistance($now, item.lastChangedAt)} {t_ago()}
 		</span>
 		<p class="w-44 overflow-clip text-ellipsis text-nowrap text-xs text-muted-foreground">
 			{item.mintUrl}
@@ -105,7 +106,7 @@
 		</span>
 		{#if item.type === 'send' || item.type === 'receive' || item.type === 'melt'}
 			<span class="text-xs text-muted-foreground">
-				{formatAmount(item.fees ?? 0, item.unit)} fee
+				{formatAmount(item.fees ?? 0, item.unit)} {t_fee()}
 			</span>
 		{/if}
 	</div>

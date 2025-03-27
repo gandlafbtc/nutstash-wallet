@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite dev --force",
 		"dev:host": "vite dev --host",
+		"compile:i18n": "npx @inlang/paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -13,7 +14,8 @@
 		"tauri": "tauri",
 		"test": "vitest",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"machine-translate": "inlang machine translate --project project.inlang"
 	},
 	"license": "MIT",
 	"dependencies": {
@@ -24,6 +26,8 @@
 		"@cashu/crypto": "^0.3.4",
 		"@gandlaf21/bc-ur": "^1.1.12",
 		"@gandlaf21/bolt11-decode": "^3.1.1",
+		"@inlang/cli": "^3.0.0",
+		"@inlang/paraglide-js": "2.0.5",
 		"@noble/curves": "^1.6.0",
 		"@noble/hashes": "^1.5.0",
 		"@nostr-dev-kit/ndk": "^2.10.6",
@@ -44,6 +48,7 @@
 		"date-fns": "^4.1.0",
 		"dayjs": "^1.11.13",
 		"embla-carousel-svelte": "^8.3.1",
+		"flag-icons": "^7.3.2",
 		"formsnap": "2.0.0-next.0",
 		"idb": "^8.0.0",
 		"jsdom": "^25.0.1",

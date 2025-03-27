@@ -13,6 +13,7 @@
 	import { swapsStore } from '$lib/stores/persistent/swap';
 	import { push } from 'svelte-spa-router';
 	import CompactSwap from './CompactSwap.svelte';
+	import { available_for_swap, fee_reserve, not_enough_funds, previous_swaps, t_amount, t_available, t_from, t_swap, t_to } from '$lib/paraglide/messages';
 	let swapOutMint = $state($mints[0]);
 	let swapInMint = $state($mints[0]);
 
@@ -39,7 +40,7 @@
 				return;
 			}
 			if (swapAmount > balance) {
-				toast.warning('Not enough funds available');
+				toast.warning(not_enough_funds());
 				return;
 			}
 			const mintquote = await createMintQuote(swapInMint.url, swapAmount, { unit: swapInUnit });
@@ -47,7 +48,7 @@
 				unit: swapOutUnit
 			});
 			if (meltquote.amount + meltquote.fee_reserve > balance) {
-				toast.warning('Currently not enough funds available to fulfill this swap');
+				toast.warning(not_enough_funds());
 			}
 			await swapsStore.addOrUpdate(
 				mintquote.quote,
@@ -66,9 +67,9 @@
 </script>
 
 <div class="flex w-80 flex-col gap-2 xl:w-[600px]">
-	<p class="font-bold">Mint swap</p>
+	<p class="font-bold">{t_swap()}</p>
 
-	<p class="pt-2 text-sm font-bold opacity-35">From</p>
+	<p class="pt-2 text-sm font-bold opacity-35">{t_from()}</p>
 	<div class="flex gap-1">
 		<MintSelector disabled={isPreparing} bind:mint={swapOutMint}></MintSelector>
 		<UnitSelector
@@ -79,13 +80,13 @@
 	</div>
 	<div class="mb-4 mt-1 flex flex-col gap-1 text-sm opacity-35">
 		<div class="flex gap-1">
-			<p class="">Available:</p>
+			<p class="">{t_available()}:</p>
 			<p>{formatAmount(balance, swapOutUnit)}</p>
 		</div>
 		<div class="flex gap-1 font-bold">
 			<p class="flex flex-col">
-				<span> Available for swap: </span>
-				<span> ( - fee reserve ) </span>
+				<span> {available_for_swap()}: </span>
+				<span> ( - {fee_reserve()} ) </span>
 			</p>
 			<p>
 				~ {formatAmount(
@@ -98,14 +99,14 @@
 			</p>
 		</div>
 	</div>
-	<p class="text-sm font-bold opacity-35">To</p>
+	<p class="text-sm font-bold opacity-35">{t_to()}</p>
 	<div class="flex gap-1">
 		<MintSelector disabled={isPreparing} bind:mint={swapInMint}></MintSelector>
 		<UnitSelector disabled={isPreparing} bind:currentUnit={swapInUnit} selectedMints={[swapInMint]}
 		></UnitSelector>
 	</div>
 
-	<p class="pt-4 text-sm font-bold opacity-35">Amount</p>
+	<p class="pt-4 text-sm font-bold opacity-35">{t_amount()}</p>
 	<form
 		class="flex flex-col gap-2"
 		onsubmit={(e) => {
@@ -123,9 +124,9 @@
 			/>
 		</div>
 
-		<FormButton type="submit" class="w-full" disabled={isPreparing}>Prepare swap</FormButton>
+		<FormButton type="submit" class="w-full" disabled={isPreparing}>{prepareSwap()}</FormButton>
 	</form>
-	<p class="pt-4 font-bold">Previous swaps</p>
+	<p class="pt-4 font-bold">{previous_swaps()}</p>
 	<div class="flex flex-col gap-2">
 		{#each $swapsStore as swap}
 			<CompactSwap {swap}></CompactSwap>

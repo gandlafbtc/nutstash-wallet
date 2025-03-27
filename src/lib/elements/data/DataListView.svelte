@@ -1,6 +1,7 @@
 <script>
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import Card from '$lib/components/ui/card/card.svelte';
+	import { ecash_transactions, t_data, t_ecash, t_history, t_invoices, t_payments, t_requests } from '$lib/paraglide/messages';
 	import {
 		ArrowLeftRight,
 		Coins,
@@ -15,7 +16,7 @@
 <div class="flex w-80 flex-col gap-2 xl:w-[600px]">
 	<p class="flex gap-2 text-lg font-bold">
 		<Database></Database>
-		<span> Data </span>
+		<span> {t_data()} </span>
 	</p>
 	<a href="/#/wallet/history">
 		<Card>
@@ -23,7 +24,7 @@
 				<div class="flex items-center gap-2 font-bold">
 					<History></History>
 
-					History
+					{t_history()}
 				</div>
 			</CardContent>
 		</Card>
@@ -33,7 +34,7 @@
 			<CardContent>
 				<div class="flex items-center gap-2 font-bold">
 					<ArrowLeftRight></ArrowLeftRight>
-					Transactions
+					{ecash_transactions()}
 				</div>
 			</CardContent>
 		</Card>
@@ -43,7 +44,7 @@
 			<CardContent>
 				<div class="flex items-center gap-2 font-bold">
 					<Coins></Coins>
-					Ecash
+					{t_ecash()}
 				</div>
 			</CardContent>
 		</Card>
@@ -53,7 +54,7 @@
 			<CardContent>
 				<div class="flex items-center gap-2 font-bold">
 					<ReceiptText></ReceiptText>
-					Invoices
+					{t_invoices()}
 				</div>
 			</CardContent>
 		</Card>
@@ -63,7 +64,7 @@
 			<CardContent>
 				<div class="flex items-center gap-2 font-bold">
 					<CreditCard></CreditCard>
-					Payments
+					{t_payments()}
 				</div>
 			</CardContent>
 		</Card>
@@ -73,7 +74,7 @@
 			<CardContent>
 				<div class="flex items-center gap-2 font-bold">
 					<HandCoins></HandCoins>
-					Requests
+					{t_requests()}
 				</div>
 			</CardContent>
 		</Card>

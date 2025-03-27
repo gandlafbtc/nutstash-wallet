@@ -13,6 +13,7 @@
 	import { isOnboarded } from '$lib/stores/local/message';
 	import { ensureError } from '$lib/helpers/errors';
 	import { LoaderCircle } from 'lucide-svelte';
+	import { create_new_nutstash_wallet, create_new_wallet, if_you_have_no_backup, import_a_nutstash_wallet_file, import_wallet_file, looks_like_your_wallet_is_updating_old, migrate_ecash, migrate_now, only_ecash_and_mints_migrate, recover_ecash_from, restore_lost_nuts, select_this_option_if_you_have_exported, select_this_to_restore_wallet, select_way_to_start, upgrading_nutstash } from '$lib/paraglide/messages';
 	let isLegacyWallet = $state(false);
 	let isLoading = $state(false);
 	onMount(() => {
@@ -49,7 +50,7 @@
 					try {
 						await mints.fetchMint(m.mintURL);
 					} catch (error) {
-						toast.warning('Could not load mint', {
+						toast.warning(could_, {
 							description: `${m.mintURL}`
 						});
 					}
@@ -125,14 +126,12 @@
 {#if isLegacyWallet}
 	<div class="flex h-screen w-full justify-center">
 		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2 xl:w-[600px]">
-			<h1 class="mb-4 text-xl font-bold">Upgrading nutstash</h1>
+			<h1 class="mb-4 text-xl font-bold">{upgrading_nutstash()}</h1>
 			{#if isLoading}
 				<LoaderCircle class="animate-spin"></LoaderCircle>
 			{:else}
 				<p class="mb-4 text-sm">
-					Looks like you were using an older nutstash version. In order to keep using nutstash, we
-					need to migrate your wallet. We've already exported a backup for you, so go ahead whenever
-					you feel ready.
+					{looks_like_your_wallet_is_updating_old()}
 				</p>
 
 				<button
@@ -162,9 +161,9 @@
 					</svg>
 
 					<div class="flex-col gap-2 text-start">
-						<h2 class="font-bold text-nutstash">Migrate now</h2>
-						<p class="">Migrate ecash and mints</p>
-						<p class="opacity-40">Only ecash and mints will be migrated.</p>
+						<h2 class="font-bold text-nutstash">{migrate_now()}</h2>
+						<p class="">{migrate_ecash()}</p>
+						<p class="opacity-40">{only_ecash_and_mints_migrate()}</p>
 					</div>
 				</button>
 			{/if}
@@ -173,7 +172,7 @@
 {:else}
 	<div class="flex h-screen w-full justify-center">
 		<div class="flex w-80 max-w-4xl flex-col items-center justify-center p-2 xl:w-[600px]">
-			<h1 class="mb-4 text-xl font-bold">Select your way to start!</h1>
+			<h1 class="mb-4 text-xl font-bold">{select_way_to_start()}</h1>
 
 			<button
 				onclick={create}
@@ -202,10 +201,10 @@
 				</svg>
 
 				<div class="flex-col gap-2 text-start">
-					<h2 class="font-bold text-nutstash">Create new wallet</h2>
-					<p class="">Create a new nutstash wallet.</p>
+					<h2 class="font-bold text-nutstash">{create_new_wallet()}</h2>
+					<p class="">{create_new_nutstash_wallet()}</p>
 					<p class="opacity-40">
-						If you have no cashu seed phrase or nutstash backup file, select this option.
+						{if_you_have_no_backup()}
 					</p>
 				</div>
 			</button>
@@ -225,9 +224,9 @@
 				</svg>
 
 				<div class="flex-col gap-2 text-start">
-					<h2 class="font-bold text-green-500">Restore lost nuts</h2>
-					<p class="">Recover ecash from a lost wallet with your seed phrase.</p>
-					<p class="opacity-40">Select this option to recreate a lost wallet.</p>
+					<h2 class="font-bold text-green-500">{restore_lost_nuts()}</h2>
+					<p class="">{recover_ecash_from()}</p>
+					<p class="opacity-40">{select_this_to_restore_wallet()}</p>
 				</div>
 			</a>
 
@@ -251,10 +250,10 @@
 				</svg>
 
 				<div class="flex-col gap-2 text-start">
-					<h2 class="font-bold text-nutstashsecondary">Import wallet file</h2>
-					<p class="">Load a wallet from a backup file.</p>
+					<h2 class="font-bold text-nutstashsecondary">{import_wallet_file()}</h2>
+					<p class="">{import_a_nutstash_wallet_file()}</p>
 					<p class="opacity-40">
-						Select this option if you have exported a nutstash wallet and want to import it.
+						{select_this_option_if_you_have_exported()}
 					</p>
 				</div>
 			</a>

@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { SquareArrowOutUpRight } from 'lucide-svelte';
+	import LanguageSwitcher from '../ui/LanguageSwitcher.svelte';
+	import { beta_warning, ecash_works_without_accounts, for_more_information_visit, nutstash_is_a, nutstash_is_not_the_custodian, t_ok, welcome_to,} from '$lib/paraglide/messages';
 </script>
 
 <div class="flex h-screen items-center justify-center">
 	<div class="flex w-80 flex-col items-center justify-center gap-5 p-3 text-center xl:w-[600px]">
+		<LanguageSwitcher></LanguageSwitcher>
 		<p class="flex items-center gap-1 font-bold text-yellow-500 opacity-80">
 			<span>
 				<svg
@@ -22,31 +25,30 @@
 					/>
 				</svg>
 			</span>
-			Nutstash is still in beta development. Please use at own risk.
+			{beta_warning()}
 		</p>
 		<img src="/nutstash_app.svg" alt="" class="w-20" />
 
-		<h1 class="text-xl font-bold">Welcome to</h1>
+		<h1 class="text-xl font-bold">{welcome_to()}</h1>
 		<img src="/nutstash-written.svg" alt="logo text" class="w-52" />
 
 		<p>
-			<span> Nutstash is a Cashu ecash wallet. </span>
+			<span> {nutstash_is_a()} </span>
 		</p>
 		<p>
 			<span>
-				Ecash works without accounts. Cashu tokens are bearer assets, that are stored locally on
-				your nutstash wallet.
+				{ecash_works_without_accounts()}
 			</span>
 		</p>
 		<p>
 			<span>
-				Nutstash is <b> not </b> the custodian. The custodian of your sats are the mints you choose to
-				connect to.
+				{nutstash_is_not_the_custodian()}
 			</span>
 		</p>
 		<p>
 			<span>
-				for more information, please visit nutstashs <span>
+				{for_more_information_visit()}
+				<span>
 					<a
 						href="https://nutstash.app/#faq"
 						target="_blank"
@@ -60,6 +62,6 @@
 			</span>
 		</p>
 
-		<Button href="/#/onboarding/pass" class="w-full">OK</Button>
+		<Button href="/#/onboarding/pass" class="w-full">{t_ok()}</Button>
 	</div>
 </div>

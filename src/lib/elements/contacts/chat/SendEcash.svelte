@@ -8,11 +8,12 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { formatAmount, getAmountForTokenSet, getProofsOfMintUnit } from '$lib/util/walletUtils';
 	import { sendEcash } from '$lib/actions/actions';
-	import { getEncodedTokenV4, type Token } from '@cashu/cashu-ts';
+	import { type Token } from '@cashu/cashu-ts';
 	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { toast } from 'svelte-sonner';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import { amount_too_small, insufficient_balance, no_mint_found, t_available, t_send, t_to } from '$lib/paraglide/messages';
 
 	let {
 		sendCallback,
@@ -30,19 +31,18 @@
 		try {
 			isLoading = true;
 			if (!mint) {
-				toast.warning('Wallet has no mint');
+				toast.warning(no_mint_found());
 				return;
 			}
 			if (amount > getAmountForTokenSet(balance)) {
-				toast.warning('Insufficient balance');
+				toast.warning(insufficient_balance());
 				return;
 			}
 			if (amount < 1) {
-				toast.warning('Amount must be greater than 0');
+				toast.warning(amount_too_small());
 				return;
 			}
 			isLoading = true;
-			console.log('mint', mint);
 			const { send } = await sendEcash(mint.url, amount, { unit: currentUnit, includeFees: false });
 			const token: Token = {
 				proofs: send,
@@ -62,19 +62,19 @@
 
 <div class="flex flex-col gap-4">
 	{#if !mint}
-		<p class="text-destructive">No mint added to wallet! add a mint first:</p>
+		<p class="text-destructive">{no_mint_found()}</p>
 		<AddMint></AddMint>
 	{:else}
 		<MintSelector bind:mint disabled={mintSelectDisabled}></MintSelector>
 		<div class="flex items-center justify-between gap-2">
-			{formatAmount(getAmountForTokenSet(balance), currentUnit)} available
+			{formatAmount(getAmountForTokenSet(balance), currentUnit)} {t_available()}
 			<UnitSelector bind:currentUnit selectedMints={[mint]} disabled={unitSelectDisabled}
 			></UnitSelector>
 		</div>
 		<Input type="number" bind:value={amount}></Input>
 		<div class="flex flex-col gap-2">
 			<p>
-				send {formatAmount(amount, currentUnit)} to
+				{t_send()} {formatAmount(amount, currentUnit)} {t_to()}
 			</p>
 			<p class="w-72 overflow-clip text-ellipsis">
 				{to}
@@ -87,6 +87,6 @@
 		{:else}
 			<Send></Send>
 		{/if}
-		Send
+		{t_send()}
 	</Button>
 </div>

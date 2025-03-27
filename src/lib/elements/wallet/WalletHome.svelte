@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getUnitSymbol } from '$lib/util/walletUtils';
 	import { Download, QrCode, Upload } from 'lucide-svelte';
-	import UnitSelector from '$lib/elements/ui/UnitSelector.svelte';
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { mints } from '$lib/stores/persistent/mints';

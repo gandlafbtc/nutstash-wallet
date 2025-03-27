@@ -15,6 +15,7 @@
 	import type { Mint } from '$lib/db/models/types';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import { no_mint_found, t_available, t_cancel, t_send, t_to } from '$lib/paraglide/messages';
 
 	let sendEcashOpen = $state(false);
 
@@ -63,21 +64,21 @@
 <Dialog.Root bind:open={sendEcashOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Send Ecash to {to.alias}</Dialog.Title>
+			<Dialog.Title>{t_send()} {t_to()} {to.alias}</Dialog.Title>
 			<Dialog.Description></Dialog.Description>
 		</Dialog.Header>
 		<div class="flex flex-col gap-4">
 			{#if !mint}
-				<p class="text-destructive">No mint added to wallet! add a mint first:</p>
+				<p class="text-destructive">{no_mint_found()}</p>
 				<AddMint></AddMint>
 			{:else}
 				<MintSelector bind:mint></MintSelector>
 				<div class="flex items-center justify-between gap-2">
-					{formatAmount(getAmountForTokenSet(balance), currentUnit)} available
+					{formatAmount(getAmountForTokenSet(balance), currentUnit)} {t_available}
 					<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
 				</div>
 				<Input type="number" bind:value={amount}></Input>
-				send {formatAmount(amount, currentUnit)} to {to.alias}
+				{t_send()} {formatAmount(amount, currentUnit)} {t_to()} {to.alias}
 			{/if}
 			<Button onclick={send} disabled={isLoading}>
 				{#if isLoading}
@@ -85,7 +86,7 @@
 				{:else}
 					<Send></Send>
 				{/if}
-				Send
+				{t_send()}
 			</Button>
 		</div>
 		<Dialog.Footer class="flex gap-2">
@@ -95,7 +96,7 @@
 					sendEcashOpen = false;
 				}}
 			>
-				Cancel
+				{t_cancel()}
 			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>

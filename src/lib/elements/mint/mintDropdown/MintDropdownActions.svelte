@@ -1,6 +1,7 @@
 <script>
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { ensureError } from '$lib/helpers/errors';
+	import { error_updating_mint, make_default, mint_updated, remove_mint, t_update, updating_mint } from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { Landmark, Loader, Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
@@ -11,14 +12,14 @@
 		try {
 			isLoading = true;
 			toast.promise(mints.fetchMint(mint.url), {
-				loading: 'Updating mint',
-				success: 'Mint updated'
+				loading: updating_mint(),
+				success: mint_updated()
 			});
 		} catch (error) {
 			console.error(error);
 			const err = ensureError(error);
 			console.error(err);
-			toast.error('Problem updating mint: ' + err.message);
+			toast.error(error_updating_mint(), {description:err.message});
 		} finally {
 			isLoading = false;
 		}
@@ -27,13 +28,13 @@
 
 <DropdownMenu.Item class="" onclick={fetchMint}>
 	<Loader></Loader>
-	Update
+	{t_update()}
 </DropdownMenu.Item>
 <DropdownMenu.Item class="" onclick={() => mints.makeDefaultMint(mint)}>
 	<Landmark></Landmark>
-	Make default
+	{make_default()}
 </DropdownMenu.Item>
 <DropdownMenu.Item class="text-destructive" onclick={() => mints.remove(mint.url, 'url')}>
 	<Trash></Trash>
-	Remove Mint
+	{remove_mint()}
 </DropdownMenu.Item>

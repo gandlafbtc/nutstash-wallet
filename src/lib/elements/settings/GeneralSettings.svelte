@@ -1,5 +1,6 @@
 <script>
 	import Label from '$lib/components/ui/label/label.svelte';
+	import LanguageSwitcher from '../ui/LanguageSwitcher.svelte';
 	import DarkModeSetting from './DarkModeSetting.svelte';
 	import HideBalanceSetting from './settingsElements/HideBalanceSetting.svelte';
 </script>
@@ -10,6 +11,12 @@
 		<div class="flex items-center justify-between">
 			<Label>Dark mode</Label>
 			<DarkModeSetting></DarkModeSetting>
+		</div>
+	</div>
+	<div class="flex items-center justify-between gap-1">
+		<p class="font-bold">Language</p>
+		<div class="flex items-center justify-between">
+			<LanguageSwitcher></LanguageSwitcher>
 		</div>
 	</div>
 	<div class="flex flex-col gap-1">

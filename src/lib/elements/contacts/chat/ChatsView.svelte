@@ -5,6 +5,7 @@
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import RecentChat from './RecentChat.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { t_chats, t_new_chat } from '$lib/paraglide/messages';
 
 	const getLatestMessages = () => {
 		const latestMap: Map<string, Message> = new Map();
@@ -33,9 +34,9 @@
 </script>
 
 <div class="flex h-full w-80 flex-col justify-start gap-2 xl:w-[600px]">
-	<p class="text-lg font-bold">Chats</p>
+	<p class="text-lg font-bold">{t_chats()}</p>
 	<div>
-		<Button href="/#/wallet/contacts">Start a new chat</Button>
+		<Button href="/#/wallet/contacts">{t_new_chat()}</Button>
 	</div>
 
 	{#each latestMessageForPubKey.entries() as message}

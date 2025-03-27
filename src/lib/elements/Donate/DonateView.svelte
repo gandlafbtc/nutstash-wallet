@@ -20,6 +20,7 @@
 	import Divider from '../ui/Divider.svelte';
 	import { copyTextToClipboard } from '$lib/util/utils';
 	import { ensureError } from '$lib/helpers/errors';
+	import { consider_showing_appreciation, hello_dear_anon, not_enough_funds, private_donation, public_donation, t_available, t_cancel, t_confirm, thank_you_for_using_nutstash, the_donation_is_now_ready, you_are_about_to_donate, you_can_add_npubs_names_or_anything } from '$lib/paraglide/messages';
 
 	let mint = $state($mints[0]);
 	let currentUnit = $state($unit);
@@ -41,7 +42,7 @@
 
 	const openPublicDono = () => {
 		if (donationAmount > amountAvailable) {
-			toast.warning('Not enough funds available');
+			toast.warning(not_enough_funds());
 			return;
 		}
 		isPublicOpen = true;
@@ -49,7 +50,7 @@
 
 	const openAnonDono = () => {
 		if (donationAmount > amountAvailable) {
-			toast.warning('Not enough funds available');
+			toast.warning(not_enough_funds());
 			return;
 		}
 		isAnonOpen = true;
@@ -150,9 +151,9 @@
 </script>
 
 <div class="flex h-full w-80 flex-col gap-4 xl:w-[600px]">
-	<p class="font-bold">Hello dear anon!</p>
+	<p class="font-bold">{hello_dear_anon()}!</p>
 	<span>
-		Thank you for using nutstash, an open source Cashu wallet, developed by <a
+		{thank_you_for_using_nutstash()}, by <a
 			class="font-bold underline"
 			href="https://gandlaf.com"
 			target="_blank"
@@ -160,12 +161,11 @@
 		>.
 	</span>
 	<span>
-		If you like using nutstash, consider showing your appreciation by sharing some nuts with the
-		wallet devs.
+		{consider_showing_appreciation()}
 	</span>
 	<MintSelector bind:mint></MintSelector>
 	<div>
-		Available: {formatAmount(amountAvailable, currentUnit)}
+		{t_available()}: {formatAmount(amountAvailable, currentUnit)}
 	</div>
 	<div class="flex gap-2">
 		<Input type="number" pattern="\d+" placeholder="donation amount" bind:value={donationAmount} />
@@ -197,11 +197,11 @@
 			onclick={openPublicDono}
 		>
 			<Heart class="text-nutstash"></Heart>
-			Public donation
+			{public_donation()}
 		</Button>
 		<Button disabled={isNaN(donationAmount) || donationAmount < 1} onclick={openAnonDono}>
 			<Heart class="text-nutstash"></Heart>
-			Anon donation
+			{private_donation()}
 		</Button>
 	</div>
 
@@ -319,10 +319,10 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title
-				>You are about to donate {formatAmount(donationAmount, currentUnit)} to nutstash publicly</Dialog.Title
+				>{you_are_about_to_donate({amount: formatAmount(donationAmount, currentUnit) })}</Dialog.Title
 			>
 			<Dialog.Description>
-				You can add NPUBs, names, or anything else that should be credited in the donation note.
+				{you_can_add_npubs_names_or_anything()}
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="flex gap-2">
@@ -379,13 +379,10 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title
-				>You are about to donate {formatAmount(donationAmount, currentUnit)} to nutstash anonymously!</Dialog.Title
+				>{you_are_about_to_donate({amount: formatAmount(donationAmount, currentUnit) })}!</Dialog.Title
 			>
 			<Dialog.Description>
-				the donation for <span class="font-bold">
-					{formatAmount(donationAmount, currentUnit)}
-				</span>
-				is now ready.
+				{the_donation_is_now_ready()}
 			</Dialog.Description>
 		</Dialog.Header>
 
@@ -396,7 +393,7 @@
 					isAnonOpen = false;
 				}}
 			>
-				Cancel
+				{t_cancel()}
 			</Button>
 			<Button onclick={donateAnon} disabled={isLoading}>
 				{#if isLoading}
@@ -404,7 +401,7 @@
 				{:else}
 					<Heart class="text-nutstash"></Heart>
 				{/if}
-				Confirm
+				{t_confirm()}
 			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
