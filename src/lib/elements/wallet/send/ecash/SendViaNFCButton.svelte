@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 
 	import NfcWriteDrawer from './NFCWriteDrawer.svelte';
+	import { isTauriMobile } from '$lib/tauri/deviceHelper';
 	let { token }: { token: string } = $props();
 	let isOpen = $state(false);
 
@@ -10,11 +11,16 @@
 
 	onMount(() => {
 		try {
-			const ndef = new NDEFReader();
-			if (!ndef) {
-				throw new Error('no ndef');
+			if (isTauriMobile) {
+				hasNdef = true;
 			}
-			hasNdef = true;
+			else {
+				const ndef = new NDEFReader();
+				if (!ndef) {
+					throw new Error('no ndef');
+				}
+				hasNdef = true;
+			}
 		} catch (error) {
 			hasNdef = false;
 		}

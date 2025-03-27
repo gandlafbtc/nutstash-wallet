@@ -5,6 +5,8 @@
 	import { push } from 'svelte-spa-router';
 	// import { isAvailable, record, textRecord, scan } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '$lib/helpers/errors';
+	import { isAvailable, scan } from '@tauri-apps/plugin-nfc';
+	import { clear } from '@gandlaf21/tauri-plugin-hce-api';
 	let scanned = $state('');
 	const abortController = new AbortController();
 	abortController.signal.onabort = (event) => {
@@ -22,21 +24,23 @@
 				nfcColor = colors[colorI];
 			}, 1000);
 			if (isTauriMobile) {
-				// if (!(await isAvailable())) {
-				// 	throw new Error('NFC not available');
-				// }
-				// const tag = await scan({ type: 'tag' }, { keepSessionAlive: false });
-				// const decoder = new TextDecoder();
-				// const records = tag.records;
-				// for (const record of records) {
-				// 	scanned = scanned + decoder.decode(new Uint8Array(record.payload));
-				// }
+				toast("tauri nfc")
+				if (!(await isAvailable())) {
+					throw new Error('NFC not available');
+				}
+				await clear("")
+				const tag = await scan({ type: "ndef", mimeType: "text/plain"  }, { keepSessionAlive: false });
+				const decoder = new TextDecoder();
+				const records = tag.records;
+				for (const record of records) {
+					scanned = scanned + decoder.decode(new Uint8Array(record.payload));
+				}
 			} else {
 				const ndef = new NDEFReader();
 				await ndef.scan({ signal: abortController.signal });
 				toast.info('Scanning for NFC tag');
-				ndef.onreadingerror = () => {
-					toast.error('Error reading from tag');
+				ndef.onreadingerror = (error: Event) => {
+					toast.error('Error reading from tag', {description: `${JSON.stringify(error)}`});
 				};
 				ndef.onreading = (event) => {
 					scanned = '';

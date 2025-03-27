@@ -1,6 +1,14 @@
 {
-	"identifier": "mobile-capability",
-	"platforms": ["android", "iOS"],
-	"windows": ["main"],
-	"permissions": []
+  "identifier": "mobile-capability",
+  "platforms": [
+    "android",
+    "iOS"
+  ],
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "hce:default",
+    "nfc:default"
+  ]
 }

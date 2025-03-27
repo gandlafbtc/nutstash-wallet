@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@gandlaf21/tauri-plugin-hce-api':
+        specifier: link:../../tauri-plugin/tauri-plugin-hce
+        version: link:../../tauri-plugin/tauri-plugin-hce
       '@tauri-apps/api':
         specifier: ^2.1.0
         version: 2.1.0
+      '@tauri-apps/plugin-nfc':
+        specifier: ~2
+        version: 2.2.0
     devDependencies:
       '@cashu/cashu-ts':
         specifier: 2.4.0
@@ -822,6 +828,9 @@ packages:
     resolution: {integrity: sha512-K2VhcKqBhAeS5pNOVdnR/xQRU6jwpgmkSL2ejHXcl0m+kaTggT0WRDQnFtPq6NljA7aE03cvwsbCAoFG7vtkJw==}
     engines: {node: '>= 10'}
     hasBin: true
+
+  '@tauri-apps/plugin-nfc@2.2.0':
+    resolution: {integrity: sha512-ZFfDcpqKwww9qOf37zPfQtEFtsjp9+IJHpvoYXPUG+jf09LRdOrd95rqR9OMPnIijaYGu5q3VEBQivZ5nMVJsw==}
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -2709,6 +2718,10 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.1.0
       '@tauri-apps/cli-win32-ia32-msvc': 2.1.0
       '@tauri-apps/cli-win32-x64-msvc': 2.1.0
+
+  '@tauri-apps/plugin-nfc@2.2.0':
+    dependencies:
+      '@tauri-apps/api': 2.1.0
 
   '@types/cookie@0.6.0': {}
 

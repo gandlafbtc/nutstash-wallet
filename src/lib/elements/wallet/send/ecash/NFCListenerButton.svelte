@@ -3,6 +3,9 @@
 	import { onDestroy, onMount } from 'svelte';
 	import NfcListener from './NFCListener.svelte';
 	import NfcListenDrawer from './NFCListenDrawer.svelte';
+	import { isTauriMobile } from '$lib/tauri/deviceHelper';
+	import { isAvailable } from '@tauri-apps/plugin-nfc';
+	import { toast } from 'svelte-sonner';
 
 	let pressed = $state(false);
 	let nfcReady = $state(false);
@@ -16,8 +19,20 @@
 		pressed = false;
 	});
 
-	onMount(() => {
+	onMount(async() => {
 		try {
+			if (isTauriMobile) {
+
+				const canScanNfc = await isAvailable();
+				if (canScanNfc) {
+					nfcReady = true
+				}
+				else {
+					nfcReady = false
+					toast('no-nfc??')
+				}
+				return
+			}
 			if (!('NDEFReader' in window)) {
 				return;
 			}

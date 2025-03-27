@@ -18,6 +18,9 @@
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
 	import { settings } from '$lib/stores/persistent/settings';
 	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { set } from '@gandlaf21/tauri-plugin-hce-api';
+	import { toast } from 'svelte-sonner';
 
 	let currentUnit = $state('sat');
 
@@ -93,10 +96,7 @@
 		<MintCarousel></MintCarousel>
 	</div>
 	<div>
-		<!-- todo fix this later -->
-		{#if !isTauri}
-			<NfcListenerButton></NfcListenerButton>
-		{/if}
+		<NfcListenerButton></NfcListenerButton>
 	</div>
 	<div class="flex w-full items-center justify-between gap-2">
 		<p class="flex-grow text-4xl">

@@ -81,7 +81,7 @@
 		{:else}
 			<Button href="/#/wallet/">Close</Button>
 		{/if}
-		{#if !isListView && !isTauri}
+		{#if !isListView}
 			<SendViaNfcButton token={encodedToken}></SendViaNfcButton>
 		{/if}
 	</Card.Footer>

@@ -17,7 +17,9 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@tauri-apps/api": "^2.1.0"
+		"@gandlaf21/tauri-plugin-hce-api": "link:../../tauri-plugin/tauri-plugin-hce",
+		"@tauri-apps/api": "^2.1.0",
+		"@tauri-apps/plugin-nfc": "~2"
 	},
 	"devDependencies": {
 		"@cashu/cashu-ts": "2.4.0",

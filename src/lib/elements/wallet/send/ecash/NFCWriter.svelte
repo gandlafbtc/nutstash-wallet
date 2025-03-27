@@ -3,6 +3,7 @@
 	import { toast } from 'svelte-sonner';
 	import { isTauriMobile } from '$lib/tauri/deviceHelper';
 	// import { isAvailable, record, textRecord, write } from '@tauri-apps/plugin-nfc';
+	import { clear, set } from "@gandlaf21/tauri-plugin-hce-api";
 	import { ensureError } from '$lib/helpers/errors';
 
 	let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } = $props();
@@ -19,10 +20,7 @@
 				nfcColor = colors[colorI];
 			}, 1000);
 			if (isTauriMobile) {
-				// if (!(await isAvailable())) {
-				// 	throw new Error('NFC not available');
-				// }
-				// await write([textRecord(token)]);
+				await set(token)
 			} else {
 				const record = {
 					recordType: 'text',
@@ -30,9 +28,9 @@
 				};
 				const ndef = new NDEFReader();
 				await ndef.write({ records: [record] });
+				toast.info('Token has been written to nfc tag');
+				isOpen = false;
 			}
-			toast.info('Token has been written to nfc tag');
-			isOpen = false;
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -46,6 +44,9 @@
 	onDestroy(() => {
 		if (interval) {
 			clearInterval(interval);
+		}
+		if (isTauriMobile) {
+			clear("")
 		}
 	});
 </script>

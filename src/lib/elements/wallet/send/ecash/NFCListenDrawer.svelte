@@ -3,7 +3,6 @@
 
 	import * as Drawer from '$lib/components/ui/drawer/';
 	import NfcListener from './NFCListener.svelte';
-	import NfcWriter from './NFCWriter.svelte';
 
 	let { isOpen = $bindable() }: { isOpen: boolean } = $props();
 </script>
