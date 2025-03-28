@@ -5,6 +5,7 @@
 	import QrCode from './QRCode.svelte';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
+	import { problems_scanning_qr, t_size, t_speed } from '$lib/paraglide/messages';
 
 	let { token, speed, size }: { token: string; speed: number[]; size: number[] } = $props();
 
@@ -43,18 +44,18 @@
 		<QrCode data={chunk} />
 		<Accordion.Root type="single">
 			<Accordion.Item value="item-1">
-				<Accordion.Trigger>Problems scanning QR?</Accordion.Trigger>
+				<Accordion.Trigger>{problems_scanning_qr()}</Accordion.Trigger>
 				<Accordion.Content>
 					<div
 						class="flex flex-col gap-4 py-2 pr-3
 			"
 					>
 						<div class="flex gap-2">
-							<span class="w-12">Size</span>
+							<span class="w-12">{t_size()}</span>
 							<Slider bind:value={size} max={5} min={1} step={1} />
 						</div>
 						<div class="flex gap-2">
-							<span>Speed</span>
+							<span>{t_speed()}</span>
 							<Slider bind:value={speed} max={5} min={1} step={1} />
 						</div>
 					</div>

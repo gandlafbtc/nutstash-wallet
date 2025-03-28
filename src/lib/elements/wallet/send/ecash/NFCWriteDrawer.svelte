@@ -2,6 +2,7 @@
 	import { buttonVariants } from '$lib/components/ui/button';
 
 	import * as Drawer from '$lib/components/ui/drawer/';
+	import { approach_nfc_tag_to_write, t_close, write_token_to_nfc_tag } from '$lib/paraglide/messages';
 	import NfcWriter from './NFCWriter.svelte';
 
 	let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } = $props();
@@ -10,8 +11,8 @@
 <Drawer.Root bind:open={isOpen} nested={true}>
 	<Drawer.Content>
 		<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
-			<Drawer.Title>Write token to NFC tag</Drawer.Title>
-			<Drawer.Description>Approach NFC tag to write the token to it</Drawer.Description>
+			<Drawer.Title>{write_token_to_nfc_tag()}</Drawer.Title>
+			<Drawer.Description>{approach_nfc_tag_to_write()}</Drawer.Description>
 		</Drawer.Header>
 		{#if isOpen}
 			<!-- content here -->
@@ -19,7 +20,7 @@
 		{/if}
 		<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
 			<Drawer.Close class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
-				>Close</Drawer.Close
+				>{t_close()}</Drawer.Close
 			>
 		</Drawer.Footer>
 	</Drawer.Content>

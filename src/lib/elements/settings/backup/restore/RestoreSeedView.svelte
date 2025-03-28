@@ -10,6 +10,7 @@
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import DiscoverMints from '$lib/elements/mint/DiscoverMints.svelte';
 	import Divider from '$lib/elements/ui/Divider.svelte';
+	import { add_more_mints, restore_ecash_from_seed_phrase, t_restore } from '$lib/paraglide/messages';
 
 	let isInProgress = $state(false);
 
@@ -20,7 +21,7 @@
 	<RestoreInProgress></RestoreInProgress>
 {:else}
 	<div class="flex h-full flex-col gap-3">
-		<span class="text-lg font-bold"> Restore from seed phrase </span>
+		<span class="text-lg font-bold"> {restore_ecash_from_seed_phrase()} </span>
 		<button
 			class=" grid w-80 grid-cols-3 rounded-lg border border-dashed p-2 text-start transition-colors duration-200 hover:bg-secondary xl:w-[600px]"
 			onclick={() => (isHide = !isHide)}
@@ -33,10 +34,10 @@
 		</button>
 		<div class="mt-5 flex flex-col gap-2">
 			<Button class="mt-3" disabled={!$mints.length} onclick={() => (isInProgress = true)}
-				>Restore</Button
+				>{t_restore()}</Button
 			>
 			<Divider text="or"></Divider>
-			<span> Add more mints </span>
+			<span> {add_more_mints()} </span>
 			<AddMint></AddMint>
 			<DiscoverMints></DiscoverMints>
 		</div>

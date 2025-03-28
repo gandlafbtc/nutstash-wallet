@@ -19,7 +19,7 @@
 	<Accordion.Root type="single">
 		<Accordion.Item value="item-1">
 			<Accordion.Trigger>
-				<div>{t_keys}</div>
+				<div>{t_keys()}</div>
 			</Accordion.Trigger>
 			<Accordion.Content>
 				<KeysList></KeysList>

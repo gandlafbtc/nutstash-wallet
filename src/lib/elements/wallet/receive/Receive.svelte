@@ -17,6 +17,7 @@
 	import { toast } from 'svelte-sonner';
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { ensureError } from '$lib/helpers/errors';
+	import { enter_amount_to_create_invoice, no_mint_found, paste_token_to_receive_ecash, receive_via_cashu_request, receive_via_lightning } from '$lib/paraglide/messages';
 
 	let entered: string = $state('');
 
@@ -77,7 +78,7 @@
 	const receiveLN = async () => {
 		try {
 			if (!mint) {
-				toast.warning('no mint available');
+				toast.warning(no_mint_found());
 				return;
 			}
 			isLoading = true;
@@ -147,8 +148,8 @@
 		<div
 			class="pointer-events-none absolute flex h-20 w-full flex-col items-center justify-center text-muted"
 		>
-			<p>Enter amount to create invoice</p>
-			<p>Paste token to receive ecash</p>
+			<p>{enter_amount_to_create_invoice()}</p>
+			<p>{paste_token_to_receive_ecash()}</p>
 		</div>
 		<Textarea
 			class="w-80 resize-none rounded-md border-dashed xl:w-[600px]"
@@ -168,11 +169,11 @@
 				: 'h-40'}"
 		>
 			{#if token.length}
-				token
+			<!--  -->
 			{:else if amount.length}
 				<div class="flex flex-col items-center justify-center gap-2">
 					{#if !mint}
-						<p class="text-destructive">No mint added to wallet! add a mint first:</p>
+						<p class="text-destructive">{no_mint_found()}</p>
 
 						<AddMint></AddMint>
 					{:else}
@@ -200,11 +201,11 @@
 							{:else}
 								<Zap></Zap>
 							{/if}
-							Receive via Lightning
+							{receive_via_lightning()}
 						</Button>
 						<Button variant="outline" onclick={receiveCashuRequest} class="w-full border-2">
 							<Banknote></Banknote>
-							Receive via Cashu request
+							{receive_via_cashu_request()}
 						</Button>
 					</div>
 				</div>

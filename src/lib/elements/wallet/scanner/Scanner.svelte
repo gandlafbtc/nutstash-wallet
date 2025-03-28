@@ -11,6 +11,7 @@
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import { checkValidPubkey, getInvoiceFromAddress } from '$lib/util/walletUtils';
 	import { sendInput } from '$lib/stores/session/sendInput';
+	import { camera_not_found, loading_camera } from '$lib/paraglide/messages';
 
 	let videoElem: HTMLVideoElement | undefined = $state();
 	let qrScanner: QrScanner | undefined = $state();
@@ -52,14 +53,12 @@
 	});
 
 	onDestroy(() => {
-		console.log('destroying scanner');
 		if (qrScanner) {
 			qrScanner.destroy();
 		}
 	});
 
 	const onScanSuccess = (result: QrScanner.ScanResult) => {
-		console.log('scanned', result.data);
 		if (
 			result.data.toLowerCase().startsWith('lightning:') ||
 			result.data.toLowerCase().startsWith('lnbc')
@@ -174,9 +173,9 @@
 	<div class="relative flex h-full w-80 items-center justify-center xl:w-[600px]">
 		<div class="video-wrapper h-80 w-80 rounded-lg border bg-black p-2 xl:w-[600px]">
 			{#if cams === undefined}
-				loading camera ...
+				{loading_camera()}
 			{:else if cams?.length === 0}
-				no camera found...
+				{camera_not_found()}
 			{/if}
 			<!-- svelte-ignore a11y_media_has_caption -->
 			<video bind:this={videoElem} width="100%" height="auto" class="video-container"> </video>

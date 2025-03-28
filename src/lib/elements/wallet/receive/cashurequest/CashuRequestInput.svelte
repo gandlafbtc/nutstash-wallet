@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Input from '$lib/components/ui/input/input.svelte';
+	import { not_a_valid_cashu_request } from '$lib/paraglide/messages';
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';
 	let inputValue = $state('');
@@ -7,7 +8,7 @@
 		setTimeout(() => {
 			try {
 				if (!inputValue.startsWith('creq')) {
-					toast.warning('Not a cashu request');
+					toast.warning(not_a_valid_cashu_request());
 					return;
 				}
 				push('/wallet/send/cashureq');

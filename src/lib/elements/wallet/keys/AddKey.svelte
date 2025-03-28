@@ -3,6 +3,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import { add_key, add_key_manually, key_already_exists, keys_that_are_added_manually_not_restore, t_add, t_attention, t_close } from '$lib/paraglide/messages';
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import { add } from 'date-fns';
 	import { Plus } from 'lucide-svelte';
@@ -15,7 +16,7 @@
 		try {
 			isLoading = true;
 			if ($keysStore.find((ks) => ks.privateKey === inputKey)) {
-				toast.warning('Key already exists');
+				toast.warning(key_already_exists());
 				return;
 			}
 
@@ -33,16 +34,15 @@
 
 <Button variant="outline" onclick={() => (isOpen = true)}>
 	<Plus></Plus>
-	Add key
+	{add_key()}
 </Button>
 
 <Dialog.Root bind:open={isOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Add key manually</Dialog.Title>
+			<Dialog.Title>{add_key_manually()}</Dialog.Title>
 			<Dialog.Description
-				><span class="text-destructive">Attention!</span> Keys that are added manually cannot be restored
-				from the seed phrase</Dialog.Description
+				><span class="text-destructive">{t_attention()}</span>{keys_that_are_added_manually_not_restore()}</Dialog.Description
 			>
 		</Dialog.Header>
 		<Input placeholder="private key" bind:value={inputKey}></Input>
@@ -53,9 +53,9 @@
 					isOpen = false;
 				}}
 			>
-				Close
+				{t_close()}
 			</Button>
-			<Button onclick={addKey}>Add</Button>
+			<Button onclick={addKey}>{t_add()}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

@@ -28,6 +28,7 @@
 	import { settings } from '$lib/stores/persistent/settings';
 	import { swapsStore } from '$lib/stores/persistent/swap';
 	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
+	import { choose_a_passphrase_to_encrypt_file, enter_passphrase, export_encrypted_wallet, export_wallet, passphrase_cannot_be_empty, passphrase_do_not_match, t_cancel, t_encrypt, wallet_file_exported } from '$lib/paraglide/messages';
 
 	let isEncrypt = $state(false);
 
@@ -59,11 +60,11 @@
 
 	const exportEncryptedFile = async () => {
 		if (!pass) {
-			toast.warning('Please enter a password');
+			toast.warning(passphrase_cannot_be_empty());
 			return;
 		}
 		if (pass !== passConf) {
-			toast.warning('Passwords do not match');
+			toast.warning(passphrase_do_not_match());
 			return;
 		}
 		const { cypher, iv } = await encrypt(restoreObj, await kdf(pass));
@@ -95,7 +96,7 @@
 		document.body.appendChild(downloadAnchorNode); // required for firefox
 		downloadAnchorNode.click();
 		downloadAnchorNode.remove();
-		toast.success('Wallet file exported');
+		toast.success(wallet_file_exported());
 	};
 </script>
 
@@ -103,12 +104,12 @@
 	<div class="flex gap-2">
 		{#if isEncrypt}
 			<Button class="btn btn-primary" onclick={() => (isOpen = true)}>
-				Export encrypted Wallet
+				{export_encrypted_wallet()}
 			</Button>
 		{:else}
 			<Button class="btn btn-primary" onclick={exportFile}>
 				<Upload></Upload>
-				Export Wallet
+				{export_wallet()}
 			</Button>
 		{/if}
 		<Toggle bind:pressed={isEncrypt}>
@@ -117,9 +118,9 @@
 	</div>
 	<span class="text-xs text-secondary">
 		{#if isEncrypt}
-			Export encrypted wallet file.
+			{export_encrypted_wallet()}
 		{:else}
-			Export unencrypted wallet file.
+			{export_wallet()}
 		{/if}
 	</span>
 </div>
@@ -127,11 +128,11 @@
 <Dialog.Root bind:open={isOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Choose a passphrase to encrypt the export file with.</Dialog.Title>
+			<Dialog.Title>{choose_a_passphrase_to_encrypt_file()}</Dialog.Title>
 			<Dialog.Description></Dialog.Description>
 		</Dialog.Header>
 		<div class="flex flex-col gap-2">
-			<span>Enter passphrase</span>
+			<span>{enter_passphrase()}</span>
 			<Input type="password" placeholder="Passphrase" bind:value={pass} />
 			<Input type="password" placeholder="Repeat passphrase" bind:value={passConf} />
 		</div>
@@ -142,9 +143,9 @@
 					isOpen = false;
 				}}
 			>
-				Cancel
+				{t_cancel()}
 			</Button>
-			<Button onclick={exportEncryptedFile}>Encrypt</Button>
+			<Button onclick={exportEncryptedFile}>{t_encrypt()}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

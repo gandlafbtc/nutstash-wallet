@@ -17,6 +17,7 @@
 	import { AlignJustify, ChevronsLeft } from 'lucide-svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { page } from '$app/stores';
+	import { t_back, to_use_the_wallet_add_mint, welcome_to_nutstash } from '$lib/paraglide/messages';
 
 	let sidebar = $state('');
 
@@ -60,7 +61,7 @@
 										}}
 									>
 										<ChevronsLeft></ChevronsLeft>
-										Back
+										{t_back()}
 									</Button>
 								{/if}
 							</div>
@@ -81,9 +82,9 @@
 	{:else}
 		<OnboardingHeader hasBack={false}></OnboardingHeader>
 		<div class="flex h-screen w-full flex-col items-center justify-start gap-5 pt-32">
-			<p class="font-bold">Welcome to nutstash!</p>
+			<p class="font-bold">{welcome_to_nutstash()}</p>
 
-			To use the wallet, add a mint.
+			{to_use_the_wallet_add_mint()}
 			<div class="flex flex-col gap-1">
 				<AddMint></AddMint>
 			</div>

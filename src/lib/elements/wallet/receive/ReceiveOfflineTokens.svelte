@@ -14,6 +14,7 @@
 	import { get } from 'svelte/store';
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
+	import { cannot_be_undone_delete_token, no_key_found_in_wallet_for_lock, sure_delete_token, t_cancel, t_claim, t_remove, t_show } from '$lib/paraglide/messages';
 
 	let isLoading = $state(false);
 	let showQR = $state(false);
@@ -57,7 +58,7 @@
 		if (lockPubs.length > 0) {
 			storedKeyPair = keysStore.getBy(lockPubs[0], 'publicKey');
 			if (!storedKeyPair) {
-				throw new Error(`No key pair found for lockPub ${lockPubs[0]}`);
+				throw new Error(no_key_found_in_wallet_for_lock()+": "+lockPubs[0]);
 			}
 			privkey = storedKeyPair.privateKey;
 		}
@@ -116,7 +117,7 @@
 				<div class="flex w-full items-center justify-center">
 					<Button variant="ghost" onclick={() => (showQR = true)}>
 						<QrCodeIcon></QrCodeIcon>
-						Show QR Code
+						{t_show()} QR
 					</Button>
 				</div>
 			{:else}
@@ -128,7 +129,7 @@
 				<CopiableToken token={tkn}></CopiableToken>
 			</div>
 			<div class="flex flex-col gap-2">
-				<Button disabled={isLoading} onclick={() => claimOneOfflineToken(tx)}>Claim</Button>
+				<Button disabled={isLoading} onclick={() => claimOneOfflineToken(tx)}>{t_claim()}</Button>
 			</div>
 		</div>
 	{/each}
@@ -138,10 +139,10 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title class="text-destructive"
-				>Are you sure you want to delete this token?</Dialog.Title
+				>{sure_delete_token()}</Dialog.Title
 			>
 			<Dialog.Description>
-				This cannot be undone. The token will be gone forever.
+				{cannot_be_undone_delete_token()}
 			</Dialog.Description>
 		</Dialog.Header>
 
@@ -152,14 +153,14 @@
 					isOpen = false;
 				}}
 			>
-				Cancel
+				{t_cancel()}
 			</Button>
 			<Button
 				variant="destructive"
 				onclick={() => {
 					removeOfflineToken();
 					isOpen = false;
-				}}>Yes, Delete</Button
+				}}>{t_remove()}</Button
 			>
 		</Dialog.Footer>
 	</Dialog.Content>

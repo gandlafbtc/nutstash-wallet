@@ -16,6 +16,7 @@
 	import { hashToCurve } from '@cashu/crypto/modules/common';
 	import { countsStore } from '$lib/stores/persistent/counts';
 	import { toast } from 'svelte-sonner';
+	import { all_keys_restored, checking_proof_states, loading_keys, loading_mint_keysets, skipping_ks_id_not_hex, t_done, t_error, t_waiting } from '$lib/paraglide/messages';
 
 	const INCREMENT = 25;
 
@@ -33,7 +34,7 @@
 
 	const restoreMint = async () => {
 		try {
-			statusMessage = 'Loading mint keysets...';
+			statusMessage = loading_mint_keysets();
 			const cashuMint = new CashuMint(mint.url);
 			const allKeysets = await cashuMint.getKeySets();
 			progress = 5;
@@ -42,16 +43,16 @@
 			const hexDigitsRegex = /^[0-9A-Fa-f]+$/;
 			for (const [i, ks] of allKeysets.keysets.entries()) {
 				if (!hexDigitsRegex.test(ks.id)) {
-					toast.info(`Skipping ${ks.id}. Not a hex keyset.`);
+					toast.info(skipping_ks_id_not_hex({id: ks.id}));
 					continue;
 				}
 				statusMessage = `Keyset ${i + 1} of ${ksLen} (${ks.id} / ${getUnitSymbol(ks.unit)}):`;
-				statusMessage2 = 'loading keys...';
+				statusMessage2 = loading_keys();
 				await restoreKeyset(cashuMint, ks);
 				progress = Math.floor(((i + 1) / ksLen) * 100);
 				statusMessage2 = '';
 			}
-			statusMessage = 'All keysets restored';
+			statusMessage = all_keys_restored();
 			status = 'done';
 			progress = 100;
 		} catch (error) {
@@ -72,7 +73,7 @@
 			});
 			const { keysetProofs, count } = await restoreBatch(cashuWallet, 0, ks.id);
 			await countsStore.addOrUpdate(ks.id, { count: count + 1, keysetId: ks.id }, 'keysetId');
-			statusMessage2 = `checking proof states`;
+			statusMessage2 = checking_proof_states();
 			const proofStates = await cashuWallet.checkProofsStates(keysetProofs);
 
 			//todo - also for pending?
@@ -131,13 +132,13 @@
 			{mint.url}
 		</span>
 		{#if status === 'done'}
-			<Badge variant="outline" class="text-green-500">Done</Badge>
+			<Badge variant="outline" class="text-green-500">{t_done()}</Badge>
 		{:else if status === 'error'}
-			<Badge variant="destructive">Error</Badge>
+			<Badge variant="destructive">{t_error()}</Badge>
 		{:else if status === 'inprogress'}
 			<LoaderCircle class="h-4 w-4 animate-spin"></LoaderCircle>
 		{:else}
-			<Badge variant="outline">waiting..</Badge>
+			<Badge variant="outline">{t_waiting()}</Badge>
 		{/if}
 	</div>
 	<div class="h-16">

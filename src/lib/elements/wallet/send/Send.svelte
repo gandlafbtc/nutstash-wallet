@@ -49,6 +49,7 @@
 	import SimpleScanner from '../scanner/simple_scanner/SimpleScanner.svelte';
 	import { nip19 } from 'nostr-tools';
 	import { sendInput } from '$lib/stores/session/sendInput';
+	import { amount_too_small, cashu_token, enter_amount_to_send_ecash, invalid_pubkey, no_mint_found, not_enough_funds, npub_or_pubkey, paste_invoice_to_send_via_lightning, prepare_payment, requires_swap, selected_proofs, t_available, t_create, t_custom, t_locked, t_offline, token_can_be_sent_offline } from '$lib/paraglide/messages';
 
 	interface Props {
 		input?: string;
@@ -185,11 +186,11 @@
 			}
 			isLoading = true;
 			if (!amount) {
-				toast('Please enter amount');
+				toast(amount_too_small());
 				return;
 			}
 			if (amount > balance) {
-				toast.warning('Not enough funds');
+				toast.warning(not_enough_funds());
 				return;
 			}
 			const sendOptions: {
@@ -207,7 +208,7 @@
 					tokenOptions.pubkey = ('02' + nip19.decode(tokenOptions.pubkey).data) as string;
 				}
 				if (!checkValidPubkey(tokenOptions.pubkey)) {
-					toast('Invalid public key');
+					toast.warning(invalid_pubkey());
 					return;
 				}
 				sendOptions.pubkey = tokenOptions.pubkey;
@@ -237,7 +238,7 @@
 
 {#if scanPubKey}
 	<SimpleScanner
-		whatToScan={'pubkey or npub'}
+		whatToScan={npub_or_pubkey()}
 		bind:isScanning={scanPubKey}
 		bind:scannedResult={tokenOptions.pubkey}
 	></SimpleScanner>
@@ -249,7 +250,7 @@
 		tabindex="0"
 	>
 		{#if !mint}
-			<p class="text-destructive">No mint added to wallet! add a mint first:</p>
+			<p class="text-destructive">{no_mint_found()}</p>
 
 			<AddMint></AddMint>
 		{:else}
@@ -259,7 +260,7 @@
 			<div class="flex w-80 items-center justify-between gap-2 xl:w-[600px]">
 				<span>
 					{formatAmount(balance, currentUnit)}
-					<span class="text-xs italic text-secondary"> available </span>
+					<span class="text-xs italic text-secondary"> {t_available()} </span>
 				</span>
 				<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
 			</div>
@@ -271,8 +272,8 @@
 					<div
 						class="pointer-events-none absolute flex h-20 w-full flex-col items-center justify-center text-muted"
 					>
-						<p>Enter amount to send ecash</p>
-						<p>Paste invoice to send via lightning</p>
+						<p>{enter_amount_to_send_ecash()}</p>
+						<p>{paste_invoice_to_send_via_lightning()}</p>
 					</div>
 					<Textarea
 						class="h-20 w-80 resize-none rounded-md border-dashed xl:w-[600px]"
@@ -344,7 +345,7 @@
 							</span> -->
 
 								{#if getAmountForTokenSet(selectedProofs) < amount + (tokenOptions.includeReceiverFees ? 1 : 0)}
-									<span class="text-red-500"> Not enough funds </span>
+									<span class="text-red-500"> {not_enough_funds()} </span>
 								{:else if getAmountForTokenSet(selectedProofs) > amount + (tokenOptions.includeReceiverFees ? 1 : 0) || tokenOptions.p2pk}
 									<span>
 										<Tooltip.Provider>
@@ -359,7 +360,7 @@
 												</Tooltip.Trigger>
 												<Tooltip.Content>
 													<div class="flex items-center gap-1 text-xs">
-														Selected coins:
+														{selected_proofs()}:
 														{#each selectedProofs.map((p) => p.amount) as amount}
 															<!-- content here -->
 															<Badge variant="outline" class="p-1 text-xs">
@@ -376,7 +377,7 @@
 											<LoaderCircle class="h-2 w-2 animate-spin"></LoaderCircle>
 										{:then fee}
 											<span class={fee ? '' : 'text-green-500'}>
-												Swap required ({formatAmount(fee, currentUnit)} swap fee)
+												{requires_swap()} ({formatAmount(fee, currentUnit)} swap fee)
 											</span>
 										{/await}
 									</span>
@@ -394,7 +395,7 @@
 												</Tooltip.Trigger>
 												<Tooltip.Content>
 													<div class="flex items-center gap-1 text-xs">
-														Selected coins:
+														{selected_proofs()}:
 														<Badge variant="outline" class="p-1 text-xs">
 															{selectedProofs.map((p) => p.amount).join(', ')}
 														</Badge>
@@ -403,7 +404,7 @@
 											</Tooltip.Root>
 										</Tooltip.Provider>
 									</span>
-									<span class="text-green-500"> Token can be sent offline </span>
+									<span class="text-green-500"> {token_can_be_sent_offline()} </span>
 								{/if}
 							</div>
 							<div class="relative flex h-10 w-full gap-2">
@@ -413,7 +414,7 @@
 									</button>
 									<!-- content here -->
 									<Input
-										placeholder="npub... or pubkey..."
+										placeholder={npub_or_pubkey()}
 										bind:value={tokenOptions.pubkey}
 										oninput={() =>
 											(tokenOptions.isValidPubkey = checkValidPubkey(tokenOptions.pubkey))}
@@ -441,18 +442,18 @@
 									<Banknote></Banknote>
 								{/if}
 								<span>
-									Create
+									{t_create()}
 									{#if tokenOptions.customOut}
-										<span> custom </span>
+										<span> {t_custom()} </span>
 									{/if}
 									{#if tokenOptions.p2pk}
-										<span> locked </span>
+										<span> {t_locked()} </span>
 										{#if tokenOptions.isOffline}
-											offline
+											{t_offline()}
 										{/if}
 									{/if}
 
-									cashu token
+									{cashu_token()}
 								</span>
 							</Button>
 						</div>
@@ -483,7 +484,7 @@
 									{:else}
 										<Zap></Zap>
 									{/if}
-									Prepare payment
+									{prepare_payment()}
 								</Button>
 							</div>
 						</div>

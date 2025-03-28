@@ -11,6 +11,7 @@
 	import { toast } from 'svelte-sonner';
 	import { reencrypt } from '$lib/init/init';
 	import { ensureError } from '$lib/helpers/errors';
+	import { encrypt_wallet_storage, incorrect_passphrase, keep_nuts_safe, passphrase_cannot_be_empty, passphrase_do_not_match, t_back, t_encrypt, wallet_encrypted_with_passphrase } from '$lib/paraglide/messages';
 
 	let oldPass = $state('');
 	let pass = $state('');
@@ -30,19 +31,19 @@
 			e.preventDefault();
 			if ($usePassword && $key) {
 				if (!(await checkIfKeysMatch($key, await kdf(oldPass)))) {
-					return toast.warning('The current password is incorrect');
+					return toast.warning(incorrect_passphrase());
 				}
 			}
 
 			if (!pass) {
-				toast.warning('Password cannot be empty');
+				toast.warning(passphrase_cannot_be_empty());
 				setTimeout(() => {
 					inputFocus?.focus();
 				}, 0);
 				return;
 			}
 			if (pass !== confPass) {
-				toast.warning('Passwords do not match');
+				toast.warning(passphrase_do_not_match());
 				setTimeout(() => {
 					inputFocus?.focus();
 				}, 0);
@@ -54,7 +55,7 @@
 				usePassword.set(true);
 			}
 			await reencrypt();
-			toast.success('Wallet encrypted with new passphrase');
+			toast.success(wallet_encrypted_with_passphrase());
 			push('/wallet/settings/security');
 		} catch (error) {
 			const err = ensureError(error);
@@ -69,8 +70,8 @@
 <div class="flex h-full items-center justify-center">
 	<div class="bg-base-100 flex w-full max-w-4xl flex-col gap-3 rounded-lg p-5 text-center lg:p-10">
 		<div class="flex flex-col gap-5">
-			<p class="text-lg font-bold">Encrypt wallet storage</p>
-			<p>Set up wallet encryption to keep your nuts safe.</p>
+			<p class="text-lg font-bold">{encrypt_wallet_storage()}</p>
+			<p>{keep_nuts_safe()}</p>
 		</div>
 		<form class="flex flex-col gap-2" onsubmit={changePass}>
 			{#if $usePassword}
@@ -85,7 +86,7 @@
 			<Input type="password" placeholder="Confirm passphrase" bind:value={confPass} />
 			<Form.Button>
 				<Lock></Lock>
-				Encrypt</Form.Button
+				{t_encrypt()}</Form.Button
 			>
 		</form>
 		<div class="mt-10">
@@ -95,7 +96,7 @@
 					pop();
 				}}
 			>
-				Back
+				{t_back()}
 			</Button>
 		</div>
 	</div>

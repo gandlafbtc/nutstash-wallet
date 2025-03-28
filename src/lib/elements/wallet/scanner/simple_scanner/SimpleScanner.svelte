@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { camera_not_found, loading_camera, scan_a_X_qr, stop_scanning } from '$lib/paraglide/messages';
 	import { Scan, SwitchCamera } from 'lucide-svelte';
 	import QrScanner from 'qr-scanner';
 	import { onDestroy, onMount } from 'svelte';
@@ -43,14 +44,12 @@
 	});
 
 	onDestroy(() => {
-		console.log('destroying scanner');
 		if (qrScanner) {
 			qrScanner.destroy();
 		}
 	});
 
 	const onScanSuccess = (result: QrScanner.ScanResult) => {
-		console.log('scanned', result.data);
 		scannedResult = result.data;
 		isScanning = false;
 	};
@@ -58,14 +57,14 @@
 
 <div class="flex min-h-96 w-full flex-col items-center justify-center">
 	<p>
-		Please scan a {whatToScan ?? ''} QR to continue.
+		{scan_a_X_qr({type: whatToScan ?? ''})}
 	</p>
 	<div class="relative flex h-full w-80 items-center justify-center xl:w-[600px]">
 		<div class="video-wrapper h-80 w-80 rounded-lg border bg-black p-2 xl:w-[600px]">
 			{#if cams === undefined}
-				loading camera ...
+				{loading_camera()}
 			{:else if cams?.length === 0}
-				no camera found...
+				{camera_not_found()}
 			{/if}
 			<!-- svelte-ignore a11y_media_has_caption -->
 			<video bind:this={videoElem} width="100%" height="auto" class="video-container"> </video>
@@ -91,7 +90,7 @@
 	</div>
 	<div class="pt-4"></div>
 	<div class="w-80 pb-10 xl:w-[600px]">
-		<Button class="w-full" onclick={() => (isScanning = false)}>Stop scanning</Button>
+		<Button class="w-full" onclick={() => (isScanning = false)}>{stop_scanning()}</Button>
 	</div>
 </div>
 

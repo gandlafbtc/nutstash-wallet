@@ -2,6 +2,7 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	import { no_known_action_for_pasted, paste_from_clipboard } from '$lib/paraglide/messages';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import { sendInput } from '$lib/stores/session/sendInput';
 	import { scanresultStore } from '$lib/stores/session/transitionstores';
@@ -48,7 +49,7 @@
 			} else if (checkValidPubkey(pasted)) {
 				pubkeyScanned(pasted);
 			} else {
-				toast.warning('No known action available for pasted informaion');
+				toast.warning(no_known_action_for_pasted());
 			}
 			pasted = '';
 		}, 100);
@@ -112,7 +113,7 @@
 			onpaste={(e) => onPaste()}
 			class="w-80 resize-none rounded-sm border-dashed bg-opacity-5 focus:outline-transparent focus-visible:outline-transparent xl:w-[600px] "
 			inputmode="none"
-			placeholder="        Paste something from clipboard..."
+			placeholder={`        ${paste_from_clipboard()}`}
 		></Input>
 	</div>
 </div>

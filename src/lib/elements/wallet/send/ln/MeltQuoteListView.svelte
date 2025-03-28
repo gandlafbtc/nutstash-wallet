@@ -3,6 +3,7 @@
 	import { MediaQuery } from 'runed';
 	import * as Pagination from '$lib/components/ui/pagination';
 	import MeltQuoteListItem from './MeltQuoteListItem.svelte';
+	import { nothing_here_yet, t_payments } from '$lib/paraglide/messages';
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
@@ -15,7 +16,7 @@
 </script>
 
 <div class="h-full">
-	<p class="text-lg font-bold">Lightning payments</p>
+	<p class="text-lg font-bold">{t_payments()}</p>
 	{#if $meltQuotesStore.length}
 		{#each currentQuotes as quote}
 			<MeltQuoteListItem {quote}></MeltQuoteListItem>
@@ -48,7 +49,7 @@
 		</Pagination.Root>
 	{:else}
 		<div class="h-20">
-			<p>No payments yet.</p>
+			<p>{nothing_here_yet()}</p>
 		</div>
 	{/if}
 </div>

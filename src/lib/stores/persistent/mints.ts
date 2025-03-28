@@ -1,14 +1,10 @@
-import { browser } from '$app/environment';
 import { ContextError, ensureError } from '$lib/helpers/errors';
-import { CashuMint, CashuWallet, type MintActiveKeys } from '@cashu/cashu-ts';
+import { CashuMint, type MintActiveKeys } from '@cashu/cashu-ts';
 
 import { get, writable } from 'svelte/store';
-import { seed } from './mnemonic';
 import type { Mint } from '$lib/db/models/types';
-import { DB } from '$lib/db/db';
 import { createEncryptionHelper, type EncryptionHelper } from './helper/encryptionHelper';
-import { createDefaultStoreFunctions, getBy } from './helper/storeHelper';
-import { selectedMint } from '../local/selectedMints';
+import { createDefaultStoreFunctions } from './helper/storeHelper';
 import { getHostFromUrl } from '$lib/util/utils';
 
 const encryptionHelper = createEncryptionHelper<Mint>('encrypted-mints');

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
 	import { LANGS, type Language } from '$lib/langs';
+	import { t_language } from '$lib/paraglide/messages';
 	import { locales, getLocale, setLocale, type Locale } from '$lib/paraglide/runtime.js';
 
 	interface Props {
@@ -25,7 +26,7 @@
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
-			<Select.GroupHeading>Language</Select.GroupHeading>
+			<Select.GroupHeading>{t_language()}</Select.GroupHeading>
 			{#each locales as lang}
 				{@const label = LANGS.find((l) => l.val === lang)?.label ?? lang}
 				<Select.Item value={lang} {label}>

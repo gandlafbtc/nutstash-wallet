@@ -5,6 +5,7 @@
 	import type { StoredPaymentRequest } from '$lib/db/models/types';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
+	import { cashu_request, t_close } from '$lib/paraglide/messages';
 	import { copyTextToClipboard } from '$lib/util/utils';
 	import { formatAmount } from '$lib/util/walletUtils';
 	import { PaymentRequest } from '@cashu/cashu-ts';
@@ -33,7 +34,7 @@
 	<Card.Header>
 		<Card.Title>
 			<a href={`/#/wallet/receive/cashureq/${request.id}`}>
-				Cashu request #{request.id}
+				{cashu_request()} #{request.id}
 			</a>
 		</Card.Title>
 		<Card.Description>{request.mints?.join(', ')}</Card.Description>
@@ -53,7 +54,7 @@
 	</Card.Content>
 	<Card.Footer>
 		{#if !isListView}
-			<Button href="/#/wallet/">Close</Button>
+			<Button href="/#/wallet/">{t_close()}</Button>
 		{/if}
 	</Card.Footer>
 </Card.Root>

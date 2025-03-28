@@ -13,6 +13,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import { allowance_must_be_a_number, allowance_updated_to, are_you_sure_you_want_to_remove_connection, connected_services_will_no_longer_be_able_to_access, create_new_connection, max_connections_reached, nwc_connection_removed, nwc_connection_turned_off, nwc_is_ready, set_allowance_amout, t_allowance, t_cancel, t_change, t_confirm, t_connected, t_connections, t_disconnected, this_connection_will_be_able_to_access_funds } from '$lib/paraglide/messages';
 
 	let isShow = $state(false);
 	let isOpen = $state(false);
@@ -28,10 +29,10 @@
 			if (conn.isActive) {
 				await nwc.generateNWCConnection();
 				await nwc.listenToNWCCommands();
-				toast.success('NWC is ready');
+				toast.success(nwc_is_ready());
 			} else {
 				await nwc.unsubscribeNWC();
-				toast.info('NWC connection was turned off');
+				toast.info(nwc_connection_turned_off());
 			}
 		} catch (error) {
 			const err = ensureError(error);
@@ -46,7 +47,7 @@
 			isSwitching = true;
 			await nwc.unsubscribeNWC();
 			await nwcKeysStore.remove(conn.walletPublicKey, 'walletPublicKey');
-			toast.info('NWC connection removed');
+			toast.info(nwc_connection_removed());
 			isOpen = false;
 		} catch (error) {
 			const err = ensureError(error);
@@ -63,13 +64,13 @@
 			const connection = { ...conn };
 			const allowanceInt = parseInt(inputAllowance);
 			if (isNaN(allowanceInt)) {
-				toast.warning('Allowance Must be a number');
+				toast.warning(allowance_must_be_a_number());
 				return;
 			}
 			connection.allowanceLeft = allowanceInt;
 			await nwcKeysStore.addOrUpdate(connection.walletPublicKey, connection, 'walletPublicKey');
 			isOpenAllowance = false;
-			toast.info('Allowance updated to ' + formatAmount(allowanceInt));
+			toast.info(allowance_updated_to({amount: formatAmount(allowanceInt)}));
 			inputAllowance = '';
 		} catch (error) {
 			const err = ensureError(error);
@@ -84,15 +85,15 @@
 <div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
 	<Button onclick={nwc.generateNWCConnection} disabled={$nwcKeysStore.length ? true : false}>
 		{#if $nwcKeysStore.length}
-			Max connections reached (1)
+			{max_connections_reached()} (1)
 		{:else}
-			Create NWC connection
+			{create_new_connection()}
 		{/if}
 	</Button>
 
 	{#if $nwcKeysStore.length}
 		<div class="mt-6 flex flex-col">
-			<p>Connections</p>
+			<p>{t_connections()}</p>
 			{#each $nwcKeysStore as conn}
 				{@const connectionString = nwc.getConnectionString(conn)}
 				<div class="my-2 flex flex-col gap-4 rounded-lg border p-4">
@@ -115,14 +116,14 @@
 						</div>
 					</button>
 					<p class="flex flex-col justify-center gap-1">
-						<span class="">Allowance </span>
+						<span class="">{t_allowance()}</span>
 						<span class="flex gap-1">
 							<Badge variant="outline">
 								{formatAmount(conn.allowanceLeft)}
 							</Badge>
 							<button class="flex items-center underline" onclick={() => (isOpenAllowance = true)}>
 								<Pen class="w-4"></Pen>
-								change
+								{t_change()}
 							</button>
 						</span>
 					</p>
@@ -132,9 +133,9 @@
 							{#if isSwitching}
 								<LoaderCircle class="animate-spin"></LoaderCircle>
 							{:else if conn.isActive}
-								<p class="text-green-500">Connected</p>
+								<p class="text-green-500">{t_connected()}</p>
 							{:else}
-								<p class="text-destructive">Disconnected</p>
+								<p class="text-destructive">{t_disconnected()}</p>
 							{/if}
 						</div>
 						<button onclick={() => (isOpen = !isOpen)}>
@@ -146,10 +147,10 @@
 					<Dialog.Content>
 						<Dialog.Header>
 							<Dialog.Title
-								>Are you sure you want to disconnect and remove this connection?</Dialog.Title
+								>{are_you_sure_you_want_to_remove_connection()}</Dialog.Title
 							>
 							<Dialog.Description>
-								Services connected will no longer be able to access this wallet.
+								{connected_services_will_no_longer_be_able_to_access()}
 							</Dialog.Description>
 						</Dialog.Header>
 
@@ -160,7 +161,7 @@
 									isOpen = false;
 								}}
 							>
-								Cancel
+								{t_cancel()}
 							</Button>
 							<Button variant="destructive" onclick={() => removeConnection(conn)}>Remove</Button>
 						</Dialog.Footer>
@@ -169,10 +170,9 @@
 				<Dialog.Root bind:open={isOpenAllowance}>
 					<Dialog.Content>
 						<Dialog.Header>
-							<Dialog.Title>Set an allowance amount</Dialog.Title>
+							<Dialog.Title>{set_allowance_amout()}</Dialog.Title>
 							<Dialog.Description>
-								This connection will be able to access funds from your wallet, up to the amount set
-								as the allowance.
+								{this_connection_will_be_able_to_access_funds()}
 							</Dialog.Description>
 						</Dialog.Header>
 						<Input
@@ -193,9 +193,9 @@
 									isOpenAllowance = false;
 								}}
 							>
-								Cancel
+								{t_cancel()}
 							</Button>
-							<Button onclick={() => updateConnection(conn)}>Confirm</Button>
+							<Button onclick={() => updateConnection(conn)}>{t_confirm()}</Button>
 						</Dialog.Footer>
 					</Dialog.Content>
 				</Dialog.Root>

@@ -12,6 +12,7 @@
 	import MintSwap from '../mint/MintSwap.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { discoverMints } from '$lib/actions/nostr';
+	import { add_mint, added_mints, default_mint, mint_settings, t_manage, t_swap } from '$lib/paraglide/messages';
 
 	let defaultMint: Mint | undefined = $derived($mints[0]);
 
@@ -27,29 +28,29 @@
 
 <div class="flex h-full w-80 flex-col gap-4 xl:w-[600px]">
 	<div>
-		<span class="text-lg font-bold"> Mint Settings </span>
+		<span class="text-lg font-bold"> {mint_settings()} </span>
 	</div>
 	<Tabs.Root value={$mints.length ? 'manage' : 'add'} class="w-full">
 		<Tabs.List>
-			<Tabs.Trigger value="manage">Manage</Tabs.Trigger>
-			<Tabs.Trigger value="add" onclick={() => discoverMints()}>Add Mint</Tabs.Trigger>
+			<Tabs.Trigger value="manage">{t_manage()}</Tabs.Trigger>
+			<Tabs.Trigger value="add" onclick={() => discoverMints()}>{add_mint()}</Tabs.Trigger>
 		</Tabs.List>
 		<Tabs.Content value="manage">
 			{#if defaultMint}
 				<!-- content here -->
 				<div class="mt-4 flex flex-col gap-6">
 					<div class="flex flex-col gap-3">
-						<span class="text-sm font-bold">Default mint</span>
+						<span class="text-sm font-bold">{default_mint()}</span>
 						<MintSelector mint={defaultMint} onchange={onMintChange}></MintSelector>
 					</div>
 					<div class="flex flex-col gap-3">
-						<span class="text-sm font-bold">Mint swap</span>
+						<span class="text-sm font-bold">{t_swap()}</span>
 						<span class="text-sm"> </span>
-						<Button href="/#/wallet/settings/mints/swap">Swap</Button>
+						<Button href="/#/wallet/settings/mints/swap">{t_swap()}</Button>
 					</div>
 
 					<div class="flex flex-col gap-1">
-						<span class="text-sm font-bold">Added mints</span>
+						<span class="text-sm font-bold">{added_mints()}</span>
 						{#each $mints as m, i}
 							<div
 								class="my-2 flex items-center gap-2 rounded-lg border p-2 text-sm"
