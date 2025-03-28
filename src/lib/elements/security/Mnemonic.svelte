@@ -11,7 +11,6 @@
 			copyTextToClipboard(text);
 		}
 	};
-
 </script>
 
 <div class="flex flex-col gap-6">

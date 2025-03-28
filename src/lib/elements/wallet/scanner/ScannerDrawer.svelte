@@ -10,12 +10,10 @@
 <Drawer.Root bind:open={$openScannerDrawer} nested={true}>
 	<Drawer.Content>
 		<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
-			<Drawer.Title>{scan_a_X_qr({type:''})}</Drawer.Title>
-			<Drawer.Description
-				>
+			<Drawer.Title>{scan_a_X_qr({ type: '' })}</Drawer.Title>
+			<Drawer.Description>
 				{you_can_scan_cashu_bla_bla()}
-				</Drawer.Description
-			>
+			</Drawer.Description>
 		</Drawer.Header>
 		<!-- {#if isTauriMobile}
     <MobileScanner></MobileScanner>

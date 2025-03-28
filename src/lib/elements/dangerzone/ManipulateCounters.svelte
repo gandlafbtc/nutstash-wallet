@@ -1,7 +1,10 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { KeysetCount } from '$lib/db/models/types';
-	import { manipulating_counters_can_mess_up_restore_process, t_warning } from '$lib/paraglide/messages';
+	import {
+		manipulating_counters_can_mess_up_restore_process,
+		t_warning
+	} from '$lib/paraglide/messages';
 	import { countsStore } from '$lib/stores/persistent/counts';
 	import NumberFlow from '@number-flow/svelte';
 

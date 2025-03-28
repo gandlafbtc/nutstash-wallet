@@ -10,7 +10,11 @@
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import DiscoverMints from '$lib/elements/mint/DiscoverMints.svelte';
 	import Divider from '$lib/elements/ui/Divider.svelte';
-	import { add_more_mints, restore_ecash_from_seed_phrase, t_restore } from '$lib/paraglide/messages';
+	import {
+		add_more_mints,
+		restore_ecash_from_seed_phrase,
+		t_restore
+	} from '$lib/paraglide/messages';
 
 	let isInProgress = $state(false);
 

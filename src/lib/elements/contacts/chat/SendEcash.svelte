@@ -13,7 +13,14 @@
 	import { toast } from 'svelte-sonner';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import { ensureError } from '$lib/helpers/errors';
-	import { amount_too_small, insufficient_balance, no_mint_found, t_available, t_send, t_to } from '$lib/paraglide/messages';
+	import {
+		amount_too_small,
+		insufficient_balance,
+		no_mint_found,
+		t_available,
+		t_send,
+		t_to
+	} from '$lib/paraglide/messages';
 
 	let {
 		sendCallback,
@@ -67,14 +74,17 @@
 	{:else}
 		<MintSelector bind:mint disabled={mintSelectDisabled}></MintSelector>
 		<div class="flex items-center justify-between gap-2">
-			{formatAmount(getAmountForTokenSet(balance), currentUnit)} {t_available()}
+			{formatAmount(getAmountForTokenSet(balance), currentUnit)}
+			{t_available()}
 			<UnitSelector bind:currentUnit selectedMints={[mint]} disabled={unitSelectDisabled}
 			></UnitSelector>
 		</div>
 		<Input type="number" bind:value={amount}></Input>
 		<div class="flex flex-col gap-2">
 			<p>
-				{t_send()} {formatAmount(amount, currentUnit)} {t_to()}
+				{t_send()}
+				{formatAmount(amount, currentUnit)}
+				{t_to()}
 			</p>
 			<p class="w-72 overflow-clip text-ellipsis">
 				{to}

@@ -69,7 +69,8 @@
 				{formatAmount(tx.amount, 'sat')}
 			</Badge>
 			<Badge variant="outline" class="">
-				{formatAmount(tx.fees ?? 0, 'sat')} {t_fee()}
+				{formatAmount(tx.fees ?? 0, 'sat')}
+				{t_fee()}
 			</Badge>
 		</div>
 	</Card.Content>

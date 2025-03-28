@@ -19,7 +19,7 @@
 				contactsStore.addMany($discoveredContacts);
 			}}
 		>
-		{import_all()}
+			{import_all()}
 		</Button>
 		<Divider text="Or select"></Divider>
 		<ScrollArea class="h-96">

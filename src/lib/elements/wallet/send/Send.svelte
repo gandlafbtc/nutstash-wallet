@@ -49,7 +49,25 @@
 	import SimpleScanner from '../scanner/simple_scanner/SimpleScanner.svelte';
 	import { nip19 } from 'nostr-tools';
 	import { sendInput } from '$lib/stores/session/sendInput';
-	import { amount_too_small, cashu_token, enter_amount_to_send_ecash, invalid_pubkey, no_mint_found, not_enough_funds, npub_or_pubkey, paste_invoice_to_send_via_lightning, prepare_payment, requires_swap, selected_proofs, t_available, t_create, t_custom, t_locked, t_offline, token_can_be_sent_offline } from '$lib/paraglide/messages';
+	import {
+		amount_too_small,
+		cashu_token,
+		enter_amount_to_send_ecash,
+		invalid_pubkey,
+		no_mint_found,
+		not_enough_funds,
+		npub_or_pubkey,
+		paste_invoice_to_send_via_lightning,
+		prepare_payment,
+		requires_swap,
+		selected_proofs,
+		t_available,
+		t_create,
+		t_custom,
+		t_locked,
+		t_offline,
+		token_can_be_sent_offline
+	} from '$lib/paraglide/messages';
 
 	interface Props {
 		input?: string;

@@ -4,7 +4,15 @@
 	import SendEcash from '$lib/elements/contacts/chat/SendEcash.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import { ensureError } from '$lib/helpers/errors';
-	import { could_not_parse_request, error_when_sending, no_matching_truested_mint_for_request, no_payment_request_to_send, no_supported_transport, t_back, unsupported_transport } from '$lib/paraglide/messages';
+	import {
+		could_not_parse_request,
+		error_when_sending,
+		no_matching_truested_mint_for_request,
+		no_payment_request_to_send,
+		no_supported_transport,
+		t_back,
+		unsupported_transport
+	} from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { decodePaymentRequest, type Token } from '@cashu/cashu-ts';
 	import { toast } from 'svelte-sonner';
@@ -55,7 +63,7 @@
 			: 0}
 		{#if requestMintIndex === undefined}
 			{no_matching_truested_mint_for_request()}
-		<AddMint readOnly={true} mintUrlToAdd={request.mints?.[0]}></AddMint>
+			<AddMint readOnly={true} mintUrlToAdd={request.mints?.[0]}></AddMint>
 		{:else}
 			<SendEcash
 				unitSelectDisabled={request.unit ? true : false}

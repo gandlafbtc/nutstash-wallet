@@ -11,7 +11,16 @@
 	import { toast } from 'svelte-sonner';
 	import { reencrypt } from '$lib/init/init';
 	import { ensureError } from '$lib/helpers/errors';
-	import { encrypt_wallet_storage, incorrect_passphrase, keep_nuts_safe, passphrase_cannot_be_empty, passphrase_do_not_match, t_back, t_encrypt, wallet_encrypted_with_passphrase } from '$lib/paraglide/messages';
+	import {
+		encrypt_wallet_storage,
+		incorrect_passphrase,
+		keep_nuts_safe,
+		passphrase_cannot_be_empty,
+		passphrase_do_not_match,
+		t_back,
+		t_encrypt,
+		wallet_encrypted_with_passphrase
+	} from '$lib/paraglide/messages';
 
 	let oldPass = $state('');
 	let pass = $state('');

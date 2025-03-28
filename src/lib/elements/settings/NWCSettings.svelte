@@ -13,7 +13,26 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { ensureError } from '$lib/helpers/errors';
-	import { allowance_must_be_a_number, allowance_updated_to, are_you_sure_you_want_to_remove_connection, connected_services_will_no_longer_be_able_to_access, create_new_connection, max_connections_reached, nwc_connection_removed, nwc_connection_turned_off, nwc_is_ready, set_allowance_amout, t_allowance, t_cancel, t_change, t_confirm, t_connected, t_connections, t_disconnected, this_connection_will_be_able_to_access_funds } from '$lib/paraglide/messages';
+	import {
+		allowance_must_be_a_number,
+		allowance_updated_to,
+		are_you_sure_you_want_to_remove_connection,
+		connected_services_will_no_longer_be_able_to_access,
+		create_new_connection,
+		max_connections_reached,
+		nwc_connection_removed,
+		nwc_connection_turned_off,
+		nwc_is_ready,
+		set_allowance_amout,
+		t_allowance,
+		t_cancel,
+		t_change,
+		t_confirm,
+		t_connected,
+		t_connections,
+		t_disconnected,
+		this_connection_will_be_able_to_access_funds
+	} from '$lib/paraglide/messages';
 
 	let isShow = $state(false);
 	let isOpen = $state(false);
@@ -70,7 +89,7 @@
 			connection.allowanceLeft = allowanceInt;
 			await nwcKeysStore.addOrUpdate(connection.walletPublicKey, connection, 'walletPublicKey');
 			isOpenAllowance = false;
-			toast.info(allowance_updated_to({amount: formatAmount(allowanceInt)}));
+			toast.info(allowance_updated_to({ amount: formatAmount(allowanceInt) }));
 			inputAllowance = '';
 		} catch (error) {
 			const err = ensureError(error);
@@ -146,9 +165,7 @@
 				<Dialog.Root bind:open={isOpen}>
 					<Dialog.Content>
 						<Dialog.Header>
-							<Dialog.Title
-								>{are_you_sure_you_want_to_remove_connection()}</Dialog.Title
-							>
+							<Dialog.Title>{are_you_sure_you_want_to_remove_connection()}</Dialog.Title>
 							<Dialog.Description>
 								{connected_services_will_no_longer_be_able_to_access()}
 							</Dialog.Description>

@@ -74,11 +74,15 @@
 			{:else}
 				<MintSelector bind:mint></MintSelector>
 				<div class="flex items-center justify-between gap-2">
-					{formatAmount(getAmountForTokenSet(balance), currentUnit)} {t_available}
+					{formatAmount(getAmountForTokenSet(balance), currentUnit)}
+					{t_available}
 					<UnitSelector bind:currentUnit selectedMints={[mint]}></UnitSelector>
 				</div>
 				<Input type="number" bind:value={amount}></Input>
-				{t_send()} {formatAmount(amount, currentUnit)} {t_to()} {to.alias}
+				{t_send()}
+				{formatAmount(amount, currentUnit)}
+				{t_to()}
+				{to.alias}
 			{/if}
 			<Button onclick={send} disabled={isLoading}>
 				{#if isLoading}

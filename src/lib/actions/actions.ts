@@ -46,7 +46,21 @@ import { getNprofile } from './nostr';
 import { cashuRequestsStore } from '$lib/stores/persistent/requests';
 import { hashToCurve } from '@cashu/crypto/modules/common';
 import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
-import { at_mint, cannot_get_fee_for_unknown_mint, decoding_invoice_failed, ecash_token_created, error_when_creating_melt_quote_for_mint, error_when_creating_mint_quote_for_mint, invalid_token, invalid_tx_id, melt_quote_expired, not_enough_funds, paid_invoice, received_amount, token_received } from '$lib/paraglide/messages';
+import {
+	at_mint,
+	cannot_get_fee_for_unknown_mint,
+	decoding_invoice_failed,
+	ecash_token_created,
+	error_when_creating_melt_quote_for_mint,
+	error_when_creating_mint_quote_for_mint,
+	invalid_token,
+	invalid_tx_id,
+	melt_quote_expired,
+	not_enough_funds,
+	paid_invoice,
+	received_amount,
+	token_received
+} from '$lib/paraglide/messages';
 
 export const createMintQuote = async (
 	mintUrl: string,
@@ -56,7 +70,7 @@ export const createMintQuote = async (
 	const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit);
 	const quote = await wallet.createMintQuote(amount);
 	if (!quote) {
-		throw new Error(error_when_creating_mint_quote_for_mint({mintUrl}));
+		throw new Error(error_when_creating_mint_quote_for_mint({ mintUrl }));
 	}
 	const quoteToStore: StoredMintQuote = {
 		...quote,
@@ -78,12 +92,12 @@ export const createMeltQuote = async (
 ) => {
 	const amount = decode(invoice).sections[2].value / 1000;
 	if (!amount) {
-		throw new Error(decoding_invoice_failed({invoice}));
+		throw new Error(decoding_invoice_failed({ invoice }));
 	}
 	const wallet = await getWalletWithUnit(get(mints), mintUrl, options?.unit);
 	const quote = await wallet.createMeltQuote(invoice);
 	if (!quote) {
-		throw new Error(error_when_creating_melt_quote_for_mint({mintUrl}));
+		throw new Error(error_when_creating_melt_quote_for_mint({ mintUrl }));
 	}
 	const quoteToStore: StoredMeltQuote = {
 		...quote,
@@ -150,9 +164,12 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 	quoteToStore.state = updatedQuote.state;
 	quoteToStore.lastChangedAt = Date.now();
 	await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, 'quote');
-	toast.success( received_amount({amount: formatAmount(getAmountForTokenSet(proofs), quoteToStore.unit)}), {
-		description: at_mint({mintUrl: quoteToStore.mintUrl})
-	});
+	toast.success(
+		received_amount({ amount: formatAmount(getAmountForTokenSet(proofs), quoteToStore.unit) }),
+		{
+			description: at_mint({ mintUrl: quoteToStore.mintUrl })
+		}
+	);
 };
 
 export const meltProofs = async (quote: StoredMeltQuote, options?: { privkey?: string }) => {
@@ -190,7 +207,7 @@ export const meltProofs = async (quote: StoredMeltQuote, options?: { privkey?: s
 		getAmountForTokenSet(change) +
 		(getAmountForTokenSet(aproxProofs) - (getAmountForTokenSet(keep) + getAmountForTokenSet(send)));
 	await meltQuotesStore.addOrUpdate(quoteToStore.quote, quoteToStore, 'quote');
-	toast.success(paid_invoice() + ": " + formatAmount(quote.amount, 'sat'));
+	toast.success(paid_invoice() + ': ' + formatAmount(quote.amount, 'sat'));
 	return { change, quoteToStore };
 };
 

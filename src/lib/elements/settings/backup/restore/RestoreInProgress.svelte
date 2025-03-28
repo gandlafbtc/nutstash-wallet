@@ -20,7 +20,17 @@
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { push } from 'svelte-spa-router';
-	import { add_restored_to_wallet, added_restored_ecash_to_your_wallet, adding_will_replace_ecash, restore_in_progress, restore_process_completed, t_add, t_cancel, t_summary, wallet_already_contains_ecash } from '$lib/paraglide/messages';
+	import {
+		add_restored_to_wallet,
+		added_restored_ecash_to_your_wallet,
+		adding_will_replace_ecash,
+		restore_in_progress,
+		restore_process_completed,
+		t_add,
+		t_cancel,
+		t_summary,
+		wallet_already_contains_ecash
+	} from '$lib/paraglide/messages';
 
 	const restoreMints = $derived($mints);
 

@@ -13,7 +13,23 @@
 	import { isOnboarded } from '$lib/stores/local/message';
 	import { ensureError } from '$lib/helpers/errors';
 	import { LoaderCircle } from 'lucide-svelte';
-	import { create_new_nutstash_wallet, create_new_wallet, if_you_have_no_backup, import_a_nutstash_wallet_file, import_wallet_file, looks_like_your_wallet_is_updating_old, migrate_ecash, migrate_now, only_ecash_and_mints_migrate, recover_ecash_from, restore_lost_nuts, select_this_option_if_you_have_exported, select_this_to_restore_wallet, select_way_to_start, upgrading_nutstash } from '$lib/paraglide/messages';
+	import {
+		create_new_nutstash_wallet,
+		create_new_wallet,
+		if_you_have_no_backup,
+		import_a_nutstash_wallet_file,
+		import_wallet_file,
+		looks_like_your_wallet_is_updating_old,
+		migrate_ecash,
+		migrate_now,
+		only_ecash_and_mints_migrate,
+		recover_ecash_from,
+		restore_lost_nuts,
+		select_this_option_if_you_have_exported,
+		select_this_to_restore_wallet,
+		select_way_to_start,
+		upgrading_nutstash
+	} from '$lib/paraglide/messages';
 	let isLegacyWallet = $state(false);
 	let isLoading = $state(false);
 	onMount(() => {

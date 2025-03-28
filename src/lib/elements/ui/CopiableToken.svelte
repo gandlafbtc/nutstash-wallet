@@ -36,7 +36,8 @@
 				<div class="flex items-center gap-2 text-center">{t_copied()}</div>
 			{:else}
 				<div class="flex items-center gap-2">
-					<Copy class="h-5 w-5"></Copy> {t_copy()}
+					<Copy class="h-5 w-5"></Copy>
+					{t_copy()}
 				</div>
 			{/if}
 		</div>

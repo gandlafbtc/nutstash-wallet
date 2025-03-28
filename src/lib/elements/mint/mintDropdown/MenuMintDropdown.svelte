@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Sidebar from '$lib/components/ui/sidebar';
-	import { Ellipsis, } from 'lucide-svelte';
+	import { Ellipsis } from 'lucide-svelte';
 	import MintDropdownActions from './MintDropdownActions.svelte';
 
 	let { mint } = $props();

@@ -1,7 +1,14 @@
 <script>
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { ensureError } from '$lib/helpers/errors';
-	import { error_updating_mint, make_default, mint_updated, remove_mint, t_update, updating_mint } from '$lib/paraglide/messages';
+	import {
+		error_updating_mint,
+		make_default,
+		mint_updated,
+		remove_mint,
+		t_update,
+		updating_mint
+	} from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { Landmark, Loader, Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
@@ -19,7 +26,7 @@
 			console.error(error);
 			const err = ensureError(error);
 			console.error(err);
-			toast.error(error_updating_mint(), {description:err.message});
+			toast.error(error_updating_mint(), { description: err.message });
 		} finally {
 			isLoading = false;
 		}

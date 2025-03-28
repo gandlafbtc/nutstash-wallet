@@ -13,7 +13,17 @@
 	import { swapsStore } from '$lib/stores/persistent/swap';
 	import { push } from 'svelte-spa-router';
 	import CompactSwap from './CompactSwap.svelte';
-	import { available_for_swap, fee_reserve, not_enough_funds, previous_swaps, t_amount, t_available, t_from, t_swap, t_to } from '$lib/paraglide/messages';
+	import {
+		available_for_swap,
+		fee_reserve,
+		not_enough_funds,
+		previous_swaps,
+		t_amount,
+		t_available,
+		t_from,
+		t_swap,
+		t_to
+	} from '$lib/paraglide/messages';
 	let swapOutMint = $state($mints[0]);
 	let swapInMint = $state($mints[0]);
 

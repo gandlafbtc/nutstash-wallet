@@ -12,7 +12,14 @@
 	import MintSwap from '../mint/MintSwap.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { discoverMints } from '$lib/actions/nostr';
-	import { add_mint, added_mints, default_mint, mint_settings, t_manage, t_swap } from '$lib/paraglide/messages';
+	import {
+		add_mint,
+		added_mints,
+		default_mint,
+		mint_settings,
+		t_manage,
+		t_swap
+	} from '$lib/paraglide/messages';
 
 	let defaultMint: Mint | undefined = $derived($mints[0]);
 

@@ -51,7 +51,24 @@
 	import { onMount } from 'svelte';
 	import { ensureError } from '$lib/helpers/errors';
 	import { get } from 'svelte/store';
-	import { add_mint, mint_added, mint_already_added, no_url_entered, report_issue, t_account, t_add, t_chat, t_contacts, t_data, t_donate, t_help, t_mints, t_nostr, t_settings, t_wallet } from '$lib/paraglide/messages';
+	import {
+		add_mint,
+		mint_added,
+		mint_already_added,
+		no_url_entered,
+		report_issue,
+		t_account,
+		t_add,
+		t_chat,
+		t_contacts,
+		t_data,
+		t_donate,
+		t_help,
+		t_mints,
+		t_nostr,
+		t_settings,
+		t_wallet
+	} from '$lib/paraglide/messages';
 
 	let showAddMint = $state(false);
 	let isAddingMint = $state(false);

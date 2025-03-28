@@ -5,7 +5,11 @@
 	import { push } from 'svelte-spa-router';
 	// import { isAvailable, record, textRecord, scan } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '$lib/helpers/errors';
-	import { cashu_token_scanned, error_reading_from_tag, scanned_non_cashu_token } from '$lib/paraglide/messages';
+	import {
+		cashu_token_scanned,
+		error_reading_from_tag,
+		scanned_non_cashu_token
+	} from '$lib/paraglide/messages';
 	let scanned = $state('');
 	const abortController = new AbortController();
 	abortController.signal.onabort = (event) => {
@@ -54,7 +58,7 @@
 						toast.info(cashu_token_scanned());
 						push('/wallet/receive/cashu/' + scanned);
 					} else {
-						toast.warning(scanned_non_cashu_token()+ ": " + scanned);
+						toast.warning(scanned_non_cashu_token() + ': ' + scanned);
 					}
 				};
 			}

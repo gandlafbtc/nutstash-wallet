@@ -32,7 +32,33 @@
 	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
 	import { randDBKey } from '$lib/db/helper';
 	import { TransactionStatus, TransactionType } from '$lib/db/models/types';
-	import { all_signatures_valid, can_be_received_offline_without_trusting_the_sender, dont_forget_to_claim_it_when_youre_online, found_duplicates, found_duplicates_in_storage, locked_for_at_least_7_days, locked_to_my_wallet, Not_locked_to_me, nothing_found, offline_options, offline_receiving_requires_trusting_the_sender, offline_summary, offline_token_received, receive_cashu_token, receive_offline, t_discard, t_duplicates, t_receive, t_timelocked, timelock_expires, token_is_from_unknown_mint, trust_mint, unique_token, validating_mint_signatures, verifiable_signatures_not_included } from '$lib/paraglide/messages';
+	import {
+		all_signatures_valid,
+		can_be_received_offline_without_trusting_the_sender,
+		dont_forget_to_claim_it_when_youre_online,
+		found_duplicates,
+		found_duplicates_in_storage,
+		locked_for_at_least_7_days,
+		locked_to_my_wallet,
+		Not_locked_to_me,
+		nothing_found,
+		offline_options,
+		offline_receiving_requires_trusting_the_sender,
+		offline_summary,
+		offline_token_received,
+		receive_cashu_token,
+		receive_offline,
+		t_discard,
+		t_duplicates,
+		t_receive,
+		t_timelocked,
+		timelock_expires,
+		token_is_from_unknown_mint,
+		trust_mint,
+		unique_token,
+		validating_mint_signatures,
+		verifiable_signatures_not_included
+	} from '$lib/paraglide/messages';
 
 	interface Props {
 		token: Token;
@@ -157,7 +183,7 @@
 			},
 			'id'
 		);
-		toast.info(offline_token_received() +" " + dont_forget_to_claim_it_when_youre_online());
+		toast.info(offline_token_received() + ' ' + dont_forget_to_claim_it_when_youre_online());
 		push('/wallet/');
 	};
 </script>

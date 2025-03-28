@@ -44,6 +44,7 @@
 		{message[1].content}
 	</div>
 	<div class="text-xs opacity-35">
-		{formatDistance($now, message[1].created_at * 1000)} {t_ago()}
+		{formatDistance($now, message[1].created_at * 1000)}
+		{t_ago()}
 	</div>
 </a>

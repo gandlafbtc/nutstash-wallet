@@ -17,7 +17,13 @@
 	import { toast } from 'svelte-sonner';
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { ensureError } from '$lib/helpers/errors';
-	import { enter_amount_to_create_invoice, no_mint_found, paste_token_to_receive_ecash, receive_via_cashu_request, receive_via_lightning } from '$lib/paraglide/messages';
+	import {
+		enter_amount_to_create_invoice,
+		no_mint_found,
+		paste_token_to_receive_ecash,
+		receive_via_cashu_request,
+		receive_via_lightning
+	} from '$lib/paraglide/messages';
 
 	let entered: string = $state('');
 
@@ -169,7 +175,7 @@
 				: 'h-40'}"
 		>
 			{#if token.length}
-			<!--  -->
+				<!--  -->
 			{:else if amount.length}
 				<div class="flex flex-col items-center justify-center gap-2">
 					{#if !mint}

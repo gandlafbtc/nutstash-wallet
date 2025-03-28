@@ -1,7 +1,15 @@
 <script>
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import Card from '$lib/components/ui/card/card.svelte';
-	import { ecash_transactions, t_data, t_ecash, t_history, t_invoices, t_payments, t_requests } from '$lib/paraglide/messages';
+	import {
+		ecash_transactions,
+		t_data,
+		t_ecash,
+		t_history,
+		t_invoices,
+		t_payments,
+		t_requests
+	} from '$lib/paraglide/messages';
 	import {
 		ArrowLeftRight,
 		Coins,

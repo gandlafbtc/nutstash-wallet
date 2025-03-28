@@ -14,7 +14,15 @@
 	import { get } from 'svelte/store';
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
-	import { cannot_be_undone_delete_token, no_key_found_in_wallet_for_lock, sure_delete_token, t_cancel, t_claim, t_remove, t_show } from '$lib/paraglide/messages';
+	import {
+		cannot_be_undone_delete_token,
+		no_key_found_in_wallet_for_lock,
+		sure_delete_token,
+		t_cancel,
+		t_claim,
+		t_remove,
+		t_show
+	} from '$lib/paraglide/messages';
 
 	let isLoading = $state(false);
 	let showQR = $state(false);
@@ -58,7 +66,7 @@
 		if (lockPubs.length > 0) {
 			storedKeyPair = keysStore.getBy(lockPubs[0], 'publicKey');
 			if (!storedKeyPair) {
-				throw new Error(no_key_found_in_wallet_for_lock()+": "+lockPubs[0]);
+				throw new Error(no_key_found_in_wallet_for_lock() + ': ' + lockPubs[0]);
 			}
 			privkey = storedKeyPair.privateKey;
 		}
@@ -138,9 +146,7 @@
 <Dialog.Root bind:open={isOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title class="text-destructive"
-				>{sure_delete_token()}</Dialog.Title
-			>
+			<Dialog.Title class="text-destructive">{sure_delete_token()}</Dialog.Title>
 			<Dialog.Description>
 				{cannot_be_undone_delete_token()}
 			</Dialog.Description>

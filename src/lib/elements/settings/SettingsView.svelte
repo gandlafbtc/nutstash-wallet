@@ -11,14 +11,24 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import CurrencySettings from './CurrencySettings.svelte';
 	import EcashSettings from './EcashSettings.svelte';
-	import { backup_and_security, cashu_tokens, currencies_units, danger_zone, delete_wallet, general_settings, manipulate_counters, t_encryption } from '$lib/paraglide/messages';
+	import {
+		backup_and_security,
+		cashu_tokens,
+		currencies_units,
+		danger_zone,
+		delete_wallet,
+		general_settings,
+		manipulate_counters,
+		t_encryption
+	} from '$lib/paraglide/messages';
 </script>
 
 <div class="flex w-80 flex-col gap-2 xl:w-[600px]">
 	<Accordion.Root type="single">
 		<Accordion.Item value="item-1">
 			<Accordion.Trigger
-				><span class="flex gap-2"><Settings></Settings>{general_settings()}</span></Accordion.Trigger
+				><span class="flex gap-2"><Settings></Settings>{general_settings()}</span
+				></Accordion.Trigger
 			>
 			<Accordion.Content>
 				<GeneralSettings></GeneralSettings>

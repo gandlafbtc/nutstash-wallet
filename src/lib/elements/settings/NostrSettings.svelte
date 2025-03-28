@@ -7,7 +7,14 @@
 	import { Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import NwcSettings from './NWCSettings.svelte';
-	import { add_relay, apply_changes, experimental_nwc_integrations, nostr_settings, nostr_wallet_connect, t_relays } from '$lib/paraglide/messages';
+	import {
+		add_relay,
+		apply_changes,
+		experimental_nwc_integrations,
+		nostr_settings,
+		nostr_wallet_connect,
+		t_relays
+	} from '$lib/paraglide/messages';
 
 	let relayUrl = $state('');
 

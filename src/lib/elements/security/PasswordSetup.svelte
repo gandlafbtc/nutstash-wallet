@@ -9,7 +9,14 @@
 	import { usePassword } from '$lib/stores/local/usePassword';
 	import { pop, push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
-	import { encrypt_wallet_storage, keep_nuts_safe, passphrase_cannot_be_empty, passphrase_do_not_match, t_encrypt, t_skip } from '$lib/paraglide/messages';
+	import {
+		encrypt_wallet_storage,
+		keep_nuts_safe,
+		passphrase_cannot_be_empty,
+		passphrase_do_not_match,
+		t_encrypt,
+		t_skip
+	} from '$lib/paraglide/messages';
 
 	let pass = $state('');
 	let confPass = $state('');
@@ -68,7 +75,7 @@
 						push('/onboarding/select');
 					}}
 				>
-				 {t_skip()}
+					{t_skip()}
 				</Button>
 			</div>
 		</form>

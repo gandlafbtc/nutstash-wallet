@@ -11,53 +11,49 @@ export const LANGS: Language[] = [
 	{
 		val: 'de',
 		label: 'Deutsch'
-	}
-	,
+	},
 	{
 		val: 'es',
 		label: 'Español'
-	}
-	,
+	},
 	{
 		val: 'fr',
 		label: 'Français'
-	}
-	,
+	},
 	{
 		val: 'kr',
 		label: '한국어'
-	}
-	,
-	{
-		val: "jp",
-		label: "日本語"
 	},
 	{
-		val: "cn",
-		label: "中文"
+		val: 'jp',
+		label: '日本語'
 	},
 	{
-		val: "br",
-		label: "Português"
+		val: 'cn',
+		label: '中文'
 	},
 	{
-		val: "ru",
-		label: "Русский"
+		val: 'br',
+		label: 'Português'
 	},
 	{
-		val: "tr",
-		label: "Türkçe"
+		val: 'ru',
+		label: 'Русский'
 	},
 	{
-		val: "sa",
-		label: "العربية السعودية"
+		val: 'tr',
+		label: 'Türkçe'
 	},
 	{
-		val: "th",
-		label: "ไทย"
+		val: 'sa',
+		label: 'العربية السعودية'
 	},
 	{
-		val: "it",
-		label: "Italiano"
+		val: 'th',
+		label: 'ไทย'
+	},
+	{
+		val: 'it',
+		label: 'Italiano'
 	}
 ];

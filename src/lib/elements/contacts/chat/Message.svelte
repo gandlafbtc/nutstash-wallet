@@ -64,5 +64,6 @@
 	{/if}
 </div>
 <div class="text-xs opacity-35">
-	{formatDistance($now, message.created_at * 1000)} {t_ago()}
+	{formatDistance($now, message.created_at * 1000)}
+	{t_ago()}
 </div>

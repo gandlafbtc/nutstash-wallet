@@ -7,7 +7,12 @@
 
 	import CompactHistoryItem from './CompactHistoryItem.svelte';
 	import { formatAmount } from '$lib/util/walletUtils';
-	import { load_more, nothing_here_yet, redeem_now, unclaimed_ecash } from '$lib/paraglide/messages';
+	import {
+		load_more,
+		nothing_here_yet,
+		redeem_now,
+		unclaimed_ecash
+	} from '$lib/paraglide/messages';
 	let items = $derived([...$transactionsStore, ...$mintQuotesStore, ...$meltQuotesStore]);
 
 	let limit = $state(2);

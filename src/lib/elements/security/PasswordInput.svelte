@@ -9,7 +9,14 @@
 	import { DEFAULT_PASS } from '$lib/stores/static/pass';
 	import { init } from '$lib/init/init';
 	import { toast } from 'svelte-sonner';
-	import { enter_pass_to_unlock, incorrect_passphrase, t_unlock, t_unlocking, wallet_is_locked, wallet_unlocked } from '$lib/paraglide/messages';
+	import {
+		enter_pass_to_unlock,
+		incorrect_passphrase,
+		t_unlock,
+		t_unlocking,
+		wallet_is_locked,
+		wallet_unlocked
+	} from '$lib/paraglide/messages';
 
 	let { children }: { children?: Snippet } = $props();
 

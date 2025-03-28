@@ -3,7 +3,18 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { DB } from '$lib/db/db';
 	import { ensureError } from '$lib/helpers/errors';
-	import { are_you_sure_you_want_to_delete_all_data, delete_wallet, deleted_wallet_reloading, restart_failed, t_cancel, t_warning, these_actions_cannot_be_undone, wallet_restart, yes_delete_wallet, your_wallet_will_be_gone } from '$lib/paraglide/messages';
+	import {
+		are_you_sure_you_want_to_delete_all_data,
+		delete_wallet,
+		deleted_wallet_reloading,
+		restart_failed,
+		t_cancel,
+		t_warning,
+		these_actions_cannot_be_undone,
+		wallet_restart,
+		yes_delete_wallet,
+		your_wallet_will_be_gone
+	} from '$lib/paraglide/messages';
 	import { isOnboarded } from '$lib/stores/local/message';
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { usePassword } from '$lib/stores/local/usePassword';

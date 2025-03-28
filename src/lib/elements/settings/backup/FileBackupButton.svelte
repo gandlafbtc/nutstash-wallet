@@ -28,7 +28,17 @@
 	import { settings } from '$lib/stores/persistent/settings';
 	import { swapsStore } from '$lib/stores/persistent/swap';
 	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
-	import { choose_a_passphrase_to_encrypt_file, enter_passphrase, export_encrypted_wallet, export_wallet, passphrase_cannot_be_empty, passphrase_do_not_match, t_cancel, t_encrypt, wallet_file_exported } from '$lib/paraglide/messages';
+	import {
+		choose_a_passphrase_to_encrypt_file,
+		enter_passphrase,
+		export_encrypted_wallet,
+		export_wallet,
+		passphrase_cannot_be_empty,
+		passphrase_do_not_match,
+		t_cancel,
+		t_encrypt,
+		wallet_file_exported
+	} from '$lib/paraglide/messages';
 
 	let isEncrypt = $state(false);
 

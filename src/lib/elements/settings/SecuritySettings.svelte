@@ -10,7 +10,21 @@
 	import { DEFAULT_PASS } from '$lib/stores/static/pass';
 	import { reencrypt } from '$lib/init/init';
 	import { ensureError } from '$lib/helpers/errors';
-	import { are_you_sure_remove_passphrase, encryption_disabled, enter_current_pass_to_confirm, incorrect_passphrase, no_key_set, remove_encryption, set_up_passphrase, t_cancel, t_change, t_remove, this_will_leave_wallet_unencrypted, wallet_is_not_encrypted, wallet_is_protected_by_passphrase } from '$lib/paraglide/messages';
+	import {
+		are_you_sure_remove_passphrase,
+		encryption_disabled,
+		enter_current_pass_to_confirm,
+		incorrect_passphrase,
+		no_key_set,
+		remove_encryption,
+		set_up_passphrase,
+		t_cancel,
+		t_change,
+		t_remove,
+		this_will_leave_wallet_unencrypted,
+		wallet_is_not_encrypted,
+		wallet_is_protected_by_passphrase
+	} from '$lib/paraglide/messages';
 
 	let isOpen = $state(false);
 	let isLoading = $state(false);
@@ -54,9 +68,7 @@
 					<Dialog.Trigger><Button variant="destructive">{t_remove()}</Button></Dialog.Trigger>
 					<Dialog.Content>
 						<Dialog.Header>
-							<Dialog.Title
-								>{are_you_sure_remove_passphrase()}</Dialog.Title
-							>
+							<Dialog.Title>{are_you_sure_remove_passphrase()}</Dialog.Title>
 							<Dialog.Description>{this_will_leave_wallet_unencrypted()}</Dialog.Description>
 						</Dialog.Header>
 						<div class="flex flex-col gap-2">
@@ -72,7 +84,8 @@
 							>
 								{t_cancel()}
 							</Button>
-							<Button variant="destructive" onclick={removeEncryption}>{remove_encryption()}</Button>
+							<Button variant="destructive" onclick={removeEncryption}>{remove_encryption()}</Button
+							>
 						</Dialog.Footer>
 					</Dialog.Content>
 				</Dialog.Root>

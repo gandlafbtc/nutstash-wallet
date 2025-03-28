@@ -32,8 +32,7 @@
 				const ndef = new NDEFReader();
 				await ndef.write({ records: [record] });
 			}
-			toast.info(token_has_been_written_to_nfc_tag()
-			);
+			toast.info(token_has_been_written_to_nfc_tag());
 			isOpen = false;
 		} catch (error) {
 			const err = ensureError(error);

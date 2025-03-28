@@ -2,7 +2,15 @@
 	import { Button } from '$lib/components/ui/button';
 	import { SquareArrowOutUpRight } from 'lucide-svelte';
 	import LanguageSwitcher from '../ui/LanguageSwitcher.svelte';
-	import { beta_warning, ecash_works_without_accounts, for_more_information_visit, nutstash_is_a, nutstash_is_not_the_custodian, t_ok, welcome_to,} from '$lib/paraglide/messages';
+	import {
+		beta_warning,
+		ecash_works_without_accounts,
+		for_more_information_visit,
+		nutstash_is_a,
+		nutstash_is_not_the_custodian,
+		t_ok,
+		welcome_to
+	} from '$lib/paraglide/messages';
 </script>
 
 <div class="flex h-screen items-center justify-center">

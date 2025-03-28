@@ -1,6 +1,13 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import { check_ecash_proofs, check_if_ecash_has_been_claimed, t_active, t_pending, unclaimed_ecash_will_be_added_back, warning_you_should_only_check_active_proofs_when } from '$lib/paraglide/messages';
+	import {
+		check_ecash_proofs,
+		check_if_ecash_has_been_claimed,
+		t_active,
+		t_pending,
+		unclaimed_ecash_will_be_added_back,
+		warning_you_should_only_check_active_proofs_when
+	} from '$lib/paraglide/messages';
 	import { pendingProofsStore, proofsStore } from '$lib/stores/persistent/proofs';
 	import CheckProofSelector from './CheckProofSelector.svelte';
 </script>
@@ -15,7 +22,8 @@
 		<Tabs.Content value="pending">
 			<div class="flex flex-col gap-3">
 				<p class="">
-					{check_if_ecash_has_been_claimed()} {unclaimed_ecash_will_be_added_back()}
+					{check_if_ecash_has_been_claimed()}
+					{unclaimed_ecash_will_be_added_back()}
 				</p>
 				<CheckProofSelector proofs={$pendingProofsStore} type="pending"></CheckProofSelector>
 			</div>

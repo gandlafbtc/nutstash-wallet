@@ -29,7 +29,12 @@ import { ensureError } from '$lib/helpers/errors';
 import { settings } from '$lib/stores/persistent/settings';
 import { mints } from '$lib/stores/persistent/mints';
 import { receiveEcash } from './actions';
-import { failed_to_reconnect, no_public_key_found, reconnected, reconnecting_nostr_relays } from '$lib/paraglide/messages';
+import {
+	failed_to_reconnect,
+	no_public_key_found,
+	reconnected,
+	reconnecting_nostr_relays
+} from '$lib/paraglide/messages';
 
 export const createAlias = () => {
 	const wordlistLength = wordlist.length;
@@ -289,7 +294,6 @@ const subscribeToNip17DirectMessages = async function () {
 		since: lastEventTimestamp - 172800,
 		'#p': [pubkeyHex]
 	};
-
 
 	relaysStore.update((context) => {
 		context.forEach((e) => {

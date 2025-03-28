@@ -20,7 +20,20 @@
 	import Divider from '../ui/Divider.svelte';
 	import { copyTextToClipboard } from '$lib/util/utils';
 	import { ensureError } from '$lib/helpers/errors';
-	import { consider_showing_appreciation, hello_dear_anon, not_enough_funds, private_donation, public_donation, t_available, t_cancel, t_confirm, thank_you_for_using_nutstash, the_donation_is_now_ready, you_are_about_to_donate, you_can_add_npubs_names_or_anything } from '$lib/paraglide/messages';
+	import {
+		consider_showing_appreciation,
+		hello_dear_anon,
+		not_enough_funds,
+		private_donation,
+		public_donation,
+		t_available,
+		t_cancel,
+		t_confirm,
+		thank_you_for_using_nutstash,
+		the_donation_is_now_ready,
+		you_are_about_to_donate,
+		you_can_add_npubs_names_or_anything
+	} from '$lib/paraglide/messages';
 
 	let mint = $state($mints[0]);
 	let currentUnit = $state($unit);
@@ -153,7 +166,8 @@
 <div class="flex h-full w-80 flex-col gap-4 xl:w-[600px]">
 	<p class="font-bold">{hello_dear_anon()}!</p>
 	<span>
-		{thank_you_for_using_nutstash()}, by <a
+		{thank_you_for_using_nutstash()}, by
+		<a
 			class="font-bold underline"
 			href="https://gandlaf.com"
 			target="_blank"
@@ -319,7 +333,9 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title
-				>{you_are_about_to_donate({amount: formatAmount(donationAmount, currentUnit) })}</Dialog.Title
+				>{you_are_about_to_donate({
+					amount: formatAmount(donationAmount, currentUnit)
+				})}</Dialog.Title
 			>
 			<Dialog.Description>
 				{you_can_add_npubs_names_or_anything()}
@@ -379,7 +395,9 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title
-				>{you_are_about_to_donate({amount: formatAmount(donationAmount, currentUnit) })}!</Dialog.Title
+				>{you_are_about_to_donate({
+					amount: formatAmount(donationAmount, currentUnit)
+				})}!</Dialog.Title
 			>
 			<Dialog.Description>
 				{the_donation_is_now_ready()}

@@ -7,7 +7,13 @@
 	import Mnemonic from '../security/Mnemonic.svelte';
 	import Divider from '../ui/Divider.svelte';
 	import FileBackupButton from './backup/FileBackupButton.svelte';
-	import { restore_from_seed, seed_phrase, show_mnemonic, t_close, t_export } from '$lib/paraglide/messages';
+	import {
+		restore_from_seed,
+		seed_phrase,
+		show_mnemonic,
+		t_close,
+		t_export
+	} from '$lib/paraglide/messages';
 
 	let isOpen = $state(false);
 </script>

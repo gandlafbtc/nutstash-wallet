@@ -16,7 +16,16 @@
 	import { hashToCurve } from '@cashu/crypto/modules/common';
 	import { countsStore } from '$lib/stores/persistent/counts';
 	import { toast } from 'svelte-sonner';
-	import { all_keys_restored, checking_proof_states, loading_keys, loading_mint_keysets, skipping_ks_id_not_hex, t_done, t_error, t_waiting } from '$lib/paraglide/messages';
+	import {
+		all_keys_restored,
+		checking_proof_states,
+		loading_keys,
+		loading_mint_keysets,
+		skipping_ks_id_not_hex,
+		t_done,
+		t_error,
+		t_waiting
+	} from '$lib/paraglide/messages';
 
 	const INCREMENT = 25;
 
@@ -43,7 +52,7 @@
 			const hexDigitsRegex = /^[0-9A-Fa-f]+$/;
 			for (const [i, ks] of allKeysets.keysets.entries()) {
 				if (!hexDigitsRegex.test(ks.id)) {
-					toast.info(skipping_ks_id_not_hex({id: ks.id}));
+					toast.info(skipping_ks_id_not_hex({ id: ks.id }));
 					continue;
 				}
 				statusMessage = `Keyset ${i + 1} of ${ksLen} (${ks.id} / ${getUnitSymbol(ks.unit)}):`;

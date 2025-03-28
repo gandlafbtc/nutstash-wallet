@@ -9,7 +9,7 @@
 		formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintUnit,
-		getUnitsForMints,
+		getUnitsForMints
 	} from '$lib/util/walletUtils';
 
 	let { mint }: { mint: Mint } = $props();

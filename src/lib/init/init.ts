@@ -22,19 +22,36 @@ import { settings } from '$lib/stores/persistent/settings';
 import { swapsStore } from '$lib/stores/persistent/swap';
 import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
 import { setDefaultOptions } from 'date-fns';
-import { es, fr, de, enUS, ko, ja, zhCN, ptBR, it, ru, nl, sv, tr, ar, th, vi } from 'date-fns/locale';
+import {
+	es,
+	fr,
+	de,
+	enUS,
+	ko,
+	ja,
+	zhCN,
+	ptBR,
+	it,
+	ru,
+	nl,
+	sv,
+	tr,
+	ar,
+	th,
+	vi
+} from 'date-fns/locale';
 import { getLocale } from '$lib/paraglide/runtime';
 
 export const init = async () => {
 	await initStores();
 	await initNostrConnections();
-	setLanguage()
+	setLanguage();
 	nwc.init();
 };
 
 const setLanguage = () => {
 	const locale = getLocale() as string;
-	console.log(locale)
+	console.log(locale);
 	switch (locale) {
 		case 'es':
 			setDefaultOptions({ locale: es });
@@ -51,7 +68,7 @@ const setLanguage = () => {
 		case 'kr':
 			setDefaultOptions({ locale: ko });
 			break;
-		case 'cn': 
+		case 'cn':
 			setDefaultOptions({ locale: zhCN });
 			break;
 		case 'br':
@@ -83,8 +100,8 @@ const setLanguage = () => {
 			break;
 		default:
 			setDefaultOptions({ locale: enUS });
-	}	
-}
+	}
+};
 const initNostrConnections = async () => {
 	await connectNostrRelays();
 };

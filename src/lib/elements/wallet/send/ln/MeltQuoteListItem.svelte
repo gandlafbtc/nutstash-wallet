@@ -19,7 +19,19 @@
 	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
 	import { mints } from '$lib/stores/persistent/mints';
-	import { fee_reserve, not_enough_funds, pays_invoice_for, requires_swap, selected_proofs, t_close, t_confirmed, t_expired, t_fee, t_payment, t_pending } from '$lib/paraglide/messages';
+	import {
+		fee_reserve,
+		not_enough_funds,
+		pays_invoice_for,
+		requires_swap,
+		selected_proofs,
+		t_close,
+		t_confirmed,
+		t_expired,
+		t_fee,
+		t_payment,
+		t_pending
+	} from '$lib/paraglide/messages';
 
 	let {
 		quote,
@@ -86,7 +98,8 @@
 					{:then swapFee}
 						<!-- promise was fulfilled -->
 						<Badge variant="outline" class="">
-							+ {formatAmount(quote.fee_reserve + swapFee, quote.unit)} {fee_reserve()}
+							+ {formatAmount(quote.fee_reserve + swapFee, quote.unit)}
+							{fee_reserve()}
 						</Badge>
 					{/await}
 					<span class="text-xs">
@@ -102,7 +115,8 @@
 					{/if}
 				{:else if quote.fees}
 					<Badge variant="outline" class="">
-						+ {formatAmount(quote.fees, quote.unit)} {t_fee()}
+						+ {formatAmount(quote.fees, quote.unit)}
+						{t_fee()}
 					</Badge>
 				{/if}
 				{pays_invoice_for()}

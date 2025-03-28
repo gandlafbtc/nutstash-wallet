@@ -9,7 +9,13 @@
 	import { pop, push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
 	import OnboardingHeader from './OnboardingHeader.svelte';
-	import { enter_your_seed_phrase_correct_order, restore_ecash_from_seed_phrase, seed_phrase_invalid, t_restore, the_seed_phrase_must_be_12_words_long } from "$lib/paraglide/messages";
+	import {
+		enter_your_seed_phrase_correct_order,
+		restore_ecash_from_seed_phrase,
+		seed_phrase_invalid,
+		t_restore,
+		the_seed_phrase_must_be_12_words_long
+	} from '$lib/paraglide/messages';
 
 	let restoreSeed: Array<string> = $state(new Array(12));
 	let seedString: string = $state('');
@@ -72,7 +78,9 @@
 			</div>
 		</Card.Content>
 		<Card.Footer class="flex flex-col gap-4">
-			<Button disabled={restoreSeed.includes(undefined)} onclick={startRestore}>{t_restore()}</Button>
+			<Button disabled={restoreSeed.includes(undefined)} onclick={startRestore}
+				>{t_restore()}</Button
+			>
 		</Card.Footer>
 	</Card.Root>
 </div>

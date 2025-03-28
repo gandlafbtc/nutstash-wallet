@@ -19,7 +19,17 @@
 	import { generateMnemonic } from '@scure/bip39';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { LoaderCircle } from 'lucide-svelte';
-	import { backup_file_legacy_wallet, drop_or_select_backup, enter_passphrase, enter_passphrase_to_decrypt_file, only_mints_will_be_imported, t_cancel, t_decrypt, t_import, wallet_backup_protected } from '$lib/paraglide/messages';
+	import {
+		backup_file_legacy_wallet,
+		drop_or_select_backup,
+		enter_passphrase,
+		enter_passphrase_to_decrypt_file,
+		only_mints_will_be_imported,
+		t_cancel,
+		t_decrypt,
+		t_import,
+		wallet_backup_protected
+	} from '$lib/paraglide/messages';
 
 	let backupFileName = $state('');
 	let isLoading = $state(true);

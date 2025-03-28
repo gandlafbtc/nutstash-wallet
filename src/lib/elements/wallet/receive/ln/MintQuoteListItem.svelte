@@ -12,7 +12,14 @@
 	import { now } from '$lib/stores/session/time';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
-	import { request_mint, t_close, t_invoice, t_pay, t_update, to_get } from '$lib/paraglide/messages';
+	import {
+		request_mint,
+		t_close,
+		t_invoice,
+		t_pay,
+		t_update,
+		to_get
+	} from '$lib/paraglide/messages';
 
 	let {
 		quote,

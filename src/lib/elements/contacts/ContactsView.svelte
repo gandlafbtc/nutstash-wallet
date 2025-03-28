@@ -8,7 +8,17 @@
 	import { discoverContacts } from '$lib/actions/nostr';
 	import { push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
-	import { add_contact, enter_npub, enter_npub_to_import_contact_list_from_nostr, import_contacts, load_any_follow_list_from_nostr, not_an_npub, t_cancel, t_contacts, t_discover } from '$lib/paraglide/messages';
+	import {
+		add_contact,
+		enter_npub,
+		enter_npub_to_import_contact_list_from_nostr,
+		import_contacts,
+		load_any_follow_list_from_nostr,
+		not_an_npub,
+		t_cancel,
+		t_contacts,
+		t_discover
+	} from '$lib/paraglide/messages';
 
 	let isOpen = $state(false);
 

@@ -11,7 +11,16 @@
 	import { meltProofs, mintProofs } from '$lib/actions/actions';
 	import { delay } from '$lib/util/utils';
 	import { ArrowLeftRight, LoaderCircle } from 'lucide-svelte';
-	import { check_swap, confirm_swap, continue_swap, swap_completed, swap_invoice_could_not_be_paid, t_not_found, t_swap, t_to } from '$lib/paraglide/messages';
+	import {
+		check_swap,
+		confirm_swap,
+		continue_swap,
+		swap_completed,
+		swap_invoice_could_not_be_paid,
+		t_not_found,
+		t_swap,
+		t_to
+	} from '$lib/paraglide/messages';
 
 	let swap = $derived(getBy($swapsStore, $params?.mintquote ?? '', 'mintQuoteId'));
 	let mintquote = $derived(getBy($mintQuotesStore, swap?.mintQuoteId ?? '', 'quote'));

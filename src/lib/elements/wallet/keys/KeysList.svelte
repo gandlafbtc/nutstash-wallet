@@ -8,7 +8,11 @@
 	import { toast } from 'svelte-sonner';
 	import { copyTextToClipboard } from '$lib/util/utils';
 	import { key } from '$lib/stores/session/key';
-	import { create_new_keys, it_is_advised_not_to_reuse_keys_to_preserve_unlinkability_of_transactions, keys_are_used_to_unlock_locked_ecash_tokens } from '$lib/paraglide/messages';
+	import {
+		create_new_keys,
+		it_is_advised_not_to_reuse_keys_to_preserve_unlinkability_of_transactions,
+		keys_are_used_to_unlock_locked_ecash_tokens
+	} from '$lib/paraglide/messages';
 
 	let isLoading = $state(false);
 
