@@ -10,20 +10,6 @@
 		"pathPattern": "./messages/{locale}.json"
 	},
 	"sourceLanguageTag": "en",
-	"languageTags": [
-		"en",
-		"de",
-		"es",
-		"fr",
-		"kr",
-		"jp",
-		"cn",
-		"br",
-		"ru",
-		"tr",
-		"sa",
-		"th",
-		"it"
-	],
+	"languageTags": ["en","de","es","fr","kr","jp","cn","br","ru","tr","sa","th","it"]
 	
 }
