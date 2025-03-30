@@ -23,6 +23,4 @@
 	{#if mint.info.nuts[10]?.supported}
 		<Toggle aria-label="toggle bold" bind:pressed={tokenOptions.p2pk}>{t_lock()}</Toggle>
 	{/if}
-
 </div>
-
