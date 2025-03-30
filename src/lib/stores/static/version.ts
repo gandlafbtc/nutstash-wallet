@@ -1,5 +1,5 @@
 import { readable } from 'svelte/store';
 
-const version = readable<string>('2.0.6');
+const version = readable<string>('2.1.1');
 
 export { version };
