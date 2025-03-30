@@ -15,7 +15,7 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { LoaderCircle, Send } from 'lucide-svelte';
 	import AddContact from '../AddContact.svelte';
-	import { onMount } from 'svelte';
+	import { add_contact, select_a_contact } from '$lib/paraglide/messages';
 
 	let contact = $derived(getBy($contactsStore, $params?.npub ?? '', 'npub'));
 
@@ -36,7 +36,7 @@
 
 	let sendMessage = async () => {
 		if (!contact) {
-			toast('Select a contact');
+			toast(select_a_contact());
 			return;
 		}
 		await sendNip17DirectMessageToNpub(contact.npub, chatText);
@@ -49,7 +49,7 @@
 
 	let sendEcashToNpub = async (tokenString: string) => {
 		if (!contact) {
-			toast('Select a contact');
+			toast(select_a_contact());
 			return;
 		}
 		await sendNip17DirectMessageToNpub(contact.npub, tokenString);
@@ -98,7 +98,7 @@
 			</div>
 		</div>
 	{:else}
-		<p class="font-bold">Add contact</p>
+		<p class="font-bold">{add_contact()}</p>
 
 		<p class="w-80 overflow-clip text-ellipsis xl:w-[600px]"></p>
 		<AddContact npubToAdd={$params?.npub}></AddContact>

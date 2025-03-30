@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { consumed_by, created_by, t_not_found } from '$lib/paraglide/messages';
 	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
 	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
 	import { mints } from '$lib/stores/persistent/mints';
@@ -69,7 +70,7 @@
 		</div>
 		<div>
 			{#if mintQuote || transactionOut || meltQuoteOut}
-				<span> Created by: </span>
+				<span> {created_by()}: </span>
 				<!-- created by -->
 				{#if mintQuote}
 					<a
@@ -98,7 +99,7 @@
 			{/if}
 
 			{#if meltQuoteIn || transactionIn}
-				<span> Consumed by: </span>
+				<span> {consumed_by()}: </span>
 				<!-- consumed by -->
 				{#if meltQuoteIn}
 					<a
@@ -120,5 +121,5 @@
 		</div>
 	</div>
 {:else}
-	Ecash not found
+	{t_not_found()}
 {/if}

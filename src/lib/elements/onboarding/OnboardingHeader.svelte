@@ -1,5 +1,6 @@
 <script>
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { t_back } from '$lib/paraglide/messages';
 	import { ChevronsLeft } from 'lucide-svelte';
 	import { pop } from 'svelte-spa-router';
 
@@ -16,7 +17,7 @@
 				}}
 			>
 				<ChevronsLeft></ChevronsLeft>
-				Back
+				{t_back()}
 			</Button>
 		{/if}
 	</div>

@@ -8,6 +8,11 @@
 	import { toast } from 'svelte-sonner';
 	import { copyTextToClipboard } from '$lib/util/utils';
 	import { key } from '$lib/stores/session/key';
+	import {
+		create_new_keys,
+		it_is_advised_not_to_reuse_keys_to_preserve_unlinkability_of_transactions,
+		keys_are_used_to_unlock_locked_ecash_tokens
+	} from '$lib/paraglide/messages';
 
 	let isLoading = $state(false);
 
@@ -30,15 +35,14 @@
 <div class="flex h-full w-80 flex-col gap-5 xl:w-[600px]">
 	<div class="flex flex-col gap-2">
 		<p>
-			Keys are used to unlock locked ecash tokens. The pubkey that is used for locking will be
-			revealed to the mint when the ecash is unlocked.
+			{keys_are_used_to_unlock_locked_ecash_tokens()}
 		</p>
-		<p>It is advised to not reuse keys to preserve unlinkability of transactions.</p>
+		<p>{it_is_advised_not_to_reuse_keys_to_preserve_unlinkability_of_transactions()}</p>
 	</div>
 	<div class="flex gap-2">
 		<Button class="flex-grow" onclick={createNew}>
 			<Plus></Plus>
-			Create new Keys
+			{create_new_keys()}
 		</Button>
 
 		<AddKey></AddKey>

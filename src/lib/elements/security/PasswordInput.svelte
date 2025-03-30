@@ -9,6 +9,14 @@
 	import { DEFAULT_PASS } from '$lib/stores/static/pass';
 	import { init } from '$lib/init/init';
 	import { toast } from 'svelte-sonner';
+	import {
+		enter_pass_to_unlock,
+		incorrect_passphrase,
+		t_unlock,
+		t_unlocking,
+		wallet_is_locked,
+		wallet_unlocked
+	} from '$lib/paraglide/messages';
 
 	let { children }: { children?: Snippet } = $props();
 
@@ -43,10 +51,10 @@
 			}
 			// init
 			await init();
-			toast.success('Wallet unlocked');
+			toast.success(wallet_unlocked());
 		} catch (error) {
 			key.set(undefined);
-			toast.warning('Wrong Password');
+			toast.warning(incorrect_passphrase());
 			setTimeout(() => {
 				console.error(error);
 				inputFocus?.focus();
@@ -65,11 +73,11 @@
 				<div class="h-20 w-20">
 					<img src="/nutstash_app.svg" alt="" />
 				</div>
-				<p class="text-lg font-bold">Wallet is locked.</p>
+				<p class="text-lg font-bold">{wallet_is_locked()}</p>
 				{#if isUnlocking}
-					<p>Unlocking...</p>
+					<p>{t_unlocking()}</p>
 				{:else}
-					<p>Enter your passphrase to unlock.</p>
+					<p>{enter_pass_to_unlock()}</p>
 				{/if}
 				<form class="flex flex-col gap-2" onsubmit={unlockWallet}>
 					{#if !isUnlocking}
@@ -86,7 +94,7 @@
 						{:else}
 							<LockOpen></LockOpen>
 						{/if}
-						Unlock
+						{t_unlock()}
 					</Form.Button>
 				</form>
 			</div>

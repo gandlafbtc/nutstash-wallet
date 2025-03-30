@@ -5,6 +5,7 @@
 	import MintQuoteListItem from './MeltQuoteListItem.svelte';
 	import MeltQuoteListItem from './MeltQuoteListItem.svelte';
 	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
+	import { t_not_found } from '$lib/paraglide/messages';
 
 	let quoteId = $derived($params?.quote);
 
@@ -18,5 +19,5 @@
 {#if quote}
 	<MeltQuoteListItem isListView={false} {quote}></MeltQuoteListItem>
 {:else}
-	Quote not found
+	{t_not_found()}
 {/if}

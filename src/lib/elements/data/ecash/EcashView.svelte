@@ -8,6 +8,7 @@
 	} from '$lib/stores/persistent/proofs';
 	import type { Proof } from '@cashu/cashu-ts';
 	import * as Select from '$lib/components/ui/select';
+	import { available_mints, load_more, nothing_here_yet, t_ecash } from '$lib/paraglide/messages';
 
 	type ProofType = 'OFFLINE' | 'SPENT' | 'PENDING' | 'DEFAULT';
 
@@ -59,7 +60,7 @@
 </script>
 
 <div class="flex h-full flex-col gap-2">
-	<p class="text-lg font-bold">Ecash</p>
+	<p class="text-lg font-bold">{t_ecash()}</p>
 	<Select.Root type="multiple" name="mint-single" bind:value={selectedStores} allowDeselect={false}>
 		<Select.Trigger class="w-80 xl:w-[600px]">
 			<Type class="h-5 w-5"></Type>
@@ -67,7 +68,7 @@
 		</Select.Trigger>
 		<Select.Content>
 			<Select.Group>
-				<Select.GroupHeading>Available Mints</Select.GroupHeading>
+				<Select.GroupHeading>{available_mints()}</Select.GroupHeading>
 				{#each selectedStoresOptions as o}
 					<Select.Item value={o} label={o}>{o}</Select.Item>
 				{/each}
@@ -111,7 +112,7 @@
 				<button class="flex w-full rounded-xl border p-5 opacity-45">
 					<span class="text-xs">
 						{#if !items.length}
-							No ecash yet ...
+							{nothing_here_yet()}
 						{/if}
 					</span>
 				</button>
@@ -126,7 +127,7 @@
 						}
 					}}
 				>
-					<span class="text-xs">Load more...</span>
+					<span class="text-xs">{load_more()}</span>
 				</button>
 			{/if}
 		</div>

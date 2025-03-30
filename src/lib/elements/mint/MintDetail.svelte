@@ -11,15 +11,23 @@
 		formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintUnit,
-		getUnitsForMints,
-		getUnitSymbol
+		getUnitsForMints
 	} from '$lib/util/walletUtils';
 
 	let { mint }: { mint: Mint } = $props();
 	import * as Accordion from '$lib/components/ui/accordion';
-	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { AlertTriangle, Check } from 'lucide-svelte';
-	console.log(mint);
+	import {
+		ecash_swap_fee,
+		mint_charges_a_swap_fee,
+		no_swap_fee,
+		t_contact,
+		t_description,
+		t_features,
+		t_fee,
+		t_fees,
+		t_version
+	} from '$lib/paraglide/messages';
 </script>
 
 <div class="flex w-80 flex-col gap-2 rounded-lg border p-4 shadow-md xl:w-[600px]">
@@ -55,23 +63,23 @@
 		<Accordion.Item value="item-0">
 			<Accordion.Trigger>
 				<span class="flex items-center gap-2">
-					Fees
+					{t_fees()}
 					{#if mint.keysets.keysets.find((ks) => ks.input_fee_ppk ?? 0 > 0)}
 						<span class="flex items-center gap-1 text-sm text-yellow-500">
 							<AlertTriangle class="h-5 w-5"></AlertTriangle>
-							(Mint charges a swap fee)
+							({mint_charges_a_swap_fee()})
 						</span>
 					{:else}
 						<span class="flex items-center gap-1 text-sm text-green-500">
 							<Check class="h-5 w-5"></Check>
-							(No swap fees)
+							({no_swap_fee()})
 						</span>
 					{/if}
 				</span>
 			</Accordion.Trigger>
 			<Accordion.Content>
 				<div class="">
-					Ecash swap fees:
+					${ecash_swap_fee()}:
 					{#each mint.keysets.keysets as ks}
 						<p class="flex items-baseline gap-1">
 							<span>
@@ -86,10 +94,10 @@
 			</Accordion.Content>
 		</Accordion.Item>
 		<Accordion.Item value="item-1">
-			<Accordion.Trigger>Description</Accordion.Trigger>
+			<Accordion.Trigger>{t_description()}</Accordion.Trigger>
 			<Accordion.Content>
 				<div class="opacity-55">
-					Version: {mint.info.version}
+					{t_version()}: {mint.info.version}
 				</div>
 				<div class="font-bold">
 					{mint.info.description}
@@ -100,7 +108,7 @@
 			</Accordion.Content>
 		</Accordion.Item>
 		<Accordion.Item value="item-2">
-			<Accordion.Trigger>Features</Accordion.Trigger>
+			<Accordion.Trigger>{t_features()}</Accordion.Trigger>
 			<Accordion.Content>
 				<div class="flex flex-col gap-1">
 					{#each Object.entries(mint.info.nuts) as item}
@@ -149,7 +157,7 @@
 			</Accordion.Content>
 		</Accordion.Item>
 		<Accordion.Item value="item-3">
-			<Accordion.Trigger>Contact</Accordion.Trigger>
+			<Accordion.Trigger>{t_contact()}</Accordion.Trigger>
 			<Accordion.Content>
 				<div class="flex flex-col gap-2">
 					<div class="flex flex-col gap-0.5">

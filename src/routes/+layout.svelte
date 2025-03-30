@@ -1,6 +1,7 @@
 <script lang="ts">
 	import StorageManager from '$lib/plugin/StorageManager.svelte';
 	import { ModeWatcher } from 'mode-watcher';
+	import '/node_modules/flag-icons/css/flag-icons.min.css';
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import Loading from '$lib/elements/base/Loading.svelte';

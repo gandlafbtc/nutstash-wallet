@@ -5,10 +5,9 @@
 	import type { StoredPaymentRequest } from '$lib/db/models/types';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
-	import { copyTextToClipboard } from '$lib/util/utils';
+	import { cashu_request, t_close } from '$lib/paraglide/messages';
 	import { formatAmount } from '$lib/util/walletUtils';
 	import { PaymentRequest } from '@cashu/cashu-ts';
-	import { Copy } from 'lucide-svelte';
 	interface Props {
 		request: StoredPaymentRequest;
 		isListView?: boolean;
@@ -29,21 +28,21 @@
 	);
 </script>
 
-<Card.Root>
+<Card.Root class="w-80 xl:w-[600px]">
 	<Card.Header>
 		<Card.Title>
 			<a href={`/#/wallet/receive/cashureq/${request.id}`}>
-				Cashu request #{request.id}
+				{cashu_request()} #{request.id}
 			</a>
 		</Card.Title>
 		<Card.Description>{request.mints?.join(', ')}</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<div class="flex flex-col items-center gap-2">
-			<div class="w-64">
+			<div class="w-full">
 				<QrCode data={encodedRequest}></QrCode>
 			</div>
-			<div class="w-64">
+			<div class="w-full">
 				<CopiableToken token={encodedRequest}></CopiableToken>
 			</div>
 			<Badge variant="outline" class="text-xl">
@@ -53,7 +52,7 @@
 	</Card.Content>
 	<Card.Footer>
 		{#if !isListView}
-			<Button href="/#/wallet/">Close</Button>
+			<Button href="/#/wallet/">{t_close()}</Button>
 		{/if}
 	</Card.Footer>
 </Card.Root>

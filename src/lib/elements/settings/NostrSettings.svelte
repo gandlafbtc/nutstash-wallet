@@ -7,6 +7,14 @@
 	import { Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import NwcSettings from './NWCSettings.svelte';
+	import {
+		add_relay,
+		apply_changes,
+		experimental_nwc_integrations,
+		nostr_settings,
+		nostr_wallet_connect,
+		t_relays
+	} from '$lib/paraglide/messages';
 
 	let relayUrl = $state('');
 
@@ -29,19 +37,19 @@
 </script>
 
 <div class="flex h-full w-80 flex-col items-start gap-3 xl:w-[600px]">
-	<p class="text-lg font-bold">Nostr settings</p>
-	<p class="font-bold">Nostr wallet connect</p>
-	Experimental NWC integration. It only works if nutstash is running in the foreground.
+	<p class="text-lg font-bold">{nostr_settings()}</p>
+	<p class="font-bold">{nostr_wallet_connect()}</p>
+	{experimental_nwc_integrations()}
 	<NwcSettings></NwcSettings>
 	<div class="flex items-center gap-2">
-		<span class="font-bold"> Relays </span>
+		<span class="font-bold"> {t_relays()} </span>
 		{#if hasChanges}
-			<Button onclick={applyChanges}>Apply Changes</Button>
+			<Button onclick={applyChanges}>{apply_changes()}</Button>
 		{/if}
 	</div>
 	<div class="flex w-full gap-2">
 		<Input placeholder="wss://..." bind:value={relayUrl} />
-		<Button onclick={addRelay}>Add Relay</Button>
+		<Button onclick={addRelay}>{add_relay()}</Button>
 	</div>
 
 	{#each $relaysStore as relay}
@@ -54,14 +62,14 @@
 			>
 				<Trash></Trash>
 			</button>
-			<p class="flex items-center gap-2">
+			<div class="flex items-center gap-2">
 				<span>
 					{relay.url}
 				</span>
 				{#if relay.hasConnection}
 					<div class="h-2 w-2 rounded-full bg-green-500"></div>
 				{/if}
-			</p>
+			</div>
 			<Switch
 				bind:checked={relay.isOn}
 				onclick={async () => {

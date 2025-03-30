@@ -5,8 +5,6 @@ import {
 	getPublicKey,
 	kinds,
 	type Event,
-	getEventHash,
-	type UnsignedEvent,
 	nip44,
 	generateSecretKey,
 	type Filter,
@@ -18,8 +16,8 @@ import NDK, { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 
 import { get } from 'svelte/store';
 import { messagesStore } from '$lib/stores/persistent/message';
-import { TokenCheckMode, type Message } from '$lib/db/models/types';
-import type { NPub, ProfilePointer } from 'nostr-tools/nip19';
+import { type Message } from '$lib/db/models/types';
+import type { ProfilePointer } from 'nostr-tools/nip19';
 import { relaysStore } from '$lib/stores/persistent/relays';
 import { toast } from 'svelte-sonner';
 import { nostrPool } from '$lib/stores/session/nostr';
@@ -31,6 +29,12 @@ import { ensureError } from '$lib/helpers/errors';
 import { settings } from '$lib/stores/persistent/settings';
 import { mints } from '$lib/stores/persistent/mints';
 import { receiveEcash } from './actions';
+import {
+	failed_to_reconnect,
+	no_public_key_found,
+	reconnected,
+	reconnecting_nostr_relays
+} from '$lib/paraglide/messages';
 
 export const createAlias = () => {
 	const wordlistLength = wordlist.length;
@@ -62,12 +66,12 @@ export const reconnect = async () => {
 			.map((r) => r.url)
 	);
 	toast.promise(subscribeToNip17DirectMessages(), {
-		loading: 'Reconnecting nostr relays...',
+		loading: reconnecting_nostr_relays(),
 		success: () => {
-			return 'Reconnected!';
+			return reconnected();
 		},
 		error: (data) => {
-			return 'Failed to reconnect';
+			return failed_to_reconnect();
 		}
 	});
 };
@@ -176,7 +180,7 @@ const sendNip17DirectMessage = async function (
 	const seedSignerSecKey = hexToBytes(hexPrivKey);
 	const signerPubKey = keysStore.getBy(hexPrivKey, 'privateKey')?.publicKey.slice(2);
 	if (!signerPubKey) {
-		throw new Error('No public key found');
+		throw new Error(no_public_key_found());
 	}
 	const randomPrivateKey = generateSecretKey();
 	const randomPublicKey = getPublicKey(randomPrivateKey);
@@ -263,10 +267,8 @@ const sendNip17DirectMessage = async function (
 	};
 
 	try {
-		console.log('publishing events...');
 		await get(nostrPool).publish(activeRelays, nostrEventReceiver);
 		await get(nostrPool).publish(activeRelays, NostrEventSender);
-		console.log('events published');
 	} catch (e) {
 		const err = ensureError(e);
 		console.error(err);
@@ -281,7 +283,7 @@ const subscribeToNip17DirectMessages = async function () {
 	const seedSignerSecKey = hexToBytes(secKeyHex);
 	const pubkeyHex = keysStore.getBy(secKeyHex, 'privateKey')?.publicKey.slice(2);
 	if (!pubkeyHex) {
-		throw new Error('No public key found');
+		throw new Error(no_public_key_found());
 	}
 	let lastEventTimestamp = get(messagesStore).reduce((max, curr) => {
 		return curr.created_at > max ? curr.created_at : max;
@@ -292,8 +294,6 @@ const subscribeToNip17DirectMessages = async function () {
 		since: lastEventTimestamp - 172800,
 		'#p': [pubkeyHex]
 	};
-
-	console.log('subscribing to NIP-17 direct messages');
 
 	relaysStore.update((context) => {
 		context.forEach((e) => {
@@ -314,10 +314,8 @@ const subscribeToNip17DirectMessages = async function () {
 		onevent: (wrapEvent: Event) => {
 			try {
 				if (get(messagesStore).find((m) => m.wrapId === wrapEvent.id)) {
-					console.log(`### Already seen NIP-17 event ${wrapEvent.id}`);
 					return;
 				}
-				console.log('received NIP-17 event');
 				const wappedContent = nip44.v2.decrypt(
 					wrapEvent.content,
 					nip44.v2.utils.getConversationKey(seedSignerSecKey, wrapEvent.pubkey)

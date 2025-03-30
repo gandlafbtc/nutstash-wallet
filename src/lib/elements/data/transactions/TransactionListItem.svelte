@@ -1,10 +1,7 @@
 <script lang="ts">
-	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { formatAmount, formatSecToMinStr, getAmountForTokenSet } from '$lib/util/walletUtils';
+	import { formatAmount } from '$lib/util/walletUtils';
 	import * as Card from '$lib/components/ui/card';
-	import { Copy, Banknote, CircleCheck, RefreshCcw } from 'lucide-svelte';
-	import { copyTextToClipboard, getHostFromUrl } from '$lib/util/utils';
-	import { decode } from '@gandlaf21/bolt11-decode';
+	import { getHostFromUrl } from '$lib/util/utils';
 	import { TransactionType, type StoredTransaction } from '$lib/db/models/types';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
@@ -14,6 +11,7 @@
 	import SendViaNfcButton from '$lib/elements/wallet/send/ecash/SendViaNFCButton.svelte';
 	import isTauri from '$lib/tauri/deviceHelper';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
+	import { t_close, t_fee, t_show } from '$lib/paraglide/messages';
 
 	let {
 		tx,
@@ -71,15 +69,16 @@
 				{formatAmount(tx.amount, 'sat')}
 			</Badge>
 			<Badge variant="outline" class="">
-				{formatAmount(tx.fees ?? 0, 'sat')} fee
+				{formatAmount(tx.fees ?? 0, 'sat')}
+				{t_fee()}
 			</Badge>
 		</div>
 	</Card.Content>
 	<Card.Footer class="flex h-12 justify-between">
 		{#if isListView}
-			<Button href={`/#/wallet/send/cashu/${tx.id}`}>Show</Button>
+			<Button href={`/#/wallet/send/cashu/${tx.id}`}>{t_show()}</Button>
 		{:else}
-			<Button href="/#/wallet/">Close</Button>
+			<Button href="/#/wallet/">{t_close()}</Button>
 		{/if}
 		{#if !isListView && !isTauri}
 			<SendViaNfcButton token={encodedToken}></SendViaNfcButton>

@@ -6,6 +6,7 @@
 	import { contactsStore } from '$lib/stores/persistent/contacts';
 	import { formatDistance } from 'date-fns';
 	import { now } from '$lib/stores/session/time';
+	import { t_ago } from '$lib/paraglide/messages';
 
 	let { message }: { message: [key: string, value: Message] } = $props();
 
@@ -43,6 +44,7 @@
 		{message[1].content}
 	</div>
 	<div class="text-xs opacity-35">
-		{formatDistance($now, message[1].created_at * 1000)} ago
+		{formatDistance($now, message[1].created_at * 1000)}
+		{t_ago()}
 	</div>
 </a>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { scanresultStore } from '$lib/stores/session/transitionstores';
-	import { parseSecret } from '@cashu/crypto/modules/common/NUT11';
 	import { Button } from '$lib/components/ui/button/';
 	import * as Card from '$lib/components/ui/card/';
 	import {
@@ -14,7 +13,7 @@
 		Lock
 	} from 'lucide-svelte';
 	import { mints } from '$lib/stores/persistent/mints';
-	import { formatAmount, getKeysForKeysetId, parseSecrets } from '$lib/util/walletUtils';
+	import { formatAmount, parseSecrets } from '$lib/util/walletUtils';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { receiveEcash } from '$lib/actions/actions';
@@ -23,7 +22,6 @@
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
 	import { type Token } from '@cashu/cashu-ts';
-	import { hasValidDleq } from '@cashu/cashu-ts';
 	import { ensureError } from '$lib/helpers/errors';
 	import {
 		offlineProofsStore,
@@ -34,7 +32,33 @@
 	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
 	import { randDBKey } from '$lib/db/helper';
 	import { TransactionStatus, TransactionType } from '$lib/db/models/types';
-	import ProgressSuccess from '$lib/components/ui/progress/progressSuccess.svelte';
+	import {
+		all_signatures_valid,
+		can_be_received_offline_without_trusting_the_sender,
+		dont_forget_to_claim_it_when_youre_online,
+		found_duplicates,
+		found_duplicates_in_storage,
+		locked_for_at_least_7_days,
+		locked_to_my_wallet,
+		Not_locked_to_me,
+		nothing_found,
+		offline_options,
+		offline_receiving_requires_trusting_the_sender,
+		offline_summary,
+		offline_token_received,
+		receive_cashu_token,
+		receive_offline,
+		t_discard,
+		t_duplicates,
+		t_receive,
+		t_timelocked,
+		timelock_expires,
+		token_is_from_unknown_mint,
+		trust_mint,
+		unique_token,
+		validating_mint_signatures,
+		verifiable_signatures_not_included
+	} from '$lib/paraglide/messages';
 
 	interface Props {
 		token: Token;
@@ -89,9 +113,9 @@
 	});
 	let trustVerdict = $derived.by(() => {
 		if (trustScore >= 100) {
-			return 'Can be received offline without trusting the sender';
+			return can_be_received_offline_without_trusting_the_sender();
 		} else {
-			return 'Offline receiving requires trusting the sender';
+			return offline_receiving_requires_trusting_the_sender();
 		}
 	});
 
@@ -159,14 +183,14 @@
 			},
 			'id'
 		);
-		toast.info("Offline token received, don't forget to claim it when you're online!");
+		toast.info(offline_token_received() + ' ' + dont_forget_to_claim_it_when_youre_online());
 		push('/wallet/');
 	};
 </script>
 
 <Card.Root class="">
 	<Card.Header>
-		<Card.Title>Receive Cashu token</Card.Title>
+		<Card.Title>{receive_cashu_token()}</Card.Title>
 		<Card.Description class="flex items-center gap-3">
 			<div class="relative">
 				<Landmark class="h-4 w-4"></Landmark>
@@ -215,7 +239,7 @@
 		{#if !isKnownMint}
 			<div class="flex items-center gap-2 text-sm text-yellow-500">
 				<AlertCircle class="h-4 w-4"></AlertCircle>
-				<span>Token is from unknown mint</span>
+				<span>{token_is_from_unknown_mint()}</span>
 			</div>
 		{/if}
 	</Card.Content>
@@ -228,50 +252,50 @@
 					{:else}
 						<Download></Download>
 					{/if}
-					Receive
+					{t_receive()}
 				</Button>
 				<Accordion.Root type="single">
 					<Accordion.Item value="item-1">
 						<Accordion.Trigger>
-							<div>Offline options</div>
+							<div>{offline_options()}</div>
 						</Accordion.Trigger>
 						<Accordion.Content>
 							<div class="mt-4 flex flex-col gap-1 rounded-md border border-muted-foreground p-2">
-								<p class="text-sm font-bold italic text-muted-foreground">Offline summary</p>
+								<p class="text-sm font-bold italic text-muted-foreground">{offline_summary()}</p>
 								<div>
 									<p class={trustScore >= 100 ? 'text-green-500' : 'text-red-500'}>
 										{trustVerdict}
 									</p>
 								</div>
-								<p class="text-sm text-muted-foreground">Validated mint signatures</p>
+								<p class="text-sm text-muted-foreground">{validating_mint_signatures()}</p>
 								{#if allDLEQsValid}
-									<p class="text-green-500">All signatures valid</p>
+									<p class="text-green-500">{all_signatures_valid()}</p>
 								{:else}
-									<p class="text-red-500">Verifiable Signatures were not included</p>
+									<p class="text-red-500">{verifiable_signatures_not_included()}</p>
 								{/if}
-								<p class="text-sm text-muted-foreground">Locked to my wallet</p>
+								<p class="text-sm text-muted-foreground">{locked_to_my_wallet()}</p>
 								{#if lockPubs.length && isLockedToMe}
-									<p class="text-green-500">Locked to me</p>
-									<p class="text-sm text-muted-foreground">Timelocked</p>
+									<p class="text-green-500">{locked_to_my_wallet()}</p>
+									<p class="text-sm text-muted-foreground">{t_timelocked()}</p>
 									{#if is1WeekTimelock}
-										<p class="text-green-500">Locked for at least 7 days</p>
+										<p class="text-green-500">{locked_for_at_least_7_days()}</p>
 									{:else}
-										<p class="text-red-500">Timelock expires</p>
+										<p class="text-red-500">{timelock_expires()}</p>
 									{/if}
 								{:else}
-									<p class="text-red-500">Not locked to me</p>
+									<p class="text-red-500">{Not_locked_to_me()}</p>
 								{/if}
-								<p class="text-sm text-muted-foreground">Unique</p>
+								<p class="text-sm text-muted-foreground">{unique_token()}</p>
 								{#if noDuplicatesInStorage}
-									<p class="text-green-500">Nothing found</p>
+									<p class="text-green-500">{nothing_found()}</p>
 								{:else}
-									<p class="text-red-500">Found duplicates in storage</p>
+									<p class="text-red-500">{found_duplicates_in_storage()}</p>
 								{/if}
-								<p class="text-sm text-muted-foreground">Duplicates</p>
+								<p class="text-sm text-muted-foreground">{t_duplicates()}</p>
 								{#if noDuplicatesInToken}
-									<p class="text-green-500">Nothing found</p>
+									<p class="text-green-500">{nothing_found()}</p>
 								{:else}
-									<p class="text-red-500">Found duplicates</p>
+									<p class="text-red-500">{found_duplicates()}</p>
 								{/if}
 								<Button
 									variant="outline"
@@ -284,7 +308,7 @@
 									{:else}
 										<Download></Download>
 									{/if}
-									Receive offline
+									{receive_offline()}
 								</Button>
 							</div>
 						</Accordion.Content>
@@ -293,7 +317,7 @@
 			</div>
 		{:else}
 			<Button class="w-full" variant="outline" onclick={discard} disabled={isLoading}
-				>Discard</Button
+				>{t_discard()}</Button
 			>
 			<Button class="w-full" onclick={trustMint} disabled={isLoading}>
 				{#if isLoading}
@@ -301,7 +325,7 @@
 				{:else}
 					<BookCheck></BookCheck>
 				{/if}
-				Trust mint
+				{trust_mint()}
 			</Button>
 		{/if}
 	</Card.Footer>

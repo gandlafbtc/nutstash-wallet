@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { StoredSwap } from '$lib/db/models/types';
+	import { t_not_found } from '$lib/paraglide/messages';
 	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
 	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
 	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
@@ -44,7 +45,7 @@
 		</div>
 	</a>
 {:else}
-	Swap not found
+	{t_not_found()}
 {/if}
 
 <style>

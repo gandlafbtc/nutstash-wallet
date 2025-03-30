@@ -8,8 +8,17 @@
 	import { discoverContacts } from '$lib/actions/nostr';
 	import { push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
-	import { keysStore } from '$lib/stores/persistent/keys';
-	import { npubEncode } from 'nostr-tools/nip19';
+	import {
+		add_contact,
+		enter_npub,
+		enter_npub_to_import_contact_list_from_nostr,
+		import_contacts,
+		load_any_follow_list_from_nostr,
+		not_an_npub,
+		t_cancel,
+		t_contacts,
+		t_discover
+	} from '$lib/paraglide/messages';
 
 	let isOpen = $state(false);
 
@@ -17,7 +26,7 @@
 
 	const loadContactList = () => {
 		if (!importNpub.startsWith('npub')) {
-			toast.warning('Use an NPub to import contacts from');
+			toast.warning(not_an_npub());
 			return;
 		}
 
@@ -27,13 +36,13 @@
 </script>
 
 <div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
-	<p class="text-lg font-bold">Contacts</p>
+	<p class="text-lg font-bold">{t_contacts()}</p>
 	<div class="flex w-full gap-2">
 		<Button onclick={() => (isOpen = !isOpen)}>
 			<Download></Download>
-			Import contacts
+			{import_contacts()}
 		</Button>
-		<Button href="/#/wallet/contacts/add">Add contact</Button>
+		<Button href="/#/wallet/contacts/add">{add_contact()}</Button>
 	</div>
 
 	{#each $contactsStore as contact}
@@ -48,11 +57,11 @@
 <Dialog.Root bind:open={isOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Enter NPUB to import contact list</Dialog.Title>
-			<Dialog.Description>Load any follow list from nostr</Dialog.Description>
+			<Dialog.Title>{enter_npub_to_import_contact_list_from_nostr()}</Dialog.Title>
+			<Dialog.Description>{load_any_follow_list_from_nostr()}</Dialog.Description>
 		</Dialog.Header>
 		<div class="flex h-72 flex-col gap-2">
-			<span>Enter NPUB</span>
+			<span>{enter_npub()}</span>
 			<Input type="text" placeholder="npub1..." bind:value={importNpub} />
 		</div>
 		<Dialog.Footer>
@@ -62,9 +71,9 @@
 					isOpen = false;
 				}}
 			>
-				Cancel
+				{t_cancel()}
 			</Button>
-			<Button onclick={loadContactList}>Discover</Button>
+			<Button onclick={loadContactList}>{t_discover()}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

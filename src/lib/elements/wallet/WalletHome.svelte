@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getUnitSymbol } from '$lib/util/walletUtils';
 	import { Download, QrCode, Upload } from 'lucide-svelte';
-	import UnitSelector from '$lib/elements/ui/UnitSelector.svelte';
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { mints } from '$lib/stores/persistent/mints';
@@ -18,6 +17,7 @@
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
 	import { settings } from '$lib/stores/persistent/settings';
 	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
+	import { t_receive, t_send } from '$lib/paraglide/messages';
 
 	let currentUnit = $state('sat');
 
@@ -136,7 +136,7 @@
 		class="z-0 flex h-full flex-grow items-center justify-center gap-2 pb-3 pt-4 opacity-70 transition-all duration-300 hover:opacity-100 active:bg-secondary"
 	>
 		<Download></Download>
-		&nbsp; Receive
+		&nbsp; {t_receive()}
 	</button>
 	<button
 		class="z-10 -m-6 flex-shrink rounded-full bg-nutstash p-8 transition-all duration-300 hover:bg-nutstashsecondary hover:p-9 active:bg-nutstashsecondary"
@@ -149,7 +149,7 @@
 		class="z-0 flex flex-grow items-center justify-center gap-2 pb-3 pl-4 pt-4 opacity-70 transition-all duration-300 hover:opacity-100 active:bg-secondary"
 	>
 		<Upload></Upload>
-		&nbsp; Send &nbsp;&nbsp;
+		&nbsp; {t_send()} &nbsp;&nbsp;
 	</button>
 </div>
 

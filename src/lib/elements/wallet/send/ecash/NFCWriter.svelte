@@ -4,6 +4,7 @@
 	import { isTauriMobile } from '$lib/tauri/deviceHelper';
 	// import { isAvailable, record, textRecord, write } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '$lib/helpers/errors';
+	import { error_writing_to_tag, token_has_been_written_to_nfc_tag } from '$lib/paraglide/messages';
 
 	let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } = $props();
 
@@ -31,12 +32,12 @@
 				const ndef = new NDEFReader();
 				await ndef.write({ records: [record] });
 			}
-			toast.info('Token has been written to nfc tag');
+			toast.info(token_has_been_written_to_nfc_tag());
 			isOpen = false;
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
-			toast.error('Writing nfc tag has failed', {
+			toast.error(error_writing_to_tag(), {
 				description: err.message
 			});
 			console.log(error);

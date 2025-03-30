@@ -12,6 +12,14 @@
 	import { now } from '$lib/stores/session/time';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
+	import {
+		request_mint,
+		t_close,
+		t_invoice,
+		t_pay,
+		t_update,
+		to_get
+	} from '$lib/paraglide/messages';
 
 	let {
 		quote,
@@ -37,7 +45,7 @@
 		<Card.Title class="relative flex flex-col justify-start text-nowrap">
 			<div class="h-10 max-w-48 flex-shrink overflow-clip text-ellipsis">
 				<a href={`/#/wallet/receive/ln/${quote.quote}`} class="underline">
-					Invoice #{quote.quote}
+					{t_invoice()} #{quote.quote}
 				</a>
 			</div>
 			{#if isListView}
@@ -64,17 +72,17 @@
 			<CopiableToken token={quote.request}></CopiableToken>
 		</div>
 		<div class="flex items-center gap-2">
-			<p class="text-xs">Pay</p>
+			<p class="text-xs">{t_pay()}</p>
 			<Badge variant="outline">
 				{formatAmount(decodedInvoice.sections[2].value / 1000, 'sat')}
 			</Badge>
-			<p class="text-xs">to get</p>
+			<p class="text-xs">{to_get()}</p>
 			<Badge variant="outline">{formatAmount(quote.amount, quote.unit)}</Badge>
 		</div>
 	</Card.Content>
 	<Card.Footer class="flex h-12 justify-between">
 		{#if !isListView}
-			<Button href="/#/wallet/">Close</Button>
+			<Button href="/#/wallet/">{t_close()}</Button>
 		{/if}
 		<div>
 			{#if quote.state === 'UNPAID'}
@@ -96,7 +104,7 @@
 							</Badge>
 						</Tooltip.Trigger>
 						<Tooltip.Content>
-							<p>Update</p>
+							<p>{t_update()}</p>
 						</Tooltip.Content>
 					</Tooltip.Root>
 				</Tooltip.Provider>
@@ -118,7 +126,7 @@
 								</Badge>
 							</Tooltip.Trigger>
 							<Tooltip.Content>
-								<p>Request mint</p>
+								<p>{request_mint()}</p>
 							</Tooltip.Content>
 						</Tooltip.Root>
 					</Tooltip.Provider>

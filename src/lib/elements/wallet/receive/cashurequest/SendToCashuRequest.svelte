@@ -4,6 +4,15 @@
 	import SendEcash from '$lib/elements/contacts/chat/SendEcash.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import {
+		could_not_parse_request,
+		error_when_sending,
+		no_matching_truested_mint_for_request,
+		no_payment_request_to_send,
+		no_supported_transport,
+		t_back,
+		unsupported_transport
+	} from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { decodePaymentRequest, type Token } from '@cashu/cashu-ts';
 	import { toast } from 'svelte-sonner';
@@ -19,10 +28,10 @@
 	const sendCallback = (token: Token) => {
 		try {
 			if (!request) {
-				throw new Error('No payment request to send to');
+				throw new Error(no_payment_request_to_send());
 			}
 			if (!nProfile) {
-				throw new Error('No supported payment transport');
+				throw new Error(no_supported_transport());
 			}
 			const paymentRequestResponse = {
 				id: request.id,
@@ -36,7 +45,7 @@
 			push('/wallet/');
 		} catch (error) {
 			const err = ensureError(error);
-			toast.error('Error when sending', { description: err.message });
+			toast.error(error_when_sending(), { description: err.message });
 			console.error(err);
 		} finally {
 		}
@@ -45,15 +54,15 @@
 
 {#if request}
 	{#if !nProfile}
-		Unsupported transport methods:
+		{unsupported_transport()}
 		{JSON.stringify(request.transport)}
-		<Button onclick={pop}>Go back</Button>
+		<Button onclick={pop}>{t_back()}</Button>
 	{:else}
 		{@const requestMintIndex = request.mints?.length
 			? $mints.findIndex((m) => request.mints?.includes(m.url))
 			: 0}
 		{#if requestMintIndex === undefined}
-			No matching trusted mint for this request.
+			{no_matching_truested_mint_for_request()}
 			<AddMint readOnly={true} mintUrlToAdd={request.mints?.[0]}></AddMint>
 		{:else}
 			<SendEcash
@@ -68,5 +77,5 @@
 		{/if}
 	{/if}
 {:else}
-	Could not parse request
+	{could_not_parse_request()}
 {/if}

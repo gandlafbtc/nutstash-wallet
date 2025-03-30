@@ -2,7 +2,6 @@
 	import AvatarFallback from '$lib/components/ui/avatar/avatar-fallback.svelte';
 	import AvatarImage from '$lib/components/ui/avatar/avatar-image.svelte';
 	import Avatar from '$lib/components/ui/avatar/avatar.svelte';
-	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import type { Mint } from '$lib/db/models/types';
 	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { getHostFromUrl } from '$lib/util/utils';
@@ -10,8 +9,7 @@
 		formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintUnit,
-		getUnitsForMints,
-		getUnitSymbol
+		getUnitsForMints
 	} from '$lib/util/walletUtils';
 
 	let { mint }: { mint: Mint } = $props();

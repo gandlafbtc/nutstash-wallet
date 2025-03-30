@@ -2,6 +2,12 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import {
+		add_mint,
+		add_mint_successfully,
+		mint_already_added,
+		no_url_entered
+	} from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { LoaderCircle, Plus } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
@@ -16,17 +22,17 @@
 	const addMint = async () => {
 		try {
 			if (!mintUrlToAdd) {
-				toast.warning('No url entered');
+				toast.warning(no_url_entered());
 				return;
 			}
 			if ($mints.find((mint) => mint.url === mintUrlToAdd)) {
-				toast.warning('Mint is already added');
+				toast.warning(mint_already_added());
 				return;
 			}
 			isAddingMint = true;
 			await mints.fetchMint(mintUrlToAdd);
 			mintUrlToAdd = '';
-			toast.success('Mint added');
+			toast.success(add_mint_successfully());
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -54,7 +60,7 @@
 			<Plus></Plus>
 		{/if}
 		{#if showAddText}
-			Add mint
+			{add_mint()}
 		{/if}
 	</Button>
 </div>

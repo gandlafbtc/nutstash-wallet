@@ -42,7 +42,6 @@ import OnboardingPass from './elements/onboarding/OnboardingPass.svelte';
 import SendLnurl from './elements/wallet/send/ln/SendLNURL.svelte';
 import AddNewContact from './elements/contacts/AddNewContact.svelte';
 import DonateView from './elements/Donate/DonateView.svelte';
-import DonateAnon from './elements/Donate/DonateAnon.svelte';
 import ManipulateCounters from './elements/dangerzone/ManipulateCounters.svelte';
 import DeleteStuff from './elements/dangerzone/DeleteStuff.svelte';
 import SendView from './elements/wallet/send/SendView.svelte';
@@ -83,7 +82,6 @@ export const walletRoutes = {
 	'/': WalletHome,
 
 	'/donate': DonateView,
-	'/donate/anon': DonateAnon,
 
 	'/mint/:url': MintView,
 	'/mint/': MintListView,

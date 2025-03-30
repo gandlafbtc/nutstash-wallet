@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { Message } from '$lib/db/models/types';
 	import ReceiveCard from '$lib/elements/wallet/receive/ecash/ReceiveCard.svelte';
+	import { t_ago, t_me } from '$lib/paraglide/messages';
 	import { keysStore } from '$lib/stores/persistent/keys';
 	import { messagesStore } from '$lib/stores/persistent/message';
 	import { now } from '$lib/stores/session/time';
-	import { getDecodedToken, getEncodedTokenV4, type Proof } from '@cashu/cashu-ts';
+	import { getDecodedToken, type Proof } from '@cashu/cashu-ts';
 	import { formatDistance } from 'date-fns';
 	import { nip19 } from 'nostr-tools';
 	import { onMount } from 'svelte';
@@ -43,7 +44,7 @@
 <div class="flex gap-1">
 	<span class="flex w-60 items-baseline gap-3 overflow-clip text-ellipsis text-nowrap">
 		{#if message.pubkey === $keysStore[$keysStore.length - 1].publicKey.slice(2)}
-			<span class="font-bold"> Me </span>
+			<span class="font-bold"> {t_me()} </span>
 		{:else}
 			<span class="font-bold">{alias}</span>
 			<div class="w-32 overflow-clip text-ellipsis text-sm opacity-35">
@@ -63,5 +64,6 @@
 	{/if}
 </div>
 <div class="text-xs opacity-35">
-	{formatDistance($now, message.created_at * 1000)} ago
+	{formatDistance($now, message.created_at * 1000)}
+	{t_ago()}
 </div>

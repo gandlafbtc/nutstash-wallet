@@ -9,6 +9,13 @@
 	import { pop, push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
 	import OnboardingHeader from './OnboardingHeader.svelte';
+	import {
+		enter_your_seed_phrase_correct_order,
+		restore_ecash_from_seed_phrase,
+		seed_phrase_invalid,
+		t_restore,
+		the_seed_phrase_must_be_12_words_long
+	} from '$lib/paraglide/messages';
 
 	let restoreSeed: Array<string> = $state(new Array(12));
 	let seedString: string = $state('');
@@ -19,11 +26,11 @@
 			seedString = '';
 			const splitted = seedStringCopy.split(' ');
 			if (splitted.length !== 12) {
-				toast.warning('The seed phrase must be 12 words');
+				toast.warning(the_seed_phrase_must_be_12_words_long());
 				return;
 			}
 			if (!validateMnemonic(seedStringCopy, wordlist)) {
-				toast.warning('The seed phrase is not valid');
+				toast.warning(seed_phrase_invalid());
 				return;
 			}
 			restoreSeed = splitted;
@@ -32,7 +39,7 @@
 
 	function startRestore() {
 		if (!validateMnemonic(restoreSeed.join(' '), wordlist)) {
-			toast.error('Invalid seed phrase');
+			toast.error(seed_phrase_invalid());
 			return;
 		}
 		mnemonic.add({ mnemonic: restoreSeed.join(' ') });
@@ -45,8 +52,8 @@
 <div class="flex h-screen items-center justify-center">
 	<Card.Root class="w-80 xl:w-[600px]">
 		<Card.Header>
-			<Card.Title>Restore ecash from seed phrase</Card.Title>
-			<Card.Description>Insert your seed phrase in the correct order...</Card.Description>
+			<Card.Title>{restore_ecash_from_seed_phrase()}</Card.Title>
+			<Card.Description>{enter_your_seed_phrase_correct_order()}</Card.Description>
 		</Card.Header>
 		<Card.Content class="flex max-w-max flex-col items-center justify-center gap-2">
 			<div class="w-20">
@@ -71,7 +78,9 @@
 			</div>
 		</Card.Content>
 		<Card.Footer class="flex flex-col gap-4">
-			<Button disabled={restoreSeed.includes(undefined)} onclick={startRestore}>restore</Button>
+			<Button disabled={restoreSeed.includes(undefined)} onclick={startRestore}
+				>{t_restore()}</Button
+			>
 		</Card.Footer>
 	</Card.Root>
 </div>

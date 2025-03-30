@@ -3,8 +3,8 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { ensureError } from '$lib/helpers/errors';
+	import { t_add } from '$lib/paraglide/messages';
 	import { contactsStore } from '$lib/stores/persistent/contacts';
-	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { Plus } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';
@@ -47,6 +47,6 @@
 	<Input placeholder="alias" bind:value={npubToAddAlias} />
 	<Button onclick={add}>
 		<Plus></Plus>
-		Add
+		{t_add()}
 	</Button>
 </div>

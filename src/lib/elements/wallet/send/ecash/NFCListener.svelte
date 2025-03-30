@@ -5,6 +5,11 @@
 	import { push } from 'svelte-spa-router';
 	// import { isAvailable, record, textRecord, scan } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '$lib/helpers/errors';
+	import {
+		cashu_token_scanned,
+		error_reading_from_tag,
+		scanned_non_cashu_token
+	} from '$lib/paraglide/messages';
 	let scanned = $state('');
 	const abortController = new AbortController();
 	abortController.signal.onabort = (event) => {
@@ -36,7 +41,7 @@
 				await ndef.scan({ signal: abortController.signal });
 				toast.info('Scanning for NFC tag');
 				ndef.onreadingerror = () => {
-					toast.error('Error reading from tag');
+					toast.error(error_reading_from_tag());
 				};
 				ndef.onreading = (event) => {
 					scanned = '';
@@ -50,10 +55,10 @@
 						scanned = scanned + decoded;
 					}
 					if (scanned.startsWith('cashu')) {
-						toast.info('Cashu token scanned');
+						toast.info(cashu_token_scanned());
 						push('/wallet/receive/cashu/' + scanned);
 					} else {
-						toast.warning('Scanned tag was not a cashu token: ' + scanned);
+						toast.warning(scanned_non_cashu_token() + ': ' + scanned);
 					}
 				};
 			}

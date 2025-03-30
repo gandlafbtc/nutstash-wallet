@@ -7,6 +7,12 @@
 
 	import CompactHistoryItem from './CompactHistoryItem.svelte';
 	import { formatAmount } from '$lib/util/walletUtils';
+	import {
+		load_more,
+		nothing_here_yet,
+		redeem_now,
+		unclaimed_ecash
+	} from '$lib/paraglide/messages';
 	let items = $derived([...$transactionsStore, ...$mintQuotesStore, ...$meltQuotesStore]);
 
 	let limit = $state(2);
@@ -27,8 +33,8 @@
 					<AlertCircle class="text-nutstash"></AlertCircle>
 				</div>
 				<div class="flex-grow">
-					<div class="text-sm">Unclaimed ecash</div>
-					<div class="flex-grow text-start text-xs text-muted-foreground">Redeem now!</div>
+					<div class="text-sm">{unclaimed_ecash()}</div>
+					<div class="flex-grow text-start text-xs text-muted-foreground">{redeem_now()}!</div>
 				</div>
 				<div>
 					{formatAmount($offlineTransactionsStore.reduce((acc, curr) => acc + curr.amount, 0))}
@@ -42,7 +48,7 @@
 			<button class="flex w-full rounded-xl border p-5 opacity-45">
 				<span class="text-xs">
 					{#if !items.length}
-						No history items yet ...
+						{nothing_here_yet()}
 					{/if}
 				</span>
 			</button>
@@ -57,7 +63,7 @@
 					}
 				}}
 			>
-				<span class="text-xs">Load more...</span>
+				<span class="text-xs">{load_more()}</span>
 			</button>
 		{/if}
 	</div>

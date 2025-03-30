@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
 	import type { Mint } from '$lib/db/models/types';
+	import { available_units } from '$lib/paraglide/messages';
 	import { unit } from '$lib/stores/persistent/settings';
 	import { getUnitsForMints, getUnitSymbol } from '$lib/util/walletUtils';
 	import { onMount } from 'svelte';
@@ -44,7 +45,7 @@
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
-			<Select.GroupHeading>Available Units</Select.GroupHeading>
+			<Select.GroupHeading>{available_units()}</Select.GroupHeading>
 			{#each mintUnits as u}
 				<Select.Item value={u} label={u}>{getUnitSymbol(u)}</Select.Item>
 			{/each}

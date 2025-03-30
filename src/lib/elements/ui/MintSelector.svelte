@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
 	import type { Mint } from '$lib/db/models/types';
+	import { available_mints } from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { Landmark } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
@@ -28,7 +29,7 @@
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
-			<Select.GroupHeading>Available Mints</Select.GroupHeading>
+			<Select.GroupHeading>{available_mints()}</Select.GroupHeading>
 			{#each $mints as m}
 				<Select.Item value={m.url} label={m.url}>{m.url}</Select.Item>
 			{/each}

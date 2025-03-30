@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { all_mints } from '$lib/paraglide/messages';
 	import { mints } from '$lib/stores/persistent/mints';
 	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import {
@@ -18,7 +19,7 @@
 			<Landmark class="text-secondary-foreground"></Landmark>
 		</div>
 		<div class="flex flex-col gap-1">
-			<p class="w-52 overflow-clip text-ellipsis font-bold">All mints</p>
+			<p class="w-52 overflow-clip text-ellipsis font-bold">{all_mints()}</p>
 			<p>
 				{$mints.length}
 			</p>

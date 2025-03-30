@@ -3,7 +3,18 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { DB } from '$lib/db/db';
 	import { ensureError } from '$lib/helpers/errors';
-	import { init } from '$lib/init/init';
+	import {
+		are_you_sure_you_want_to_delete_all_data,
+		delete_wallet,
+		deleted_wallet_reloading,
+		restart_failed,
+		t_cancel,
+		t_warning,
+		these_actions_cannot_be_undone,
+		wallet_restart,
+		yes_delete_wallet,
+		your_wallet_will_be_gone
+	} from '$lib/paraglide/messages';
 	import { isOnboarded } from '$lib/stores/local/message';
 	import { selectedMint } from '$lib/stores/local/selectedMints';
 	import { usePassword } from '$lib/stores/local/usePassword';
@@ -20,13 +31,13 @@
 			isOnboarded.set(false);
 			DB.deleteDatabase();
 			toast.promise(delay(1000), {
-				loading: 'Wallet has been deleted. Reloading now...',
-				success: 'Wallet restart...'
+				loading: deleted_wallet_reloading(),
+				success: wallet_restart()
 			});
 			await delay(2000);
 			window.location.reload();
 			await delay(2000);
-			toast.error('Restart has failed. Please restart the app manually.');
+			toast.error(restart_failed());
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -37,8 +48,8 @@
 
 <div class="flex h-full w-80 flex-col gap-5 xl:w-[600px]">
 	<p class="text-destructive">
-		<span class="font-bold"> Warning! </span>
-		These actions can not be undone. Be sure of what you want to do before proceeding.
+		<span class="font-bold"> {t_warning()}! </span>
+		{these_actions_cannot_be_undone()}
 	</p>
 	<Button
 		variant="destructive"
@@ -46,7 +57,7 @@
 			isOpen = true;
 		}}
 	>
-		Delete Wallet
+		{delete_wallet()}
 	</Button>
 </div>
 
@@ -54,10 +65,10 @@
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title class="text-destructive"
-				>Are you sure you want to delete this wallet?</Dialog.Title
+				>{are_you_sure_you_want_to_delete_all_data()}</Dialog.Title
 			>
 			<Dialog.Description>
-				This cannot be undone. Your wallet will be gone forever.
+				{your_wallet_will_be_gone()}
 			</Dialog.Description>
 		</Dialog.Header>
 
@@ -68,9 +79,9 @@
 					isOpen = false;
 				}}
 			>
-				Cancel
+				{t_cancel()}
 			</Button>
-			<Button variant="destructive" onclick={deleteAll}>Yes, Delete wallet</Button>
+			<Button variant="destructive" onclick={deleteAll}>{yes_delete_wallet()}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

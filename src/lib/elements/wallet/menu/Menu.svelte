@@ -51,6 +51,24 @@
 	import { onMount } from 'svelte';
 	import { ensureError } from '$lib/helpers/errors';
 	import { get } from 'svelte/store';
+	import {
+		add_mint,
+		mint_added,
+		mint_already_added,
+		no_url_entered,
+		report_issue,
+		t_account,
+		t_add,
+		t_chat,
+		t_contacts,
+		t_data,
+		t_donate,
+		t_help,
+		t_mints,
+		t_nostr,
+		t_settings,
+		t_wallet
+	} from '$lib/paraglide/messages';
 
 	let showAddMint = $state(false);
 	let isAddingMint = $state(false);
@@ -64,17 +82,17 @@
 	const addMint = async () => {
 		try {
 			if (!mintUrlToAdd) {
-				toast.warning('No url entered');
+				toast.warning(no_url_entered());
 				return;
 			}
 			if ($mints.find((mint) => mint.url === mintUrlToAdd)) {
-				toast.warning('Mint is already added');
+				toast.warning(mint_already_added());
 				return;
 			}
 			isAddingMint = true;
 			await mints.fetchMint(mintUrlToAdd);
 			mintUrlToAdd = '';
-			toast.success('Mint added');
+			toast.success(mint_added());
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -110,7 +128,7 @@
 									{...props}
 								>
 									<Wallet></Wallet>
-									Wallet
+									{t_wallet()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -125,7 +143,7 @@
 									{...props}
 								>
 									<Contact></Contact>
-									Contacts
+									{t_contacts()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -140,7 +158,7 @@
 									{...props}
 								>
 									<MessageCircleMore></MessageCircleMore>
-									Chat
+									{t_chat()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -160,7 +178,7 @@
 									{...props}
 								>
 									<User></User>
-									Account
+									{t_account()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -174,7 +192,7 @@
 									{...props}
 								>
 									<Landmark></Landmark>
-									Mints
+									{t_mints()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -188,7 +206,7 @@
 									{...props}
 								>
 									<NetworkIcon></NetworkIcon>
-									Nostr
+									{t_nostr()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -202,7 +220,7 @@
 									{...props}
 								>
 									<Settings></Settings>
-									Settings
+									{t_settings()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -216,7 +234,7 @@
 									{...props}
 								>
 									<Database></Database>
-									Data
+									{t_data()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -227,7 +245,7 @@
 		<Sidebar.Group>
 			<Sidebar.GroupLabel class="gap-2">
 				<Landmark></Landmark>
-				Mints</Sidebar.GroupLabel
+				{t_mints()}</Sidebar.GroupLabel
 			>
 			<Sidebar.GroupAction
 				title="Add Mint"
@@ -243,7 +261,7 @@
 				{#if showAddMint}
 					<X></X>
 				{:else}
-					<Plus /> <span class="sr-only">Add Mint</span>
+					<Plus /> <span class="sr-only">{add_mint()}</span>
 				{/if}
 			</Sidebar.GroupAction>
 			<Sidebar.GroupContent>
@@ -272,7 +290,7 @@
 									{:else}
 										<Plus></Plus>
 									{/if}
-									Add
+									{t_add()}
 								</Sidebar.MenuButton>
 							</Sidebar.MenuItem>
 						{/if}
@@ -288,7 +306,7 @@
 				<Sidebar.Menu>
 					<Sidebar.GroupLabel class="gap-2">
 						<LifeBuoy></LifeBuoy>
-						Help</Sidebar.GroupLabel
+						{t_help()}</Sidebar.GroupLabel
 					>
 					<Sidebar.MenuItem>
 						<Sidebar.MenuButton>
@@ -299,7 +317,7 @@
 									{...props}
 								>
 									<Heart></Heart>
-									Donate
+									{t_donate()}
 								</a>
 							{/snippet}
 						</Sidebar.MenuButton>
@@ -316,7 +334,7 @@
 								>
 									<AlertCircle></AlertCircle>
 									<span class="flex items-center gap-1">
-										Report Issue
+										{report_issue()}
 										<ExternalLink class="h-4 w-4"></ExternalLink>
 									</span>
 								</a>

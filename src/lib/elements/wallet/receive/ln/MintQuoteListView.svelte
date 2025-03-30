@@ -3,6 +3,7 @@
 	import { MediaQuery } from 'runed';
 	import MintQuoteListItem from './MintQuoteListItem.svelte';
 	import * as Pagination from '$lib/components/ui/pagination';
+	import { nothing_found, nothing_here_yet, t_invoices } from '$lib/paraglide/messages';
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
@@ -15,7 +16,7 @@
 </script>
 
 <div class="h-full">
-	<p class="text-lg font-bold">Lightning invoices</p>
+	<p class="text-lg font-bold">{t_invoices()}</p>
 	{#if $mintQuotesStore.length}
 		{#each currentQuotes as quote}
 			<MintQuoteListItem {quote}></MintQuoteListItem>
@@ -48,7 +49,7 @@
 		</Pagination.Root>
 	{:else}
 		<div class="h-20">
-			<p>No invoices created yet.</p>
+			<p>{nothing_here_yet()}</p>
 		</div>
 	{/if}
 </div>

@@ -6,11 +6,12 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { contactsStore } from '$lib/stores/persistent/contacts';
 	import Divider from '../ui/Divider.svelte';
+	import { import_all, import_contacts, t_done } from '$lib/paraglide/messages';
 	let hasSelected = $state(false);
 </script>
 
 <div class="flex h-full w-80 flex-col gap-2 xl:w-[600px]">
-	<p class="font-bold">Import Contacts</p>
+	<p class="font-bold">{import_contacts()}</p>
 	{#if $discoveredContacts.length}
 		<Button
 			disabled={hasSelected}
@@ -18,7 +19,7 @@
 				contactsStore.addMany($discoveredContacts);
 			}}
 		>
-			Import all
+			{import_all()}
 		</Button>
 		<Divider text="Or select"></Divider>
 		<ScrollArea class="h-96">
@@ -44,7 +45,7 @@
 			{/each}
 		</ScrollArea>
 		<div class="flex gap-2">
-			<Button href="/#/wallet/contacts">Done</Button>
+			<Button href="/#/wallet/contacts">{t_done()}</Button>
 		</div>
 	{:else}
 		<LoaderCircle class="animate-spin"></LoaderCircle>
