@@ -28,7 +28,7 @@
 	);
 </script>
 
-<Card.Root class='w-80 xl:w-[600px]'>
+<Card.Root class="w-80 xl:w-[600px]">
 	<Card.Header>
 		<Card.Title>
 			<a href={`/#/wallet/receive/cashureq/${request.id}`}>

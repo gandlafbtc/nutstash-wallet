@@ -101,7 +101,7 @@
 
 	{#each $offlineTransactionsStore as tx}
 		{@const tkn = getEncodedToken({ proofs: tx.in, mint: tx.mintUrl, unit: tx.unit })}
-		<div class="relative flex flex-col gap-4 rounded-xl border p-4 w-80 xl:w-[600px]">
+		<div class="relative flex w-80 flex-col gap-4 rounded-xl border p-4 xl:w-[600px]">
 			<div class="absolute right-2 top-2">
 				<Button
 					variant="ghost"
