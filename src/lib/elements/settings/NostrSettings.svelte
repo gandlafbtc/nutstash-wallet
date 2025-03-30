@@ -62,14 +62,14 @@
 			>
 				<Trash></Trash>
 			</button>
-			<p class="flex items-center gap-2">
+			<div class="flex items-center gap-2">
 				<span>
 					{relay.url}
 				</span>
 				{#if relay.hasConnection}
 					<div class="h-2 w-2 rounded-full bg-green-500"></div>
 				{/if}
-			</p>
+			</div>
 			<Switch
 				bind:checked={relay.isOn}
 				onclick={async () => {
