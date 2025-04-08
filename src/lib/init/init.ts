@@ -49,6 +49,28 @@ export const init = async () => {
 	nwc.init();
 };
 
+const stores = {
+	mnemonic,
+	mints,
+	transactionsStore,
+	offlineTransactionsStore,
+	mintQuotesStore,
+	meltQuotesStore,
+	proofsStore,
+	offlineProofsStore,
+	pendingProofsStore,
+	spentProofsStore,
+	keysStore,
+	nwcKeysStore,
+	countsStore,
+	messagesStore,
+	contactsStore,
+	relaysStore,
+	cashuRequestsStore,
+	swapsStore,
+	settings
+} as const;
+
 const setLanguage = () => {
 	const locale = getLocale() as string;
 	console.log(locale);
@@ -107,67 +129,15 @@ const initNostrConnections = async () => {
 };
 
 const initStores = async () => {
-	await mnemonic.init();
-	await mints.init();
-	await transactionsStore.init();
-	await offlineTransactionsStore.init();
-	await mintQuotesStore.init();
-	await meltQuotesStore.init();
-	await proofsStore.init();
-	await offlineProofsStore.init();
-	await pendingProofsStore.init();
-	await spentProofsStore.init();
-	await keysStore.init();
-	await nwcKeysStore.init();
-	await countsStore.init();
-	await messagesStore.init();
-	await contactsStore.init();
-	await relaysStore.init();
-	await cashuRequestsStore.init();
-	await swapsStore.init();
-	await settings.init();
+	await Promise.all(Object.values(stores).map(store => store.init()));
 };
 
 export const reencrypt = async () => {
-	await mnemonic.reEncrypt();
-	await mints.reEncrypt();
-	await transactionsStore.reEncrypt();
-	await offlineTransactionsStore.reEncrypt();
-	await mintQuotesStore.reEncrypt();
-	await meltQuotesStore.reEncrypt();
-	await proofsStore.reEncrypt();
-	await offlineProofsStore.reEncrypt();
-	await pendingProofsStore.reEncrypt();
-	await spentProofsStore.reEncrypt();
-	await keysStore.reEncrypt();
-	await nwcKeysStore.reEncrypt();
-	await countsStore.reEncrypt();
-	await messagesStore.reEncrypt();
-	await contactsStore.reEncrypt();
-	await relaysStore.reEncrypt();
-	await cashuRequestsStore.reEncrypt();
-	await swapsStore.reEncrypt();
-	await settings.reEncrypt();
+	await Promise.all(Object.values(stores).map(store => store.reEncrypt()));
 };
 
 export const setStoresFromBackupJSON = async (obj: any) => {
-	mints.set(obj.mints);
-	transactionsStore.set(obj.transactionsStore);
-	offlineTransactionsStore.set(obj.offlineTransactionsStore);
-	mintQuotesStore.set(obj.mintQuotesStore);
-	meltQuotesStore.set(obj.meltQuotesStore);
-	proofsStore.set(obj.proofsStore);
-	offlineProofsStore.set(obj.offlineProofsStore);
-	pendingProofsStore.set(obj.pendingProofsStore);
-	spentProofsStore.set(obj.spentProofsStore);
-	keysStore.set(obj.keysStore);
-	nwcKeysStore.set(obj.nwcKeysStore);
-	countsStore.set(obj.countsStore);
-	mnemonic.set(obj.mnemonic);
-	messagesStore.set(obj.messagesStore);
-	contactsStore.set(obj.contactsStore);
-	relaysStore.set(obj.relaysStore);
-	cashuRequestsStore.set(obj.cashuRequestsStore);
-	swapsStore.set(obj.swapsStore);
-	settings.set(obj.settings);
+	(Object.keys(stores)).forEach(key => {
+		stores[key].set(obj[key]);
+	});
 };
