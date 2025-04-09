@@ -13,8 +13,8 @@ importers:
         version: 2.1.0
     devDependencies:
       '@cashu/cashu-ts':
-        specifier: 2.4.0
-        version: 2.4.0
+        specifier: link:../cashu-kvac
+        version: link:../cashu-kvac
       '@cashu/crypto':
         specifier: ^0.3.4
         version: 0.3.4
@@ -197,9 +197,6 @@ packages:
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
     engines: {node: '>=6.9.0'}
-
-  '@cashu/cashu-ts@2.4.0':
-    resolution: {integrity: sha512-RnH4P1Mnij2WMPDYRjlrn3jP8Tl4uqywi3fCWyEP6sN6ZgpNSfXT3g+2kbVPye2YvilD4h6heYRPyv6/maLkTQ==}
 
   '@cashu/crypto@0.3.4':
     resolution: {integrity: sha512-mfv1Pj4iL1PXzUj9NKIJbmncCLMqYfnEDqh/OPxAX0nNBt6BOnVJJLjLWFlQeYxlnEfWABSNkrqPje1t5zcyhA==}
@@ -2335,13 +2332,6 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
     optional: true
-
-  '@cashu/cashu-ts@2.4.0':
-    dependencies:
-      '@cashu/crypto': 0.3.4
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
-      buffer: 6.0.3
 
   '@cashu/crypto@0.3.4':
     dependencies:

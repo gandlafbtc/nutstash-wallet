@@ -1,6 +1,8 @@
 import {
 	CashuMint,
 	CashuWallet,
+	ExtendedCashuMint,
+	ExtendedCashuWallet,
 	hasValidDleq,
 	type Keys,
 	type MintActiveKeys,
@@ -16,6 +18,7 @@ import type { Mint } from '$lib/db/models/types';
 import { nip05, nip19 } from 'nostr-tools';
 import { parseSecret } from '@cashu/crypto/modules/common/NUT11';
 import { mints } from '$lib/stores/persistent/mints';
+import { useSingleAmount } from '$lib/stores/session/useKvac';
 // import { parseSecret } from '@cashu/crypto/modules/client/NUT11';
 /**
  * returns a subset of tokens, so that not all tokens are sent to mint for smaller amounts.
@@ -348,7 +351,7 @@ export const getWalletWithUnit = async (
 	mints: Mint[],
 	mintUrl: string,
 	unit = 'sat'
-): Promise<CashuWallet> => {
+): Promise<CashuWallet| ExtendedCashuWallet> => {
 	const mint = getBy<Mint>(mints, mintUrl, 'url');
 	if (!mint) {
 		throw new Error(`Mint ${mintUrl} not found`);
@@ -357,6 +360,11 @@ export const getWalletWithUnit = async (
 	const keys = mint.keys.keysets.find((ks) => ks.unit === unit);
 	if (!keys) {
 		throw new Error(`No keys for this unit: ${unit} [${mintUrl}]`);
+	}
+	if (get(useSingleAmount)) {
+		const wallet = new ExtendedCashuWallet(new ExtendedCashuMint(mintUrl))
+		await wallet.loadMint();
+		return wallet
 	}
 	const wallet = new CashuWallet(new CashuMint(mintUrl), {
 		bip39seed: get(seed),

@@ -89,4 +89,20 @@ export interface NutstashDB extends DBSchema {
 		key: string;
 		value: EncryptedStore;
 	};
+	'encrypted-kvac-proofs': {
+		key: string;
+		value: EncryptedStore;
+	};
+	'encrypted-spent-kvac-proofs': {
+		key: string;
+		value: EncryptedStore;
+	};
+	'encrypted-pending-kvac-proofs': {
+		key: string;
+		value: EncryptedStore;
+	};
+	'encrypted-offline-kvac-proofs': {
+		key: string;
+		value: EncryptedStore;
+	};
 }

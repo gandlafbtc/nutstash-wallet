@@ -3,7 +3,7 @@ import type { NutstashDB } from './model';
 import { ensureError } from '$lib/helpers/errors';
 import { toast } from 'svelte-sonner';
 
-export const DB_VERSION = 3;
+export const DB_VERSION = 4;
 export const DB_NAME = 'nutstash-db';
 
 export class DB {
@@ -48,6 +48,13 @@ export class DB {
 				// version 3
 				if ((newVersion ?? 0) > 2 && oldVersion < 3) {
 					db.createObjectStore('encrypted-offline-transactions');
+				}
+				// version 4
+				if ((newVersion ?? 0) > 3 && oldVersion < 4) {
+					db.createObjectStore('encrypted-kvac-proofs')
+					db.createObjectStore('encrypted-spent-kvac-proofs')
+					db.createObjectStore('encrypted-pending-kvac-proofs')
+					db.createObjectStore('encrypted-offline-kvac-proofs');
 				}
 			},
 			blocked: (currentVersion, blockedVersion, event) => {

@@ -25,7 +25,8 @@ import {
 	type PaymentRequestTransport,
 	CashuMint,
 	CashuWallet,
-	CheckStateEnum
+	CheckStateEnum,
+	ExtendedCashuWallet
 } from '@cashu/cashu-ts';
 import { get } from 'svelte/store';
 import { bytesToHex, randomBytes } from '@noble/hashes/utils';
@@ -150,26 +151,36 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 
 	let currentCount = getCurrentCount(wallet.keysetId);
 
-	const proofs = await wallet.mintProofs(quote.amount, quote.quote, { counter: currentCount });
+	if (wallet instanceof ExtendedCashuWallet) {
+		const zeroCoins =await wallet.bootstrap(2)
 
-	await proofsStore.addMany(proofs);
-	if (proofs.length) {
-		quoteToStore.out = proofs;
-		let endCount = proofs.length;
-		endCount = endCount + currentCount;
-		await updateCount(wallet.keysetId, endCount);
-		quoteToStore.counts = { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) };
+		const [empty, minted] = await wallet.kvacMint(zeroCoins[0], zeroCoins[1],quote.amount, quote.quote)
+		console.log(minted)
+	}
+	else {
+
+		const proofs = await wallet.mintProofs(quote.amount, quote.quote, { counter: currentCount });
+		
+		await proofsStore.addMany(proofs);
+		toast.success(
+			received_amount({ amount: formatAmount(getAmountForTokenSet(proofs), quoteToStore.unit) }),
+			{
+				description: at_mint({ mintUrl: quoteToStore.mintUrl })
+			}
+		);
+		if (proofs.length) {
+			quoteToStore.out = proofs;
+			let endCount = proofs.length;
+			endCount = endCount + currentCount;
+			await updateCount(wallet.keysetId, endCount);
+			quoteToStore.counts = { keysetId: wallet.keysetId, counts: getCount(currentCount, endCount) };
+		}
 	}
 	const updatedQuote = await wallet.checkMintQuote(quote.quote);
 	quoteToStore.state = updatedQuote.state;
 	quoteToStore.lastChangedAt = Date.now();
 	await mintQuotesStore.addOrUpdate(quote.quote, quoteToStore, 'quote');
-	toast.success(
-		received_amount({ amount: formatAmount(getAmountForTokenSet(proofs), quoteToStore.unit) }),
-		{
-			description: at_mint({ mintUrl: quoteToStore.mintUrl })
-		}
-	);
+
 };
 
 export const meltProofs = async (quote: StoredMeltQuote, options?: { privkey?: string }) => {

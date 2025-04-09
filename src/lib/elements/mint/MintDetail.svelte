@@ -148,7 +148,7 @@
 											: 'text-yellow-500'
 										: 'text-destructive'}
 								>
-									{NUT[item[0]]}
+									{NUT[item[0]]?? item[0]}
 								</p>
 							</Badge>
 						{/if}

@@ -18,6 +18,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { page } from '$app/stores';
 	import { t_back, to_use_the_wallet_add_mint, welcome_to_nutstash } from '$lib/paraglide/messages';
+	import UseKvacToggle from '../settings/UseKvacToggle.svelte';
 
 	let sidebar = $state('');
 
@@ -72,7 +73,10 @@
 									class="w-32 transition-all duration-500"
 								/>
 							</a>
-							<div class="hidden w-20 sm:block"></div>
+							<!-- <div class="hidden w-20 sm:block"></div> -->
+							<div class="w-20 sm:block">
+								<UseKvacToggle></UseKvacToggle>
+							</div>
 						</div>
 					</div>
 					<Router routes={walletRoutes} prefix={WALLET_ROUTE_PREFIX}></Router>
