@@ -1,5 +1,5 @@
 import { ContextError, ensureError } from '$lib/helpers/errors';
-import { CashuMint, type MintActiveKeys } from '@cashu/cashu-ts';
+import { CashuMint, ExtendedCashuMint, type MintActiveKeys } from '@cashu/cashu-ts';
 
 import { get, writable } from 'svelte/store';
 import type { Mint } from '$lib/db/models/types';
@@ -40,14 +40,25 @@ export const mints = createMintsStore(encryptionHelper);
 
 const loadMint = async (mintUrl: string): Promise<Mint> => {
 	try {
-		const cashuMint = new CashuMint(mintUrl);
+		const cashuMint = new ExtendedCashuMint(mintUrl);
 		const mintInfo = await cashuMint.getInfo();
 		const mintAllKeysets = await cashuMint.getKeySets();
 		const mintActiveKeys: MintActiveKeys = await cashuMint.getKeys();
+		let mintAllKvacKeysets = undefined;
+		let mintActiveKvacKeys = undefined;
+		try {
+			mintAllKvacKeysets = await cashuMint.getKvacKeySets();
+			mintActiveKvacKeys = await cashuMint.getKvacKeys();
+		} catch (e) {
+			console.warn(`Mint does not support KVAC: ${e}`)
+		}
+
 		const mint = {
 			info: mintInfo,
 			keys: mintActiveKeys,
 			keysets: mintAllKeysets,
+			kvacKeys: mintActiveKvacKeys,
+			kvacKeysets: mintAllKvacKeysets,
 			url: mintUrl
 		};
 

@@ -2,6 +2,7 @@ import { countsStore } from '$lib/stores/persistent/counts';
 import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
 import { mints } from '$lib/stores/persistent/mints';
 import { pendingProofsStore, proofsStore, spentProofsStore } from '$lib/stores/persistent/proofs';
+import { kvacCoinsStore, spentKvacCoinsStore, pendingKvacCoinssStore } from '$lib/stores/persistent/kvacProofs';
 import { transactionsStore } from '$lib/stores/persistent/transactions';
 import { getCount } from '$lib/util/utils';
 import {
@@ -26,7 +27,8 @@ import {
 	CashuMint,
 	CashuWallet,
 	CheckStateEnum,
-	ExtendedCashuWallet
+	ExtendedCashuWallet,
+	type KvacCoin
 } from '@cashu/cashu-ts';
 import { get } from 'svelte/store';
 import { bytesToHex, randomBytes } from '@noble/hashes/utils';
@@ -150,12 +152,61 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 	const quoteToStore = { ...quote };
 
 	let currentCount = getCurrentCount(wallet.keysetId);
+	console.log(`currentCount: ${currentCount}`);
 
 	if (wallet instanceof ExtendedCashuWallet) {
-		const zeroCoins =await wallet.bootstrap(2)
+		const mintUnitCoins: KvacCoin[] = kvacCoinsStore.getByKeysetIds(wallet.kvacKeysets.map((ks) => ks.id));
 
-		const [empty, minted] = await wallet.kvacMint(zeroCoins[0], zeroCoins[1],quote.amount, quote.quote)
-		console.log(minted)
+		let zeroCoin = mintUnitCoins.find((c) => c.amount === 0);
+		if (!zeroCoin) {
+			zeroCoin = (await wallet.bootstrap(1))[0];
+		}
+		let balanceCoin = mintUnitCoins.find((c) => c.amount !== 0);
+		if (!balanceCoin) {
+			balanceCoin = (await wallet.bootstrap(1))[0];
+		}
+
+		// Identified by tag
+		let tags = [zeroCoin.coin.mac.t as unknown as string, balanceCoin.coin.mac.t as unknown as string];
+		console.log(`chosen coins tags: ${tags}`);
+		
+		// Remove old coins
+		await kvacCoinsStore.removeMany(tags);
+
+		// Add old coins to pending
+		await pendingKvacCoinssStore.addMany([zeroCoin, balanceCoin]);
+
+		try {
+			const [newZeroCoin, newBalanceCoin] = await wallet.kvacMint(
+				balanceCoin,
+				zeroCoin,
+				quote.amount,
+				quote.quote,
+				{ counter: currentCount }
+			);
+			await kvacCoinsStore.addMany([newZeroCoin, newBalanceCoin]);
+			toast.success(
+				received_amount({ amount: formatAmount(newBalanceCoin.amount - balanceCoin.amount, quoteToStore.unit) }),
+				{
+					description: at_mint({ mintUrl: quoteToStore.mintUrl })
+				}
+			);
+			console.log(newBalanceCoin);
+			// Set old coins as spent
+			await spentKvacCoinsStore.addMany([zeroCoin, balanceCoin]);
+			// Update the count
+			await updateCount(wallet.keysetId, currentCount + 2);
+		} catch (e: any) {
+			toast.error(
+				"couldn't mint KVAC coins: " + e
+			)
+			await spentKvacCoinsStore.removeMany(tags);
+			await kvacCoinsStore.addMany([zeroCoin, balanceCoin]);
+		} finally {
+			// Remove old coins from pending
+			await pendingKvacCoinssStore.removeMany(tags);
+		}
+		
 	}
 	else {
 
