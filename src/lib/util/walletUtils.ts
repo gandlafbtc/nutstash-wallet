@@ -351,7 +351,7 @@ export const getWalletWithUnit = async (
 	mints: Mint[],
 	mintUrl: string,
 	unit = 'sat'
-): Promise<CashuWallet| ExtendedCashuWallet> => {
+): Promise<ExtendedCashuWallet> => {
 	const mint = getBy<Mint>(mints, mintUrl, 'url');
 	if (!mint) {
 		throw new Error(`Mint ${mintUrl} not found`);

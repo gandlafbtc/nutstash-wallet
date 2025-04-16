@@ -52,8 +52,8 @@ export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
 	createdAt: number;
 	lastChangedAt: number;
 	type: 'melt';
-	in?: Proof[];
-	out?: Proof[];
+	in?: Proof[] | KvacCoin[];
+	out?: Proof[] | KvacCoin[];
 	request: string;
 	fees?: number;
 	counts?: { keysetId: string; counts: number[] };
