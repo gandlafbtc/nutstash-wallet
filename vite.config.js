@@ -2,10 +2,11 @@ import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 
-// @ts-expect-error process is a nodejs global
-const host = process.env.TAURI_DEV_HOST;
+// ts-expect-error process is a nodejs global
+const host = '0.0.0.0';
 
 // https://vitejs.dev/config/
+// @ts-ignore
 export default defineConfig(async () => ({
 	plugins: [
 		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' }),
@@ -38,5 +39,8 @@ export default defineConfig(async () => ({
 	},
 	test: {
 		environment: 'jsdom'
+	},
+	preview: {
+		allowedHosts: true,
 	}
 }));
