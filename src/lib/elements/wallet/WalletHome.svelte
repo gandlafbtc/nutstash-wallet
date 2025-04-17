@@ -19,7 +19,7 @@
 	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
 	import { t_receive, t_send } from '$lib/paraglide/messages';
 	import { useSingleAmount } from '$lib/stores/session/useKvac';
-	import { kvacProofsStore } from '$lib/stores/persistent/kvacProofs';
+	import { kvacCoinsStore } from '$lib/stores/persistent/kvacProofs';
 
 	let currentUnit = $state('sat');
 
@@ -84,7 +84,7 @@
 			.filter((k) => k.unit === currentUnit)
 			.map((k) => k.id)
 	);
-	let amount = $derived(getByMany($useSingleAmount? $kvacProofsStore: $proofsStore, keysetIds, 'id').reduce((a, b) => a + b.amount, 0));
+	let amount = $derived(getByMany($useSingleAmount ? $kvacCoinsStore : $proofsStore, keysetIds, 'id').reduce((a, b) => a + b.amount, 0));
 </script>
 
 <div class="flex h-full w-full flex-col items-center justify-start gap-5">

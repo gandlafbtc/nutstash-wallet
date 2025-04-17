@@ -2,6 +2,7 @@ import { countsStore } from '$lib/stores/persistent/counts';
 import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
 import { mints } from '$lib/stores/persistent/mints';
 import { pendingProofsStore, proofsStore, spentProofsStore } from '$lib/stores/persistent/proofs';
+import { kvacCoinsStore, spentKvacCoinsStore, pendingKvacCoinssStore } from '$lib/stores/persistent/kvacProofs';
 import { transactionsStore } from '$lib/stores/persistent/transactions';
 import { getCount } from '$lib/util/utils';
 import {
@@ -26,7 +27,8 @@ import {
 	CashuMint,
 	CashuWallet,
 	CheckStateEnum,
-	ExtendedCashuWallet
+	ExtendedCashuWallet,
+	type KvacCoin
 } from '@cashu/cashu-ts';
 import { get } from 'svelte/store';
 import { bytesToHex, randomBytes } from '@noble/hashes/utils';
@@ -62,6 +64,7 @@ import {
 	received_amount,
 	token_received
 } from '$lib/paraglide/messages';
+import { useSingleAmount } from '$lib/stores/session/useKvac';
 
 export const createMintQuote = async (
 	mintUrl: string,
@@ -149,15 +152,65 @@ export const mintProofs = async (quote: StoredMintQuote) => {
 	const wallet = await getWalletWithUnit(get(mints), quote.mintUrl, quote.unit);
 	const quoteToStore = { ...quote };
 
-	let currentCount = getCurrentCount(wallet.keysetId);
+	if (get(useSingleAmount)) {
+		let currentCount = getCurrentCount(wallet.kvacKeysetId);
+		console.log(`currentCount: ${currentCount}`);
+		const mintUnitCoins: KvacCoin[] = kvacCoinsStore.getByKeysetIds(wallet.kvacKeysets.map((ks) => ks.id));
 
-	if (wallet instanceof ExtendedCashuWallet) {
-		const zeroCoins =await wallet.bootstrap(2)
+		let zeroCoin = mintUnitCoins.find((c) => c.amount === 0);
+		if (!zeroCoin) {
+			zeroCoin = (await wallet.bootstrap(1))[0];
+		}
+		let balanceCoin = mintUnitCoins.find((c) => c.amount !== 0);
+		if (!balanceCoin) {
+			balanceCoin = (await wallet.bootstrap(1))[0];
+		}
 
-		const [empty, minted] = await wallet.kvacMint(zeroCoins[0], zeroCoins[1],quote.amount, quote.quote)
-		console.log(minted)
-	}
-	else {
+		// Identified by tag
+		let tags = [zeroCoin.coin.mac.t as unknown as string, balanceCoin.coin.mac.t as unknown as string];
+		console.log(`chosen coins tags: ${tags}`);
+
+		// Remove old coins
+		await kvacCoinsStore.removeMany(tags);
+
+		// Add old coins to pending
+		await pendingKvacCoinssStore.addMany([zeroCoin, balanceCoin]);
+
+		try {
+			const [newZeroCoin, newBalanceCoin] = await wallet.kvacMint(
+				balanceCoin,
+				zeroCoin,
+				quote.amount,
+				quote.quote,
+				{ counter: currentCount }
+			);
+			await kvacCoinsStore.addMany([newZeroCoin, newBalanceCoin]);
+			toast.success(
+				received_amount({ amount: formatAmount(newBalanceCoin.amount - balanceCoin.amount, quoteToStore.unit) }),
+				{
+					description: at_mint({ mintUrl: quoteToStore.mintUrl })
+				}
+			);
+			console.log(newBalanceCoin);
+			// Set old coins as spent
+			await spentKvacCoinsStore.addMany([zeroCoin, balanceCoin]);
+			// Update the count
+			await updateCount(wallet.keysetId, currentCount + 2);
+		} catch (e: any) {
+			toast.error(
+				"couldn't mint KVAC coins: " + e
+			)
+			await spentKvacCoinsStore.removeMany(tags);
+			await kvacCoinsStore.addMany([zeroCoin, balanceCoin]);
+		} finally {
+			// Remove old coins from pending
+			await pendingKvacCoinssStore.removeMany(tags);
+		}
+		
+	} else {
+
+		let currentCount = getCurrentCount(wallet.keysetId);
+		console.log(`currentCount: ${currentCount}`);
 
 		const proofs = await wallet.mintProofs(quote.amount, quote.quote, { counter: currentCount });
 		
@@ -190,36 +243,120 @@ export const meltProofs = async (quote: StoredMeltQuote, options?: { privkey?: s
 	const wallet = await getWalletWithUnit(get(mints), quote.mintUrl, quote.unit);
 	const quoteToStore = { ...quote };
 	const totalAmount = quote.amount + quote.fee_reserve;
-	const { aproxProofs, currentCount, endCount, keep, keysetId, send } = await doSend(
-		quote.mintUrl,
-		totalAmount,
-		{ unit: quote.unit, privkey: options?.privkey }
-	);
-	const qquote: MeltQuoteResponse = {
-		quote: quote.quote,
-		amount: quote.amount,
-		fee_reserve: quote.fee_reserve,
-		state: quote.state,
-		expiry: quote.expiry,
-		payment_preimage: null
-	};
-	const { change, quote: updatedQuote } = await wallet.meltProofs(qquote, send, {
-		counter: endCount
-	});
-	await proofsStore.addMany(change);
-	await updateCount(keysetId, endCount + change.length + 1);
-	quoteToStore.lastChangedAt = Date.now();
-	quoteToStore.state = updatedQuote.state;
-	quoteToStore.payment_preimage = updatedQuote.payment_preimage;
-	quoteToStore.in = aproxProofs;
-	quoteToStore.out = change;
-	quoteToStore.fees =
-		updatedQuote.fee_reserve -
-		getAmountForTokenSet(change) +
-		(getAmountForTokenSet(aproxProofs) - (getAmountForTokenSet(keep) + getAmountForTokenSet(send)));
-	await meltQuotesStore.addOrUpdate(quoteToStore.quote, quoteToStore, 'quote');
-	toast.success(paid_invoice() + ': ' + formatAmount(quote.amount, 'sat'));
-	return { change, quoteToStore };
+
+	if (get(useSingleAmount)) {
+
+		// Get current count and unit coins for the Mint
+		const currentCount = getCurrentCount(wallet.kvacKeysetId);
+		const mintUnitCoins: KvacCoin[] = kvacCoinsStore.getByKeysetIds(wallet.kvacKeysets.map((ks) => ks.id));
+		// Get decoy input and balance coin
+		let zeroCoin = mintUnitCoins.find((c) => c.amount === 0);
+		if (!zeroCoin) {
+			zeroCoin = (await wallet.bootstrap(1))[0];
+		}
+		console.log(`totalAmount: ${totalAmount}`);
+		console.log(`mintUnitCoins: ${JSON.stringify(mintUnitCoins, null, 2)}`);
+		let balanceCoin = mintUnitCoins.find((c) => c.amount >= totalAmount);
+		if (!balanceCoin) {
+			throw new Error(not_enough_funds());
+		}
+
+		// Identified by tag
+		let tags = [zeroCoin.coin.mac.t as unknown as string, balanceCoin.coin.mac.t as unknown as string];
+		console.log(`chosen coins tags: ${tags}`);
+
+		// Remove old coins
+		await kvacCoinsStore.removeMany(tags);
+
+		// Add old coins to pending
+		await pendingKvacCoinssStore.addMany([zeroCoin, balanceCoin]);
+
+		try {
+			const qquote: MeltQuoteResponse = {
+				quote: quote.quote,
+				amount: quote.amount,
+				fee_reserve: quote.fee_reserve,
+				state: quote.state,
+				expiry: quote.expiry,
+				payment_preimage: null
+			};
+			const [state, [newZeroCoin, newBalanceCoin]] = await wallet.kvacMelt(
+				qquote,
+				balanceCoin,
+				zeroCoin,
+				{counter: currentCount},
+			);
+			if (state === MeltQuoteState.PAID) {
+				await kvacCoinsStore.addMany([newZeroCoin, newBalanceCoin]);
+
+				// Update the state of the quote
+				quoteToStore.lastChangedAt = Date.now();
+				quoteToStore.state = state;
+				quoteToStore.payment_preimage = "";
+				quoteToStore.in = [zeroCoin, balanceCoin];
+				quoteToStore.out = [newZeroCoin, newBalanceCoin];
+				quoteToStore.fees = balanceCoin.amount - newBalanceCoin.amount - qquote.amount;
+				await meltQuotesStore.addOrUpdate(quoteToStore.quote, quoteToStore, 'quote');
+
+				toast.success(
+					paid_invoice({ amount: formatAmount(balanceCoin.amount - newBalanceCoin.amount, quoteToStore.unit) }),
+					{
+						description: at_mint({ mintUrl: quoteToStore.mintUrl })
+					}
+				);
+				console.log(newBalanceCoin);
+				// Set old coins as spent
+				await spentKvacCoinsStore.addMany([zeroCoin, balanceCoin]);
+				// Update the count
+				await updateCount(wallet.keysetId, currentCount + 2);
+			} else {
+				throw new Error("failed to pay the quote")
+			}
+			
+		} catch (e: any) {
+			toast.error(
+				"couldn't melt KVAC coins: " + e
+			)
+			await spentKvacCoinsStore.removeMany(tags);
+			await kvacCoinsStore.addMany([zeroCoin, balanceCoin]);
+		} finally {
+			// Remove old coins from pending
+			await pendingKvacCoinssStore.removeMany(tags);
+		}
+
+		return { undefined, quoteToStore };
+	} else {
+		const { aproxProofs, currentCount, endCount, keep, keysetId, send } = await doSend(
+			quote.mintUrl,
+			totalAmount,
+			{ unit: quote.unit, privkey: options?.privkey }
+		);
+		const qquote: MeltQuoteResponse = {
+			quote: quote.quote,
+			amount: quote.amount,
+			fee_reserve: quote.fee_reserve,
+			state: quote.state,
+			expiry: quote.expiry,
+			payment_preimage: null
+		};
+		const { change, quote: updatedQuote } = await wallet.meltProofs(qquote, send, {
+			counter: endCount
+		});
+		await proofsStore.addMany(change);
+		await updateCount(keysetId, endCount + change.length + 1);
+		quoteToStore.lastChangedAt = Date.now();
+		quoteToStore.state = updatedQuote.state;
+		quoteToStore.payment_preimage = updatedQuote.payment_preimage;
+		quoteToStore.in = aproxProofs;
+		quoteToStore.out = change;
+		quoteToStore.fees =
+			updatedQuote.fee_reserve -
+			getAmountForTokenSet(change) +
+			(getAmountForTokenSet(aproxProofs) - (getAmountForTokenSet(keep) + getAmountForTokenSet(send)));
+		await meltQuotesStore.addOrUpdate(quoteToStore.quote, quoteToStore, 'quote');
+		toast.success(paid_invoice() + ': ' + formatAmount(quote.amount, 'sat'));
+		return { change, quoteToStore };
+	}
 };
 
 export const receiveEcash = async (

@@ -2,12 +2,15 @@ import type {
 	MeltQuoteResponse,
 	MintQuoteResponse,
 	Proof as CashuProof,
+	KvacCoin as CashuKvacCoin,
 	Token,
 	MintQuoteState,
 	MeltQuoteState,
 	PaymentRequest,
 	RawPaymentRequest,
-	PaymentRequestTransport
+	PaymentRequestTransport,
+	MintActiveKvacKeys,
+	MintAllKvacKeysets
 } from '@cashu/cashu-ts';
 import type {
 	GetInfoResponse,
@@ -35,7 +38,7 @@ export type StoredMintQuote = Omit<MintQuoteResponse, 'state'> & {
 	createdAt: number;
 	lastChangedAt: number;
 	type: 'mint';
-	out?: Proof[];
+	out?: Proof[] | KvacCoin[];
 	counts?: {
 		keysetId: string;
 		counts: number[];
@@ -49,8 +52,8 @@ export type StoredMeltQuote = Omit<MeltQuoteResponse, 'state'> & {
 	createdAt: number;
 	lastChangedAt: number;
 	type: 'melt';
-	in?: Proof[];
-	out?: Proof[];
+	in?: Proof[] | KvacCoin[];
+	out?: Proof[] | KvacCoin[];
 	request: string;
 	fees?: number;
 	counts?: { keysetId: string; counts: number[] };
@@ -109,6 +112,7 @@ export type Contact = {
 export type KeysetCount = { keysetId: string; count: number };
 
 export type Proof = CashuProof;
+export type KvacCoin = CashuKvacCoin;
 
 export type StoredSeed = {
 	mnemonic: string;
@@ -148,6 +152,8 @@ export type Mint = {
 	url: string;
 	keys: MintActiveKeys;
 	keysets: MintAllKeysets;
+	kvacKeys: MintActiveKvacKeys | undefined,
+	kvacKeysets: MintAllKvacKeysets | undefined,
 	info: GetInfoResponse;
 };
 

@@ -351,29 +351,38 @@ export const getWalletWithUnit = async (
 	mints: Mint[],
 	mintUrl: string,
 	unit = 'sat'
-): Promise<CashuWallet| ExtendedCashuWallet> => {
+): Promise<ExtendedCashuWallet> => {
 	const mint = getBy<Mint>(mints, mintUrl, 'url');
 	if (!mint) {
 		throw new Error(`Mint ${mintUrl} not found`);
 	}
 	const keysets = mint.keysets.keysets.filter((ks) => ks.unit === unit);
+	const kvacKeysets = mint.kvacKeysets?.kvac_keysets.filter((ks) => ks.unit === unit);
 	const keys = mint.keys.keysets.find((ks) => ks.unit === unit);
-	if (!keys) {
-		throw new Error(`No keys for this unit: ${unit} [${mintUrl}]`);
-	}
+	const kvacKeys = mint.kvacKeys?.kvac_keysets.find((ks) => ks.unit === unit);
 	if (get(useSingleAmount)) {
-		const wallet = new ExtendedCashuWallet(new ExtendedCashuMint(mintUrl))
-		await wallet.loadMint();
-		return wallet
+		if (!kvacKeysets || !kvacKeys) {
+			console.error(`No KVAC keys for this unit: ${unit} [${mintUrl}]`);
+			throw new Error(`No KVAC keys for this unit: ${unit} [${mintUrl}]`);
+		}
+	} else {
+		if (!keys) {
+			throw new Error(`No keys for this unit: ${unit} [${mintUrl}]`);
+		}
 	}
-	const wallet = new CashuWallet(new CashuMint(mintUrl), {
+	const wallet = new ExtendedCashuWallet(new ExtendedCashuMint(mintUrl), {
 		bip39seed: get(seed),
 		mintInfo: mint.info,
 		unit: unit,
 		keys,
-		keysets
+		keysets,
+		kvacKeys,
+		kvacKeysets,
 	});
 	await wallet.getKeys();
+	if (get(useSingleAmount)) {
+		await wallet.getKvacKeys();
+	}
 	return wallet;
 };
 
