@@ -1,6 +1,6 @@
 [package]
 name = "nutstash"
-version = "2.1.1"
+version = "2.1.2"
 description = "Cashu ecash wallet"
 authors = ["gandlaf21"]
 edition = "2021"
