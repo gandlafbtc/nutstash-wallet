@@ -24,6 +24,7 @@
 		receive_via_cashu_request,
 		receive_via_lightning
 	} from '$lib/paraglide/messages';
+	import ggwave_factory from 'ggwave';
 
 	let entered: string = $state('');
 
@@ -38,8 +39,18 @@
 
 	let inputFocus: HTMLTextAreaElement | null = $state(null);
 	let thisDrawer: HTMLDivElement | null = $state(null);
+	let isListening = $state(false);
 
 	let isLoading = $state(false);
+
+	let ggwave: any;
+	let recorder: any;
+	let context: AudioContext;
+	let mediaStream: any;
+
+	ggwave_factory().then(function(obj) {
+		ggwave = obj;
+	});
 
 	onMount(() => {
 		setTimeout(() => {
@@ -142,6 +153,88 @@
 			entered = entered + value;
 		}
 	};
+
+	function convertTypedArray(src, type) {
+		var buffer = new ArrayBuffer(src.byteLength);
+		var baseView = new src.constructor(buffer).set(src);
+		return new type(buffer);
+	}
+
+	const captureStart = () => {
+		if (!context) {
+			context = new AudioContext({sampleRate: 48000});
+		}
+
+		const parameters = ggwave.getDefaultParameters();
+		parameters.sampleRateInp = context.sampleRate;
+		parameters.sampleRateOut = context.sampleRate;
+		const instance = ggwave.init(parameters);
+
+		let constraints = {
+			audio: {
+				// not sure if these are necessary to have
+				echoCancellation: false,
+				autoGainControl: false,
+				noiseSuppression: false
+			}
+		};
+
+		navigator.mediaDevices.getUserMedia(constraints).then(function (e) {
+			mediaStream = context.createMediaStreamSource(e);
+
+			var bufferSize = 1024;
+			var numberOfInputChannels = 1;
+			var numberOfOutputChannels = 1;
+
+			if (context.createScriptProcessor) {
+				recorder = context.createScriptProcessor(
+						bufferSize,
+						numberOfInputChannels,
+						numberOfOutputChannels);
+			} else {
+				recorder = context.createJavaScriptNode(
+						bufferSize,
+						numberOfInputChannels,
+						numberOfOutputChannels);
+			}
+
+			recorder.onaudioprocess = function (e) {
+				var source = e.inputBuffer;
+				var res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
+
+				if (res && res.length > 0) {
+					res = new TextDecoder("utf-8").decode(res);
+					if (res.startsWith('cashuA') || res.startsWith('cashuB')) {
+						captureStop();
+						entered = res;
+					}
+				}
+			}
+
+			mediaStream.connect(recorder);
+			recorder.connect(context.destination);
+		}).catch(function (e) {
+			console.error(e);
+		});
+	}
+
+	const captureStop = () => {
+		if (recorder) {
+			recorder.disconnect(context.destination);
+			mediaStream.disconnect(recorder);
+			recorder = null;
+			isListening = false;
+		}
+	}
+
+	const toggleListening = () => {
+		if (isListening) {
+			captureStop();
+		} else {
+			captureStart();
+		}
+		isListening = !isListening;
+	};
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -168,6 +261,9 @@
 			placeholder=""
 		></Textarea>
 	</div>
+	<Button onclick={toggleListening}>
+		{isListening ? 'Listening Ultrasound' : 'Listen Ultrasound'}
+	</Button>
 	<div>
 		<div
 			class="flex items-start justify-center {entered.length && isNumeric(entered)

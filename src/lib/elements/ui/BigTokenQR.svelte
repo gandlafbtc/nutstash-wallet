@@ -6,6 +6,8 @@
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import { problems_scanning_qr, t_size, t_speed } from '$lib/paraglide/messages';
+	import { Button, type Props } from '$lib/components/ui/button/index.js';
+	import ggwave_factory from 'ggwave';
 
 	let { token, speed, size }: { token: string; speed: number[]; size: number[] } = $props();
 
@@ -37,11 +39,43 @@
 	onDestroy(() => {
 		clearInterval(qrInterval);
 	});
+	const transmitAudio = () => {
+		function convertTypedArray(src, type) {
+			var buffer = new ArrayBuffer(src.byteLength);
+			var baseView = new src.constructor(buffer).set(src);
+			return new type(buffer);
+		}
+            
+		ggwave_factory().then(
+			function(ggwave) {
+				const audioContext = new (window.AudioContext || window.webkitAudioContext)({sampleRate: 48000});
+
+				const parameters = ggwave.getDefaultParameters();
+				parameters.sampleRateInp = audioContext.sampleRate;
+				parameters.sampleRateOut = audioContext.sampleRate;
+				const instance = ggwave.init(parameters);
+
+				var waveform = ggwave.encode(instance, token, ggwave.ProtocolId.GGWAVE_PROTOCOL_ULTRASOUND_FASTEST, 10);
+				
+				const buf = convertTypedArray(waveform, Float32Array);
+				const buffer = audioContext.createBuffer(1, buf.length, audioContext.sampleRate);
+				buffer.getChannelData(0).set(buf);
+
+				const source = audioContext.createBufferSource();
+				source.buffer = buffer;
+				source.connect(audioContext.destination);
+				source.start();					
+			}
+		);
+	};
 </script>
 
 {#if chunk && size && speed}
 	<div class="flex flex-col gap-2">
 		<QrCode data={chunk} />
+		<Button onclick={transmitAudio} class="audio-button small-icon-button">
+			<i class="icon-audio"></i>Transmit via Audio
+		</Button>
 		<Accordion.Root type="single">
 			<Accordion.Item value="item-1">
 				<Accordion.Trigger>{problems_scanning_qr()}</Accordion.Trigger>
