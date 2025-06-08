@@ -47,6 +47,7 @@
 	let recorder: any;
 	let context: AudioContext;
 	let mediaStream: any;
+	let receivedChunks: string;
 
 	ggwave_factory().then(function(obj) {
 		ggwave = obj;
@@ -165,6 +166,7 @@
 			context = new AudioContext({sampleRate: 48000});
 		}
 
+		receivedChunks = "";
 		const parameters = ggwave.getDefaultParameters();
 		parameters.sampleRateInp = context.sampleRate;
 		parameters.sampleRateOut = context.sampleRate;
@@ -199,29 +201,20 @@
 			}
 
 			recorder.onaudioprocess = function (e) {
-				let allChunksResult = "";
-				const decoder = new TextDecoder("utf-8");
+				const source = e.inputBuffer;
+				const res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
 
-				let i = 0;
-				while (allChunksResult.length === 0 || allChunksResult.charAt(allChunksResult.length - 1) !== '.') {
-					console.debug(`Receiving chunk ${i}...`);
-					const source = e.inputBuffer;
-					const res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
-
-					if (res && res.length > 0) {
-						allChunksResult += decoder.decode(res);
-					}
-
-					++i;
+				if (res && res.length > 0) {
+					receivedChunks += new TextDecoder("utf-8").decode(res);
 				}
 
-				captureStop();
-				console.debug(`allChunksResult: ${allChunksResult}`)
+				console.debug(`receivedChunks: ${receivedChunks}`);
 
-				if (allChunksResult.length > 0) {
-					if (allChunksResult.startsWith('cashuA') || allChunksResult.startsWith('cashuB')) {
-						entered = allChunksResult.slice(0, -1);
+				if (receivedChunks !== "" && receivedChunks.charAt(receivedChunks.length - 1) === '.') {
+					if (receivedChunks.startsWith('cashuA') || receivedChunks.startsWith('cashuB')) {
+						entered = receivedChunks.slice(0, -1);
 					}
+					captureStop();
 				}
 			}
 
