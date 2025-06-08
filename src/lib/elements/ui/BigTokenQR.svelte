@@ -47,24 +47,50 @@
 		}
             
 		ggwave_factory().then(
-			function(ggwave) {
+			async function(ggwave) {
 				const audioContext = new (window.AudioContext || window.webkitAudioContext)({sampleRate: 48000});
+
+				// Break down in chunks
+				const chunks = [];
+				for (let i = 0; i < token.length; i += 139) {
+					chunks.push(token.slice(i, i + 139));
+				}
+
+				// Add a period `.` to the end
+				chunks[chunks.length - 1] += ".";
+				console.debug(`Have ${chunks.length} chunks to play`);
 
 				const parameters = ggwave.getDefaultParameters();
 				parameters.sampleRateInp = audioContext.sampleRate;
 				parameters.sampleRateOut = audioContext.sampleRate;
 				const instance = ggwave.init(parameters);
 
-				var waveform = ggwave.encode(instance, token, ggwave.ProtocolId.GGWAVE_PROTOCOL_ULTRASOUND_FASTEST, 10);
+				for (let i = 0; i < chunks.length; ++i) {
+					const chunk = chunks[i];
+					const waveform = ggwave.encode(instance, chunk, ggwave.ProtocolId.GGWAVE_PROTOCOL_ULTRASOUND_FASTEST, 10);
 				
-				const buf = convertTypedArray(waveform, Float32Array);
-				const buffer = audioContext.createBuffer(1, buf.length, audioContext.sampleRate);
-				buffer.getChannelData(0).set(buf);
+					const buf = convertTypedArray(waveform, Float32Array);
+					const buffer = audioContext.createBuffer(1, buf.length, audioContext.sampleRate);
+					buffer.getChannelData(0).set(buf);
 
-				const source = audioContext.createBufferSource();
-				source.buffer = buffer;
-				source.connect(audioContext.destination);
-				source.start();					
+					const source = audioContext.createBufferSource();
+					source.buffer = buffer;
+					source.connect(audioContext.destination);
+
+					// Create a promise that resolves when the audio finishes
+					const playPromise = new Promise(resolve => {
+						source.onended = resolve;
+					});
+
+					console.log(`Playing chunk ${i}`);
+					source.start();
+					await playPromise;
+
+					// Wait an additional 0.1 seconds between chunks
+					if (i < chunks.length - 1) {
+						await new Promise(resolve => setTimeout(resolve, 100));
+					}
+				}				
 			}
 		);
 	};
