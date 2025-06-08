@@ -199,14 +199,28 @@
 			}
 
 			recorder.onaudioprocess = function (e) {
-				var source = e.inputBuffer;
-				var res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
+				let allChunksResult = "";
+				const decoder = new TextDecoder("utf-8");
 
-				if (res && res.length > 0) {
-					res = new TextDecoder("utf-8").decode(res);
-					if (res.startsWith('cashuA') || res.startsWith('cashuB')) {
-						captureStop();
-						entered = res;
+				let i = 0;
+				while (allChunksResult.length === 0 || allChunksResult.charAt(allChunksResult.length - 1) !== '.') {
+					console.debug(`Receiving chunk ${i}...`);
+					const source = e.inputBuffer;
+					const res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
+
+					if (res && res.length > 0) {
+						allChunksResult += decoder.decode(res);
+					}
+
+					++i;
+				}
+
+				captureStop();
+				console.debug(`allChunksResult: ${allChunksResult}`)
+
+				if (allChunksResult.length > 0) {
+					if (allChunksResult.startsWith('cashuA') || allChunksResult.startsWith('cashuB')) {
+						entered = allChunksResult.slice(0, -1);
 					}
 				}
 			}
