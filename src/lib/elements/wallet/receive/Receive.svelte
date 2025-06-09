@@ -178,6 +178,7 @@
 		parameters.sampleRateInp = context.sampleRate;
 		parameters.sampleRateOut = context.sampleRate;
 		const instance = ggwave.init(parameters);
+		let timeout: number | null;
 
 		let constraints = {
 			audio: {
@@ -211,13 +212,14 @@
 				const source = e.inputBuffer;
 
 				// Pull me out after 30 seconds
-				let timeout = setTimeout(captureStop, 30000);
+				timeout = timeout ? timeout : setTimeout(captureStop, 30000);
 				const res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
-				clearTimeout(timeout);
 
 				if (res && res.length > 0) {
 					isReceiving = true;
 					receivedChunks += new TextDecoder("utf-8").decode(res);
+					clearTimeout(timeout);
+					timeout = null;
 				}
 
 				console.debug(`receivedChunks: ${receivedChunks}`);
