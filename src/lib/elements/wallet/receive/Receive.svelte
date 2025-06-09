@@ -209,7 +209,11 @@
 
 			recorder.onaudioprocess = function (e) {
 				const source = e.inputBuffer;
+
+				// Pull me out after 30 seconds
+				let timeout = setTimeout(captureStop, 30000);
 				const res = ggwave.decode(instance, convertTypedArray(new Float32Array(source.getChannelData(0)), Int8Array));
+				clearTimeout(timeout);
 
 				if (res && res.length > 0) {
 					isReceiving = true;
