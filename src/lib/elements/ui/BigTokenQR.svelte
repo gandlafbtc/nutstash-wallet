@@ -130,7 +130,7 @@
 		</div>
 		{#if isTransmitting}
 			<div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-				<div class="bg-green-600 h-2.5 rounded-full" style:width = {progress}></div>
+				<div class="bg-green-600 h-2.5 rounded-full transition-all duration-500" style:width = {progress}></div>
 			</div>
 		{/if}
 		<Accordion.Root type="single">
