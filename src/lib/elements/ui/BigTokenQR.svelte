@@ -122,9 +122,11 @@
 		<Button onclick={transmitAudio} class="audio-button small-icon-button" disabled={isTransmitting}>
 			<i class="icon-audio"></i>Transmit via Audio
 		</Button>
+		{#if isTransmitting}
 		<Button onclick={resetTransmission} class="reset-button small-icon-button">
 			<i class="icon-reset"></i>Reset
 		</Button>
+		{/if}
 		</div>
 		{#if isTransmitting}
 			<div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
