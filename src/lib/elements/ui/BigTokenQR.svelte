@@ -16,6 +16,8 @@
 	let intervalMS = $derived(1000 / speed[0]);
 	const firstSeqNum = 0;
 	let encoder: UREncoder;
+	let isTransmitting = $state(false);
+	let progress = $state(0);
 	let qrInterval: number | undefined;
 
 	$effect(() => {
@@ -31,6 +33,7 @@
 		qrInterval = setInterval(() => {
 			chunk = encoder.nextPart();
 		}, intervalMS);
+		isTransmitting = false;
 	};
 
 	onMount(() => {
@@ -39,7 +42,13 @@
 	onDestroy(() => {
 		clearInterval(qrInterval);
 	});
-	const transmitAudio = () => {
+	const resetTransmission = () => {
+		isTransmitting = false;
+		progress = 0;
+	};
+
+	const transmitAudio = async () => {
+		isTransmitting = true;
 		function convertTypedArray(src, type) {
 			var buffer = new ArrayBuffer(src.byteLength);
 			var baseView = new src.constructor(buffer).set(src);
@@ -82,7 +91,7 @@
 						source.onended = resolve;
 					});
 
-					console.log(`Playing chunk ${i}`);
+					progress = ((i + 1) / chunks.length) * 100;
 					source.start();
 					await playPromise;
 
@@ -99,10 +108,15 @@
 {#if chunk && size && speed}
 	<div class="flex flex-col gap-2">
 		<QrCode data={chunk} />
-		<Button onclick={transmitAudio} class="audio-button small-icon-button">
+		<Button onclick={transmitAudio} class="audio-button small-icon-button" disabled={isTransmitting}>
 			<i class="icon-audio"></i>Transmit via Audio
 		</Button>
-		<Accordion.Root type="single">
+		<Button onclick={resetTransmission} class="reset-button small-icon-button">
+			<i class="icon-reset"></i>Reset
+		</Button>
+		{#if isTransmitting}
+			<div class="progress-bar" style="width: {progress}%;"></div>
+		{/if}
 			<Accordion.Item value="item-1">
 				<Accordion.Trigger>{problems_scanning_qr()}</Accordion.Trigger>
 				<Accordion.Content>
