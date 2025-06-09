@@ -17,8 +17,9 @@
 	const firstSeqNum = 0;
 	let encoder: UREncoder;
 	let isTransmitting = $state(false);
-	let progress = $state(0);
+	let progress = $state("0%");
 	let qrInterval: number | undefined;
+	let audioContext: AudioContext;
 
 	$effect(() => {
 		if (intervalMS || maxFragmentLength) {
@@ -44,11 +45,18 @@
 	});
 	const resetTransmission = () => {
 		isTransmitting = false;
-		progress = 0;
+		progress = "0%";
+		if (audioContext) {
+			audioContext.close();
+		}
 	};
 
 	const transmitAudio = async () => {
+		if (isTransmitting)
+			return;
+
 		isTransmitting = true;
+
 		function convertTypedArray(src, type) {
 			var buffer = new ArrayBuffer(src.byteLength);
 			var baseView = new src.constructor(buffer).set(src);
@@ -57,7 +65,7 @@
             
 		ggwave_factory().then(
 			async function(ggwave) {
-				const audioContext = new (window.AudioContext || window.webkitAudioContext)({sampleRate: 48000});
+				audioContext = new (window.AudioContext || window.webkitAudioContext)({sampleRate: 48000});
 
 				// Break down in chunks
 				const chunks = [];
@@ -75,6 +83,7 @@
 				const instance = ggwave.init(parameters);
 
 				for (let i = 0; i < chunks.length; ++i) {
+					console.log(`Playing chunk ${i}`);
 					const chunk = chunks[i];
 					const waveform = ggwave.encode(instance, chunk, ggwave.ProtocolId.GGWAVE_PROTOCOL_ULTRASOUND_FASTEST, 10);
 				
@@ -91,15 +100,16 @@
 						source.onended = resolve;
 					});
 
-					progress = ((i + 1) / chunks.length) * 100;
 					source.start();
 					await playPromise;
 
-					// Wait an additional 0.1 seconds between chunks
-					if (i < chunks.length - 1) {
-						await new Promise(resolve => setTimeout(resolve, 100));
-					}
-				}				
+					progress = (Math.floor(((i+1) / chunks.length) * 100)).toString()+"%";
+					console.log(`progress: ${progress}`);
+				}
+				
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				isTransmitting = false;
+				progress = "0%"
 			}
 		);
 	};
@@ -108,15 +118,20 @@
 {#if chunk && size && speed}
 	<div class="flex flex-col gap-2">
 		<QrCode data={chunk} />
+		<div class="flex flex-row">
 		<Button onclick={transmitAudio} class="audio-button small-icon-button" disabled={isTransmitting}>
 			<i class="icon-audio"></i>Transmit via Audio
 		</Button>
 		<Button onclick={resetTransmission} class="reset-button small-icon-button">
 			<i class="icon-reset"></i>Reset
 		</Button>
+		</div>
 		{#if isTransmitting}
-			<div class="progress-bar" style="width: {progress}%;"></div>
+			<div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+				<div class="bg-green-600 h-2.5 rounded-full" style:width = {progress}></div>
+			</div>
 		{/if}
+		<Accordion.Root type="single">
 			<Accordion.Item value="item-1">
 				<Accordion.Trigger>{problems_scanning_qr()}</Accordion.Trigger>
 				<Accordion.Content>
