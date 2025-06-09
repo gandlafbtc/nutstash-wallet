@@ -118,7 +118,7 @@
 {#if chunk && size && speed}
 	<div class="flex flex-col gap-2">
 		<QrCode data={chunk} />
-		<div class="flex flex-row">
+		<div class="flex flex-row justify-center gap-4 my-4">
 		<Button onclick={transmitAudio} class="audio-button small-icon-button" disabled={isTransmitting}>
 			<i class="icon-audio"></i>Transmit via Audio
 		</Button>
