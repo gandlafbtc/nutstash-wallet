@@ -96,6 +96,9 @@ importers:
       formsnap:
         specifier: 2.0.0-next.0
         version: 2.0.0-next.0(svelte@5.1.13)(sveltekit-superforms@2.20.0(@sveltejs/kit@2.8.0(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.13)(vite@5.4.10))(svelte@5.1.13)(vite@5.4.10))(@types/json-schema@7.0.15)(svelte@5.1.13)(typescript@5.6.3))
+      ggwave:
+        specifier: ^0.4.0
+        version: 0.4.0
       idb:
         specifier: ^8.0.0
         version: 8.0.0
@@ -1365,6 +1368,9 @@ packages:
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
+
+  ggwave@0.4.0:
+    resolution: {integrity: sha512-+sKq0aIEVJ7zHj4Vw+Sj/RPa91xp76ihaG5gsOKZ8ojM5+uUu3NFzAspozwBx/zeaThxP5VeIkA2bbsfWpUd2g==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -3407,6 +3413,8 @@ snapshots:
     optional: true
 
   function-bind@1.1.2: {}
+
+  ggwave@0.4.0: {}
 
   glob-parent@5.1.2:
     dependencies:
