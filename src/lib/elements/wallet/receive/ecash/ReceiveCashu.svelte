@@ -20,7 +20,7 @@
 			} else return null;
 		} catch (error) {
 			const err = ensureError(error);
-			console.error(err);
+			console.error("[getTokenFromUrlOrStore]: "+err);
 			toast.error(err.message);
 			return null;
 		}
