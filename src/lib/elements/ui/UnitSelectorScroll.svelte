@@ -1,11 +1,9 @@
 <script lang="ts">
-	import type { Mint } from '$lib/db/models/types';
-	import { unit } from '$lib/stores/persistent/settings';
-	import { getUnitsForMints } from '$lib/util/walletUtils';
+	import { types,getUnitsForMints, unit } from '@gandlaf21/cashu-wallet-engine';
 	import { ChevronDown, ChevronUp } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
-	type Props = { selectedMints: Mint[]; currentUnit: string; disabled?: boolean };
+	type Props = { selectedMints: types.Mint[]; currentUnit: string; disabled?: boolean };
 
 	let { selectedMints, currentUnit = $bindable(), disabled = false }: Props = $props();
 

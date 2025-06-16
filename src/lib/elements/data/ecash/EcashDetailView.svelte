@@ -1,16 +1,11 @@
 <script lang="ts">
 	import { consumed_by, created_by, t_not_found } from '$lib/paraglide/messages';
-	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-	import { mints } from '$lib/stores/persistent/mints';
-	import {
-		offlineProofsStore,
+	import {		offlineProofsStore,
 		pendingProofsStore,
 		proofsStore,
 		spentProofsStore
-	} from '$lib/stores/persistent/proofs';
-	import { transactionsStore } from '$lib/stores/persistent/transactions';
-	import { formatAmount, getUnitForKeysetId } from '$lib/util/walletUtils';
+, mintsStore as mints,mintQuotesStore,meltQuotesStore,transactionsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount, getUnitForKeysetId, } from "@gandlaf21/cashu-wallet-engine/util";
 	import { Coins } from 'lucide-svelte';
 	import { params } from 'svelte-spa-router';
 

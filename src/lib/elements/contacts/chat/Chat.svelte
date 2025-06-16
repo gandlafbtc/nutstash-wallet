@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { sendNip17DirectMessageToNpub } from '$lib/actions/nostr';
+	import { getBy, messagesStore, contactsStore, } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { sendNip17DirectMessageToNpub } from '@gandlaf21/cashu-wallet-engine';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-	import { contactsStore } from '$lib/stores/persistent/contacts';
-	import { messagesStore } from '$lib/stores/persistent/message';
-	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
 	import { toast } from 'svelte-sonner';
 	import { params } from 'svelte-spa-router';
 	import Message from './Message.svelte';

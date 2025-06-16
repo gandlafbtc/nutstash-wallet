@@ -1,15 +1,13 @@
 <script lang="ts">
 	import Progress from '$lib/components/ui/progress/progress.svelte';
-	import * as Select from '$lib/components/ui/select';
 	import { scanresultStore } from '$lib/stores/session/transitionstores';
 	import { Scan, SwitchCamera } from 'lucide-svelte';
 	import QrScanner from 'qr-scanner';
 	import { onDestroy, onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';
 	import { URDecoder } from '@gandlaf21/bc-ur';
-	import ScannerDrawer from './ScannerDrawer.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
-	import { checkValidPubkey, getInvoiceFromAddress } from '$lib/util/walletUtils';
+	import { checkValidPubkey} from '@gandlaf21/cashu-wallet-engine';
 	import { sendInput } from '$lib/stores/session/sendInput';
 	import { camera_not_found, loading_camera } from '$lib/paraglide/messages';
 

@@ -10,13 +10,7 @@ import { nip04, generateSecretKey, getPublicKey } from 'nostr-tools';
 import { get } from 'svelte/store';
 import { toast } from 'svelte-sonner';
 import { decode } from '@gandlaf21/bolt11-decode';
-import { getAmountForTokenSet, getProofsOfMintUnit } from '$lib/util/walletUtils';
-import { mints } from '../persistent/mints';
-import { proofsStore } from '../persistent/proofs';
-import { createMeltQuote, meltProofs } from '$lib/actions/actions';
-import type { NWCConnection } from '$lib/db/models/types';
-import { nwcKeysStore } from '../persistent/nwcConnections';
-import { relaysStore } from '../persistent/relays';
+import { relaysStore, nwcKeysStore, createMeltQuote, meltProofs, proofsStore, mintsStore as mints, getAmountForTokenSet, getProofsOfMintUnit, types } from '@gandlaf21/cashu-wallet-engine';
 
 type NWCCommand = {
 	method: string;
@@ -194,7 +188,7 @@ const createNWC = () => {
 		};
 	};
 	// ––––---------- NWC Connection ––––----------
-	const replyNWC = async (result: NWCResult | NWCError, event: NDKEvent, conn: NWCConnection) => {
+	const replyNWC = async (result: NWCResult | NWCError, event: NDKEvent, conn: types.NWCConnection) => {
 		// reply to NWC with result
 		let replyEvent = new NDKEvent(event.ndk);
 		replyEvent.kind = 23195;
@@ -214,7 +208,7 @@ const createNWC = () => {
 		await replyEvent.publish();
 	};
 
-	const parseNWCCommand = async (command: string, event: NDKEvent, conn: NWCConnection) => {
+	const parseNWCCommand = async (command: string, event: NDKEvent, conn: types.NWCConnection) => {
 		// parse command to JSON object {method: 'pay_invoice', params: {invoice: '1234'}}
 		let nwcCommand: NWCCommand = JSON.parse(command);
 		let result: NWCResult | NWCError;
@@ -251,7 +245,7 @@ const createNWC = () => {
 		}
 		await replyNWC(result, event, conn);
 	};
-	const getConnectionString = (connection: NWCConnection) => {
+	const getConnectionString = (connection: types.NWCConnection) => {
 		const relays = get(relaysStore)
 			.filter((r) => r.isOn)
 			.map((relay) => relay.url);
@@ -265,7 +259,7 @@ const createNWC = () => {
 			.filter((r) => r.isOn)
 			.map((relay) => relay.url);
 		const connections = get(nwcKeysStore);
-		let conn: NWCConnection;
+		let conn: types.NWCConnection;
 		// NOTE: we only support one connection for now
 		if (!connections.length) {
 			const sk = generateSecretKey(); // `sk` is a Uint8Array
@@ -283,7 +277,7 @@ const createNWC = () => {
 				counter: 0,
 				isActive: true,
 				allowanceLeft: 1000
-			} as NWCConnection;
+			} as types.NWCConnection;
 			await nwcKeysStore.addOrUpdate(conn.walletPublicKey, conn, 'walletPublicKey');
 		} else {
 			conn = connections[0];

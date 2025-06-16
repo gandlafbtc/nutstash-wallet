@@ -1,8 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
 	import { currency_settings, preffered_currency, t_units } from '$lib/paraglide/messages';
-	import { unit } from '$lib/stores/persistent/settings';
-	import { getUnitSymbol } from '$lib/util/walletUtils';
+	import { unit, getUnitSymbol } from '@gandlaf21/cashu-wallet-engine';
 
 	const units = ['sat', 'msat', 'btc', 'usd', 'eur', 'gbp', 'cad', 'aud', 'jpy', 'krw'];
 

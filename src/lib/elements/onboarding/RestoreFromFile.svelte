@@ -5,17 +5,12 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { pop, push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
-	import { reencrypt, setStoresFromBackupJSON } from '$lib/init/init';
+	import {mnemonicStore as mnemonic,  proofsStore, reencrypt, setStoresFromBackupJSON, decrypt,ensureError, mintsStore as mints, kdf,  } from '@gandlaf21/cashu-wallet-engine';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { decrypt, kdf } from '$lib/actions/encryption';
 	import { hexToBytes } from '@noble/hashes/utils';
 	import OnboardingHeader from './OnboardingHeader.svelte';
-	import { ensureError } from '$lib/helpers/errors';
 	import Page from '../../../routes/+page.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import { mnemonic, seed } from '$lib/stores/persistent/mnemonic';
 	import { generateMnemonic } from '@scure/bip39';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { LoaderCircle } from 'lucide-svelte';
@@ -36,7 +31,7 @@
 	let pass = $state('');
 	let isOpen = $state(false);
 	let isOpenLegacy = $state(false);
-	let backupObject = $state();
+	let backupObject: any = $state();
 	let decryptedObj = $state();
 
 	const handleDragEnter = () => {
@@ -50,7 +45,7 @@
 		toast.warning('File is no a valid nutstash_backup.json');
 	};
 
-	const handleDropAccepted = async (file) => {
+	const handleDropAccepted = async (file: any) => {
 		try {
 			isLoading = true;
 			await readBackupFileToObject(file);
@@ -75,7 +70,7 @@
 		}
 	};
 
-	const readBackupFileToObject = async (file) => {
+	const readBackupFileToObject = async (file: any) => {
 		const backupFile: File = file.detail.acceptedFiles[0];
 		const jsonString = await backupFile.text();
 

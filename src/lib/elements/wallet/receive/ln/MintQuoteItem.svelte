@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { params } from 'svelte-spa-router';
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-	import { onMount } from 'svelte';
+	import { mintQuotesStore } from '@gandlaf21/cashu-wallet-engine';
 	import MintQuoteListItem from './MintQuoteListItem.svelte';
 	import { t_not_found } from '$lib/paraglide/messages';
 

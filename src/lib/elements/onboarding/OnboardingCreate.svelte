@@ -1,9 +1,6 @@
 <script>
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-
 	import Mnemonic from '$lib/elements/security/Mnemonic.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { pop } from 'svelte-spa-router';
 	import { isOnboarded } from '$lib/stores/local/message';
 	import OnboardingHeader from './OnboardingHeader.svelte';
 	import { i_wrote_it_down, new_seed_phrase_created } from '$lib/paraglide/messages';

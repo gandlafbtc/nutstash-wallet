@@ -4,21 +4,21 @@
 		formatSecToMinStr,
 		getAmountForTokenSet,
 		getAproxAmount,
-		getProofsOfMintUnit
-	} from '$lib/util/walletUtils';
+		getProofsOfMintUnit,
+		getHostFromUrl,
+		types,
+		checkMeltQuote, getFeeForProofs, meltProofs ,
+		proofsStore,
+		getBy,
+		mintsStore as mints
+	} from '@gandlaf21/cashu-wallet-engine';
 	import * as Card from '$lib/components/ui/card';
 	import { Check, LoaderCircle, RotateCcw } from 'lucide-svelte';
-	import { getHostFromUrl } from '$lib/util/utils';
 	import { decode } from '@gandlaf21/bolt11-decode';
-	import { EXPIRED, type StoredMeltQuote } from '$lib/db/models/types';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { checkMeltQuote, getFeeForProofs, meltProofs } from '$lib/actions/actions';
 	import { now } from '$lib/stores/session/time';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { MeltQuoteState } from '@cashu/cashu-ts';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
-	import { mints } from '$lib/stores/persistent/mints';
 	import {
 		fee_reserve,
 		not_enough_funds,
@@ -37,7 +37,7 @@
 		quote,
 		isListView = true
 	}: {
-		quote: StoredMeltQuote;
+		quote: types.StoredMeltQuote;
 		isListView?: boolean;
 	} = $props();
 
@@ -67,7 +67,7 @@
 
 <div class="h-full">
 	<Card.Root
-		class="m-3 w-80 xl:w-[600px] {quote.state === EXPIRED.EXPIRED
+		class="m-3 w-80 xl:w-[600px] {quote.state === types.EXPIRED.EXPIRED
 			? 'bg-red-700 bg-opacity-20 opacity-40'
 			: ''}"
 	>
@@ -155,7 +155,7 @@
 						<RotateCcw></RotateCcw>
 					</button>
 				</div>
-			{:else if quote.state === EXPIRED.EXPIRED}
+			{:else if quote.state === types.EXPIRED.EXPIRED}
 				<div class="flex items-center gap-1">
 					<Badge variant="destructive" class="text-secondary">{t_expired()}</Badge>
 					<button onclick={() => checkMeltQuote(quote)}>

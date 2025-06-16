@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context.js';
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
-	import { mints } from '$lib/stores/persistent/mints';
+	import { selectedMint, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
 	import AllMintsCompact from '../AllMintsCompact.svelte';
 	import MintCompact from '../MintCompact.svelte';
-	import { selectedMint } from '$lib/stores/local/selectedMints';
 
 	let api = $state<CarouselAPI>();
 

@@ -3,31 +3,27 @@
 	import AvatarImage from '$lib/components/ui/avatar/avatar-image.svelte';
 	import Avatar from '$lib/components/ui/avatar/avatar.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import type { Mint } from '$lib/db/models/types';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import { NUT, NUTSTASH_NUTS } from '$lib/stores/static/const';
-	import { copyTextToClipboard, getHostFromUrl } from '$lib/util/utils';
 	import {
+		types,
 		formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintUnit,
-		getUnitsForMints
-	} from '$lib/util/walletUtils';
-
-	let { mint }: { mint: Mint } = $props();
-	import * as Accordion from '$lib/components/ui/accordion';
-	import { AlertTriangle, Check } from 'lucide-svelte';
-	import {
-		ecash_swap_fee,
-		mint_charges_a_swap_fee,
-		no_swap_fee,
-		t_contact,
-		t_description,
-		t_features,
-		t_fee,
-		t_fees,
-		t_version
-	} from '$lib/paraglide/messages';
+		getUnitsForMints, NUT, NUTSTASH_NUTS, proofsStore } from '@gandlaf21/cashu-wallet-engine';
+	import { copyTextToClipboard, getHostFromUrl } from '$lib/utils';
+		import * as Accordion from '$lib/components/ui/accordion';
+		import { AlertTriangle, Check } from 'lucide-svelte';
+		import {
+			ecash_swap_fee,
+			mint_charges_a_swap_fee,
+			no_swap_fee,
+			t_contact,
+			t_description,
+			t_features,
+			t_fee,
+			t_fees,
+			t_version
+		} from '$lib/paraglide/messages';
+		let { mint }: { mint: types.Mint } = $props();
 </script>
 
 <div class="flex w-80 flex-col gap-2 rounded-lg border p-4 shadow-md xl:w-[600px]">

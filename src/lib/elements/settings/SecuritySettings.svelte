@@ -1,15 +1,10 @@
 <script>
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { usePassword } from '$lib/stores/local/usePassword';
+	import { ensureError, reencrypt, usePassword, checkIfKeysMatch, kdf, key, DEFAULT_PASS } from '@gandlaf21/cashu-wallet-engine';
 	import { Lock, LockOpen } from 'lucide-svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { checkIfKeysMatch, decrypt, encrypt, kdf } from '$lib/actions/encryption';
-	import { key } from '$lib/stores/session/key';
 	import { toast } from 'svelte-sonner';
-	import { DEFAULT_PASS } from '$lib/stores/static/pass';
-	import { reencrypt } from '$lib/init/init';
-	import { ensureError } from '$lib/helpers/errors';
 	import {
 		are_you_sure_remove_passphrase,
 		encryption_disabled,

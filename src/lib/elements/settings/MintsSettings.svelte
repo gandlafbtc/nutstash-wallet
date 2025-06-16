@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { mints } from '$lib/stores/persistent/mints';
+	import { discoverMints,getBy ,types, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
 	import MintSelector from '../ui/MintSelector.svelte';
 	import AddMint from '../mint/AddMint.svelte';
-	import type { Mint } from '$lib/db/models/types';
-	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
 	import { toast } from 'svelte-sonner';
 	import DiscoverMints from '../mint/DiscoverMints.svelte';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { getHostFromUrl } from '$lib/util/utils';
+	import { getHostFromUrl } from '$lib/utils';
 	import MintDropdown from '../mint/mintDropdown/MintDropdown.svelte';
 	import MintSwap from '../mint/MintSwap.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { discoverMints } from '$lib/actions/nostr';
 	import {
 		add_mint,
 		added_mints,
@@ -21,7 +18,7 @@
 		t_swap
 	} from '$lib/paraglide/messages';
 
-	let defaultMint: Mint | undefined = $derived($mints[0]);
+	let defaultMint: types.Mint | undefined = $derived($mints[0]);
 
 	const onMintChange = (minturl: string) => {
 		const mint = getBy($mints, minturl, 'url');

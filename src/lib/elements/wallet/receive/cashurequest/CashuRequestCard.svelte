@@ -2,14 +2,13 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import type { StoredPaymentRequest } from '$lib/db/models/types';
+	import { formatAmount, types} from '@gandlaf21/cashu-wallet-engine';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { cashu_request, t_close } from '$lib/paraglide/messages';
-	import { formatAmount } from '$lib/util/walletUtils';
 	import { PaymentRequest } from '@cashu/cashu-ts';
 	interface Props {
-		request: StoredPaymentRequest;
+		request: types.StoredPaymentRequest;
 		isListView?: boolean;
 	}
 

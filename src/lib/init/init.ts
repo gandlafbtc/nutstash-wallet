@@ -1,26 +1,3 @@
-import { connectNostrRelays } from '$lib/actions/nostr';
-import { contactsStore } from '$lib/stores/persistent/contacts';
-import { messagesStore } from '$lib/stores/persistent/message';
-import { countsStore } from '$lib/stores/persistent/counts';
-import { keysStore } from '$lib/stores/persistent/keys';
-import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
-import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-import { mints } from '$lib/stores/persistent/mints';
-import { mnemonic } from '$lib/stores/persistent/mnemonic';
-import {
-	offlineProofsStore,
-	pendingProofsStore,
-	proofsStore,
-	spentProofsStore
-} from '$lib/stores/persistent/proofs';
-import { transactionsStore } from '$lib/stores/persistent/transactions';
-import { relaysStore } from '$lib/stores/persistent/relays';
-import { nwcKeysStore } from '$lib/stores/persistent/nwcConnections';
-import { nwc } from '$lib/stores/session/nwc';
-import { cashuRequestsStore } from '$lib/stores/persistent/requests';
-import { settings } from '$lib/stores/persistent/settings';
-import { swapsStore } from '$lib/stores/persistent/swap';
-import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
 import { setDefaultOptions } from 'date-fns';
 import {
 	es,
@@ -41,35 +18,18 @@ import {
 	vi
 } from 'date-fns/locale';
 import { getLocale } from '$lib/paraglide/runtime';
+import { init as initWallet, connectNostrRelays } from "@gandlaf21/cashu-wallet-engine";
+import { nwc } from '$lib/stores/session/nwc';
 
-export const init = async () => {
-	await initStores();
+
+export const init = async (pass: string) => {
+	await initWallet(pass);
 	await initNostrConnections();
 	setLanguage();
 	nwc.init();
 };
 
-const stores = {
-	mnemonic,
-	mints,
-	transactionsStore,
-	offlineTransactionsStore,
-	mintQuotesStore,
-	meltQuotesStore,
-	proofsStore,
-	offlineProofsStore,
-	pendingProofsStore,
-	spentProofsStore,
-	keysStore,
-	nwcKeysStore,
-	countsStore,
-	messagesStore,
-	contactsStore,
-	relaysStore,
-	cashuRequestsStore,
-	swapsStore,
-	settings
-} as const;
+
 
 const setLanguage = () => {
 	const locale = getLocale() as string;
@@ -128,16 +88,4 @@ const initNostrConnections = async () => {
 	await connectNostrRelays();
 };
 
-const initStores = async () => {
-	await Promise.all(Object.values(stores).map(store => store.init()));
-};
 
-export const reencrypt = async () => {
-	await Promise.all(Object.values(stores).map(store => store.reEncrypt()));
-};
-
-export const setStoresFromBackupJSON = async (obj: any) => {
-	(Object.keys(stores)).forEach(key => {
-		stores[key].set(obj[key]);
-	});
-};

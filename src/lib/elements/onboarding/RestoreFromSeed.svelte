@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { validateMnemonic } from '@scure/bip39';
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
+	import { mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine';
 	import { isOnboarded } from '$lib/stores/local/message';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';

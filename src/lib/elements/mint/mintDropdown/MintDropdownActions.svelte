@@ -1,6 +1,6 @@
 <script>
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { ensureError } from '$lib/helpers/errors';
+	import { ensureError, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		error_updating_mint,
 		make_default,
@@ -9,7 +9,6 @@
 		t_update,
 		updating_mint
 	} from '$lib/paraglide/messages';
-	import { mints } from '$lib/stores/persistent/mints';
 	import { Landmark, Loader, Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	let { mint } = $props();

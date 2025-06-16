@@ -1,11 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
-
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import { LoaderCircle, Plus } from 'lucide-svelte';
-	import { toast } from 'svelte-sonner';
+	import { mintsStore as mints, mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine';
 	import RestoreInProgress from './RestoreInProgress.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import DiscoverMints from '$lib/elements/mint/DiscoverMints.svelte';

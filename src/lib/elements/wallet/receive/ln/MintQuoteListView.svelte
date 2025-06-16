@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
+	import { mintQuotesStore } from '@gandlaf21/cashu-wallet-engine';
 	import { MediaQuery } from 'runed';
 	import MintQuoteListItem from './MintQuoteListItem.svelte';
 	import * as Pagination from '$lib/components/ui/pagination';
-	import { nothing_found, nothing_here_yet, t_invoices } from '$lib/paraglide/messages';
+	import { nothing_here_yet, t_invoices } from '$lib/paraglide/messages';
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 

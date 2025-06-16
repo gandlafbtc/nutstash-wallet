@@ -3,7 +3,7 @@
 	import { nip19 } from 'nostr-tools';
 	import QrCode from '../ui/QRCode.svelte';
 	import { Copy } from 'lucide-svelte';
-	import { copyTextToClipboard } from '$lib/util/utils';
+	import { copyTextToClipboard } from '$lib/utils';
 
 	const { pub }: { pub: string } = $props();
 

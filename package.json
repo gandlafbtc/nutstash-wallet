@@ -26,6 +26,7 @@
 		"@cashu/crypto": "^0.3.4",
 		"@gandlaf21/bc-ur": "^1.1.12",
 		"@gandlaf21/bolt11-decode": "^3.1.1",
+		"@gandlaf21/cashu-wallet-engine": "file:../cashu-wallet-engine",
 		"@inlang/cli": "^3.0.0",
 		"@inlang/paraglide-js": "2.0.5",
 		"@noble/curves": "^1.6.0",

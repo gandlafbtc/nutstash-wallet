@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
+	import { meltQuotesStore } from '@gandlaf21/cashu-wallet-engine';
 	import { MediaQuery } from 'runed';
 	import * as Pagination from '$lib/components/ui/pagination';
 	import MeltQuoteListItem from './MeltQuoteListItem.svelte';

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { ensureError } from '$lib/helpers/errors';
+	import {  mintsStore as  mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		add_mint,
 		add_mint_successfully,
 		mint_already_added,
 		no_url_entered
 	} from '$lib/paraglide/messages';
-	import { mints } from '$lib/stores/persistent/mints';
 	import { LoaderCircle, Plus } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 

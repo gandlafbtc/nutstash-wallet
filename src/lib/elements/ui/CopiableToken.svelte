@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t_copied, t_copy } from '$lib/paraglide/messages';
-	import { copyTextToClipboard } from '$lib/util/utils';
+	import { copyTextToClipboard } from '$lib/utils';
 
 	import { Copy } from 'lucide-svelte';
 	interface Props {

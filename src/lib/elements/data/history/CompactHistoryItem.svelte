@@ -1,23 +1,20 @@
 <script lang="ts">
-	import { formatAmount } from '$lib/util/walletUtils';
+	import { formatAmount } from '@gandlaf21/cashu-wallet-engine/util';
 	import { ArrowDownRight, ArrowUpRight, Banknote, Zap, Timer, X, HandCoins } from 'lucide-svelte';
 	import { formatDistance } from 'date-fns';
 	import { now } from '$lib/stores/session/time';
 	import {
-		EXPIRED,
-		type StoredMeltQuote,
-		type StoredMintQuote,
-		type StoredTransaction
-	} from '$lib/db/models/types';
+		types
+	} from '@gandlaf21/cashu-wallet-engine';
 	import { t_ago, t_fee } from '$lib/paraglide/messages';
 	interface Props {
-		item: StoredTransaction | StoredMeltQuote | StoredMintQuote;
+		item: types.StoredTransaction | types.StoredMeltQuote | types.StoredMintQuote;
 	}
 
 	let { item }: Props = $props();
 
-	let isExpired = $derived(item.type === 'mint' && item.state === EXPIRED.EXPIRED);
-	const getUrlForItem = (item: StoredTransaction | StoredMeltQuote | StoredMintQuote): string => {
+	let isExpired = $derived(item.type === 'mint' && item.state === types.EXPIRED.EXPIRED);
+	const getUrlForItem = (item: types.StoredTransaction | types.StoredMeltQuote | types.StoredMintQuote): string => {
 		if (item.type === 'mint') {
 			return `/#/wallet/receive/ln/${item.quote}`;
 		} else if (item.type === 'melt') {

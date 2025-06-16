@@ -1,11 +1,10 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
-	import type { Mint } from '$lib/db/models/types';
+	import { types, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
 	import { available_mints } from '$lib/paraglide/messages';
-	import { mints } from '$lib/stores/persistent/mints';
 	import { Landmark } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
-	type Props = { mint: Mint; onchange?: (value: string) => void; disabled?: boolean };
+	type Props = { mint: types.Mint; onchange?: (value: string) => void; disabled?: boolean };
 
 	let { mint = $bindable(), onchange, disabled = false }: Props = $props();
 

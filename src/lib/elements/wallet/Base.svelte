@@ -7,16 +7,13 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import { statusMessage } from '$lib/stores/session/statusMessage';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { usePassword } from '$lib/stores/local/usePassword';
+	import { usePassword, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
 	import PasswordInput from '../security/PasswordInput.svelte';
-	import Breadcrumb from './menu/Breadcrumb.svelte';
 	import AddMint from '../mint/AddMint.svelte';
 	import DiscoverMints from '../mint/DiscoverMints.svelte';
 	import OnboardingHeader from '../onboarding/OnboardingHeader.svelte';
 	import { AlignJustify, ChevronsLeft } from 'lucide-svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { page } from '$app/stores';
 	import { t_back, to_use_the_wallet_add_mint, welcome_to_nutstash } from '$lib/paraglide/messages';
 
 	let sidebar = $state('');

@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { sendNip17DirectMessageToNprofile } from '$lib/actions/nostr';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import SendEcash from '$lib/elements/contacts/chat/SendEcash.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
-	import { ensureError } from '$lib/helpers/errors';
+	import {mintsStore  as  mints, ensureError,sendNip17DirectMessageToNprofile } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		could_not_parse_request,
 		error_when_sending,
@@ -13,7 +12,6 @@
 		t_back,
 		unsupported_transport
 	} from '$lib/paraglide/messages';
-	import { mints } from '$lib/stores/persistent/mints';
 	import { decodePaymentRequest, type Token } from '@cashu/cashu-ts';
 	import { toast } from 'svelte-sonner';
 	import { params, pop, push } from 'svelte-spa-router';

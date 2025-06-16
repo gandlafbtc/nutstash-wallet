@@ -2,13 +2,13 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import { auto_receive_from_trusted_mints } from '$lib/paraglide/messages';
-	import { settings } from '$lib/stores/persistent/settings';
+	import { settingsStore } from '@gandlaf21/cashu-wallet-engine';
 
-	let value = $state($settings[0].tokens.autoReceive);
+	let value = $state($settingsStore[0].tokens.autoReceive);
 
 	const toggle = () => {
 		setTimeout(() => {
-			settings.setAutoReceive(value);
+			settingsStore.setAutoReceive(value);
 		}, 50);
 	};
 </script>

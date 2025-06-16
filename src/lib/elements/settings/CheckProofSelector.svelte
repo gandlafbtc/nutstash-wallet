@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { checkProofs } from '$lib/actions/actions';
+	import { getMintForKeysetId,  mintsStore as mints, checkProofs, ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { ensureError } from '$lib/helpers/errors';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { getMintForKeysetId } from '$lib/util/walletUtils';
 	import type { Proof } from '@cashu/cashu-ts';
 	import { LoaderCircle } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';

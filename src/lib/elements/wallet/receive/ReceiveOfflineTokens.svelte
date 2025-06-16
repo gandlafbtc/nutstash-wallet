@@ -1,18 +1,12 @@
 <script lang="ts">
-	import { receiveEcash } from '$lib/actions/actions';
+	import { keysStore,formatAmount, parseSecrets , offlineTransactionsStore , ensureError, receiveEcash, types } from '@gandlaf21/cashu-wallet-engine';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import type { StoredTransaction } from '$lib/db/models/types';
-	import { ensureError } from '$lib/helpers/errors';
-	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
-	import { formatAmount, parseSecrets } from '$lib/util/walletUtils';
 	import { Copy, Download, LoaderCircle, QrCodeIcon, Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
 	import { getEncodedToken } from '@cashu/cashu-ts';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
-	import { get } from 'svelte/store';
-	import { keysStore } from '$lib/stores/persistent/keys';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import {
 		cannot_be_undone_delete_token,
@@ -44,7 +38,7 @@
 		}
 	};
 
-	const claimOneOfflineToken = async (tx: StoredTransaction) => {
+	const claimOneOfflineToken = async (tx: types.StoredTransaction) => {
 		isLoading = true;
 		try {
 			await claimOfflineToken(tx);
@@ -57,7 +51,7 @@
 		}
 	};
 
-	const claimOfflineToken = async (tx: StoredTransaction) => {
+	const claimOfflineToken = async (tx: types.StoredTransaction) => {
 		const token = { proofs: tx.in, mint: tx.mintUrl, unit: tx.unit };
 		const { lockPubs } = parseSecrets(token);
 		console.log(lockPubs);

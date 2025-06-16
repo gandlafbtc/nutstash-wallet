@@ -5,7 +5,7 @@
 		pendingProofsStore,
 		proofsStore,
 		spentProofsStore
-	} from '$lib/stores/persistent/proofs';
+	} from '@gandlaf21/cashu-wallet-engine/stores';
 	import type { Proof } from '@cashu/cashu-ts';
 	import * as Select from '$lib/components/ui/select';
 	import { available_mints, load_more, nothing_here_yet, t_ecash } from '$lib/paraglide/messages';

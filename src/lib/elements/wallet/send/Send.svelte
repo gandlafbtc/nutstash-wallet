@@ -3,23 +3,11 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import MintSelector from '$lib/elements/ui/MintSelector.svelte';
 	import UnitSelector from '$lib/elements/ui/UnitSelector.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
 	import {
-		checkValidPubkey,
-		formatAmount,
-		getAmountForTokenSet,
-		getAproxAmount,
-		getProofsOfMintUnit,
-		getUnitsForMints,
-		isNumeric
-	} from '$lib/util/walletUtils';
-	import {
-		QrCode,
 		Zap,
 		LoaderCircle,
 		Banknote,
 		Copy,
-		HandCoins,
 		Check,
 		X,
 		Coins,
@@ -29,22 +17,25 @@
 	import { onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';
 	import NumericKeys from '$lib/elements/ui/NumericKeys.svelte';
-	import { unit } from '$lib/stores/persistent/settings';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
+	import { checkValidPubkey,
+		types,
+		selectedMint,
+		formatAmount,
+		getAmountForTokenSet,
+		getAproxAmount,
+		ensureError,
+		getProofsOfMintUnit,
+		getUnitsForMints, unit,
+		createMeltQuote, getFeeForProofs, sendEcash,isNumeric,proofsStore, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
 	import TokenOptions from './TokenOptions.svelte';
 	import { toast } from 'svelte-sonner';
-	import { createMeltQuote, getFeeForProofs, sendEcash } from '$lib/actions/actions';
-	import { openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
+	import { openSendDrawer } from '$lib/stores/session/drawer';
 	import { decode } from '@gandlaf21/bolt11-decode';
-	import { copyTextToClipboard } from '$lib/util/utils';
-	import type { Mint, Proof } from '$lib/db/models/types';
+	import { copyTextToClipboard } from '$lib/utils';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
-	import { selectedMint } from '$lib/stores/local/selectedMints';
-	import { goto } from '$app/navigation';
-	import { ensureError } from '$lib/helpers/errors';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
 	import SimpleScanner from '../scanner/simple_scanner/SimpleScanner.svelte';
 	import { nip19 } from 'nostr-tools';
@@ -85,10 +76,10 @@
 		return getUnitsForMints([mint]).find((u) => u === $unit) ? $unit : 'sat';
 	};
 
-	let mint: Mint | undefined = $state($selectedMint !== -1 ? $mints[$selectedMint] : $mints[0]);
+	let mint: types.Mint | undefined = $state($selectedMint !== -1 ? $mints[$selectedMint] : $mints[0]);
 	let currentUnit: string = $state(getCurrentUnit());
 
-	let unitProofs: Proof[] = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit));
+	let unitProofs: types.Proof[] = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit));
 	let balance = $derived(getAmountForTokenSet(unitProofs));
 	let invoice = $derived.by(() => {
 		if (
@@ -129,7 +120,7 @@
 		customOut: false,
 		includeReceiverFees: false
 	});
-	let selectedProofs: Proof[] = $derived(
+	let selectedProofs: types.Proof[] = $derived(
 		getAproxAmount(amount ?? 0, unitProofs, tokenOptions.includeReceiverFees) ?? []
 	);
 

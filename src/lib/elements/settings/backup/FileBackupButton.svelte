@@ -1,33 +1,12 @@
 <script lang="ts">
-	import { encrypt, kdf } from '$lib/actions/encryption';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
-	import { contactsStore } from '$lib/stores/persistent/contacts';
-	import { messagesStore } from '$lib/stores/persistent/message';
-	import { countsStore } from '$lib/stores/persistent/counts';
-	import { keysStore } from '$lib/stores/persistent/keys';
-	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import {
-		offlineProofsStore,
-		pendingProofsStore,
-		proofsStore,
-		spentProofsStore
-	} from '$lib/stores/persistent/proofs';
-	import { transactionsStore } from '$lib/stores/persistent/transactions';
 	import { bytesToHex } from '@noble/hashes/utils';
 	import { Lock, Upload } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
-	import { relaysStore } from '$lib/stores/persistent/relays';
-	import { nwcKeysStore } from '$lib/stores/persistent/nwcConnections';
-	import { cashuRequestsStore } from '$lib/stores/persistent/requests';
-	import { settings } from '$lib/stores/persistent/settings';
-	import { swapsStore } from '$lib/stores/persistent/swap';
-	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
+	import {offlineTransactionsStore, swapsStore,  settingsStore as settings, cashuRequestsStore, nwcKeysStore, relaysStore, transactionsStore, offlineProofsStore,pendingProofsStore,proofsStore,spentProofsStore, mnemonicStore as mnemonic, mintsStore as mints,mintQuotesStore, meltQuotesStore, keysStore, countsStore, messagesStore, contactsStore, encrypt, kdf } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		choose_a_passphrase_to_encrypt_file,
 		enter_passphrase,

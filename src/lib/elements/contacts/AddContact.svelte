@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { createAlias } from '$lib/actions/nostr';
+	import { createAlias,  ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { contactsStore } from "@gandlaf21/cashu-wallet-engine/stores";
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { ensureError } from '$lib/helpers/errors';
 	import { t_add } from '$lib/paraglide/messages';
-	import { contactsStore } from '$lib/stores/persistent/contacts';
 	import { Plus } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';

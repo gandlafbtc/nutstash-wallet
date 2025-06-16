@@ -3,20 +3,14 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import MintSelector from '$lib/elements/ui/MintSelector.svelte';
 	import UnitSelector from '$lib/elements/ui/UnitSelector.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { formatAmount, getUnitsForMints, isNumeric } from '$lib/util/walletUtils';
-	import { QrCode, Zap, LoaderCircle, Banknote } from 'lucide-svelte';
+	import { ensureError, selectedMint, createCashuRequest, createMintQuote, unit, formatAmount, getUnitsForMints, isNumeric, mintsStore as mints, types } from '@gandlaf21/cashu-wallet-engine';
+	import { Zap, LoaderCircle, Banknote } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';
 	import NumericKeys from '$lib/elements/ui/NumericKeys.svelte';
-	import { unit } from '$lib/stores/persistent/settings';
-	import { createCashuRequest, createMintQuote } from '$lib/actions/actions';
-	import { openReceiveDrawer, openScannerDrawer } from '$lib/stores/session/drawer';
-	import type { Mint } from '$lib/db/models/types';
+	import { openReceiveDrawer } from '$lib/stores/session/drawer';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import { toast } from 'svelte-sonner';
-	import { selectedMint } from '$lib/stores/local/selectedMints';
-	import { ensureError } from '$lib/helpers/errors';
 	import {
 		enter_amount_to_create_invoice,
 		no_mint_found,
@@ -28,11 +22,12 @@
 
 	let entered: string = $state('');
 
-	let mint: Mint | undefined = $state($selectedMint !== -1 ? $mints[$selectedMint] : $mints[0]);
+	let mint: types.Mint | undefined = $state($selectedMint !== -1 ? $mints[$selectedMint] : $mints[0]);
 
 	let token = $state('');
 	let amount = $state('');
 	const getCurrentUnit = () => {
+		if (!mint) return "sat";
 		return getUnitsForMints([mint]).find((u) => u === $unit) ? $unit : 'sat';
 	};
 	let currentUnit: string = $state(getCurrentUnit());

@@ -3,8 +3,8 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { or_copy_it, write_down_your_12_words } from '$lib/paraglide/messages';
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
-	import { copyTextToClipboard } from '$lib/util/utils';
+	import { mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine';
+	import { copyTextToClipboard } from '$lib/utils';
 	const copyMnemonic = () => {
 		const text = $mnemonic[0].mnemonic;
 		if (browser) {

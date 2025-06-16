@@ -1,15 +1,13 @@
 <script lang="ts">
-	import type { StoredSwap } from '$lib/db/models/types';
+	import {  types } from '@gandlaf21/cashu-wallet-engine';	
+	import { mintQuotesStore,meltQuotesStore, getBy, } from '@gandlaf21/cashu-wallet-engine/stores';
+	import {   formatAmount } from '@gandlaf21/cashu-wallet-engine/util';
+
 	import { t_not_found } from '$lib/paraglide/messages';
-	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
-	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-	import { swapsStore } from '$lib/stores/persistent/swap';
-	import { formatAmount } from '$lib/util/walletUtils';
 	import { ArrowDown, CheckCircle } from 'lucide-svelte';
 
 	interface Props {
-		swap: StoredSwap;
+		swap: types.StoredSwap;
 	}
 
 	let { swap }: Props = $props();

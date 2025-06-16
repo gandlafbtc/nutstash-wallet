@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { params } from 'svelte-spa-router';
 	import TransactionListItem from './TransactionListItem.svelte';
-	import { transactionsStore } from '$lib/stores/persistent/transactions';
+	import { transactionsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { t_not_found } from '$lib/paraglide/messages';
 
 	let txId = $derived($params?.id);

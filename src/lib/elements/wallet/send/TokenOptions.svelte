@@ -1,15 +1,13 @@
 <script lang="ts">
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
-	import type { Mint } from '$lib/db/models/types';
+	import type { types } from '@gandlaf21/cashu-wallet-engine';
 	import { t_lock } from '$lib/paraglide/messages';
-	import { selectedMint } from '$lib/stores/local/selectedMints';
-	import { Lock, FileInput, FileOutput, HandCoins } from 'lucide-svelte';
-
+	
 	const {
 		tokenOptions = $bindable(),
 		mint
 	}: {
-		mint: Mint;
+		mint: types.Mint;
 		tokenOptions: {
 			p2pk: boolean;
 			customIn: boolean;

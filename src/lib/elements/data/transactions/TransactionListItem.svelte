@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { formatAmount } from '$lib/util/walletUtils';
+	import { formatAmount } from '@gandlaf21/cashu-wallet-engine/util';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
 	import * as Card from '$lib/components/ui/card';
-	import { getHostFromUrl } from '$lib/util/utils';
-	import { TransactionType, type StoredTransaction } from '$lib/db/models/types';
+	import { getHostFromUrl } from '$lib/utils';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { getEncodedTokenV4, type Token } from '@cashu/cashu-ts';
@@ -17,7 +17,7 @@
 		tx,
 		isListView = true
 	}: {
-		tx: StoredTransaction;
+		tx: types.StoredTransaction;
 		isListView?: boolean;
 	} = $props();
 
@@ -53,7 +53,7 @@
 	<Card.Content class="flex flex-col gap-3">
 		{#if !isListView}
 			<!-- content here -->
-			{#if encodedToken && tx.type === TransactionType.SEND}
+			{#if encodedToken && tx.type === types.TransactionType.SEND}
 				{#if encodedToken.length > 300}
 					<BigTokenQr size={[3]} speed={[3]} token={encodedToken}></BigTokenQr>
 				{:else}

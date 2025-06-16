@@ -3,7 +3,7 @@
 	import { toast } from 'svelte-sonner';
 	import { isTauriMobile } from '$lib/tauri/deviceHelper';
 	// import { isAvailable, record, textRecord, write } from '@tauri-apps/plugin-nfc';
-	import { ensureError } from '$lib/helpers/errors';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import { error_writing_to_tag, token_has_been_written_to_nfc_tag } from '$lib/paraglide/messages';
 
 	let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } = $props();

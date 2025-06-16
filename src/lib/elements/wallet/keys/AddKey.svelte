@@ -2,7 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { ensureError } from '$lib/helpers/errors';
+	import { ensureError, keysStore } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		add_key,
 		add_key_manually,
@@ -12,8 +12,6 @@
 		t_attention,
 		t_close
 	} from '$lib/paraglide/messages';
-	import { keysStore } from '$lib/stores/persistent/keys';
-	import { add } from 'date-fns';
 	import { Plus } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 

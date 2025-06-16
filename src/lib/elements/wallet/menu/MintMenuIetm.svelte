@@ -1,12 +1,11 @@
 <script lang="ts">
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import { Ellipsis, Loader, LoaderCircle, Trash } from 'lucide-svelte';
-	import type { Mint } from '$lib/db/models/types';
-	import { getHostFromUrl } from '$lib/util/utils';
+	import { types,getHostFromUrl } from '@gandlaf21/cashu-wallet-engine';
 	import MenuMintDropdown from '$lib/elements/mint/mintDropdown/MenuMintDropdown.svelte';
 	const sidebar = Sidebar.useSidebar();
 
-	const { mint }: { mint: Mint } = $props();
+	const { mint }: { mint: types.Mint } = $props();
 </script>
 
 <Sidebar.MenuItem>

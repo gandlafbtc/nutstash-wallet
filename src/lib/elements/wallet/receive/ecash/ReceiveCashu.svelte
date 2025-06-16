@@ -4,7 +4,7 @@
 	import { params } from 'svelte-spa-router';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import ReceiveCard from './ReceiveCard.svelte';
-	import { ensureError } from '$lib/helpers/errors';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import { toast } from 'svelte-sonner';
 
 	let enteredToken: string = $state('');

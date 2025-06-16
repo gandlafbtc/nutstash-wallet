@@ -1,13 +1,11 @@
 <script lang="ts">
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { formatAmount, formatSecToMinStr } from '$lib/util/walletUtils';
+	import { mintProofs, types, formatAmount, formatSecToMinStr } from '@gandlaf21/cashu-wallet-engine';
 	import * as Card from '$lib/components/ui/card';
 	import { Copy, Banknote, CircleCheck, RefreshCcw } from 'lucide-svelte';
-	import { copyTextToClipboard, getHostFromUrl } from '$lib/util/utils';
+	import { getHostFromUrl } from '$lib/utils';
 	import { decode } from '@gandlaf21/bolt11-decode';
-	import { EXPIRED, type StoredMintQuote } from '$lib/db/models/types';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { mintProofs } from '$lib/actions/actions';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { now } from '$lib/stores/session/time';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -25,7 +23,7 @@
 		quote,
 		isListView = true
 	}: {
-		quote: StoredMintQuote;
+		quote: types.StoredMintQuote;
 		isListView?: boolean;
 	} = $props();
 
@@ -37,7 +35,7 @@
 </script>
 
 <Card.Root
-	class="m-3 w-80 xl:w-[600px] {quote.state === EXPIRED.EXPIRED
+	class="m-3 w-80 xl:w-[600px] {quote.state === types.EXPIRED.EXPIRED
 		? 'bg-red-700 bg-opacity-20 opacity-40'
 		: ''}"
 >
@@ -108,7 +106,7 @@
 						</Tooltip.Content>
 					</Tooltip.Root>
 				</Tooltip.Provider>
-			{:else if quote.state === EXPIRED.EXPIRED}
+			{:else if quote.state === types.EXPIRED.EXPIRED}
 				<Badge variant="destructive">
 					{quote.state}
 				</Badge>

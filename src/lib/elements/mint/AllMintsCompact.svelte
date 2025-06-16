@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { all_mints } from '$lib/paraglide/messages';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import {
-		formatAmount,
+	import { proofsStore, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintsUnit,
-		getUnitsForMints
-	} from '$lib/util/walletUtils';
+		getUnitsForMints} from '@gandlaf21/cashu-wallet-engine/util';
 	import { Landmark } from 'lucide-svelte';
 </script>
 

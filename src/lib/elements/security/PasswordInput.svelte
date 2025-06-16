@@ -3,10 +3,7 @@
 	import * as Form from '$lib/components/ui/form';
 	import { LockOpen, LoaderCircle } from 'lucide-svelte';
 	import { onMount, type Snippet } from 'svelte';
-	import { kdf } from '$lib/actions/encryption';
-	import { key } from '$lib/stores/session/key';
-	import { usePassword } from '$lib/stores/local/usePassword';
-	import { DEFAULT_PASS } from '$lib/stores/static/pass';
+	import { usePassword,key } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { init } from '$lib/init/init';
 	import { toast } from 'svelte-sonner';
 	import {
@@ -44,13 +41,8 @@
 		isUnlocking = true;
 
 		try {
-			if ($usePassword) {
-				key.set(await kdf(pass));
-			} else {
-				key.set(await kdf(DEFAULT_PASS));
-			}
 			// init
-			await init();
+			await init(pass);
 			toast.success(wallet_unlocked());
 		} catch (error) {
 			key.set(undefined);

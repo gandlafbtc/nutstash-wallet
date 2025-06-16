@@ -1,21 +1,16 @@
 <script lang="ts">
-	import { getUnitSymbol } from '$lib/util/walletUtils';
 	import { Download, QrCode, Upload } from 'lucide-svelte';
-	import { selectedMint } from '$lib/stores/local/selectedMints';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { getByMany } from '$lib/stores/persistent/helper/storeHelper';
+	import { settingsStore as settings, getByMany, mintsStore  as mints, proofsStore, selectedMint ,getUnitSymbol } from '@gandlaf21/cashu-wallet-engine';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import CompactHistory from '../data/history/CompactHistory.svelte';
 	import NumberFlow, { type Format } from '@number-flow/svelte';
-	import { css, getDivider } from '$lib/util/utils';
+	import { css, getDivider } from '$lib/utils';
 	import QuickPaste from './QuickPaste.svelte';
 	import NfcListenerButton from './send/ecash/NFCListenerButton.svelte';
 	import isTauri from '$lib/tauri/deviceHelper';
 	import { untrack } from 'svelte';
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
-	import { settings } from '$lib/stores/persistent/settings';
 	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
 	import { t_receive, t_send } from '$lib/paraglide/messages';
 
