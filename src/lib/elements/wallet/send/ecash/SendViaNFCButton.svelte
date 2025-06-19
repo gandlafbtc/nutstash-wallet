@@ -3,8 +3,8 @@
 	import { onMount } from 'svelte';
 
 	import NfcWriteDrawer from './NFCWriteDrawer.svelte';
+	import { openWriteNFCDrawer } from '$lib/stores/session/drawer';
 	let { token }: { token: string } = $props();
-	let isOpen = $state(false);
 
 	let hasNdef = $state(false);
 
@@ -22,7 +22,7 @@
 </script>
 
 {#if hasNdef}
-	<Button onclick={() => (isOpen = true)}>
+	<Button onclick={() => openWriteNFCDrawer.set(true)}>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			height="24px"
@@ -35,5 +35,5 @@
 		>
 	</Button>
 
-	<NfcWriteDrawer bind:isOpen {token}></NfcWriteDrawer>
+	<NfcWriteDrawer {token}></NfcWriteDrawer>
 {/if}

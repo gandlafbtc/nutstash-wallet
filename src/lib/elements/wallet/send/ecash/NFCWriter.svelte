@@ -5,8 +5,9 @@
 	// import { isAvailable, record, textRecord, write } from '@tauri-apps/plugin-nfc';
 	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import { error_writing_to_tag, token_has_been_written_to_nfc_tag } from '$lib/paraglide/messages';
+	import { openWriteNFCDrawer } from '$lib/stores/session/drawer';
 
-	let { token, isOpen = $bindable() }: { token: string; isOpen: boolean } = $props();
+	let { token }: { token: string } = $props();
 
 	const colors = ['green', 'yellow', 'blue'];
 	let colorI = 0;
@@ -33,7 +34,7 @@
 				await ndef.write({ records: [record] });
 			}
 			toast.info(token_has_been_written_to_nfc_tag());
-			isOpen = false;
+			openWriteNFCDrawer.set(false)
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -41,7 +42,7 @@
 				description: err.message
 			});
 			console.log(error);
-			isOpen = false;
+			openWriteNFCDrawer.set(false)
 		}
 	});
 	onDestroy(() => {
