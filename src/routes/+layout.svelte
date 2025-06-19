@@ -13,6 +13,8 @@
 	import Send from '$lib/elements/wallet/send/Send.svelte';
 	import ScannerDrawer from '$lib/elements/wallet/scanner/ScannerDrawer.svelte';
 	import { openReceiveDrawer, openSendDrawer } from '$lib/stores/session/drawer';
+	import ReceiveSelect from '$lib/elements/wallet/receive/ReceiveSelect.svelte';
+	import SendSelect from '$lib/elements/wallet/send/SendSelect.svelte';
 
 	let isInit = $state(false);
 	let { children } = $props();
@@ -34,18 +36,16 @@
 			<Toaster position="top-right" richColors closeButton></Toaster>
 		</div>
 		<Drawer.Root
-			bind:open={$openReceiveDrawer}
-			controlledOpen={$openReceiveDrawer}
-			handleOnly={true}
-		>
+			open={$openReceiveDrawer}
+			onOpenChange={(state)=> {openReceiveDrawer.set(state)}}
+			>
 			<Drawer.Content>
 				<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Title>Receive via ecash or Lightning</Drawer.Title>
-					<Drawer.Description
-						>Enter an amount to receive via Lightning or paste a token to receive eCash.</Drawer.Description
-					>
+
 				</Drawer.Header>
-				<Receive></Receive>
+				<ReceiveSelect></ReceiveSelect>
+				<!-- <Receive></Receive> -->
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Close
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
@@ -55,15 +55,15 @@
 			</Drawer.Content>
 		</Drawer.Root>
 
-		<Drawer.Root bind:open={$openSendDrawer} controlledOpen={$openSendDrawer} handleOnly={true}>
+		<Drawer.Root bind:open={$openSendDrawer} 
+		onOpenChange={(state)=> {openSendDrawer.set(state)}}
+		>
 			<Drawer.Content>
 				<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Title>Send via ecash or Lightning</Drawer.Title>
-					<Drawer.Description
-						>Enter an amount to send ecash or paste a Lightning invoice.</Drawer.Description
-					>
 				</Drawer.Header>
-				<Send></Send>
+				<!-- <Send></Send> -->
+				 <SendSelect></SendSelect>
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Close
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}

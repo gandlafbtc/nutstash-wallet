@@ -3,6 +3,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import NfcListener from './NFCListener.svelte';
 	import NfcListenDrawer from './NFCListenDrawer.svelte';
+	import { openScanNFCDrawer } from '$lib/stores/session/drawer';
 
 	let pressed = $state(false);
 	let nfcReady = $state(false);
@@ -30,7 +31,7 @@
 </script>
 
 {#if nfcReady}
-	<Toggle bind:pressed>
+	<Toggle bind:pressed onclick={()=> openScanNFCDrawer.set(true)}>
 		<div class="relative flex items-center gap-2">
 			<svg
 				class="h-5 w-5"
