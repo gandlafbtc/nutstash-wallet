@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mintQuotesStore } from '@gandlaf21/cashu-wallet-engine';
+	import { mintQuotesStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { MediaQuery } from 'runed';
 	import MintQuoteListItem from './MintQuoteListItem.svelte';
 	import * as Pagination from '$lib/components/ui/pagination';

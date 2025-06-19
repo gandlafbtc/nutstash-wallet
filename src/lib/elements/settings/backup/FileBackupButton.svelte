@@ -6,7 +6,8 @@
 	import { bytesToHex } from '@noble/hashes/utils';
 	import { Lock, Upload } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
-	import {offlineTransactionsStore, swapsStore,  settingsStore as settings, cashuRequestsStore, nwcKeysStore, relaysStore, transactionsStore, offlineProofsStore,pendingProofsStore,proofsStore,spentProofsStore, mnemonicStore as mnemonic, mintsStore as mints,mintQuotesStore, meltQuotesStore, keysStore, countsStore, messagesStore, contactsStore, encrypt, kdf } from '@gandlaf21/cashu-wallet-engine';
+	import {offlineTransactionsStore, swapsStore,  settingsStore as settings, cashuRequestsStore, nwcKeysStore, relaysStore, transactionsStore, offlineProofsStore,pendingProofsStore,proofsStore,spentProofsStore, mnemonicStore as mnemonic, mintsStore as mints,mintQuotesStore, meltQuotesStore, keysStore, countsStore, messagesStore, contactsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { encrypt, kdf } from "@gandlaf21/cashu-wallet-engine";
 	import {
 		choose_a_passphrase_to_encrypt_file,
 		enter_passphrase,

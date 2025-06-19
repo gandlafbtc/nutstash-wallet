@@ -7,7 +7,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import { statusMessage } from '$lib/stores/session/statusMessage';
-	import { usePassword, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+	import { usePassword, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
 	import PasswordInput from '../security/PasswordInput.svelte';
 	import AddMint from '../mint/AddMint.svelte';
 	import DiscoverMints from '../mint/DiscoverMints.svelte';

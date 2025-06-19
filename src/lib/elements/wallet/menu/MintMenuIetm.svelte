@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Sidebar from '$lib/components/ui/sidebar';
-	import { Ellipsis, Loader, LoaderCircle, Trash } from 'lucide-svelte';
-	import { types,getHostFromUrl } from '@gandlaf21/cashu-wallet-engine';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { getHostFromUrl } from '@gandlaf21/cashu-wallet-engine/util';
 	import MenuMintDropdown from '$lib/elements/mint/mintDropdown/MenuMintDropdown.svelte';
 	const sidebar = Sidebar.useSidebar();
 

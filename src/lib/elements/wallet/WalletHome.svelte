@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Download, QrCode, Upload } from 'lucide-svelte';
-	import { settingsStore as settings, getByMany, mintsStore  as mints, proofsStore, selectedMint ,getUnitSymbol } from '@gandlaf21/cashu-wallet-engine';
+	import { settingsStore as settings, getByMany, mintsStore  as mints, proofsStore, selectedMint } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitSymbol } from '@gandlaf21/cashu-wallet-engine/util';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import CompactHistory from '../data/history/CompactHistory.svelte';

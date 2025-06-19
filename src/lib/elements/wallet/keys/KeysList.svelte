@@ -1,6 +1,7 @@
 <script>
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { ensureError,  keysStore } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError,} from '@gandlaf21/cashu-wallet-engine';
+	import {  keysStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { CheckCircle, Copy, Plus } from 'lucide-svelte';
 	import Keypair from './Keypair.svelte';
 	import AddKey from './AddKey.svelte';

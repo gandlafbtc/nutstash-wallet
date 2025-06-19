@@ -1,6 +1,8 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
-	import { types, unit, getUnitSymbol, getUnitsForMints } from '@gandlaf21/cashu-wallet-engine';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { unit } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitSymbol, getUnitsForMints } from '@gandlaf21/cashu-wallet-engine/util';
 	import { available_units } from '$lib/paraglide/messages';
 	import { onMount } from 'svelte';
 	type Props = { selectedMints: types.Mint[]; currentUnit: string; disabled?: boolean };

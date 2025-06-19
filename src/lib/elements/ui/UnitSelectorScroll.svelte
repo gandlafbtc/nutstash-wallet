@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { types,getUnitsForMints, unit } from '@gandlaf21/cashu-wallet-engine';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { unit } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitsForMints } from '@gandlaf21/cashu-wallet-engine/util';
 	import { ChevronDown, ChevronUp } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
@@ -52,7 +54,7 @@
 	const itemHeight = 60;
 
 	// Select item and scroll to it
-	function selectItem(index) {
+	function selectItem(index: number) {
 		// Ensure index is within bounds
 		if (index < 0) index = 0;
 		if (index >= mintUnits.length) index = mintUnits.length - 1;
@@ -69,10 +71,11 @@
 	}
 
 	// Handle scroll event
-	function handleScroll(e) {
+	function handleScroll(e: Event) {
 		if (isDragging) return;
 
-		const scrollTop = e.target.scrollTop;
+		const target = e.target as HTMLElement;
+		const scrollTop = target.scrollTop;
 		const newIndex = Math.round(scrollTop / itemHeight);
 
 		if (newIndex !== selectedIndex) {
@@ -81,16 +84,29 @@
 	}
 
 	// Mouse/touch event handlers
-	function handleMouseDown(e) {
+	function handleMouseDown(e: MouseEvent | TouchEvent) {
 		isDragging = true;
-		startY = e.clientY || (e.touches && e.touches[0].clientY);
+		if ('touches' in e) {
+			// Touch event
+			startY = e.touches[0].clientY;
+		} else {
+			// Mouse event
+			startY = e.clientY;
+		}
 		e.preventDefault();
 	}
 
-	function handleMouseMove(e) {
+	function handleMouseMove(e: MouseEvent | TouchEvent) {
 		if (!isDragging) return;
 
-		const currentY = e.clientY || (e.touches && e.touches[0].clientY);
+		let currentY: number;
+		if ('touches' in e) {
+			// Touch event
+			currentY = e.touches[0].clientY;
+		} else {
+			// Mouse event
+			currentY = e.clientY;
+		}
 		const delta = startY - currentY;
 
 		scrollDistance += delta;

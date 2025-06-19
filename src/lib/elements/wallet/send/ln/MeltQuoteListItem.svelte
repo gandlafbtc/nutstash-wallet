@@ -1,17 +1,19 @@
 <script lang="ts">
 	import {
-		formatAmount,
-		formatSecToMinStr,
-		getAmountForTokenSet,
-		getAproxAmount,
-		getProofsOfMintUnit,
-		getHostFromUrl,
 		types,
 		checkMeltQuote, getFeeForProofs, meltProofs ,
-		proofsStore,
+	} from '@gandlaf21/cashu-wallet-engine';
+	import { 		proofsStore,
 		getBy,
 		mintsStore as mints
-	} from '@gandlaf21/cashu-wallet-engine';
+ } from "@gandlaf21/cashu-wallet-engine/stores";
+	import { 
+		formatSecToMinStr,
+		getAmountForTokenSet,
+		formatAmount,
+		getAproxAmount,
+		getProofsOfMintUnit,
+		getHostFromUrl, } from "@gandlaf21/cashu-wallet-engine/util";
 	import * as Card from '$lib/components/ui/card';
 	import { Check, LoaderCircle, RotateCcw } from 'lucide-svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';

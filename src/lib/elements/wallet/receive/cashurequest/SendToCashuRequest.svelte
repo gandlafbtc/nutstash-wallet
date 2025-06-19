@@ -2,7 +2,8 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import SendEcash from '$lib/elements/contacts/chat/SendEcash.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
-	import {mintsStore  as  mints, ensureError,sendNip17DirectMessageToNprofile } from '@gandlaf21/cashu-wallet-engine';
+	import {mintsStore  as  mints} from '@gandlaf21/cashu-wallet-engine/stores';
+	import { ensureError,sendNip17DirectMessageToNprofile } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		could_not_parse_request,
 		error_when_sending,

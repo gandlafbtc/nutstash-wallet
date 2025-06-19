@@ -3,7 +3,9 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import MintSelector from '$lib/elements/ui/MintSelector.svelte';
 	import UnitSelector from '$lib/elements/ui/UnitSelector.svelte';
-	import { ensureError, selectedMint, createCashuRequest, createMintQuote, unit, formatAmount, getUnitsForMints, isNumeric, mintsStore as mints, types } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError, createCashuRequest, createMintQuote, types } from '@gandlaf21/cashu-wallet-engine';
+	import { formatAmount, getUnitsForMints, isNumeric} from '@gandlaf21/cashu-wallet-engine/util';
+	import {  selectedMint, mintsStore as mints, unit } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { Zap, LoaderCircle, Banknote } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';

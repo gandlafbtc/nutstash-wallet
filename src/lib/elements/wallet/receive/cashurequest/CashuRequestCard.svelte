@@ -2,7 +2,8 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import { formatAmount, types} from '@gandlaf21/cashu-wallet-engine';
+	import { types} from '@gandlaf21/cashu-wallet-engine';
+	import { formatAmount} from '@gandlaf21/cashu-wallet-engine/util';
 	import CopiableToken from '$lib/elements/ui/CopiableToken.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
 	import { cashu_request, t_close } from '$lib/paraglide/messages';

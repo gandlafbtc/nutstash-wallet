@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cashuRequestsStore } from '@gandlaf21/cashu-wallet-engine';
+	import { cashuRequestsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { params } from 'svelte-spa-router';
 	import CashuRequestCard from './CashuRequestCard.svelte';
 

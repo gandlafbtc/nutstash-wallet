@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { mintsStore as mints, mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints, mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine/stores';
 	import RestoreInProgress from './RestoreInProgress.svelte';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
 	import DiscoverMints from '$lib/elements/mint/DiscoverMints.svelte';

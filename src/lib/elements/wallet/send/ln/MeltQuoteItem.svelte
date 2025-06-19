@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { params } from 'svelte-spa-router';
-	import { meltQuotesStore } from '@gandlaf21/cashu-wallet-engine';
+	import { meltQuotesStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import MeltQuoteListItem from './MeltQuoteListItem.svelte';
 	import { t_not_found } from '$lib/paraglide/messages';
 

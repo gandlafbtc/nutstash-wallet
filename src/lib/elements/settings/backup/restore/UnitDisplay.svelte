@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getDivider } from '$lib/utils';
-	import { getUnitSymbol } from '@gandlaf21/cashu-wallet-engine';
+	import { getUnitSymbol } from '@gandlaf21/cashu-wallet-engine/util';
 	import NumberFlow from '@number-flow/svelte';
 
 	let { unit, amount }: { unit: string; amount: number } = $props();

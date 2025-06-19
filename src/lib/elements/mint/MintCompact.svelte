@@ -2,11 +2,14 @@
 	import AvatarFallback from '$lib/components/ui/avatar/avatar-fallback.svelte';
 	import AvatarImage from '$lib/components/ui/avatar/avatar-image.svelte';
 	import Avatar from '$lib/components/ui/avatar/avatar.svelte';
-	import {
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { proofsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { 
 		formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintUnit,
-		getUnitsForMints, proofsStore, types} from '@gandlaf21/cashu-wallet-engine';
+		getUnitsForMints 
+	} from '@gandlaf21/cashu-wallet-engine/util';
 	import { getHostFromUrl } from '$lib/utils';
 
 	let { mint }: { mint: types.Mint } = $props();

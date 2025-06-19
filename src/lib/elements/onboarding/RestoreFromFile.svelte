@@ -5,7 +5,8 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { pop, push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
-	import {mnemonicStore as mnemonic,  proofsStore, reencrypt, setStoresFromBackupJSON, decrypt,ensureError, mintsStore as mints, kdf,  } from '@gandlaf21/cashu-wallet-engine';
+	import {proofsStore,mnemonicStore as mnemonic,mintsStore as mints,  } from '@gandlaf21/cashu-wallet-engine/stores';
+	import {   reencrypt, setStoresFromBackupJSON, decrypt,ensureError,  kdf,  } from '@gandlaf21/cashu-wallet-engine';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { hexToBytes } from '@noble/hashes/utils';

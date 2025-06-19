@@ -1,6 +1,7 @@
 <script>
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { ensureError, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		error_updating_mint,
 		make_default,

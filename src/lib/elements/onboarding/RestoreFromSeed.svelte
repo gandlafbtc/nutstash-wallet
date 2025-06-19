@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { validateMnemonic } from '@scure/bip39';
-	import { mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine';
+	import { mnemonicStore as mnemonic } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { isOnboarded } from '$lib/stores/local/message';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -78,7 +78,7 @@
 			</div>
 		</Card.Content>
 		<Card.Footer class="flex flex-col gap-4">
-			<Button disabled={restoreSeed.includes(undefined)} onclick={startRestore}
+			<Button disabled={restoreSeed.some(word => !word.trim())} onclick={startRestore}
 				>{t_restore()}</Button
 			>
 		</Card.Footer>

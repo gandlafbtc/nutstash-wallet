@@ -5,7 +5,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import Loading from '$lib/elements/base/Loading.svelte';
-	import { key } from '@gandlaf21/cashu-wallet-engine';
+	import { key } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Drawer from '$lib/components/ui/drawer';
 	import Receive from '$lib/elements/wallet/receive/Receive.svelte';

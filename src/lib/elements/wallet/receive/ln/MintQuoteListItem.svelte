@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { mintProofs, types, formatAmount, formatSecToMinStr } from '@gandlaf21/cashu-wallet-engine';
+	import { formatAmount, formatSecToMinStr } from '@gandlaf21/cashu-wallet-engine/util';
+	import { mintProofs, types } from '@gandlaf21/cashu-wallet-engine';
 	import * as Card from '$lib/components/ui/card';
 	import { Copy, Banknote, CircleCheck, RefreshCcw } from 'lucide-svelte';
 	import { getHostFromUrl } from '$lib/utils';

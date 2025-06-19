@@ -12,11 +12,12 @@
 		LoaderCircle,
 		Lock
 	} from 'lucide-svelte';
-	import {		offlineProofsStore,
-		pendingProofsStore,
+	import {		ensureError, types, randDBKey,    receiveEcash    } from '@gandlaf21/cashu-wallet-engine';
+		import {offlineProofsStore,mintsStore as mints,
+		pendingProofsStore,offlineTransactionsStore,
 		proofsStore,
-		spentProofsStore
-, ensureError, types, randDBKey,offlineTransactionsStore,   getBy,  keysStore, receiveEcash, formatAmount, parseSecrets,  mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+		spentProofsStore, getBy,  keysStore } from "@gandlaf21/cashu-wallet-engine/stores";
+		import { formatAmount, parseSecrets, } from "@gandlaf21/cashu-wallet-engine/util";
 	import * as Accordion from '$lib/components/ui/accordion';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { push } from 'svelte-spa-router';

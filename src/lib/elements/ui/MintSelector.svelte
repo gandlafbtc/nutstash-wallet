@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
-	import { types, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { available_mints } from '$lib/paraglide/messages';
 	import { Landmark } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';

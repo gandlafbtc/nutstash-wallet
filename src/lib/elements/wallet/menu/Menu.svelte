@@ -23,7 +23,8 @@
 	} from 'lucide-svelte';
 	import MintMenuIetm from './MintMenuIetm.svelte';
 	import { toast } from 'svelte-sonner';
-	import { ensureError, messagesStore, mintsStore as mints, } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { messagesStore, mintsStore as mints, } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { push } from 'svelte-spa-router';
 	import { onMount } from 'svelte';
 	import {

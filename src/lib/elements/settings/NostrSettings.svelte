@@ -1,5 +1,6 @@
 <script>
-	import { reconnect, relaysStore} from '@gandlaf21/cashu-wallet-engine';
+	import { reconnect } from '@gandlaf21/cashu-wallet-engine';
+	import { relaysStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';

@@ -2,7 +2,7 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import { auto_receive_from_trusted_mints } from '$lib/paraglide/messages';
-	import { settingsStore } from '@gandlaf21/cashu-wallet-engine';
+	import { settingsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 
 	let value = $state($settingsStore[0].tokens.autoReceive);
 

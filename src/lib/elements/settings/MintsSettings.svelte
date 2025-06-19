@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { discoverMints,getBy ,types, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+	import { discoverMints, types } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
 	import MintSelector from '../ui/MintSelector.svelte';
 	import AddMint from '../mint/AddMint.svelte';
 	import { toast } from 'svelte-sonner';
@@ -7,7 +8,6 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { getHostFromUrl } from '$lib/utils';
 	import MintDropdown from '../mint/mintDropdown/MintDropdown.svelte';
-	import MintSwap from '../mint/MintSwap.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import {
 		add_mint,
@@ -21,7 +21,7 @@
 	let defaultMint: types.Mint | undefined = $derived($mints[0]);
 
 	const onMintChange = (minturl: string) => {
-		const mint = getBy($mints, minturl, 'url');
+		const mint = $mints.find(m => m.url === minturl);
 		if (!mint) {
 			toast.warning('Mint not found');
 			return;

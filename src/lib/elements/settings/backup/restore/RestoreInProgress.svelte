@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { proofsStore, mintsStore as mints,getAmountForTokenSet,getUnitForKeysetId,
- } from '@gandlaf21/cashu-wallet-engine';
+	import { proofsStore, mintsStore as mints,
+ } from '@gandlaf21/cashu-wallet-engine/stores';
+ import { getAmountForTokenSet,getUnitForKeysetId } from "@gandlaf21/cashu-wallet-engine/util";
 	import { onDestroy, onMount } from 'svelte';
 	import { Coins, Landmark, LoaderCircle } from 'lucide-svelte';
 	import Progress from '$lib/components/ui/progress/progress.svelte';

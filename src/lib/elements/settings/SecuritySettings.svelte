@@ -1,6 +1,7 @@
 <script>
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { ensureError, reencrypt, usePassword, checkIfKeysMatch, kdf, key, DEFAULT_PASS } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError, reencrypt, checkIfKeysMatch, kdf } from '@gandlaf21/cashu-wallet-engine';
+	import { usePassword, key, DEFAULT_PASS } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { Lock, LockOpen } from 'lucide-svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';

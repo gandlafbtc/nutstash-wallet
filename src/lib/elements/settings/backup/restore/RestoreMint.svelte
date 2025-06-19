@@ -1,7 +1,9 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Progress from '$lib/components/ui/progress/progress.svelte';
-	import {countsStore, getUnitSymbol, types, seed } from '@gandlaf21/cashu-wallet-engine';
+	import {countsStore,  seed } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitSymbol} from '@gandlaf21/cashu-wallet-engine/util';
+	import {types} from '@gandlaf21/cashu-wallet-engine';
 	import { restoredProofs } from '$lib/stores/session/restoredproofs';
 	import {
 		CashuMint,

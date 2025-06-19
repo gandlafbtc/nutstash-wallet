@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { ensureError,  reencrypt,  mnemonicStore as mnemonic,  mintsStore as mints, proofsStore } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError,  reencrypt } from '@gandlaf21/cashu-wallet-engine';
+	import { mnemonicStore as mnemonic,  mintsStore as mints, proofsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { pop, push } from 'svelte-spa-router';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { generateMnemonic } from '@scure/bip39';

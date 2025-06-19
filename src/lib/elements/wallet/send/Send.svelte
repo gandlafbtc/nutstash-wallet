@@ -17,16 +17,18 @@
 	import { onMount } from 'svelte';
 	import { push } from 'svelte-spa-router';
 	import NumericKeys from '$lib/elements/ui/NumericKeys.svelte';
-	import { checkValidPubkey,
+	import { 
 		types,
-		selectedMint,
-		formatAmount,
-		getAmountForTokenSet,
-		getAproxAmount,
+		
+		
 		ensureError,
-		getProofsOfMintUnit,
-		getUnitsForMints, unit,
-		createMeltQuote, getFeeForProofs, sendEcash,isNumeric,proofsStore, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+		
+		createMeltQuote, getFeeForProofs, sendEcash } from '@gandlaf21/cashu-wallet-engine';
+		import { checkValidPubkey,formatAmount,
+			getUnitsForMints,isNumeric,
+			getProofsOfMintUnit,getAmountForTokenSet,
+		getAproxAmount, } from "@gandlaf21/cashu-wallet-engine/util";
+		import { selectedMint, unit,proofsStore, mintsStore as mints } from "@gandlaf21/cashu-wallet-engine/stores";
 	import TokenOptions from './TokenOptions.svelte';
 	import { toast } from 'svelte-sonner';
 	import { openSendDrawer } from '$lib/stores/session/drawer';

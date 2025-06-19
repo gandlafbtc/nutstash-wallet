@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { keysStore,formatAmount, parseSecrets , offlineTransactionsStore , ensureError, receiveEcash, types } from '@gandlaf21/cashu-wallet-engine';
+	import {   ensureError, receiveEcash, types } from '@gandlaf21/cashu-wallet-engine';
+	import { formatAmount, parseSecrets  } from '@gandlaf21/cashu-wallet-engine/util';
+	import { keysStore, offlineTransactionsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Copy, Download, LoaderCircle, QrCodeIcon, Trash } from 'lucide-svelte';

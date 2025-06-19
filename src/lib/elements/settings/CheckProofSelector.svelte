@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { getMintForKeysetId,  mintsStore as mints, checkProofs, ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { checkProofs, ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getMintForKeysetId } from '@gandlaf21/cashu-wallet-engine/util';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import type { Proof } from '@cashu/cashu-ts';

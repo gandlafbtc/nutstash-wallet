@@ -7,7 +7,7 @@
 	import { push } from 'svelte-spa-router';
 	import { URDecoder } from '@gandlaf21/bc-ur';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
-	import { checkValidPubkey} from '@gandlaf21/cashu-wallet-engine';
+	import { checkValidPubkey} from '@gandlaf21/cashu-wallet-engine/util';
 	import { sendInput } from '$lib/stores/session/sendInput';
 	import { camera_not_found, loading_camera } from '$lib/paraglide/messages';
 

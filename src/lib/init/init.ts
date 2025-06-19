@@ -87,5 +87,3 @@ const setLanguage = () => {
 const initNostrConnections = async () => {
 	await connectNostrRelays();
 };
-
-

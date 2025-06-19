@@ -3,12 +3,14 @@
 	import AvatarImage from '$lib/components/ui/avatar/avatar-image.svelte';
 	import Avatar from '$lib/components/ui/avatar/avatar.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
+	import { types} from '@gandlaf21/cashu-wallet-engine';
+	import { proofsStore, NUT, NUTSTASH_NUTS  } from '@gandlaf21/cashu-wallet-engine/stores';
 	import {
-		types,
 		formatAmount,
 		getAmountForTokenSet,
 		getProofsOfMintUnit,
-		getUnitsForMints, NUT, NUTSTASH_NUTS, proofsStore } from '@gandlaf21/cashu-wallet-engine';
+		getUnitsForMints 
+	} from '@gandlaf21/cashu-wallet-engine/util';
 	import { copyTextToClipboard, getHostFromUrl } from '$lib/utils';
 		import * as Accordion from '$lib/components/ui/accordion';
 		import { AlertTriangle, Check } from 'lucide-svelte';

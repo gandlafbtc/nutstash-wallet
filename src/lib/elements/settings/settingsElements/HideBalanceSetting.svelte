@@ -2,8 +2,7 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import { hide_balance } from '$lib/paraglide/messages';
-	import { settingsStore } from '@gandlaf21/cashu-wallet-engine';
-	import { set } from 'date-fns';
+	import { settingsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 
 	let value = $state($settingsStore[0].general.hideBalance);
 

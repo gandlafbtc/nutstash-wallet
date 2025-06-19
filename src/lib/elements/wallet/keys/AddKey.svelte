@@ -2,7 +2,8 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { ensureError, keysStore } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { keysStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import {
 		add_key,
 		add_key_manually,

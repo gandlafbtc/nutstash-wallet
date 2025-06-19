@@ -10,7 +10,9 @@ import { nip04, generateSecretKey, getPublicKey } from 'nostr-tools';
 import { get } from 'svelte/store';
 import { toast } from 'svelte-sonner';
 import { decode } from '@gandlaf21/bolt11-decode';
-import { relaysStore, nwcKeysStore, createMeltQuote, meltProofs, proofsStore, mintsStore as mints, getAmountForTokenSet, getProofsOfMintUnit, types } from '@gandlaf21/cashu-wallet-engine';
+import { types, createMeltQuote, meltProofs } from '@gandlaf21/cashu-wallet-engine';
+import { relaysStore, nwcKeysStore, proofsStore, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+import { getAmountForTokenSet, getProofsOfMintUnit } from '@gandlaf21/cashu-wallet-engine/util';
 
 type NWCCommand = {
 	method: string;

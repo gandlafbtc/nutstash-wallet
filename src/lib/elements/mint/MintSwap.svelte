@@ -1,7 +1,9 @@
 <script lang="ts">
 	import FormButton from '$lib/components/ui/form/form-button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { swapsStore, formatAmount, getAmountForTokenSet, getProofsOfMintUnit, unit, proofsStore,  mintsStore as mints,  ensureError, createMeltQuote, createMintQuote} from '@gandlaf21/cashu-wallet-engine';
+	import { swapsStore, unit, proofsStore, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount, getAmountForTokenSet, getProofsOfMintUnit } from '@gandlaf21/cashu-wallet-engine/util';
+	import { ensureError, createMeltQuote, createMintQuote } from '@gandlaf21/cashu-wallet-engine';
 	import { toast } from 'svelte-sonner';
 	import MintSelector from '../ui/MintSelector.svelte';
 	import UnitSelector from '../ui/UnitSelector.svelte';

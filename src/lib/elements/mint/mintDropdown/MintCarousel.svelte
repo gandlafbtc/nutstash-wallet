@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context.js';
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
-	import { selectedMint, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine';
+	import { selectedMint, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
 	import AllMintsCompact from '../AllMintsCompact.svelte';
 	import MintCompact from '../MintCompact.svelte';
 

@@ -1,7 +1,9 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
-	import { ensureError, formatAmount, nwcKeysStore, types } from '@gandlaf21/cashu-wallet-engine';
+	import { ensureError, types } from '@gandlaf21/cashu-wallet-engine';
+	import { nwcKeysStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount } from '@gandlaf21/cashu-wallet-engine/util';
 	import { nwc } from '$lib/stores/session/nwc';
 	import { Copy, LoaderCircle, Pen, Trash } from 'lucide-svelte';
 	import QrCode from '../ui/QRCode.svelte';
