@@ -15,6 +15,7 @@
 	import { openReceiveDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import ReceiveSelect from '$lib/elements/wallet/receive/ReceiveSelect.svelte';
 	import SendSelect from '$lib/elements/wallet/send/SendSelect.svelte';
+	import { t_close } from '$lib/paraglide/messages';
 
 	let isInit = $state(false);
 	let { children } = $props();
@@ -47,9 +48,9 @@
 				<ReceiveSelect></ReceiveSelect>
 				<!-- <Receive></Receive> -->
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-					<Drawer.Close
+					<button
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
-						onclick={() => openReceiveDrawer.set(false)}>Cancel</Drawer.Close
+						onmouseup={() => openReceiveDrawer.set(false)}>{t_close()}</button
 					>
 				</Drawer.Footer>
 			</Drawer.Content>
@@ -65,10 +66,9 @@
 				<!-- <Send></Send> -->
 				 <SendSelect></SendSelect>
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-					<Drawer.Close
+					<button
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
-						onclick={() => openSendDrawer.set(false)}>Cancel</Drawer.Close
-					>
+						onmouseup={() => openSendDrawer.set(false)}>{t_close()}</button>
 				</Drawer.Footer>
 			</Drawer.Content>
 		</Drawer.Root>

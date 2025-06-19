@@ -29,7 +29,6 @@ import TransactionsView from './elements/data/transactions/TransactionsView.svel
 import TransactionItem from './elements/data/transactions/TransactionItem.svelte';
 import EcashDetailView from './elements/data/ecash/EcashDetailView.svelte';
 import MeltQuoteItem from './elements/wallet/send/ln/MeltQuoteItem.svelte';
-import Send from './elements/wallet/send/Send.svelte';
 import ChangePassword from './elements/security/ChangePassword.svelte';
 import RestoreSeedView from './elements/settings/backup/restore/RestoreSeedView.svelte';
 import Scan from './elements/wallet/scanner/Scan.svelte';
@@ -54,6 +53,8 @@ import MintSwap from './elements/mint/MintSwap.svelte';
 import ConfirmMintSwap from './elements/mint/ConfirmMintSwap.svelte';
 import ProofChecker from './elements/settings/ProofChecker.svelte';
 import ReceiveOfflineTokens from './elements/wallet/receive/ReceiveOfflineTokens.svelte';
+import SendEcashView from './elements/wallet/send/SendEcashView.svelte';
+import SendLnView from './elements/wallet/send/SendLNView.svelte';
 
 export const routes = {
 	'/': Loading,
@@ -114,6 +115,8 @@ export const walletRoutes = {
 	'/send/cashureq/:creq': SendToCashuRequest,
 
 	'/send': SendView,
+	'/sendecash': SendEcashView,
+	'/sendln': SendLnView,
 	'/send/cashu': TransactionsView,
 	'/send/cashu/:id': TransactionItem,
 	'/send/ln': SendLn,
