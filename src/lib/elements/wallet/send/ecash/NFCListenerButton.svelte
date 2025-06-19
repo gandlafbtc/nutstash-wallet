@@ -43,7 +43,7 @@
 			>
 			{#if pressed}
 				<div class="absolute right-0 top-0">
-					<NfcListenDrawer bind:isOpen={pressed}></NfcListenDrawer>
+					<NfcListenDrawer></NfcListenDrawer>
 				</div>
 			{/if}
 		</div>
