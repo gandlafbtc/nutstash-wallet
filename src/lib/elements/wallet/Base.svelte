@@ -15,6 +15,7 @@
 	import { AlignJustify, ChevronsLeft } from 'lucide-svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { t_back, to_use_the_wallet_add_mint, welcome_to_nutstash } from '$lib/paraglide/messages';
+	import UpdatingMints from './menu/UpdatingMints.svelte';
 
 	let sidebar = $state('');
 
@@ -33,10 +34,16 @@
 					</Button>
 
 				<!-- {/if} -->
-				{#if $statusMessage}
+				<!-- {#if $statusMessage}
 					<Badge></Badge>
-				{/if}
-				<div class="flex gap-2">
+				{/if} -->
+
+				<div class="flex w-full items-center justify-center">
+					<UpdatingMints></UpdatingMints>
+				</div>
+
+				<div class="flex gap-2 items-center">
+
 					<div class="w-20">
 						{#if $location !== '/wallet/'}
 							<Button

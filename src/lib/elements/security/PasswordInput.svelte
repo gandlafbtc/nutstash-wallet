@@ -43,7 +43,7 @@
 		try {
 			// init
 			await init(pass);
-			toast.success(wallet_unlocked());
+			// toast.success(wallet_unlocked());
 		} catch (error) {
 			key.set(undefined);
 			toast.warning(incorrect_passphrase());

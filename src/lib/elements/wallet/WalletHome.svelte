@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Download, QrCode, Upload } from 'lucide-svelte';
-	import { settingsStore as settings, getByMany, mintsStore  as mints, proofsStore, selectedMint } from '@gandlaf21/cashu-wallet-engine/stores';
-	import { getUnitSymbol } from '@gandlaf21/cashu-wallet-engine/util';
+	import { settingsStore as settings, getByMany, mintsStore  as mints, proofsStore, selectedMint, settingsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount, getUnitSymbol } from '@gandlaf21/cashu-wallet-engine/util';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import CompactHistory from '../data/history/CompactHistory.svelte';
@@ -13,6 +13,8 @@
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
 	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
 	import { t_receive, t_send } from '$lib/paraglide/messages';
+	import { getConversionRate } from '@gandlaf21/cashu-wallet-engine';
+	import { fade } from 'svelte/transition';
 
 	let currentUnit = $state('sat');
 
@@ -109,7 +111,26 @@
 		<!-- <UnitSelector bind:currentUnit selectedMints={activeMints}></UnitSelector> -->
 		<UnitSelectorScroll bind:currentUnit selectedMints={activeMints}></UnitSelectorScroll>
 	</div>
+	<div>
+		{#if currentUnit === 'sat' && $settingsStore[0].currency.useConversion}
+			<div class="flex flex-col items-center justify-center text-muted-foreground">
+				{#await getConversionRate()}
+					<span> ... </span>
+				{:then rate}
 
+					<span transition:fade>
+						
+						~{formatAmount(
+							(amount ?? 0) * (rate / 1000000),
+							$settingsStore[0].currency.conversionUnit
+						)}
+					</span>
+				{:catch error}
+					<span class="text-destructive-foreground"> could not load conversion rate </span>
+				{/await}
+			</div>
+		{/if}
+	</div>
 	<ScrollArea
 		class="relative mb-20 flex h-full w-80 flex-col gap-5 overflow-y-hidden from-background before:pointer-events-none
   before:absolute before:bottom-0 before:top-0 before:z-10 before:h-10  before:w-full before:bg-gradient-to-b
