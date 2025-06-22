@@ -236,15 +236,20 @@
 		}
 	};
 
-	const onKeypadPress = (value: string) => {
-		if (value === 'delete') {
-			entered = entered.slice(0, -1);
-		} else if (value === 'clear') {
-			entered = '';
-		} else {
-			entered = entered + value;
-		}
-	};
+    const onKeypadPress = (value: string) => {
+        if (value === 'delete') {
+            entered = entered.slice(0, -1);
+        } else if (value === 'clear') {
+            entered = '';
+        } else {
+            entered = entered + value;
+        }
+        try {
+            // amount = parseInt(entered);
+        } catch (error) {
+            // amount = 0
+        }
+    };
 </script>
 
 {#if scanPubKey}

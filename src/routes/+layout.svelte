@@ -12,10 +12,14 @@
 	import { buttonVariants } from '$lib/components/ui/button';
 	import Send from '$lib/elements/wallet/send/Send.svelte';
 	import ScannerDrawer from '$lib/elements/wallet/scanner/ScannerDrawer.svelte';
-	import { openReceiveDrawer, openSendDrawer } from '$lib/stores/session/drawer';
+	import { openReceiveDrawer, openScanNFCDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import ReceiveSelect from '$lib/elements/wallet/receive/ReceiveSelect.svelte';
 	import SendSelect from '$lib/elements/wallet/send/SendSelect.svelte';
 	import { t_close } from '$lib/paraglide/messages';
+	import NfcListenDrawer from '$lib/elements/wallet/send/ecash/NFCListenDrawer.svelte';
+	import { isNfcSupported } from '$lib/stores/session/isNfc';
+	import ListenSoundDrawer from '$lib/elements/wallet/receive/ecash/ListenSoundDrawer.svelte';
+	import NpubDrawer from '$lib/elements/wallet/receive/NpubDrawer.svelte';
 
 	let isInit = $state(false);
 	let { children } = $props();
@@ -73,6 +77,11 @@
 			</Drawer.Content>
 		</Drawer.Root>
 		<ScannerDrawer></ScannerDrawer>
+		{#if $isNfcSupported && $openScanNFCDrawer}
+			<NfcListenDrawer></NfcListenDrawer>
+		{/if}
+		<ListenSoundDrawer></ListenSoundDrawer>
+		<NpubDrawer></NpubDrawer>
 	</StorageManager>
 {:else}
 	<Loading></Loading>

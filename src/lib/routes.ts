@@ -55,6 +55,9 @@ import ProofChecker from './elements/settings/ProofChecker.svelte';
 import ReceiveOfflineTokens from './elements/wallet/receive/ReceiveOfflineTokens.svelte';
 import SendEcashView from './elements/wallet/send/SendEcashView.svelte';
 import SendLnView from './elements/wallet/send/SendLNView.svelte';
+import ReceiveLnView from './elements/wallet/receive/ReceiveLNView.svelte';
+import ReceiveEcashView from './elements/wallet/receive/ReceiveEcashView.svelte';
+import CreateCashuRequestView from './elements/wallet/receive/CreateCashuRequestView.svelte';
 
 export const routes = {
 	'/': Loading,
@@ -93,19 +96,18 @@ export const walletRoutes = {
 	'/contacts/chat': ChatsView,
 	'/contacts/chat/:npub': Chat,
 	'/address': AddressesView,
-
 	'/ecash': EcashView,
 	'/ecash/:type/:secret': EcashDetailView,
-
 	'/history': HistoryView,
-
 	'/scan': Scan,
-
 	'/receive': ReceiveView,
+	"/receiveln": ReceiveLnView,
+	"/receiveecash": ReceiveEcashView,
 	'/receive-offline-tokens': ReceiveOfflineTokens,
 	'/receive/ln': MintQuoteListView,
 	'/receive/ln/:quote': MintQuoteItem,
 	'/receive/cashu': ReceiveCashu,
+	'/receive/cashureq/create': CreateCashuRequestView,
 	'/receive/cashureq/': CashuRequestListView,
 	'/receive/cashureq/:id': ReceiveCashuRequest,
 	'/receive/cashu/:token': ReceiveCashu,

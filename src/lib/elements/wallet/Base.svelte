@@ -28,17 +28,28 @@
 		<Sidebar.Provider class="h-full">
 			<Menu bind:sidebar></Menu>
 			<div class="fixed z-10 flex w-full items-center justify-between bg-background p-4">
-				<div class="h-6">
 					<Button variant="ghost" onclick={() => sidebar.toggle()}>
 						<AlignJustify class="h-5 w-5"></AlignJustify>
 					</Button>
-				</div>
 
 				<!-- {/if} -->
 				{#if $statusMessage}
 					<Badge></Badge>
 				{/if}
-				<div>
+				<div class="flex gap-2">
+					<div class="w-20">
+						{#if $location !== '/wallet/'}
+							<Button
+								variant="link"
+								onclick={() => {
+									pop();
+								}}
+							>
+								<ChevronsLeft></ChevronsLeft>
+								{t_back()}
+							</Button>
+						{/if}
+					</div>
 					{#if $usePassword}
 						<WalletLock></WalletLock>
 					{/if}
@@ -47,30 +58,8 @@
 
 			<div class="flex h-full w-full items-center justify-center">
 				<div class="flex h-full flex-col items-center justify-center gap-2">
-					<div class="relative z-50 flex h-16 w-72 items-center justify-between">
-						<div class="fixed z-50 flex h-16 w-72 items-center justify-between">
-							<div class="w-20">
-								{#if $location !== '/wallet/'}
-									<Button
-										variant="link"
-										onclick={() => {
-											pop();
-										}}
-									>
-										<ChevronsLeft></ChevronsLeft>
-										{t_back()}
-									</Button>
-								{/if}
-							</div>
-							<a href="/#/wallet/">
-								<img
-									src="/nutstash-written.svg"
-									alt="logo text"
-									class="w-32 transition-all duration-500"
-								/>
-							</a>
-							<div class="hidden w-20 sm:block"></div>
-						</div>
+					<div class="relative z-50 flex h-16  items-center justify-between">
+
 					</div>
 					<Router routes={walletRoutes} prefix={WALLET_ROUTE_PREFIX}></Router>
 				</div>

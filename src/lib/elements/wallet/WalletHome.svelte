@@ -8,7 +8,6 @@
 	import NumberFlow, { type Format } from '@number-flow/svelte';
 	import { css, getDivider } from '$lib/utils';
 	import QuickPaste from './QuickPaste.svelte';
-	import NfcListenerButton from './send/ecash/NFCListenerButton.svelte';
 	import isTauri from '$lib/tauri/deviceHelper';
 	import { untrack } from 'svelte';
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
@@ -88,12 +87,7 @@
 	<div>
 		<MintCarousel></MintCarousel>
 	</div>
-	<div>
-		<!-- todo fix this later -->
-		{#if !isTauri}
-			<NfcListenerButton></NfcListenerButton>
-		{/if}
-	</div>
+
 	<div class="flex w-full items-center justify-between gap-2">
 		<p class="flex-grow text-4xl">
 			{getUnitSymbol(currentUnit, false)}

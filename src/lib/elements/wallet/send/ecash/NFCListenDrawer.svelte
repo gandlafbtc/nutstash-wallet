@@ -8,7 +8,7 @@
 
 </script>
 
-<Drawer.Root open={$openScanNFCDrawer}>
+<Drawer.Root open={$openScanNFCDrawer} onOpenChange={(open) => openScanNFCDrawer.set(open)}>
 	<Drawer.Content>
 		<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 			<Drawer.Title>{reading_nfc_tag()}</Drawer.Title>
