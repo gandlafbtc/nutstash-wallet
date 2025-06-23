@@ -22,7 +22,7 @@
             <Banknote class="text-purple-500 h-8 w-8"></Banknote>
             <div class="flex flex-col">
                 <div class="text-sm font-bold">Send via Ecash</div>
-                <div class="text-xs text-muted-foreground">Create a Cashu ecash token that can easily be shared through any medium</div>
+                <div class="text-xs text-muted-foreground">Create a Cashu ecash token</div>
             </div>
         </button>
     </div>

@@ -46,7 +46,6 @@
 	};
 
 	let restoredUnits = $derived(getUnitProofs($restoredProofs));
-	$inspect(restoredUnits);
 	const restores: (() => Promise<void>)[] = [];
 	let mintsRestored = $state(0);
 	let progress = $state(0);

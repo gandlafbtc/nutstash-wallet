@@ -23,7 +23,7 @@
 </script>
 
 <Select.Root type="single" name="mint-single" {onValueChange} allowDeselect={false} {disabled}>
-	<Select.Trigger class="">
+	<Select.Trigger class="break-all">
 		<Landmark class="h-5 w-5"></Landmark>
 		{mint?.url}
 	</Select.Trigger>

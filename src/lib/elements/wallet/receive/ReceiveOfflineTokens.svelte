@@ -60,7 +60,7 @@
 		let privkey = undefined;
 		let storedKeyPair = undefined;
 		if (lockPubs.length > 0) {
-			storedKeyPair = keysStore.getBy(lockPubs[0], 'publicKey');
+			storedKeyPair = keysStore.getBy(lockPubs[0].slice(2), 'publicKey');
 			if (!storedKeyPair) {
 				throw new Error(no_key_found_in_wallet_for_lock() + ': ' + lockPubs[0]);
 			}

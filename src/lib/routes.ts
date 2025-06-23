@@ -13,7 +13,6 @@ import WalletHome from './elements/wallet/WalletHome.svelte';
 import MintListView from './elements/mint/MintListView.svelte';
 import MintQuoteListView from './elements/wallet/receive/ln/MintQuoteListView.svelte';
 import MintQuoteItem from './elements/wallet/receive/ln/MintQuoteItem.svelte';
-import ReceiveView from './elements/wallet/receive/ReceiveView.svelte';
 import ContactsView from './elements/contacts/ContactsView.svelte';
 import EcashView from './elements/data/ecash/EcashView.svelte';
 import HistoryView from './elements/data/history/HistoryView.svelte';
@@ -58,6 +57,7 @@ import SendLnView from './elements/wallet/send/SendLNView.svelte';
 import ReceiveLnView from './elements/wallet/receive/ReceiveLNView.svelte';
 import ReceiveEcashView from './elements/wallet/receive/ReceiveEcashView.svelte';
 import CreateCashuRequestView from './elements/wallet/receive/CreateCashuRequestView.svelte';
+import SendLnIvoiceView from './elements/wallet/send/ln/SendLNIvoiceView.svelte';
 
 export const routes = {
 	'/': Loading,
@@ -100,7 +100,6 @@ export const walletRoutes = {
 	'/ecash/:type/:secret': EcashDetailView,
 	'/history': HistoryView,
 	'/scan': Scan,
-	'/receive': ReceiveView,
 	"/receiveln": ReceiveLnView,
 	"/receiveecash": ReceiveEcashView,
 	'/receive-offline-tokens': ReceiveOfflineTokens,
@@ -122,6 +121,7 @@ export const walletRoutes = {
 	'/send/cashu': TransactionsView,
 	'/send/cashu/:id': TransactionItem,
 	'/send/ln': SendLn,
+	'/send/ln/invoice/:invoice': SendLnIvoiceView,
 	'/send/lnurl': SendLnurl,
 	'/send/ln/:quote': MeltQuoteItem,
 

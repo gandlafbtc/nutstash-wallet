@@ -66,7 +66,7 @@
 	//offline checks
 	let { lockPubs, allDLEQsValid, timelock } = $derived(parseSecrets(token));
 	let isLockedToMe = $derived(
-		lockPubs.filter((lp) => !$keysStore.map((ks) => ks.publicKey).includes(lp)).length
+		lockPubs.filter((lp) => !$keysStore.map((ks) => "02"+ks.publicKey).includes(lp)).length
 			? false
 			: true
 	);
@@ -119,7 +119,7 @@
 			let privkey;
 			if (lockPubs.length) {
 				//todo make this work with multiple lock pubs
-				privkey = getBy($keysStore, lockPubs[0], 'publicKey')?.privateKey;
+				privkey = getBy($keysStore, lockPubs[0].slice(2), 'publicKey')?.privateKey;
 			}
 			const { proofs } = await receiveEcash(token, { privkey });
 			if (proofs) {

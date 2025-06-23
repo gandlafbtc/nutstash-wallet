@@ -5,7 +5,7 @@
 	import { getHostFromUrl } from '$lib/utils';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import QrCode from '$lib/elements/ui/QRCode.svelte';
-	import { getEncodedTokenV4, type Token } from '@cashu/cashu-ts';
+	import { getDecodedToken, getEncodedToken, getEncodedTokenV4, type Token } from '@cashu/cashu-ts';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import BigTokenQr from '$lib/elements/ui/BigTokenQR.svelte';
 	import SendViaNfcButton from '$lib/elements/wallet/send/ecash/SendViaNFCButton.svelte';

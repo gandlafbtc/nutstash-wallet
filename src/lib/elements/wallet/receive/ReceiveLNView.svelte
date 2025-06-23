@@ -61,15 +61,9 @@
         }
         try {
             const newAmount = parseInt(entered)
-            if (useConversion) {
-                conversionAmount =Number.isNaN(newAmount)?0 :newAmount;
-            }
-            else {
-                amount =Number.isNaN(newAmount)?0 :newAmount;
-            }
+            amount =Number.isNaN(newAmount)?0 :newAmount;
         } catch (error) {
             amount = 0
-            conversionAmount = 0
         }
     };
 

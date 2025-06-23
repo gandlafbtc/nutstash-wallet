@@ -474,7 +474,7 @@
 							</Button>
 						</div>
 					{:else if invoice.length}
-						<div class="flex h-40 flex-col items-center justify-center gap-2">
+						<!-- <div class="flex h-40 flex-col items-center justify-center gap-2">
 							<button
 								class=" text-xs italic text-secondary"
 								onclick={() => copyTextToClipboard(invoice)}
@@ -503,7 +503,7 @@
 									{prepare_payment()}
 								</Button>
 							</div>
-						</div>
+						</div> -->
 					{:else}
 						<!-- <div>
 						<button onclick={() => openScannerDrawer.update((ctx) => !ctx)}>

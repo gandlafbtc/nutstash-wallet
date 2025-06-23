@@ -7,7 +7,7 @@
 
 	const { pub }: { pub: string } = $props();
 
-	let npub = nip19.npubEncode(pub.slice(2));
+	let npub = nip19.npubEncode(pub);
 </script>
 
 <div class="my-2 flex flex-col gap-2 rounded-lg border p-4">

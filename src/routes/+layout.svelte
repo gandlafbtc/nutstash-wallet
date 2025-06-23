@@ -8,9 +8,7 @@
 	import { key } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Drawer from '$lib/components/ui/drawer';
-	import Receive from '$lib/elements/wallet/receive/Receive.svelte';
 	import { buttonVariants } from '$lib/components/ui/button';
-	import Send from '$lib/elements/wallet/send/Send.svelte';
 	import ScannerDrawer from '$lib/elements/wallet/scanner/ScannerDrawer.svelte';
 	import { openReceiveDrawer, openScanNFCDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import ReceiveSelect from '$lib/elements/wallet/receive/ReceiveSelect.svelte';
@@ -50,7 +48,6 @@
 
 				</Drawer.Header>
 				<ReceiveSelect></ReceiveSelect>
-				<!-- <Receive></Receive> -->
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
 					<button
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
