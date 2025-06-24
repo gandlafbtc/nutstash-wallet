@@ -7,9 +7,10 @@
 	import { push } from 'svelte-spa-router';
 	import { URDecoder } from '@gandlaf21/bc-ur';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
-	import { checkValidPubkey} from '@gandlaf21/cashu-wallet-engine/util';
+	import { checkValidPubkey } from '@gandlaf21/cashu-wallet-engine/util';
 	import { sendInput } from '$lib/stores/session/sendInput';
 	import { camera_not_found, loading_camera } from '$lib/paraglide/messages';
+	import { hasNativeQRScanner } from '$lib/stores/session/hasNativeQRScanner';
 
 	let videoElem: HTMLVideoElement | undefined = $state();
 	let qrScanner: QrScanner | undefined = $state();
@@ -23,14 +24,55 @@
 
 	let decoder: URDecoder;
 
+	let nativeInterval: number | undefined;
+
 	onMount(async () => {
 		decoder = new URDecoder();
+		if (!videoElem) {
+			console.error('video element not present');
+			return;
+		}
+		// TODO: this could potentially improve QR code scanner performance on supported devices, using native barcode reader
+		// if ($hasNativeQRScanner && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		// 	// Get the video element
+		// 	// Check if device has camera
+		// 		// Use video without audio
+		// 		const constraints = {
+		// 			video: {
+		// 				facingMode: { ideal: 'environment' }
+		// 			},
+		// 			audio: false
+		// 		};
 
+		// 		// Start video stream
+		// 	const stream = await navigator.mediaDevices.getUserMedia(constraints)
+		// 	videoElem!.srcObject = stream
+		// 	await videoElem!.play();
+		// 	const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+		// 	const detectCode = () => {
+		// 		// Start detecting codes on to the video element
+		// 		barcodeDetector
+		// 			.detect(videoElem)
+		// 			.then((codes) => {
+		// 				// If no codes exit function
+		// 				if (codes.length === 0) return;
+
+		// 				for (const barcode of codes) {
+		// 					// Log the barcode to the console
+		// 					const { rawValue } = barcode as { rawValue: string  };
+		// 					onScanSuccess({ data:  rawValue , cornerPoints: barcode.cornerPoints });
+		// 				}
+		// 			})
+		// 			.catch((err) => {
+		// 				// Log an error if one happens
+		// 				console.error(err);
+		// 				alert(err)
+		// 			});
+		// 		};
+		// 	nativeInterval = setInterval(detectCode, 50);
+		// 	return
+		// }
 		if (await QrScanner.hasCamera()) {
-			if (!videoElem) {
-				console.error('video element not present');
-				return;
-			}
 			qrScanner = new QrScanner(
 				videoElem,
 				(result) => {
@@ -53,6 +95,9 @@
 	onDestroy(() => {
 		if (qrScanner) {
 			qrScanner.destroy();
+		}
+		if (nativeInterval) {
+			clearInterval(nativeInterval);
 		}
 	});
 
@@ -103,9 +148,6 @@
 		} else if (result.data.toLowerCase().startsWith('npub')) {
 			npubScanned(result.data);
 			return;
-		} else if (result.data.toLowerCase().startsWith('lnurl')) {
-			lnurlScanned(result.data);
-			return;
 		} else if (result.data.includes('@') && result.data.includes('.')) {
 			lnAddressScanned(result.data);
 			return;
@@ -128,13 +170,7 @@
 	const lnAddressScanned = (lnAddress: string) => {
 		closeDrawers();
 		scanresultStore.set(lnAddress);
-		push('/wallet/send/lnurl');
-	};
-
-	const lnurlScanned = (lnurl: string) => {
-		closeDrawers();
-		scanresultStore.set(lnurl);
-		push('/wallet/send/lnurl');
+		push('/wallet/sendln');
 	};
 
 	const lnInvoiceScanned = (invoice: string) => {

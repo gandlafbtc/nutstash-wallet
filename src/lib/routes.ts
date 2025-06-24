@@ -37,12 +37,10 @@ import ChatsView from './elements/contacts/chat/ChatsView.svelte';
 import ImportContacts from './elements/contacts/ImportContacts.svelte';
 import NwcSettings from './elements/settings/NWCSettings.svelte';
 import OnboardingPass from './elements/onboarding/OnboardingPass.svelte';
-import SendLnurl from './elements/wallet/send/ln/SendLNURL.svelte';
 import AddNewContact from './elements/contacts/AddNewContact.svelte';
 import DonateView from './elements/Donate/DonateView.svelte';
 import ManipulateCounters from './elements/dangerzone/ManipulateCounters.svelte';
 import DeleteStuff from './elements/dangerzone/DeleteStuff.svelte';
-import SendView from './elements/wallet/send/SendView.svelte';
 import ReceiveCashuRequest from './elements/wallet/receive/cashurequest/ReceiveCashuRequest.svelte';
 import CashuRequestListView from './elements/wallet/receive/cashurequest/CashuRequestListView.svelte';
 import SendToCashuRequest from './elements/wallet/receive/cashurequest/SendToCashuRequest.svelte';
@@ -115,14 +113,12 @@ export const walletRoutes = {
 	'/send/cashureq': CashuRequestInput,
 	'/send/cashureq/:creq': SendToCashuRequest,
 
-	'/send': SendView,
 	'/sendecash': SendEcashView,
 	'/sendln': SendLnView,
 	'/send/cashu': TransactionsView,
 	'/send/cashu/:id': TransactionItem,
 	'/send/ln': SendLn,
 	'/send/ln/invoice/:invoice': SendLnIvoiceView,
-	'/send/lnurl': SendLnurl,
 	'/send/ln/:quote': MeltQuoteItem,
 
 	'/data': DataListView,

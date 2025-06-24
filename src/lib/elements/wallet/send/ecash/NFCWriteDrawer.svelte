@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { buttonVariants } from '$lib/components/ui/button';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	import * as Drawer from '$lib/components/ui/drawer/';
 	import {
@@ -13,7 +14,7 @@
 	let { token }: { token: string } = $props();
 </script>
 
-<Drawer.Root open={$openWriteNFCDrawer} nested={true}>
+<Drawer.Root open={$openWriteNFCDrawer} onOpenChange={(open) => openWriteNFCDrawer.set(open)}>
 	<Drawer.Content>
 		<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 			<Drawer.Title>{write_token_to_nfc_tag()}</Drawer.Title>
@@ -24,8 +25,8 @@
 			<NfcWriter {token}></NfcWriter>
 		{/if}
 		<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-			<Drawer.Close class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
-				>{t_close()}</Drawer.Close
+			<Button onclick={() => openWriteNFCDrawer.set(false)} class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
+				>{t_close()}</Button
 			>
 		</Drawer.Footer>
 	</Drawer.Content>

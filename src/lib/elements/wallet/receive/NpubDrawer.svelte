@@ -3,14 +3,13 @@
 
 	import * as Drawer from '$lib/components/ui/drawer/';
 	import Address from '$lib/elements/addresses/Address.svelte';
-	import { approach_nfc_tag_to_read_it, reading_nfc_tag, t_close } from '$lib/paraglide/messages';
-	import { openNpubDrawer, openScanNFCDrawer } from '$lib/stores/session/drawer';
+	import { t_close } from '$lib/paraglide/messages';
+	import { openNpubDrawer } from '$lib/stores/session/drawer';
 	import { keysStore } from '@gandlaf21/cashu-wallet-engine/stores';
-	const pub = $keysStore.map((ks) => ks.publicKey)[$keysStore.length - 1];
-
+	const pub = $derived($keysStore[$keysStore.length - 1]?.publicKey);
 </script>
 
-<Drawer.Root open={$openNpubDrawer} onOpenChange={(open) => openNpubDrawer.set(open)}>
+<Drawer.Root open={$openNpubDrawer} onOpenChange={(open) => openNpubDrawer.set(open)} >
 	<Drawer.Content>
 		<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 			<Drawer.Title>Nostr - NPUB</Drawer.Title>

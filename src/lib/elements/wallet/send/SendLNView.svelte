@@ -11,6 +11,8 @@
 	import { getInvoiceFromAddress, getInvoiceFromLNURL } from "@gandlaf21/cashu-wallet-engine/util";
 	import { toast } from "svelte-sonner";
 	import { ensureError } from "@gandlaf21/cashu-wallet-engine";
+	import { onMount } from "svelte";
+	import { scanresultStore } from "$lib/stores/session/transitionstores";
 
     let isLnurl = $state(false);
     //lnurl
@@ -21,6 +23,13 @@
     let invoiceOrLnurl = $state("");
 
     let isLoading = $state(false)
+
+    onMount(()=> {
+        if ($scanresultStore?.includes("@")) {
+            invoiceOrLnurl=$scanresultStore
+        }
+        scanresultStore.set("")
+    })
 
     $effect(() => {
         isLnurl = false;

@@ -2,9 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { onMount } from 'svelte';
 
-	import NfcWriteDrawer from './NFCWriteDrawer.svelte';
 	import { openWriteNFCDrawer } from '$lib/stores/session/drawer';
-	let { token }: { token: string } = $props();
 
 	let hasNdef = $state(false);
 
@@ -35,5 +33,4 @@
 		>
 	</Button>
 
-	<NfcWriteDrawer {token}></NfcWriteDrawer>
 {/if}

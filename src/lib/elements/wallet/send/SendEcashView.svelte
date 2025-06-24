@@ -14,7 +14,7 @@
 		getProofsOfMintUnit,
 		getUnitsForMints
 	} from '@gandlaf21/cashu-wallet-engine/util';
-	import { ArrowRight, Wallet, Banknote, WifiOff, ScanIcon } from 'lucide-svelte';
+	import { ArrowRight, Wallet, Banknote, WifiOff, ScanIcon, LoaderCircle } from 'lucide-svelte';
 
 	import TokenOptions from './TokenOptions.svelte';
 	import { toast } from 'svelte-sonner';
@@ -176,7 +176,15 @@
 			<div class="space-y-2">
 				<div class="flex items-center gap-1.5">
 					<Wallet class="h-4 w-4 text-blue-500" />
-					<span class="text-sm font-medium">From</span>
+					<div
+					class="flex items-center justify-between rounded-md p-1 {insufficientFunds
+						? 'bg-destructive/10'
+						: 'bg-muted/30'}"
+				>
+					<span class="font-medium {insufficientFunds ? 'text-destructive' : ''}">
+						{formatAmount(availableBalance, currentUnit)}
+					</span>
+				</div>
 				</div>
 
 				<div class="flex items-center gap-2">
@@ -186,18 +194,7 @@
 					<UnitSelector bind:currentUnit selectedMints={[mint]} />
 				</div>
 
-				<div
-					class="flex items-center justify-between rounded-md p-1 {insufficientFunds
-						? 'bg-destructive/10'
-						: 'bg-muted/30'}"
-				>
-					<span class="text-sm {insufficientFunds ? 'text-destructive' : 'text-muted-foreground'}">
-						Available balance
-					</span>
-					<span class="font-medium {insufficientFunds ? 'text-destructive' : ''}">
-						{formatAmount(availableBalance, currentUnit)}
-					</span>
-				</div>
+
 
 
 			</div>
@@ -243,7 +240,7 @@
 				</div>
 
 			<Button
-				disabled={!amount || amount === 0 || insufficientFunds}
+				disabled={!amount || amount === 0 || insufficientFunds || isLoading}
 				class="gap-1.5"
 				onclick={sendCashu}
 			>
@@ -254,7 +251,12 @@
 					Create token
 				  {/if}
 				</span>
+				{#if isLoading}
+				  <LoaderCircle class='animate-spin'></LoaderCircle>
+				{:else}
+				  
 				<ArrowRight class="h-4 w-4" />
+				{/if}
 			</Button>
 		</Card.Footer>
 	</Card.Root>

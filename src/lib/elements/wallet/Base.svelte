@@ -5,17 +5,16 @@
 	import WalletLock from './WalletLock.svelte';
 	import Menu from './menu/Menu.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { statusMessage } from '$lib/stores/session/statusMessage';
 	import { usePassword, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
 	import PasswordInput from '../security/PasswordInput.svelte';
 	import AddMint from '../mint/AddMint.svelte';
 	import DiscoverMints from '../mint/DiscoverMints.svelte';
 	import OnboardingHeader from '../onboarding/OnboardingHeader.svelte';
-	import { AlignJustify, ChevronsLeft } from 'lucide-svelte';
+	import { AlignJustify, ChevronsLeft, QrCodeIcon, User } from 'lucide-svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { t_back, to_use_the_wallet_add_mint, welcome_to_nutstash } from '$lib/paraglide/messages';
 	import UpdatingMints from './menu/UpdatingMints.svelte';
+	import { openNpubDrawer } from '$lib/stores/session/drawer';
 
 	let sidebar = $state('');
 
@@ -38,6 +37,10 @@
 					<Badge></Badge>
 				{/if} -->
 
+				<button class="relative" onclick={() => openNpubDrawer.set(true)}>
+					<QrCodeIcon class="absolute -bottom-1 -right-1  h-3 w-3 bg-background" ></QrCodeIcon>
+					<User class="h-5 w-5"></User>
+				</button>
 				<div class="flex w-full items-center justify-center">
 					<UpdatingMints></UpdatingMints>
 				</div>

@@ -40,8 +40,6 @@
 				return;
 			} else if (pasted.toLowerCase().startsWith('npub')) {
 				npubScanned(pasted);
-			} else if (pasted.toLowerCase().startsWith('lnurl')) {
-				lnurlScanned(pasted);
 			} else if (pasted.includes('@') && pasted.includes('.')) {
 				lnAddressScanned(pasted);
 			} else if (checkValidPubkey(pasted)) {
@@ -68,19 +66,12 @@
 	const lnAddressScanned = (lnAddress: string) => {
 		closeDrawers();
 		scanresultStore.set(lnAddress);
-		push('/wallet/send/lnurl');
-	};
-
-	const lnurlScanned = (lnurl: string) => {
-		closeDrawers();
-		scanresultStore.set(lnurl);
-		push('/wallet/send/lnurl');
+		push('/wallet/sendln');
 	};
 
 	const lnInvoiceScanned = (invoice: string) => {
 		closeDrawers();
-		scanresultStore.set(invoice);
-		push('/wallet/send');
+		push(`/wallet/send/ln/invoice/${invoice}`);
 	};
 
 	const cashuTokenScanned = (token: string) => {
