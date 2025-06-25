@@ -8,7 +8,7 @@ import * as Command from "$lib/components/ui/command/index.js";
     let {selectedContact=$bindable()}: Props = $props();
   </script>
    
-       <Command.Root class="">
+       <Command.Root>
            <Command.Input placeholder="Type to search a contact" />
            <Command.List>
                <Command.Empty>No results found.</Command.Empty>

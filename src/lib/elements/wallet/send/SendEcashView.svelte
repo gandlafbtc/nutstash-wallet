@@ -14,15 +14,15 @@
 		getProofsOfMintUnit,
 		getUnitsForMints
 	} from '@gandlaf21/cashu-wallet-engine/util';
-	import { ArrowRight, Wallet, Banknote, WifiOff, ScanIcon, LoaderCircle } from 'lucide-svelte';
+	import { ArrowRight, Wallet, Banknote, WifiOff, ScanIcon, LoaderCircle, Lock, Contact } from 'lucide-svelte';
 
-	import TokenOptions from './TokenOptions.svelte';
 	import { toast } from 'svelte-sonner';
 	import {
 		amount_too_small,
 		invalid_pubkey,
 		not_enough_funds,
 		npub_or_pubkey,
+		t_lock,
 	} from '$lib/paraglide/messages';
 	import { nip19 } from 'nostr-tools';
 	import { ensureError, sendEcash, types } from '@gandlaf21/cashu-wallet-engine';
@@ -34,11 +34,22 @@
 	import * as Dialog  from '$lib/components/ui/dialog';
 	import * as Tabs from "$lib/components/ui/tabs/index.js";
 	import CoinSelector from '$lib/elements/ui/CoinSelector.svelte';
+	import * as Command from '$lib/components/ui/command';
+	import ContactSearch from '$lib/elements/contacts/ContactSearch.svelte';
 	let entered = $state('');
 	let amount: number | undefined = $state();
 	let isLoading = $state(false);
 	let scanPubKey = $state(false);
 
+	let contactOpen = $state(false);
+	let selectedContact: types.Contact | undefined = $state(undefined);
+
+	$effect(() => {
+		if (selectedContact) {
+			tokenOptions.pubkey = selectedContact.npub;
+			contactOpen = false
+		}
+	});
 	let mint: types.Mint = $state($selectedMint !== -1 ? $mintsStore[$selectedMint] : $mintsStore[0]);
 
 
@@ -193,15 +204,27 @@
 					</div>
 					<UnitSelector bind:currentUnit selectedMints={[mint]} />
 				</div>
-
-
-
-
 			</div>
 		</Card.Content>
 
 		<Card.Content class="border-t flex flex-col gap-2 p-3">
-			<TokenOptions {mint} bind:tokenOptions></TokenOptions>
+			{#if mint.info.nuts[10]?.supported}
+			<div class="flex justify-between items-center w-full">
+				<div class="flex gap-1">
+					<Label for="p2pk" class="flex items-center gap-1">
+						<Lock ></Lock>{t_lock()}
+					</Label>
+					{#if tokenOptions.p2pk}
+						<button class="flex gap-1 items-center text-xs p-0.5 rounded-md border text-blue-500 border-blue-500 opacity-85 hover:opacity-100 transition-opacity" onclick={()=> {contactOpen=true}}>
+							<Contact class='h-3'>
+							</Contact>
+							Address book
+						</button>
+					{/if}
+				</div>
+				<Switch bind:checked={tokenOptions.p2pk}  id="p2pk" />
+			</div>		
+			{/if}
 			{#if tokenOptions.p2pk}
 				 <div class="relative">
 					<button class="absolute right-2 top-2" onclick={()=>scanPubKey=true}>
@@ -279,3 +302,7 @@
 		{/if}
 	</Dialog.Content>
 </Dialog.Root>
+
+<Command.Dialog bind:open={contactOpen}>
+	<ContactSearch bind:selectedContact={selectedContact}></ContactSearch>
+</Command.Dialog>
