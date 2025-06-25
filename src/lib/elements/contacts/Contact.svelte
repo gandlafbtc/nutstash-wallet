@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { Contact } from '$lib/db/models/types';
 
-	let { contact }: { contact: Contact } = $props();
 	import * as Avatar from '$lib/components/ui/avatar';
+	import type { types } from '@gandlaf21/cashu-wallet-engine';
+
+	let { contact }: { contact: types.Contact } = $props();
 </script>
 
 <div class="flex items-center gap-4 rounded-xl border p-2">

@@ -15,10 +15,11 @@
 	import TransmitAudio from '$lib/elements/ui/TransmitAudio.svelte';
 	import NfcWriteDrawer from '$lib/elements/wallet/send/ecash/NFCWriteDrawer.svelte';
 	import { Nfc, Volume2, Send, Share2 } from 'lucide-svelte';
-	import { openEmitSoundDrawer, openNpubDrawer, openWriteNFCDrawer } from '$lib/stores/session/drawer';
+	import { openEmitSoundDrawer, openNpubDrawer, openSendNostrDrawer, openWriteNFCDrawer } from '$lib/stores/session/drawer';
 	import { copyTextToClipboard } from '$lib/utils';
 	import { isNfcSupported } from '$lib/stores/session/isNfc';
 	import EmitSoundDrawer from '$lib/elements/wallet/send/ecash/EmitSoundDrawer.svelte';
+	import SendNostrDrawer from '$lib/elements/wallet/send/ecash/SendNostrDrawer.svelte';
 
 
 	let {
@@ -70,19 +71,7 @@
 				{:else}
 					<QrCode data={encodedToken}></QrCode>
 				{/if}
-				
-				<div>
-					<CopiableToken token={encodedToken}></CopiableToken>
-				</div>
-				<div class="flex flex-col items-center justify-center gap-2">
-					<Badge variant="outline" class="flex w-full items-center justify-center text-2xl">
-						{formatAmount(tx.amount, 'sat')}
-					</Badge>
-					<!-- <Badge variant="outline" class="">
-						{formatAmount(tx.fees ?? 0, 'sat')}
-						{t_fee()}
-					</Badge> -->
-				</div>
+
 				<div class="">
 					<div class="flex flex-wrap gap-2 justify-center">
 						<!-- Sound Button -->
@@ -109,11 +98,16 @@
 
 						<!-- Nostr Button -->
 						<button class="opacity-80 hover:opacity-100 transition-opacity flex flex-col items-center border rounded-md p-1.5 w-[70px] h-[70px] justify-center" onclick={() => {
-							openNpubDrawer.set(true);
+							openSendNostrDrawer.set(true);
 						}}>
 							<Send class="text-blue-500 h-5 w-5 mb-0.5"></Send>
 							<div class="text-[10px] font-medium">Nostr</div>
 						</button>
+						{#if $openSendNostrDrawer}
+							<SendNostrDrawer data={encodedToken} >
+								
+							</SendNostrDrawer>
+						{/if}
 						
 						<!-- Share Button -->
 						<button class="opacity-80 hover:opacity-100 transition-opacity flex flex-col items-center border rounded-md p-1.5 w-[70px] h-[70px] justify-center" onclick={() => {
@@ -135,6 +129,19 @@
 				</div>
 
 			{/if}
+							
+			<div>
+				<CopiableToken token={encodedToken}></CopiableToken>
+			</div>
+			<div class="flex flex-col items-center justify-center gap-2">
+				<Badge variant="outline" class="flex w-full items-center justify-center text-2xl">
+					{formatAmount(tx.amount, 'sat')}
+				</Badge>
+				<!-- <Badge variant="outline" class="">
+					{formatAmount(tx.fees ?? 0, 'sat')}
+					{t_fee()}
+				</Badge> -->
+			</div>
 		{/if}
 
 

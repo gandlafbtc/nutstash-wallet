@@ -203,7 +203,6 @@
 		<Card.Content class="border-t flex flex-col gap-2 p-3">
 			<TokenOptions {mint} bind:tokenOptions></TokenOptions>
 			{#if tokenOptions.p2pk}
-				<!-- content here -->
 				 <div class="relative">
 					<button class="absolute right-2 top-2" onclick={()=>scanPubKey=true}>
 						<ScanIcon></ScanIcon>

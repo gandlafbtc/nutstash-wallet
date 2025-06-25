@@ -8,3 +8,4 @@ export let openWriteNFCDrawer = writable(false);
 export let openListenSoundDrawer = writable(false);
 export let openEmitSoundDrawer = writable(false);
 export let openNpubDrawer = writable(false);
+export let openSendNostrDrawer = writable(false);
