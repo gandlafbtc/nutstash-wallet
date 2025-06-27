@@ -56,6 +56,7 @@ import ReceiveLnView from './elements/wallet/receive/ReceiveLNView.svelte';
 import ReceiveEcashView from './elements/wallet/receive/ReceiveEcashView.svelte';
 import CreateCashuRequestView from './elements/wallet/receive/CreateCashuRequestView.svelte';
 import SendLnIvoiceView from './elements/wallet/send/ln/SendLNIvoiceView.svelte';
+import MultiNutView from './elements/wallet/send/ln/MultiNutView.svelte';
 
 export const routes = {
 	'/': Loading,
@@ -118,6 +119,7 @@ export const walletRoutes = {
 	'/send/cashu': TransactionsView,
 	'/send/cashu/:id': TransactionItem,
 	'/send/ln': SendLn,
+	'/send/ln/multi/:id': MultiNutView,
 	'/send/ln/invoice/:invoice': SendLnIvoiceView,
 	'/send/ln/:quote': MeltQuoteItem,
 

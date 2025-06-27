@@ -7,6 +7,7 @@
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import {
 		createMeltQuote,
+		createMultiMint,
 		ensureError,
 		getConversionRate,
 		meltProofs,
@@ -39,14 +40,13 @@
 	let isProcessing = $state(false);
 	let isOpen = $state(false);
 	// Define type with both amount and percentage since we're in a transition phase
-	type MintWithAmount = types.Mint & { amount?: number; percentage?: number };
+	type MintWithAmount = types.Mint & { amount: number; percentage?: number };
 	
 	let mint: MintWithAmount = $state(
 		$selectedMint !== -1
 			? { ...$mintsStore[$selectedMint], amount: 1, percentage: 100 }
 			: { ...$mintsStore[0], amount: 1, percentage: 100 }
 	);
-	let mintsToAdd: MintWithAmount[] = $state([]);
 	let additionalMints: MintWithAmount[] = $state([]);
 	const getCurrentUnit = () => {
 		if (!mint) {
@@ -117,7 +117,7 @@
 
 	// Distribution strategies
 	const setEqualDistribution = () => {
-		const allMints = [mint, ...additionalMints, ...mintsToAdd];
+		const allMints = [mint, ...additionalMints];
 		const amountPerMint = Math.floor(amount / allMints.length);
 		// Adjust for rounding errors by adding remainder to first mint
 		const remainder = amount - amountPerMint * allMints.length;
@@ -131,7 +131,7 @@
 	};
 
 	const setRelativeToBalanceDistribution = () => {
-		const allMints = [mint, ...additionalMints, ...mintsToAdd];
+		const allMints = [mint, ...additionalMints];
 		const totalBalance = allMints.reduce((sum, m) => sum + getMintBalance(m), 0);
 
 		// If total balance is 0, fall back to equal distribution
@@ -158,7 +158,7 @@
 	};
 
 	const setMaxPrimaryMintDistribution = () => {
-		const allMints = [mint, ...additionalMints, ...mintsToAdd];
+		const allMints = [mint, ...additionalMints];
 		const primaryMintBalance = getMintBalance(mint);
 
 		// Calculate how much can be paid from primary mint (max 97% of balance)
@@ -197,7 +197,7 @@
 	};
 	
 	const setMinPrimaryMintDistribution = () => {
-		const allMints = [mint, ...additionalMints, ...mintsToAdd];
+		const allMints = [mint, ...additionalMints];
 		const otherMints = allMints.slice(1);
 		
 		// If no other mints, primary mint must handle everything
@@ -257,10 +257,7 @@
 	});
 
 	const handlePayInvoice = async () => {
-		if (additionalMints) {
-			handlePayMulti();
-			return;
-		}
+		// Single mint payment only
 		try {
 			if (!mint) {
 				toast.warning('No mint selected');
@@ -291,7 +288,13 @@
 
 	const handlePayMulti = async () => {
 		try {
+			if (!invoice) {
+				toast.warning('No invoice detected');
+				return;
+			}
 			isProcessing = true;
+			const multiMint = await createMultiMint([mint, ...additionalMints], invoice)
+			push('/wallet/send/ln/multi/' + multiMint.id)
 		} catch (error) {
 			const err = ensureError(error);
 			console.error(err);
@@ -302,10 +305,14 @@
 		}
 	};
 
-	const addMints = () => {
-		// Amounts are already set directly, no need to convert from percentages
-		additionalMints = [...additionalMints, ...mintsToAdd];
-		mintsToAdd = [];
+	const addMint = (mintToAdd: types.Mint) => {
+		// Add mint directly to additionalMints with minimum amount
+		additionalMints = [...additionalMints, { ...mintToAdd, amount: 1 }];
+		// Redistribute amounts to maintain total
+		setEqualDistribution();
+	};
+	
+	const closeDialog = () => {
 		isOpen = false;
 	};
 </script>
@@ -472,30 +479,66 @@
 					</div>
 				</div>
 
-				<Button
-					class="mt-4 w-full"
-					variant={amount > balance ? 'destructive' : 'default'}
-					disabled={amount > balance || isProcessing}
-					onclick={handlePayInvoice}
-				>
-					{#if isProcessing}
-						<div class="flex items-center gap-2">
-							<div
-								class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-							></div>
-							Processing...
-						</div>
-					{:else if amount > balance}
-						Insufficient balance
-					{:else if additionalMints.length > 0}
-						<div>Pay from multiple mints</div>
-					{:else}
-						<div class="flex items-center gap-2">
-							Pay Invoice
-							<ArrowRight class="h-4 w-4" />
-						</div>
+				{#if additionalMints.length > 0}
+					<!-- Multi-mint payment button -->
+					<Button
+						class="mt-4 w-full"
+						variant="default"
+						disabled={
+							isProcessing || 
+							!isValidTotal([mint, ...additionalMints]) || 
+							([mint, ...additionalMints]).some(m => !hasSufficientBalance(m, m.amount ?? 0))
+						}
+						onclick={handlePayMulti}
+					>
+						{#if isProcessing}
+							<div class="flex items-center gap-2">
+								<div
+									class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+								></div>
+								Processing...
+							</div>
+						{:else}
+							<div class="flex items-center gap-2">
+								Pay from multiple mints
+								<ArrowRight class="h-4 w-4" />
+							</div>
+						{/if}
+					</Button>
+					{#if !isValidTotal([mint, ...additionalMints])}
+						<p class="mt-2 text-center text-xs text-destructive">
+							Total amount must match invoice amount exactly
+						</p>
+					{:else if ([mint, ...additionalMints]).some(m => !hasSufficientBalance(m, m.amount ?? 0))}
+						<p class="mt-2 text-center text-xs text-destructive">
+							One or more mints have insufficient balance
+						</p>
 					{/if}
-				</Button>
+				{:else}
+					<!-- Single mint payment button -->
+					<Button
+						class="mt-4 w-full"
+						variant={amount > balance ? 'destructive' : 'default'}
+						disabled={amount > balance || isProcessing}
+						onclick={handlePayInvoice}
+					>
+						{#if isProcessing}
+							<div class="flex items-center gap-2">
+								<div
+									class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+								></div>
+								Processing...
+							</div>
+						{:else if amount > balance}
+							Insufficient balance
+						{:else}
+							<div class="flex items-center gap-2">
+								Pay Invoice
+								<ArrowRight class="h-4 w-4" />
+							</div>
+						{/if}
+					</Button>
+				{/if}
 			</div>
 		</Card>
 	{/if}
@@ -514,22 +557,12 @@
 			{#each $mintsStore.filter((m) => ![mint, ...additionalMints]
 						.map((m) => m.url)
 						.includes(m.url)) as mintToAdd}
-				<!-- select mints to add -->
-				<label
-					class="flex items-center space-x-3 rounded border border-muted p-2 hover:bg-muted/30"
+				<!-- Clickable mint item area -->
+				<button 
+					class="w-full text-left flex items-center justify-between rounded border border-muted p-3 hover:bg-muted/30 hover:border-primary/50 transition-colors"
+					onclick={() => addMint(mintToAdd)}
 				>
-					<div class="flex items-center gap-2">
-						<Checkbox
-						checked={mintsToAdd.map((m) => m.url).includes(mintToAdd.url)}
-						onCheckedChange={(checked) => {
-							if (checked) {
-								mintsToAdd = [...mintsToAdd, { ...mintToAdd, amount: 1 }];
-							} else {
-								mintsToAdd = mintsToAdd.filter((m) => m.url !== mintToAdd.url);
-							}
-							setEqualDistribution()
-						}}
-						/>
+					<div class="flex items-center gap-3">
 						<Avatar.Root class="h-8 w-8">
 							{#if mintToAdd.info && (mintToAdd.info as any).icon_url}
 								<Avatar.Image src={(mintToAdd.info as any).icon_url} alt={mintToAdd.info?.name ?? 'Mint'} />
@@ -537,12 +570,19 @@
 								<Avatar.Fallback class="bg-primary/10 text-primary">{(mintToAdd.info?.name ?? 'M').charAt(0).toUpperCase()}</Avatar.Fallback>
 							{/if}
 						</Avatar.Root>
+						<div>
+							<p class="text-sm font-medium">{mintToAdd.info?.name ?? 'Mint'}</p>
+							<p class="truncate text-xs text-muted-foreground">{mintToAdd.url}</p>
+							<p class="text-xs mt-1">
+								Balance: <span class="font-medium">{formatAmount(getMintBalance(mintToAdd), 'sat')}</span>
+							</p>
+						</div>
 					</div>
-					<div class="flex-1">
-						<p class="text-sm font-medium">{mintToAdd.info?.name ?? 'Mint'}</p>
-						<p class="truncate text-xs text-muted-foreground">{mintToAdd.url}</p>
+					<div class="flex items-center text-primary">
+						<Plus class="h-4 w-4 mr-1" />
+						<span class="text-xs">Add</span>
 					</div>
-				</label>
+				</button>
 			{/each}
 		</div>
 		{#if amount > 0}
@@ -588,7 +628,7 @@
 					</div>
 
 					<div class="my-4 h-px bg-muted"></div>
-					{#each [mint, ...additionalMints, ...mintsToAdd] as selectedMint}
+					{#each [mint, ...additionalMints] as selectedMint}
 						<div class="space-y-2">
 							<div class="flex items-center justify-between">
 								<div class="flex items-center gap-2">
@@ -610,7 +650,7 @@
 							</div>
 							{#if amount<10000}
 							
-							{@const remainingNeeded = amount - getTotalAmount([mint, ...additionalMints, ...mintsToAdd]) + (selectedMint.amount ?? 1)}
+							{@const remainingNeeded = amount - getTotalAmount([mint, ...additionalMints]) + (selectedMint.amount ?? 1)}
 							{@const maxMintBalance = (getMintBalance(selectedMint)*.98)}
 							<div class="relative">
 								<Slider
@@ -621,7 +661,7 @@
 									step={1}
 									onValueChange={(newAmount: number) => {
 										// Calculate if we're close to the amount needed to complete the total
-										const remainingNeeded = amount - getTotalAmount([mint, ...additionalMints, ...mintsToAdd]) + (selectedMint.amount ?? 1);
+										const remainingNeeded = amount - getTotalAmount([mint, ...additionalMints]) + (selectedMint.amount ?? 1);
 										const snapThreshold = Math.max(5, amount * 0.02); // 2% of total or 5 sats, whichever is larger
 										
 										// If we're within the threshold, snap to the exact amount needed
@@ -689,12 +729,12 @@
 					<div class="mt-4 flex justify-between text-sm font-medium">
 						<span>Total:</span>
 						<span
-							class={isValidTotal([mint, ...additionalMints, ...mintsToAdd])
+							class={isValidTotal([mint, ...additionalMints])
 								? 'text-green-500'
 								: 'text-destructive'}
 						>
 							{formatAmount(
-								getTotalAmount([mint, ...additionalMints, ...mintsToAdd]), 
+								getTotalAmount([mint, ...additionalMints]), 
 								'sat'
 							)} / {formatAmount(amount, 'sat')}
 						</span>
@@ -707,23 +747,9 @@
 		<Dialog.Footer>
 			<Button
 				variant="outline"
-				onclick={() => {
-					isOpen = false;
-				}}
+				onclick={closeDialog}
 			>
-				{t_cancel()}
-			</Button>
-			<Button
-				onclick={addMints}
-				disabled={
-					// Check if total amount doesn't equal invoice amount
-					!isValidTotal([mint, ...additionalMints, ...mintsToAdd]) 
-					||
-					// Check if any mint's amount exceeds 97% of its balance
-					([mint, ...additionalMints, ...mintsToAdd]).map(m=> hasSufficientBalance(m, m.amount??0)).includes(false)
-				}
-			>
-				{t_confirm()}
+				Close
 			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
