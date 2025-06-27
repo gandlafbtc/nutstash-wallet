@@ -8,6 +8,9 @@
 	const getLatestMessages = () => {
 		const latestMap: Map<string, types.Message> = new Map();
 		for (const message of $messagesStore) {
+			if (!message.tags) {
+				continue
+			}
 			if (latestMap.has(message.tags[0][1])) {
 				if (message.created_at > (latestMap.get(message.tags[0][1])?.created_at ?? 0)) {
 					latestMap.set(message.tags[0][1], message);

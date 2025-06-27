@@ -1,0 +1,23 @@
+services:
+  nutshell1:
+    image: cashubtc/nutshell:0.16.4
+    ports:
+      - "3336:3336"
+    environment:
+      MINT_LIGHTNING_BACKEND: FakeWallet
+      MINT_INPUT_FEE_PPK: 0
+      MINT_LISTEN_HOST: 0.0.0.0
+      MINT_LISTEN_PORT: 3336
+      MINT_PRIVATE_KEY: TEST_PRIVATE_KEY_1
+    command: poetry run mint
+  nutshell2:
+    image: cashubtc/nutshell:0.16.4
+    ports:
+      - "3337:3337"
+    environment:
+      MINT_LIGHTNING_BACKEND: FakeWallet
+      MINT_INPUT_FEE_PPK: 0
+      MINT_LISTEN_HOST: 0.0.0.0
+      MINT_LISTEN_PORT: 3337
+      MINT_PRIVATE_KEY: TEST_PRIVATE_KEY_2
+    command: poetry run mint

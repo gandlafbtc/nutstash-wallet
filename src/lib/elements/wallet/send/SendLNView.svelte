@@ -2,9 +2,7 @@
 	import Input from "$lib/components/ui/input/input.svelte";
 	import { LoaderCircle, Scan, Zap } from "lucide-svelte";
 	import SimpleScanner from "../scanner/simple_scanner/SimpleScanner.svelte";
-	import * as Dialog from "$lib/components/ui/dialog";
 	import Button from "$lib/components/ui/button/button.svelte";
-	import {  t_cancel } from "$lib/paraglide/messages";
 	import { push } from "svelte-spa-router";
 	import NumericKeys from "$lib/elements/ui/NumericKeys.svelte";
 	import AmountInput from "$lib/elements/ui/AmountInput.svelte";
