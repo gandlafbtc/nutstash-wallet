@@ -158,6 +158,26 @@
 	})
 </script>
 
+
+<svelte:body onkeydown={(e)=> {
+	if (contactOpen) {
+		return
+	}
+	if (e.key === 'Backspace') {
+		onKeypadPress('delete');
+    }
+    else if (e.key === 'Enter') {
+		if (!amount || amount === 0 || insufficientFunds || isLoading) {
+			return;
+        }
+        sendCashu();
+    }
+    else if (e.key >= '0' && e.key <= '9') {
+		onKeypadPress(e.key);
+    }
+}
+} />
+
 <div class="flex w-80 flex-col gap-2 xl:w-[600px] max-h-[30%] overflow-y-scroll">
 	<!-- Header -->
 	<div class="flex items-center gap-2 justify-between">

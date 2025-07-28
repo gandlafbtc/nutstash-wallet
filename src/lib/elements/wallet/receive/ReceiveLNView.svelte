@@ -68,10 +68,26 @@
     };
 
 </script>
-
+<svelte:body onkeydown={(e)=> {
+    if (e.key === 'Backspace') {
+        onKeypadPress('delete');
+    }
+    else if (e.key === 'Enter') {
+        if (isLoading) {
+            return;
+        }
+        receiveLN()
+    }
+    else if (e.key >= '0' && e.key <= '9') {
+        onKeypadPress(e.key);
+    }
+    }
+} />
 <div class="flex flex-col gap-2 p-2">
     <div class="w-80 xl:w-[600px] gap-2 flex">
-
+        <p>
+            {receive_via_lightning()}
+        </p>
         <MintSelector bind:mint></MintSelector>
         <UnitSelector bind:currentUnit selectedMints={[mint
         ]}></UnitSelector>
@@ -95,6 +111,6 @@
 </Button>
 </div>
         <!-- Numeric keypad -->
-        <div class="fixed w-80 bottom-10 h-64">
+        <div class="fixed w-80 lg:w-[600px] bottom-10 h-64">
             <NumericKeys onkeypressed={onKeypadPress}></NumericKeys>
         </div>

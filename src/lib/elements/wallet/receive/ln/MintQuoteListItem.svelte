@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { formatAmount, formatSecToMinStr } from '@gandlaf21/cashu-wallet-engine/util';
-	import { mintProofs, types } from '@gandlaf21/cashu-wallet-engine';
+	import { formatAmount, formatSecToMinStr, getAmountForTokenSet, getWalletWithUnit } from '@gandlaf21/cashu-wallet-engine/util';
+	import { checkMintQuote, ensureError, mintProofs, types } from '@gandlaf21/cashu-wallet-engine';
 	import * as Card from '$lib/components/ui/card';
 	import { Copy, Banknote, CircleCheck, RefreshCcw } from 'lucide-svelte';
 	import { getHostFromUrl } from '$lib/utils';
@@ -19,6 +19,8 @@
 		t_update,
 		to_get
 	} from '$lib/paraglide/messages';
+	import { toast } from 'svelte-sonner';
+	import { countsStore, mintsStore, offlineProofsStore, proofsStore, pendingProofsStore, spentProofsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 
 	let {
 		quote,
@@ -28,8 +30,44 @@
 		isListView?: boolean;
 	} = $props();
 
+	let isLoading = $state(false)
+
 	const tryMint = async () => {
-		mintProofs(quote);
+		if (isLoading) {
+			return
+		}
+		try {
+			isLoading = true;
+			await mintProofs(quote);
+		} catch (error: unknown) {
+			// if already issued
+			if ((error as { code?: number }).code === 11000) {
+				const wallet = await getWalletWithUnit($mintsStore, quote.mintUrl, quote.unit)
+				let start = countsStore.getBy(wallet.keysetId, "keysetId")?.count ?? 0
+				let keysetId = wallet.keysetId
+				if (quote.counts) {
+					start = Math.min(...quote.counts.counts)
+					keysetId = quote.counts.keysetId
+				}
+				const  { proofs } = await  wallet.restore(start, 25, {keysetId})
+				const allProofs = [...$offlineProofsStore, ...$proofsStore, ...$pendingProofsStore, ...$spentProofsStore]
+				const newProofs = proofs.filter(proof => !allProofs.some(existingProof => 
+					existingProof.secret === proof.secret
+				))
+				if (getAmountForTokenSet(newProofs) === quote.amount) {
+					proofsStore.addMany(newProofs)
+					await checkMintQuote(quote)
+					toast.success("received")
+					return	
+				}
+			}
+			const err = ensureError(error);
+			console.error(err)
+			toast.error(err.message);
+		}
+		finally {
+			isLoading = false;
+		}
 	};
 
 	const decodedInvoice = $derived(decode(quote.request));

@@ -86,7 +86,8 @@
 </script>
 
 <div class="w-80 xl:w-[600px flex flex-col gap-2">
-    <p class="font-bold">
+    <p class="font-bold text-lg flex gap-1 items-center">
+        <Zap class='text-yellow-500 w-6'> </Zap>
         Send via Lightning
     </p>
     <div class="w-full relative flex flex-col gap-2">
@@ -97,7 +98,7 @@
                 
             </Scan>
         </button>
-        <Input placeholder="Invoice or LNURL address" bind:value={invoiceOrLnurl} />
+        <Input placeholder="Invoice or lightning address" bind:value={invoiceOrLnurl} />
         {#if isLnurl}
         <div class="flex flex-col gap-2">
             <div class="flex items-center justify-between gap-2 mb-4">

@@ -29,11 +29,9 @@
 		getUnitsForMints
 	} from '@gandlaf21/cashu-wallet-engine/util';
 	import { params, push } from 'svelte-spa-router';
-	import { Zap, Wallet, ArrowRight, Landmark, Plus, X } from 'lucide-svelte';
+	import { Zap, Wallet, ArrowRight, Plus, X } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { m, t_cancel, t_confirm } from '$lib/paraglide/messages';
-	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 
 	const invoice = $derived($params?.invoice);
@@ -334,7 +332,6 @@
 	{:else if decodedInvoice}
 		{@const description =
 			decodedInvoice.sections.find((s: any) => s.name === 'description')?.value || 'No description'}
-
 		<Card class="overflow-hidden border">
 			<div class="border-b bg-primary/5 p-4">
 				<div class="flex items-center justify-between">

@@ -17,10 +17,10 @@
 	<div>
 		<span class="text-lg font-bold"> {currency_settings()} </span>
 	</div>
-	<div class="flex w-80 flex-col gap-1 xl:w-[600px]">
-		<span class="text-sm">{preffered_currency()}: </span>
+	<div class="flex gap-10 items-center">
+		<span class="text-sm w-full">{preffered_currency()}</span>
 		<Select.Root type="single" name="unit" value={$unit} {onValueChange} allowDeselect={false}>
-			<Select.Trigger class="w-80 xl:w-[600px]">
+			<Select.Trigger>
 				<div class="flex-grow">
 					{getUnitSymbol($unit)}
 				</div>
