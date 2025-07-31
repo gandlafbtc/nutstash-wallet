@@ -61,7 +61,7 @@
 				</p>
 			</div>
 			<Checkbox
-				disabled={isChecking}
+				disabled={true}
 				id="terms"
 				bind:checked={proof.isSelected}
 				aria-labelledby="terms-label"
