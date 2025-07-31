@@ -3,25 +3,21 @@
 	import { Banknote, LoaderCircle, Send } from 'lucide-svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import MintSelector from '$lib/elements/ui/MintSelector.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
+	import { ensureError, types,  sendEcash} from '@gandlaf21/cashu-wallet-engine';
+	import { proofsStore, mintsStore as mints,  unit} from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount, getAmountForTokenSet, getProofsOfMintUnit  } from '@gandlaf21/cashu-wallet-engine/util';
 	import UnitSelector from '$lib/elements/ui/UnitSelector.svelte';
-	import { unit } from '$lib/stores/persistent/settings';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { formatAmount, getAmountForTokenSet, getProofsOfMintUnit } from '$lib/util/walletUtils';
-	import { sendEcash } from '$lib/actions/actions';
 	import { getEncodedTokenV4, type Token } from '@cashu/cashu-ts';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { toast } from 'svelte-sonner';
-	import type { Mint } from '$lib/db/models/types';
 	import AddMint from '$lib/elements/mint/AddMint.svelte';
-	import { ensureError } from '$lib/helpers/errors';
 	import { no_mint_found, t_available, t_cancel, t_send, t_to } from '$lib/paraglide/messages';
 
 	let sendEcashOpen = $state(false);
 
 	let { sendCallback, to } = $props();
 	let isLoading = $state(false);
-	let mint: Mint | undefined = $state($mints[0]);
+	let mint: types.Mint | undefined = $state($mints[0]);
 	let currentUnit = $state($unit);
 	let balance = $derived(getProofsOfMintUnit(mint, $proofsStore, currentUnit));
 	let amount = $state(0);

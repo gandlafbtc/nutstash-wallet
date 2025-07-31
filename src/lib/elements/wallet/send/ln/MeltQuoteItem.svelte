@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { params } from 'svelte-spa-router';
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-	import { onMount } from 'svelte';
-	import MintQuoteListItem from './MeltQuoteListItem.svelte';
+	import { meltQuotesStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import MeltQuoteListItem from './MeltQuoteListItem.svelte';
-	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
 	import { t_not_found } from '$lib/paraglide/messages';
 
 	let quoteId = $derived($params?.quote);

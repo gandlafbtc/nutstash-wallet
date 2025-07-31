@@ -14,7 +14,9 @@
 	let intervalMS = $derived(1000 / speed[0]);
 	const firstSeqNum = 0;
 	let encoder: UREncoder;
+
 	let qrInterval: number | undefined;
+
 
 	$effect(() => {
 		if (intervalMS || maxFragmentLength) {
@@ -37,6 +39,7 @@
 	onDestroy(() => {
 		clearInterval(qrInterval);
 	});
+	
 </script>
 
 {#if chunk && size && speed}
@@ -50,14 +53,14 @@
 						class="flex flex-col gap-4 py-2 pr-3
 			"
 					>
-						<div class="flex gap-2">
-							<span class="w-12">{t_size()}</span>
-							<Slider bind:value={size} max={5} min={1} step={1} />
-						</div>
-						<div class="flex gap-2">
-							<span>{t_speed()}</span>
-							<Slider bind:value={speed} max={5} min={1} step={1} />
-						</div>
+					<div class="flex gap-2">
+						<span>{t_speed()}</span>
+						<Slider bind:value={speed} max={10} min={1} step={1} />
+					</div>
+					<div class="flex gap-2">
+						<span class="w-12">{t_size()}</span>
+						<Slider bind:value={size} max={10} min={1} step={1} />
+					</div>
 					</div>
 				</Accordion.Content>
 			</Accordion.Item>

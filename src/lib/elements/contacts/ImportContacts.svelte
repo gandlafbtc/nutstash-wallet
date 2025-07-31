@@ -1,10 +1,9 @@
 <script>
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { discoveredContacts } from '$lib/stores/session/contactdiscover';
+	import { discoveredContacts, contactsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { Check, LoaderCircle, Plus } from 'lucide-svelte';
 	import Contact from './Contact.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { contactsStore } from '$lib/stores/persistent/contacts';
 	import Divider from '../ui/Divider.svelte';
 	import { import_all, import_contacts, t_done } from '$lib/paraglide/messages';
 	let hasSelected = $state(false);

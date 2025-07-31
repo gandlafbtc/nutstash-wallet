@@ -1,11 +1,11 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
-	import type { Mint } from '$lib/db/models/types';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { unit } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitSymbol, getUnitsForMints } from '@gandlaf21/cashu-wallet-engine/util';
 	import { available_units } from '$lib/paraglide/messages';
-	import { unit } from '$lib/stores/persistent/settings';
-	import { getUnitsForMints, getUnitSymbol } from '$lib/util/walletUtils';
 	import { onMount } from 'svelte';
-	type Props = { selectedMints: Mint[]; currentUnit: string; disabled?: boolean };
+	type Props = { selectedMints: types.Mint[]; currentUnit: string; disabled?: boolean };
 
 	let { selectedMints, currentUnit = $bindable(), disabled = false }: Props = $props();
 

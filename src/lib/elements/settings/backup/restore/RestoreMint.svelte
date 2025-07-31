@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Progress from '$lib/components/ui/progress/progress.svelte';
-	import type { Mint } from '$lib/db/models/types';
-	import { seed } from '$lib/stores/persistent/mnemonic';
+	import {countsStore,  seed } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitSymbol} from '@gandlaf21/cashu-wallet-engine/util';
+	import {types} from '@gandlaf21/cashu-wallet-engine';
 	import { restoredProofs } from '$lib/stores/session/restoredproofs';
-	import { getUnitSymbol } from '$lib/util/walletUtils';
 	import {
 		CashuMint,
 		CashuWallet,
@@ -14,7 +14,6 @@
 	} from '@cashu/cashu-ts';
 	import { LoaderCircle } from 'lucide-svelte';
 	import { hashToCurve } from '@cashu/crypto/modules/common';
-	import { countsStore } from '$lib/stores/persistent/counts';
 	import { toast } from 'svelte-sonner';
 	import {
 		all_keys_restored,
@@ -31,7 +30,7 @@
 
 	const enc = new TextEncoder();
 
-	let { mint, restore = $bindable() }: { mint: Mint; restore: () => Promise<void> } = $props();
+	let { mint, restore = $bindable() }: { mint: types.Mint; restore: () => Promise<void> } = $props();
 	let status = $state('waiting');
 	let statusMessage = $state('');
 	let statusMessage2 = $state('');

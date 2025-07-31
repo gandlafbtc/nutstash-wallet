@@ -1,18 +1,17 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
-	import { nwcKeysStore } from '$lib/stores/persistent/nwcConnections';
+	import { ensureError, types } from '@gandlaf21/cashu-wallet-engine';
+	import { nwcKeysStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount } from '@gandlaf21/cashu-wallet-engine/util';
 	import { nwc } from '$lib/stores/session/nwc';
 	import { Copy, LoaderCircle, Pen, Trash } from 'lucide-svelte';
 	import QrCode from '../ui/QRCode.svelte';
-	import { copyTextToClipboard } from '$lib/util/utils';
-	import { formatAmount } from '$lib/util/walletUtils';
+	import { copyTextToClipboard } from '$lib/utils';
 	import { toast } from 'svelte-sonner';
-	import type { NWCConnection } from '$lib/db/models/types';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { ensureError } from '$lib/helpers/errors';
 	import {
 		allowance_must_be_a_number,
 		allowance_updated_to,
@@ -41,7 +40,7 @@
 
 	let inputAllowance = $state('');
 
-	const switchActive = async (conn: NWCConnection) => {
+	const switchActive = async (conn: types.NWCConnection) => {
 		try {
 			isSwitching = true;
 			await nwcKeysStore.addOrUpdate(conn.walletPublicKey, conn, 'walletPublicKey');
@@ -61,7 +60,7 @@
 			isSwitching = false;
 		}
 	};
-	const removeConnection = async (conn: NWCConnection) => {
+	const removeConnection = async (conn: types.NWCConnection) => {
 		try {
 			isSwitching = true;
 			await nwc.unsubscribeNWC();
@@ -77,7 +76,7 @@
 		}
 	};
 
-	const updateConnection = async (conn: NWCConnection) => {
+	const updateConnection = async (conn: types.NWCConnection) => {
 		try {
 			isSwitching = true;
 			const connection = { ...conn };

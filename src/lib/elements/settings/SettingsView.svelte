@@ -2,7 +2,7 @@
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import Card from '$lib/components/ui/card/card.svelte';
 	import * as Accordion from '$lib/components/ui/accordion/';
-	import { Banknote, Bitcoin, Settings, Shield, ShieldCheckIcon, Skull } from 'lucide-svelte';
+	import { Banknote, Bitcoin, FlaskConical, Settings, Shield, ShieldCheckIcon, Skull } from 'lucide-svelte';
 	import GeneralSettings from './GeneralSettings.svelte';
 	import DeleteStuff from '../dangerzone/DeleteStuff.svelte';
 	import ManipulateCounters from '../dangerzone/ManipulateCounters.svelte';
@@ -21,6 +21,7 @@
 		manipulate_counters,
 		t_encryption
 	} from '$lib/paraglide/messages';
+	import UseMultinutSetting from './settingsElements/UseMultinutSetting.svelte';
 </script>
 
 <div class="flex w-80 flex-col gap-2 xl:w-[600px]">
@@ -66,6 +67,24 @@
 			>
 			<Accordion.Content>
 				<EcashSettings></EcashSettings>
+			</Accordion.Content>
+		</Accordion.Item>
+
+		<Accordion.Item value="item-98">
+			<Accordion.Trigger
+				><span class="flex gap-2 text-yellow-500"><FlaskConical></FlaskConical>Beta features</span
+				></Accordion.Trigger
+			>
+			<Accordion.Content>
+				<div class="flex flex-col gap-1">
+					<p class="text-sm text-yellow-500">
+						Beta features are experimental. Please use only for testing.
+					</p>
+					<p class="font-bold">Multinut</p>
+					<div class="flex items-center justify-between">
+						<UseMultinutSetting/>
+					</div>
+				</div>
 			</Accordion.Content>
 		</Accordion.Item>
 		<Accordion.Item value="item-99">

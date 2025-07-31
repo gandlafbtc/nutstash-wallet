@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { mnemonic } from '$lib/stores/persistent/mnemonic';
+	import { ensureError,  reencrypt } from '@gandlaf21/cashu-wallet-engine';
+	import { mnemonicStore as mnemonic,  mintsStore as mints, proofsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { pop, push } from 'svelte-spa-router';
 	import { wordlist } from '@scure/bip39/wordlists/english';
 	import { generateMnemonic } from '@scure/bip39';
@@ -7,13 +8,10 @@
 
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import { reencrypt } from '$lib/init/init';
 	import { isOnboarded } from '$lib/stores/local/message';
-	import { ensureError } from '$lib/helpers/errors';
 	import { LoaderCircle } from 'lucide-svelte';
 	import {
+	couldnot_load_mint,
 		create_new_nutstash_wallet,
 		create_new_wallet,
 		if_you_have_no_backup,
@@ -66,7 +64,7 @@
 					try {
 						await mints.fetchMint(m.mintURL);
 					} catch (error) {
-						toast.warning(could_, {
+						toast.warning(couldnot_load_mint(), {
 							description: `${m.mintURL}`
 						});
 					}

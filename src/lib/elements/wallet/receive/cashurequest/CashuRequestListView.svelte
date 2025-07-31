@@ -1,6 +1,6 @@
 <script>
 	import { t_requests } from '$lib/paraglide/messages';
-	import { cashuRequestsStore } from '$lib/stores/persistent/requests';
+	import { cashuRequestsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import CashuRequestCard from './CashuRequestCard.svelte';
 </script>
 

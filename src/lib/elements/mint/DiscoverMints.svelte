@@ -1,13 +1,11 @@
 <script>
-	import { discoverMints } from '$lib/actions/nostr';
+	import { ensureError,  discoverMints } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints, discoveredMints, } from '@gandlaf21/cashu-wallet-engine/stores';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { discoveredMints } from '$lib/stores/session/mintdiscover';
 	import { LoaderCircle, Search } from 'lucide-svelte';
 	import AddMint from './AddMint.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { delay } from '$lib/util/utils';
-	import { ensureError } from '$lib/helpers/errors';
+	import { delay } from '$lib/utils';
 	import { toast } from 'svelte-sonner';
 	import { discover_mints } from '$lib/paraglide/messages';
 

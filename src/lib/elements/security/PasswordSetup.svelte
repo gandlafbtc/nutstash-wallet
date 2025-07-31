@@ -4,10 +4,9 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Lock } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import { key } from '$lib/stores/session/key';
-	import { kdf } from '$lib/actions/encryption';
-	import { usePassword } from '$lib/stores/local/usePassword';
-	import { pop, push } from 'svelte-spa-router';
+	import { key, usePassword } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { kdf } from '@gandlaf21/cashu-wallet-engine';
+	import { push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
 	import {
 		encrypt_wallet_storage,

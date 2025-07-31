@@ -1,14 +1,12 @@
 <script lang="ts">
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { no_known_action_for_pasted, paste_from_clipboard } from '$lib/paraglide/messages';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import { sendInput } from '$lib/stores/session/sendInput';
 	import { scanresultStore } from '$lib/stores/session/transitionstores';
-	import { checkValidPubkey } from '$lib/util/walletUtils';
+	import { checkValidPubkey } from '@gandlaf21/cashu-wallet-engine/util';
 	import { ClipboardPaste } from 'lucide-svelte';
-	import { nip19 } from 'nostr-tools';
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';
 
@@ -42,8 +40,6 @@
 				return;
 			} else if (pasted.toLowerCase().startsWith('npub')) {
 				npubScanned(pasted);
-			} else if (pasted.toLowerCase().startsWith('lnurl')) {
-				lnurlScanned(pasted);
 			} else if (pasted.includes('@') && pasted.includes('.')) {
 				lnAddressScanned(pasted);
 			} else if (checkValidPubkey(pasted)) {
@@ -70,19 +66,12 @@
 	const lnAddressScanned = (lnAddress: string) => {
 		closeDrawers();
 		scanresultStore.set(lnAddress);
-		push('/wallet/send/lnurl');
-	};
-
-	const lnurlScanned = (lnurl: string) => {
-		closeDrawers();
-		scanresultStore.set(lnurl);
-		push('/wallet/send/lnurl');
+		push('/wallet/sendln');
 	};
 
 	const lnInvoiceScanned = (invoice: string) => {
 		closeDrawers();
-		scanresultStore.set(invoice);
-		push('/wallet/send');
+		push(`/wallet/send/ln/invoice/${invoice}`);
 	};
 
 	const cashuTokenScanned = (token: string) => {

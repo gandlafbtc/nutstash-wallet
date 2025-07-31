@@ -2,14 +2,13 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import { hide_balance } from '$lib/paraglide/messages';
-	import { settings } from '$lib/stores/persistent/settings';
-	import { set } from 'date-fns';
+	import { settingsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 
-	let value = $state($settings[0].general.hideBalance);
+	let value = $state($settingsStore[0].general.hideBalance);
 
 	const toggle = () => {
 		setTimeout(() => {
-			settings.setHideBalance(value);
+			settingsStore.setHideBalance(value);
 		}, 50);
 	};
 </script>

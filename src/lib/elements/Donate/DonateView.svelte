@@ -1,25 +1,21 @@
 <script lang="ts">
 	import { Bitcoin, Copy, Heart, LoaderCircle, Plus, X, Zap } from 'lucide-svelte';
 	import MintSelector from '../ui/MintSelector.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { unit } from '$lib/stores/persistent/settings';
 	import UnitSelector from '../ui/UnitSelector.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { formatAmount, getAmountForTokenSet, getProofsOfMintUnit } from '$lib/util/walletUtils';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
+	import { ensureError, sendEcash, publishEvent, sendNip17DirectMessageToNpub } from '@gandlaf21/cashu-wallet-engine';
+	import { NUTSTASH_PUBKEY, proofsStore,    mintsStore as mints, unit } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount, getAmountForTokenSet, getProofsOfMintUnit,} from '@gandlaf21/cashu-wallet-engine/util';
+	
 	import { Button } from '$lib/components/ui/button';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { toast } from 'svelte-sonner';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { sendEcash } from '$lib/actions/actions';
-	import { NUTSTASH_PUBKEY } from '$lib/stores/static/const';
-	import { publishEvent, sendNip17DirectMessageToNpub } from '$lib/actions/nostr';
 	import { npubEncode } from 'nostr-tools/nip19';
 	import { getEncodedTokenV4 } from '@cashu/cashu-ts';
 	import Divider from '../ui/Divider.svelte';
-	import { copyTextToClipboard } from '$lib/util/utils';
-	import { ensureError } from '$lib/helpers/errors';
+	import { copyTextToClipboard } from '$lib/utils';
 	import {
 		consider_showing_appreciation,
 		hello_dear_anon,

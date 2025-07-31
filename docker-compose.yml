@@ -1,0 +1,75 @@
+services:
+  nutshell1:
+    image: cashubtc/nutshell:0.17.0
+    ports:
+      - "3336:3336"
+    environment:
+      MINT_LIGHTNING_BACKEND: FakeWallet
+      MINT_INPUT_FEE_PPK: 0
+      MINT_LISTEN_HOST: 0.0.0.0
+      MINT_LISTEN_PORT: 3336
+      MINT_PRIVATE_KEY: TEST_PRIVATE_KEY_1
+    command: poetry run mint
+  nutshell2:
+    image: cashubtc/nutshell:0.17.0
+    ports:
+      - "3335:3335"
+    restart: always
+    environment:
+      MINT_LIGHTNING_BACKEND: FakeWallet
+      MINT_INPUT_FEE_PPK: 0
+      MINT_LISTEN_HOST: 0.0.0.0
+      MINT_LISTEN_PORT: 3335
+      MINT_PRIVATE_KEY: TEST_PRIVATE_KEY_2
+      MINT_REQUIRE_AUTH: TRUE
+      MINT_AUTH_OICD_DISCOVERY_URL: http://keycloak:8080/realms/test/.well-known/openid-configuration
+      MINT_AUTH_OICD_CLIENT_ID: cashu-client
+      MINT_AUTH_MAX_BLIND_TOKENS: 100
+      MINT_AUTH_RATE_LIMIT_PER_MINUTE: 5
+    command: poetry run mint
+    networks:
+      - keycloak_network
+    depends_on:
+      - keycloak
+  postgres:
+    image: postgres:16.4
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - keycloak_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.6
+    command: start
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - keycloak_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  keycloak_network:
+    driver: bridge

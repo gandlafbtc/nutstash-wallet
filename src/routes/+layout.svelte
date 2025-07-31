@@ -5,14 +5,19 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import Loading from '$lib/elements/base/Loading.svelte';
-	import { key } from '$lib/stores/session/key';
+	import { key } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Drawer from '$lib/components/ui/drawer';
-	import Receive from '$lib/elements/wallet/receive/Receive.svelte';
 	import { buttonVariants } from '$lib/components/ui/button';
-	import Send from '$lib/elements/wallet/send/Send.svelte';
 	import ScannerDrawer from '$lib/elements/wallet/scanner/ScannerDrawer.svelte';
-	import { openReceiveDrawer, openSendDrawer } from '$lib/stores/session/drawer';
+	import { openReceiveDrawer, openScanNFCDrawer, openSendDrawer } from '$lib/stores/session/drawer';
+	import ReceiveSelect from '$lib/elements/wallet/receive/ReceiveSelect.svelte';
+	import SendSelect from '$lib/elements/wallet/send/SendSelect.svelte';
+	import { t_close } from '$lib/paraglide/messages';
+	import NfcListenDrawer from '$lib/elements/wallet/send/ecash/NFCListenDrawer.svelte';
+	import { isNfcSupported } from '$lib/stores/session/isNfc';
+	import ListenSoundDrawer from '$lib/elements/wallet/receive/ecash/ListenSoundDrawer.svelte';
+	import NpubDrawer from '$lib/elements/wallet/receive/NpubDrawer.svelte';
 
 	let isInit = $state(false);
 	let { children } = $props();
@@ -34,45 +39,46 @@
 			<Toaster position="top-right" richColors closeButton></Toaster>
 		</div>
 		<Drawer.Root
-			bind:open={$openReceiveDrawer}
-			controlledOpen={$openReceiveDrawer}
-			handleOnly={true}
-		>
+			open={$openReceiveDrawer}
+			onOpenChange={(state)=> {openReceiveDrawer.set(state)}}
+			>
 			<Drawer.Content>
 				<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Title>Receive via ecash or Lightning</Drawer.Title>
-					<Drawer.Description
-						>Enter an amount to receive via Lightning or paste a token to receive eCash.</Drawer.Description
-					>
+
 				</Drawer.Header>
-				<Receive></Receive>
+				<ReceiveSelect></ReceiveSelect>
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-					<Drawer.Close
+					<button
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
-						onclick={() => openReceiveDrawer.set(false)}>Cancel</Drawer.Close
+						onmouseup={() => openReceiveDrawer.set(false)}>{t_close()}</button
 					>
 				</Drawer.Footer>
 			</Drawer.Content>
 		</Drawer.Root>
 
-		<Drawer.Root bind:open={$openSendDrawer} controlledOpen={$openSendDrawer} handleOnly={true}>
+		<Drawer.Root bind:open={$openSendDrawer} 
+		onOpenChange={(state)=> {openSendDrawer.set(state)}}
+		>
 			<Drawer.Content>
 				<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 					<Drawer.Title>Send via ecash or Lightning</Drawer.Title>
-					<Drawer.Description
-						>Enter an amount to send ecash or paste a Lightning invoice.</Drawer.Description
-					>
 				</Drawer.Header>
-				<Send></Send>
+				<!-- <Send></Send> -->
+				 <SendSelect></SendSelect>
 				<Drawer.Footer class="flex flex-col items-center justify-center gap-3 text-center">
-					<Drawer.Close
+					<button
 						class={buttonVariants({ variant: 'outline' }) + ' w-80 xl:w-[600px]'}
-						onclick={() => openSendDrawer.set(false)}>Cancel</Drawer.Close
-					>
+						onmouseup={() => openSendDrawer.set(false)}>{t_close()}</button>
 				</Drawer.Footer>
 			</Drawer.Content>
 		</Drawer.Root>
 		<ScannerDrawer></ScannerDrawer>
+		{#if $isNfcSupported && $openScanNFCDrawer}
+			<NfcListenDrawer></NfcListenDrawer>
+		{/if}
+		<ListenSoundDrawer></ListenSoundDrawer>
+		<NpubDrawer></NpubDrawer>
 	</StorageManager>
 {:else}
 	<Loading></Loading>

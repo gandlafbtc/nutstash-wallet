@@ -1,19 +1,16 @@
 <script lang="ts">
-	import { meltQuotesStore } from '$lib/stores/persistent/meltquotes';
-	import { mintQuotesStore } from '$lib/stores/persistent/mintquotes';
-	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
-	import { transactionsStore } from '$lib/stores/persistent/transactions';
+	import {  formatAmount} from '@gandlaf21/cashu-wallet-engine/util';
+	import {  transactionsStore,offlineTransactionsStore, mintQuotesStore, meltQuotesStore, multiMeltQuotesStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { AlertCircle } from 'lucide-svelte';
 
 	import CompactHistoryItem from './CompactHistoryItem.svelte';
-	import { formatAmount } from '$lib/util/walletUtils';
 	import {
 		load_more,
 		nothing_here_yet,
 		redeem_now,
 		unclaimed_ecash
 	} from '$lib/paraglide/messages';
-	let items = $derived([...$transactionsStore, ...$mintQuotesStore, ...$meltQuotesStore]);
+	let items = $derived([...$transactionsStore, ...$mintQuotesStore, ...$meltQuotesStore, ...$multiMeltQuotesStore]);
 
 	let limit = $state(2);
 

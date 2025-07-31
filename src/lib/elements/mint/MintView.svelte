@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { getBy, getByHost } from '$lib/stores/persistent/helper/storeHelper';
-	import { mints } from '$lib/stores/persistent/mints';
+	import { getByHost, mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { onMount } from 'svelte';
 	import { params } from 'svelte-spa-router';
 	import MintDetail from './MintDetail.svelte';

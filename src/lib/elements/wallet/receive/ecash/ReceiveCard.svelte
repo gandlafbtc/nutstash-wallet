@@ -12,26 +12,17 @@
 		LoaderCircle,
 		Lock
 	} from 'lucide-svelte';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { formatAmount, parseSecrets } from '$lib/util/walletUtils';
+	import {		ensureError, types, randDBKey,    receiveEcash    } from '@gandlaf21/cashu-wallet-engine';
+		import {offlineProofsStore,mintsStore as mints,
+		pendingProofsStore,offlineTransactionsStore,
+		proofsStore,
+		spentProofsStore, getBy,  keysStore } from "@gandlaf21/cashu-wallet-engine/stores";
+		import { formatAmount, parseSecrets, } from "@gandlaf21/cashu-wallet-engine/util";
 	import * as Accordion from '$lib/components/ui/accordion';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { receiveEcash } from '$lib/actions/actions';
 	import { push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
-	import { keysStore } from '$lib/stores/persistent/keys';
-	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
 	import { type Token } from '@cashu/cashu-ts';
-	import { ensureError } from '$lib/helpers/errors';
-	import {
-		offlineProofsStore,
-		pendingProofsStore,
-		proofsStore,
-		spentProofsStore
-	} from '$lib/stores/persistent/proofs';
-	import { offlineTransactionsStore } from '$lib/stores/persistent/offlineTransactions';
-	import { randDBKey } from '$lib/db/helper';
-	import { TransactionStatus, TransactionType } from '$lib/db/models/types';
 	import {
 		all_signatures_valid,
 		can_be_received_offline_without_trusting_the_sender,
@@ -75,7 +66,7 @@
 	//offline checks
 	let { lockPubs, allDLEQsValid, timelock } = $derived(parseSecrets(token));
 	let isLockedToMe = $derived(
-		lockPubs.filter((lp) => !$keysStore.map((ks) => ks.publicKey).includes(lp)).length
+		lockPubs.filter((lp) => !$keysStore.map((ks) => "02"+ks.publicKey).includes(lp)).length
 			? false
 			: true
 	);
@@ -128,7 +119,7 @@
 			let privkey;
 			if (lockPubs.length) {
 				//todo make this work with multiple lock pubs
-				privkey = getBy($keysStore, lockPubs[0], 'publicKey')?.privateKey;
+				privkey = getBy($keysStore, lockPubs[0].slice(2), 'publicKey')?.privateKey;
 			}
 			const { proofs } = await receiveEcash(token, { privkey });
 			if (proofs) {
@@ -176,8 +167,8 @@
 				out: token.proofs,
 				createdAt: Date.now(),
 				lastChangedAt: Date.now(),
-				type: TransactionType.OFFLINE,
-				state: TransactionStatus.PENDING,
+				type: types.TransactionType.OFFLINE,
+				state: types.TransactionStatus.PENDING,
 				mintUrl: token.mint,
 				unit: token.unit ?? 'sat'
 			},

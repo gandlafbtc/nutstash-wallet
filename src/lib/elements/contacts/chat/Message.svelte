@@ -1,16 +1,15 @@
-<script lang="ts">
-	import type { Message } from '$lib/db/models/types';
+<script lang="ts">	
+	import { keysStore, messagesStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
 	import ReceiveCard from '$lib/elements/wallet/receive/ecash/ReceiveCard.svelte';
 	import { t_ago, t_me } from '$lib/paraglide/messages';
-	import { keysStore } from '$lib/stores/persistent/keys';
-	import { messagesStore } from '$lib/stores/persistent/message';
 	import { now } from '$lib/stores/session/time';
 	import { getDecodedToken, type Proof } from '@cashu/cashu-ts';
 	import { formatDistance } from 'date-fns';
 	import { nip19 } from 'nostr-tools';
 	import { onMount } from 'svelte';
 
-	let { message, alias }: { message: Message; alias?: string } = $props();
+	let { message, alias }: { message: types.Message; alias?: string } = $props();
 
 	let decoded:
 		| {

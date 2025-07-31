@@ -1,5 +1,5 @@
 <script>
-	import { keysStore } from '$lib/stores/persistent/keys';
+	import { keysStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import KeysList from '../wallet/keys/KeysList.svelte';
 	import Address from './Address.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';

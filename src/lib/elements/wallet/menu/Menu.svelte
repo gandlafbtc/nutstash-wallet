@@ -1,56 +1,32 @@
 <script lang="ts">
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import DarkModeSetting from '$lib/elements/settings/DarkModeSetting.svelte';
-	import { mints } from '$lib/stores/persistent/mints';
 	import { version } from '$lib/stores/static/version';
 	import {
 		AlertCircle,
-		ShieldCheck,
-		ArrowLeftRight,
-		Delete,
-		CreditCard,
-		ReceiptText,
-		House,
-		Bitcoin,
-		Coins,
 		Contact,
 		Database,
 		Heart,
-		History,
-		Key,
 		Landmark,
 		LifeBuoy,
 		LoaderCircle,
-		Megaphone,
-		Network,
 		Plus,
-		Save,
 		Send,
 		Settings,
-		Trash,
 		X,
 		Wallet,
 		ExternalLink,
-		Scan,
-		QrCode,
 		MessageCircleMore,
-		RefreshCcw,
-		Unplug,
 		FileQuestion,
-		Skull,
-		Tally5,
-		Import,
 		User,
 		NetworkIcon
 	} from 'lucide-svelte';
 	import MintMenuIetm from './MintMenuIetm.svelte';
 	import { toast } from 'svelte-sonner';
-	import { reconnect } from '$lib/actions/nostr';
-	import { messagesStore } from '$lib/stores/persistent/message';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { messagesStore, mintsStore as mints, } from '@gandlaf21/cashu-wallet-engine/stores';
 	import { push } from 'svelte-spa-router';
 	import { onMount } from 'svelte';
-	import { ensureError } from '$lib/helpers/errors';
-	import { get } from 'svelte/store';
 	import {
 		add_mint,
 		mint_added,

@@ -4,7 +4,7 @@
 	import { toast } from 'svelte-sonner';
 	import { push } from 'svelte-spa-router';
 	// import { isAvailable, record, textRecord, scan } from '@tauri-apps/plugin-nfc';
-	import { ensureError } from '$lib/helpers/errors';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		cashu_token_scanned,
 		error_reading_from_tag,

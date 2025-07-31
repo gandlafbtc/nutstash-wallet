@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { MediaQuery } from 'runed';
 	import * as Pagination from '$lib/components/ui/pagination';
-	import { transactionsStore } from '$lib/stores/persistent/transactions';
+	import { transactionsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import TransactionListItem from './TransactionListItem.svelte';
 	import { ecash_transactions, nothing_here_yet } from '$lib/paraglide/messages';
 

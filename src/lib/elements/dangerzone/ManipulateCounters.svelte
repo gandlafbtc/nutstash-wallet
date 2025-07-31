@@ -1,14 +1,15 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { KeysetCount } from '$lib/db/models/types';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
+	import { countsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	
 	import {
 		manipulating_counters_can_mess_up_restore_process,
 		t_warning
 	} from '$lib/paraglide/messages';
-	import { countsStore } from '$lib/stores/persistent/counts';
 	import NumberFlow from '@number-flow/svelte';
 
-	const updateCount = async (count: KeysetCount, incr: number) => {
+	const updateCount = async (count: types.KeysetCount, incr: number) => {
 		await countsStore.addOrUpdate(
 			count.keysetId,
 			{ keysetId: count.keysetId, count: count.count + incr },

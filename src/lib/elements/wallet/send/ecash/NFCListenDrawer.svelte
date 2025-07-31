@@ -3,18 +3,18 @@
 
 	import * as Drawer from '$lib/components/ui/drawer/';
 	import { approach_nfc_tag_to_read_it, reading_nfc_tag, t_close } from '$lib/paraglide/messages';
+	import { openScanNFCDrawer } from '$lib/stores/session/drawer';
 	import NfcListener from './NFCListener.svelte';
 
-	let { isOpen = $bindable() }: { isOpen: boolean } = $props();
 </script>
 
-<Drawer.Root bind:open={isOpen} nested={true}>
+<Drawer.Root open={$openScanNFCDrawer} onOpenChange={(open) => openScanNFCDrawer.set(open)}>
 	<Drawer.Content>
 		<Drawer.Header class="flex flex-col items-center justify-center gap-3 text-center">
 			<Drawer.Title>{reading_nfc_tag()}</Drawer.Title>
 			<Drawer.Description>{approach_nfc_tag_to_read_it()}</Drawer.Description>
 		</Drawer.Header>
-		{#if isOpen}
+		{#if $openScanNFCDrawer}
 			<!-- content here -->
 			<NfcListener></NfcListener>
 		{/if}

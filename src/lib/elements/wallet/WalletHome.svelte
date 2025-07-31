@@ -1,23 +1,20 @@
 <script lang="ts">
-	import { getUnitSymbol } from '$lib/util/walletUtils';
 	import { Download, QrCode, Upload } from 'lucide-svelte';
-	import { selectedMint } from '$lib/stores/local/selectedMints';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { getByMany } from '$lib/stores/persistent/helper/storeHelper';
+	import { settingsStore as settings, getByMany, mintsStore  as mints, proofsStore, selectedMint, settingsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { formatAmount, getUnitSymbol } from '@gandlaf21/cashu-wallet-engine/util';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { openReceiveDrawer, openScannerDrawer, openSendDrawer } from '$lib/stores/session/drawer';
 	import CompactHistory from '../data/history/CompactHistory.svelte';
 	import NumberFlow, { type Format } from '@number-flow/svelte';
-	import { css, getDivider } from '$lib/util/utils';
+	import { css, getDivider } from '$lib/utils';
 	import QuickPaste from './QuickPaste.svelte';
-	import NfcListenerButton from './send/ecash/NFCListenerButton.svelte';
 	import isTauri from '$lib/tauri/deviceHelper';
 	import { untrack } from 'svelte';
 	import MintCarousel from '../mint/mintDropdown/MintCarousel.svelte';
-	import { settings } from '$lib/stores/persistent/settings';
 	import UnitSelectorScroll from '../ui/UnitSelectorScroll.svelte';
 	import { t_receive, t_send } from '$lib/paraglide/messages';
+	import { getConversionRate } from '@gandlaf21/cashu-wallet-engine';
+	import { fade } from 'svelte/transition';
 
 	let currentUnit = $state('sat');
 
@@ -92,12 +89,7 @@
 	<div>
 		<MintCarousel></MintCarousel>
 	</div>
-	<div>
-		<!-- todo fix this later -->
-		{#if !isTauri}
-			<NfcListenerButton></NfcListenerButton>
-		{/if}
-	</div>
+
 	<div class="flex w-full items-center justify-between gap-2">
 		<p class="flex-grow text-4xl">
 			{getUnitSymbol(currentUnit, false)}
@@ -119,7 +111,26 @@
 		<!-- <UnitSelector bind:currentUnit selectedMints={activeMints}></UnitSelector> -->
 		<UnitSelectorScroll bind:currentUnit selectedMints={activeMints}></UnitSelectorScroll>
 	</div>
+	<div>
+		{#if currentUnit === 'sat' && $settingsStore[0].currency.useConversion}
+			<div class="flex flex-col items-center justify-center text-muted-foreground">
+				{#await getConversionRate()}
+					<span> ... </span>
+				{:then rate}
 
+					<span transition:fade>
+						
+						~{formatAmount(
+							(amount ?? 0) * (rate / 1000000),
+							$settingsStore[0].currency.conversionUnit
+						)}
+					</span>
+				{:catch error}
+					<span class="text-destructive-foreground"> could not load conversion rate </span>
+				{/await}
+			</div>
+		{/if}
+	</div>
 	<ScrollArea
 		class="relative mb-20 flex h-full w-80 flex-col gap-5 overflow-y-hidden from-background before:pointer-events-none
   before:absolute before:bottom-0 before:top-0 before:z-10 before:h-10  before:w-full before:bg-gradient-to-b

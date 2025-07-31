@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { checkProofs } from '$lib/actions/actions';
+	import { checkProofs, ensureError } from '@gandlaf21/cashu-wallet-engine';
+	import { mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getMintForKeysetId } from '@gandlaf21/cashu-wallet-engine/util';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { ensureError } from '$lib/helpers/errors';
-	import { mints } from '$lib/stores/persistent/mints';
-	import { getMintForKeysetId } from '$lib/util/walletUtils';
 	import type { Proof } from '@cashu/cashu-ts';
 	import { LoaderCircle } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
@@ -62,7 +61,7 @@
 				</p>
 			</div>
 			<Checkbox
-				disabled={isChecking}
+				disabled={true}
 				id="terms"
 				bind:checked={proof.isSelected}
 				aria-labelledby="terms-label"

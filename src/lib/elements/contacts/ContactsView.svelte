@@ -3,9 +3,9 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { Download } from 'lucide-svelte';
-	import { contactsStore } from '$lib/stores/persistent/contacts';
+	import { discoverContacts } from '@gandlaf21/cashu-wallet-engine';
+	import { contactsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import Contact from './Contact.svelte';
-	import { discoverContacts } from '$lib/actions/nostr';
 	import { push } from 'svelte-spa-router';
 	import { toast } from 'svelte-sonner';
 	import {

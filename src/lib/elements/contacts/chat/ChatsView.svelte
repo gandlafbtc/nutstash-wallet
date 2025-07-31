@@ -1,15 +1,16 @@
 <script lang="ts">
-	import type { Message } from '$lib/db/models/types';
-
-	import { messagesStore } from '$lib/stores/persistent/message';
-	import { keysStore } from '$lib/stores/persistent/keys';
+	import { keysStore, messagesStore,} from '@gandlaf21/cashu-wallet-engine/stores';
+	import { types } from '@gandlaf21/cashu-wallet-engine';
 	import RecentChat from './RecentChat.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { t_chats, t_new_chat } from '$lib/paraglide/messages';
 
 	const getLatestMessages = () => {
-		const latestMap: Map<string, Message> = new Map();
+		const latestMap: Map<string, types.Message> = new Map();
 		for (const message of $messagesStore) {
+			if (!message.tags) {
+				continue
+			}
 			if (latestMap.has(message.tags[0][1])) {
 				if (message.created_at > (latestMap.get(message.tags[0][1])?.created_at ?? 0)) {
 					latestMap.set(message.tags[0][1], message);

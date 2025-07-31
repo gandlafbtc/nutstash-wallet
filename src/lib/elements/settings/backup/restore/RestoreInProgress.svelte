@@ -1,22 +1,17 @@
 <script lang="ts">
-	import { mints } from '$lib/stores/persistent/mints';
+	import { proofsStore, mintsStore as mints,
+ } from '@gandlaf21/cashu-wallet-engine/stores';
+ import { getAmountForTokenSet,getUnitForKeysetId } from "@gandlaf21/cashu-wallet-engine/util";
 	import { onDestroy, onMount } from 'svelte';
 	import { Coins, Landmark, LoaderCircle } from 'lucide-svelte';
 	import Progress from '$lib/components/ui/progress/progress.svelte';
 	import RestoreMint from './RestoreMint.svelte';
 	import NumberFlow from '@number-flow/svelte';
 	import { restoredProofs } from '$lib/stores/session/restoredproofs';
-	import {
-		getAmountForTokenSet,
-		getUnitForKeysetId,
-		getUnitsForMints,
-		getUnitSymbol
-	} from '$lib/util/walletUtils';
 	import type { Proof } from '@cashu/cashu-ts';
 	import UnitDisplay from './UnitDisplay.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Divider from '$lib/elements/ui/Divider.svelte';
-	import { proofsStore } from '$lib/stores/persistent/proofs';
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { push } from 'svelte-spa-router';
@@ -51,7 +46,6 @@
 	};
 
 	let restoredUnits = $derived(getUnitProofs($restoredProofs));
-	$inspect(restoredUnits);
 	const restores: (() => Promise<void>)[] = [];
 	let mintsRestored = $state(0);
 	let progress = $state(0);

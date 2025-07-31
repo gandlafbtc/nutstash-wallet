@@ -8,7 +8,7 @@
 		unclaimed_ecash_will_be_added_back,
 		warning_you_should_only_check_active_proofs_when
 	} from '$lib/paraglide/messages';
-	import { pendingProofsStore, proofsStore } from '$lib/stores/persistent/proofs';
+	import { pendingProofsStore, proofsStore } from '@gandlaf21/cashu-wallet-engine/stores';
 	import CheckProofSelector from './CheckProofSelector.svelte';
 </script>
 

@@ -1,6 +1,7 @@
 <script>
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { ensureError } from '$lib/helpers/errors';
+	import { mintsStore as mints } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { ensureError } from '@gandlaf21/cashu-wallet-engine';
 	import {
 		error_updating_mint,
 		make_default,
@@ -9,7 +10,6 @@
 		t_update,
 		updating_mint
 	} from '$lib/paraglide/messages';
-	import { mints } from '$lib/stores/persistent/mints';
 	import { Landmark, Loader, Trash } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	let { mint } = $props();
@@ -20,7 +20,10 @@
 			isLoading = true;
 			toast.promise(mints.fetchMint(mint.url), {
 				loading: updating_mint(),
-				success: mint_updated()
+				success: mint_updated(),
+				error: (e)=> {
+					return e.message
+				}
 			});
 		} catch (error) {
 			console.error(error);

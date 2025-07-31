@@ -1,14 +1,13 @@
 <script lang="ts">
-	import type { Message } from '$lib/db/models/types';
+	import { getBy, contactsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { types} from '@gandlaf21/cashu-wallet-engine';
 	import { nip19 } from 'nostr-tools';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { getBy } from '$lib/stores/persistent/helper/storeHelper';
-	import { contactsStore } from '$lib/stores/persistent/contacts';
 	import { formatDistance } from 'date-fns';
 	import { now } from '$lib/stores/session/time';
 	import { t_ago } from '$lib/paraglide/messages';
 
-	let { message }: { message: [key: string, value: Message] } = $props();
+	let { message }: { message: [key: string, value: types.Message] } = $props();
 
 	let npub = $derived(nip19.npubEncode(message[0]));
 	let alias = $derived(getBy($contactsStore, npub, 'npub')?.alias ?? '?');

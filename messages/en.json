@@ -403,5 +403,15 @@
 	"to_use_the_wallet_add_mint": "To use the wallet, add a mint.",
 	"no_known_action_for_pasted": "No known action available for pasted informaion",
 	"paste_from_clipboard": "Paste something from clipboard...",
-	"all_mints": "All Mints"
+	"all_mints": "All Mints",
+	"create_lightning_invoice": "Create a Lightning invoice for someone to pay",
+	"receive_cashu_ecash": "Receive a Cashu ecash token",
+	"paste_token_placeholder": "Paste a token - cashuA... cashuB... 🥜",
+	"scan_qr": "Scan QR",
+	"scan_qr_description": "Scan a QR code containing a Cashu token",
+	"listen_ultrasound": "Listen ultrasound",
+	"listen_ultrasound_description": "Receive tokens via ultrasonic data transmission",
+	"read_nfc_tag": "Read NFC tag",
+	"read_nfc_tag_description": "Scan an NFC tag containing a Cashu token",
+	"create_cashu_invoice_description": "Create a Cashu invoice that can be paid with ecash"
 }

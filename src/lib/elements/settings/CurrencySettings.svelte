@@ -1,8 +1,10 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
 	import { currency_settings, preffered_currency, t_units } from '$lib/paraglide/messages';
-	import { unit } from '$lib/stores/persistent/settings';
-	import { getUnitSymbol } from '$lib/util/walletUtils';
+	import { settingsStore, unit } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { getUnitSymbol } from '@gandlaf21/cashu-wallet-engine/util';
+	import UseConversionSetting from './settingsElements/UseConversionSetting.svelte';
+	import ConversionUnitSetting from './settingsElements/ConversionUnitSetting.svelte';
 
 	const units = ['sat', 'msat', 'btc', 'usd', 'eur', 'gbp', 'cad', 'aud', 'jpy', 'krw'];
 
@@ -15,10 +17,10 @@
 	<div>
 		<span class="text-lg font-bold"> {currency_settings()} </span>
 	</div>
-	<div class="flex w-80 flex-col gap-1 xl:w-[600px]">
-		<span class="text-sm">{preffered_currency()}: </span>
+	<div class="flex gap-10 items-center">
+		<span class="text-sm w-full">{preffered_currency()}</span>
 		<Select.Root type="single" name="unit" value={$unit} {onValueChange} allowDeselect={false}>
-			<Select.Trigger class="w-80 xl:w-[600px]">
+			<Select.Trigger>
 				<div class="flex-grow">
 					{getUnitSymbol($unit)}
 				</div>
@@ -33,4 +35,10 @@
 			</Select.Content>
 		</Select.Root>
 	</div>
+	<div>
+		<UseConversionSetting></UseConversionSetting>
+	</div>
+	{#if $settingsStore[0].currency.useConversion}
+		<ConversionUnitSetting></ConversionUnitSetting>
+	{/if}
 </div>
