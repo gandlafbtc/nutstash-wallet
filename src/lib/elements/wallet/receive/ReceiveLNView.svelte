@@ -84,10 +84,11 @@
     }
 } />
 <div class="flex flex-col gap-2 p-2">
+    <p class="flex gap-1 font-bold text-lg items-center pb-5">
+        <Zap class=' w-6 h-6 text-yellow-500'></Zap>
+        {receive_via_lightning()}
+    </p>
     <div class="w-80 xl:w-[600px] gap-2 flex">
-        <p>
-            {receive_via_lightning()}
-        </p>
         <MintSelector bind:mint></MintSelector>
         <UnitSelector bind:currentUnit selectedMints={[mint
         ]}></UnitSelector>
