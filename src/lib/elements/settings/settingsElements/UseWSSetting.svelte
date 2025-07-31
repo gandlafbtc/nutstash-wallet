@@ -14,8 +14,7 @@
 
 <div class="flex w-full items-center justify-between gap-2">
 	<div class="flex w-full items-center justify-between space-x-2">
-		<Label for="hide-balance">Use Websocket updates for mint quotes
-		</Label>
-		<Switch id="hide-balance" bind:checked={value} onclick={toggle} />
+		<Label for="use-ws-label">Use Websocket updates for mint quotes</Label>
+		<Switch id="use-ws-label" bind:checked={value} onclick={toggle} />
 	</div>
 </div>

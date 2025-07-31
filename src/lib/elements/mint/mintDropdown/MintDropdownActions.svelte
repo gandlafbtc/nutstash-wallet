@@ -20,7 +20,10 @@
 			isLoading = true;
 			toast.promise(mints.fetchMint(mint.url), {
 				loading: updating_mint(),
-				success: mint_updated()
+				success: mint_updated(),
+				error: (e)=> {
+					return e.message
+				}
 			});
 		} catch (error) {
 			console.error(error);

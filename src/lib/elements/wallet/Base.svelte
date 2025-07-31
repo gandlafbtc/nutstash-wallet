@@ -15,8 +15,11 @@
 	import { t_back, to_use_the_wallet_add_mint, welcome_to_nutstash } from '$lib/paraglide/messages';
 	import UpdatingMints from './menu/UpdatingMints.svelte';
 	import { openNpubDrawer } from '$lib/stores/session/drawer';
+	import OnboardingCreate from '../onboarding/OnboardingCreate.svelte';
 
 	let sidebar = $state('');
+
+	let settingsConfirmed = $state(false);
 
 	onMount(async () => {
 		setTimeout(async () => {}, 300);
@@ -78,15 +81,18 @@
 	{:else}
 		<OnboardingHeader hasBack={false}></OnboardingHeader>
 		<div class="flex h-screen w-full flex-col items-center justify-start gap-5 pt-32">
-			<p class="font-bold">{welcome_to_nutstash()}</p>
-
+		<OnboardingCreate bind:settingsConfirmed></OnboardingCreate>
+		{#if settingsConfirmed}
+		<p class="font-bold text-lg">
 			{to_use_the_wallet_add_mint()}
-			<div class="flex flex-col gap-1">
-				<AddMint></AddMint>
-			</div>
-			<div class="flex flex-col gap-1">
-				<DiscoverMints></DiscoverMints>
-			</div>
+		</p>
+		<div class="flex flex-col gap-1">
+			<AddMint></AddMint>
 		</div>
+		<div class="flex flex-col gap-1">
+			<DiscoverMints></DiscoverMints>
+		</div>
+		{/if}
+	</div>
 	{/if}
 </PasswordInput>

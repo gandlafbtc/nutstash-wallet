@@ -457,16 +457,18 @@
 								{/each}
 							</div>
 						{/if}
+						{#if $settingsStore[0].general.useMultinut}
 						<Button
-							variant="outline"
-							onclick={() => {
-								currentUnit = 'sat';
-								isOpen = true;
-							}}
+						variant="outline"
+						onclick={() => {
+							currentUnit = 'sat';
+							isOpen = true;
+						}}
 						>
-							<Plus></Plus>
-							Add another mint (experimental)
-						</Button>
+						<Plus></Plus>
+						Add another mint (experimental)
+					</Button>
+					{/if}
 						<div class="flex items-center justify-between rounded bg-muted/30 p-2">
 							<span class="text-sm text-muted-foreground">Available balance</span>
 							<span class="font-medium">

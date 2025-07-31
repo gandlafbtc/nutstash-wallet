@@ -14,8 +14,7 @@
 
 <div class="flex w-full items-center justify-between gap-2">
 	<div class="flex w-full items-center justify-between space-x-2">
-		<Label for="hide-balance">Auto check token state
-		</Label>
-		<Switch id="hide-balance" bind:checked={value} onclick={toggle} />
+		<Label for="auto-check-label">Auto check token state</Label>
+		<Switch id="auto-check-label" bind:checked={value} onclick={toggle} />
 	</div>
 </div>

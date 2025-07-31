@@ -15,7 +15,7 @@
 
 <div class="flex w-full items-center justify-between gap-2">
 	<div class="flex w-full items-center justify-between space-x-2">
-		<Label for="hide-balance">{auto_receive_from_trusted_mints()}</Label>
-		<Switch id="hide-balance" bind:checked={value} onclick={toggle} />
+		<Label for="auto-receive-label">{auto_receive_from_trusted_mints()}</Label>
+		<Switch id="auto-receive-label" bind:checked={value} onclick={toggle} />
 	</div>
 </div>

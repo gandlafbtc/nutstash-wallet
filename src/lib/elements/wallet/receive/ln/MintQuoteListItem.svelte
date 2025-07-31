@@ -3,7 +3,7 @@
 	import { formatAmount, formatSecToMinStr, getAmountForTokenSet, getWalletWithUnit } from '@gandlaf21/cashu-wallet-engine/util';
 	import { checkMintQuote, ensureError, mintProofs, types } from '@gandlaf21/cashu-wallet-engine';
 	import * as Card from '$lib/components/ui/card';
-	import { Copy, Banknote, CircleCheck, RefreshCcw } from 'lucide-svelte';
+	import { Copy, Banknote, CircleCheck, RefreshCcw, X } from 'lucide-svelte';
 	import { getHostFromUrl } from '$lib/utils';
 	import { decode } from '@gandlaf21/bolt11-decode';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
@@ -21,6 +21,7 @@
 	} from '$lib/paraglide/messages';
 	import { toast } from 'svelte-sonner';
 	import { countsStore, mintsStore, offlineProofsStore, proofsStore, pendingProofsStore, spentProofsStore } from '@gandlaf21/cashu-wallet-engine/stores';
+	import { fade, fly, scale } from 'svelte/transition';
 
 	let {
 		quote,
@@ -29,6 +30,8 @@
 		quote: types.StoredMintQuote;
 		isListView?: boolean;
 	} = $props();
+
+	let isoOverlayClosed = $state(false);
 
 	let isLoading = $state(false)
 
@@ -172,3 +175,37 @@
 		</div>
 	</Card.Footer>
 </Card.Root>
+
+{#if !isListView && quote?.state==="ISSUED" && !isoOverlayClosed}
+<!-- overlay -->
+<div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-70" transition:fade={{duration:100}}>
+	<div class="relative mx-4 h-screen w-screen rounded-lg bg-card p-6 shadow-lg flex flex-col justify-center">
+		<!-- Close button -->
+		<button 
+			class="absolute right-2 top-2 rounded-full p-1 hover:bg-muted" 
+			onclick={() => (isoOverlayClosed = true)}
+		>
+			<X class="h-6 w-6" />
+		</button>
+		
+		<!-- Success content -->
+		<div class="flex flex-col items-center justify-center space-y-4 pt-6">
+			<h2 class="text-2xl font-bold text-green-500">Payment Received!</h2>
+			<CircleCheck class="h-16 w-16 text-green-500" />
+			<p class="text-center text-green-500">
+				+ {formatAmount(quote.amount, quote.unit)} 
+			</p>
+		</div>
+		
+		<!-- Return to wallet button -->
+		<div class="mt-8 flex justify-center">
+			<Button href="/#/wallet/" variant="outline" class="px-8">
+				Return to Wallet
+			</Button>
+		</div>
+		<div class="h-64">
+
+		</div>
+	</div>
+</div>
+{/if}

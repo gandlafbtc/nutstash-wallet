@@ -24,7 +24,7 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import { getDecodedToken, getEncodedToken } from '@cashu/cashu-ts';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { HandCoins, Nfc, ScanQrCode, Send, SmartphoneNfc, Volume2 } from 'lucide-svelte';
+	import { Banknote, HandCoins, Nfc, ScanQrCode, Send, SmartphoneNfc, Volume2 } from 'lucide-svelte';
 	import { set } from 'date-fns';
 	import { isNfcSupported } from '$lib/stores/session/isNfc';
 
@@ -65,9 +65,12 @@
 </script>
 
 <div class="flex flex-col gap-5">
-	<p class="font-bold">
-		{receive_cashu_ecash()}
-	</p>
+
+	<div class="flex items-center gap-2 w-full">
+		<Banknote class="h-6 w-6 text-purple-500" />
+		<h2 class="text-xl font-bold w-full">{receive_cashu_ecash()}
+		</h2>
+	</div>
 	<Textarea
 		class="w-80 resize-none rounded-md border-dashed xl:w-[600px]"
 		inputmode="none"

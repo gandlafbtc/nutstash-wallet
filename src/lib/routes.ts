@@ -2,7 +2,6 @@ import Loading from './elements/base/Loading.svelte';
 import NotFound from './elements/base/NotFound.svelte';
 import MintView from './elements/mint/MintView.svelte';
 import Onboarding from './elements/onboarding/Onboarding.svelte';
-import OnboardingCreate from './elements/onboarding/OnboardingCreate.svelte';
 import OnboardingSelect from './elements/onboarding/OnboardingSelect.svelte';
 import RestoreFromFile from './elements/onboarding/RestoreFromFile.svelte';
 import RestoreFromSeed from './elements/onboarding/RestoreFromSeed.svelte';
@@ -57,6 +56,7 @@ import ReceiveEcashView from './elements/wallet/receive/ReceiveEcashView.svelte'
 import CreateCashuRequestView from './elements/wallet/receive/CreateCashuRequestView.svelte';
 import SendLnIvoiceView from './elements/wallet/send/ln/SendLNIvoiceView.svelte';
 import MultiNutView from './elements/wallet/send/ln/MultiNutView.svelte';
+import OnboardingShowSeed from './elements/onboarding/OnboardingShowSeed.svelte';
 
 export const routes = {
 	'/': Loading,
@@ -66,7 +66,7 @@ export const routes = {
 	'/onboarding/pass': OnboardingPass,
 	'/onboarding/select': OnboardingSelect,
 	'/onboarding/new/quick': OnboardingSelect,
-	'/onboarding/new/secure': OnboardingCreate,
+	'/onboarding/new/secure': OnboardingShowSeed,
 	'/onboarding/restore/seed': RestoreFromSeed,
 	'/onboarding/restore/file': RestoreFromFile,
 

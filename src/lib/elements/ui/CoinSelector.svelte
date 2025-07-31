@@ -42,17 +42,25 @@
 
 <div class="h-full w-full overflow-hidden p-4 bg-card rounded-lg">
     <div class="max-h-full overflow-y-auto pr-1">
+        {#if availableProofs.length}
+          
         <div class="grid grid-cols-3 gap-2 pb-1">
             {#each availableProofs as proof, i}
-                <Toggle 
-                variant="outline"
-                    class="h-12 w-full" 
-                    pressed={togglesPressed[i]} 
-                    onPressedChange={(isPressed) => handlePressed(proof, isPressed, i)}
-                >
-                    {proof.amount}
-                </Toggle>
-            {/each}
-        </div>
+            <Toggle 
+            variant="outline"
+            class="h-12 w-full" 
+            pressed={togglesPressed[i]} 
+            onPressedChange={(isPressed) => handlePressed(proof, isPressed, i)}
+            >
+            {proof.amount}
+        </Toggle>
+        {/each}
+    </div>
+    {:else}
+    <div class="w-full h-full flex items-center justify-center">
+
+        <p class="text-muted">No coins available. </p>
+    </div>
+    {/if}
     </div>
 </div>

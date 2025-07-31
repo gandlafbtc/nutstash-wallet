@@ -29,7 +29,13 @@
 		ExternalLink,
 		Coins,
 
-		Landmark
+		Landmark,
+
+		CircleCheck,
+
+		X
+
+
 
 	} from 'lucide-svelte';
 	import { decode } from '@gandlaf21/bolt11-decode';
@@ -50,6 +56,7 @@
 		t_payment,
 		t_pending
 	} from '$lib/paraglide/messages';
+	import { fade } from 'svelte/transition';
 
 	let {
 		quote,
@@ -60,6 +67,7 @@
 	} = $props();
 
 	let isLoading = $state(false);
+	let isoOverlayClosed = $state(false);
 
 	let mint = $derived(getBy($mints, quote.mintUrl, 'url'));
 	let unitProofs = $derived(mint ? getProofsOfMintUnit(mint, $proofsStore, quote.unit) : []);
@@ -276,3 +284,39 @@
 		</Card.Footer>
 	</Card.Root>
 </div>
+{#if !isListView && quote?.state==="PAID" && !isoOverlayClosed}
+<!-- overlay -->
+<div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-70" transition:fade={{duration:100}}>
+	<div class="relative mx-4 h-screen w-screen rounded-lg bg-card p-6 shadow-lg flex flex-col justify-center">
+		<!-- Close button -->
+		<button 
+			class="absolute right-2 top-2 rounded-full p-1 hover:bg-muted" 
+			onclick={() => (isoOverlayClosed = true)}
+		>
+			<X class="h-6 w-6" />
+		</button>
+		
+		<!-- Success content -->
+		<div class="flex flex-col items-center justify-center space-y-4 pt-6">
+			<h2 class="text-2xl font-bold text-green-500">Payment Sent!</h2>
+			<CircleCheck class="h-16 w-16 text-green-500" />
+			<p class="text-center text-red-500">
+				- {formatAmount(quote.amount, quote.unit)} 
+			</p>
+			<p class="text-xs text-center text-red-500">
+				fees {formatAmount(quote.fees??0, quote.unit)} 
+			</p>
+		</div>
+		
+		<!-- Return to wallet button -->
+		<div class="mt-8 flex justify-center">
+			<Button href="/#/wallet/" variant="outline" class="px-8">
+				Return to Wallet
+			</Button>
+		</div>
+		<div class="h-64">
+
+		</div>
+	</div>
+</div>
+{/if}

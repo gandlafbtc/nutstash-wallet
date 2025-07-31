@@ -182,9 +182,8 @@
 	<!-- Header -->
 	<div class="flex items-center gap-2 justify-between">
 		<div class="flex items-center gap-2 w-full">
-			<Banknote class="h-5 w-5 text-purple-500" />
+			<Banknote class="h-6 w-6 text-purple-500" />
 			<h2 class="text-xl font-bold w-full">Send Ecash</h2>
-			
 		</div>
 		<Tabs.Root bind:value={currentTab}>
 			<Tabs.List>
