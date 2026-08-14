@@ -1,3 +1,5 @@
+⚠️ NOTICE! Nutstash is currently unmaintained. For the time being, please consider using a different cashu wallet like https://cashu.me . 
+
 ⚠️ don't be reckless!
 This app is in early development and most likely buggy. It does handle real sats though, so be sure to use only amounts that are small enough to lose.
 
@@ -10,8 +12,8 @@ A multi platform cashu wallet
 To run the project for development, follow these steps:
 
 1. Clone this repository
-2. Install dependencies with `pnpm install`
-3. Run the app with `npm run dev`
+2. Install dependencies with `bun i`
+3. Run the app with `bun run dev`
 
 ### Translations
 

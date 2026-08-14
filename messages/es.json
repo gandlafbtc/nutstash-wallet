@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "Para usar el monedero, agrega un mint.",
 	"no_known_action_for_pasted": "No hay ninguna acción conocida para la información pegada",
 	"paste_from_clipboard": "Pega algo desde el portapapeles...",
-	"all_mints": "Todos los mints"
+	"all_mints": "Todos los mints",
+	"t_unmaintained_warning": "Nutstash no está siendo mantenido actualmente. Por el momento, considera usar otro monedero Cashu como cashu.me ."
 }

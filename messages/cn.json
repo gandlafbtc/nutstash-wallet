@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "要使用钱包，请添加一个 Mint。",
 	"no_known_action_for_pasted": "粘贴的内容没有已知操作",
 	"paste_from_clipboard": "从剪贴板粘贴...",
-	"all_mints": "所有 Mint"
+	"all_mints": "所有 Mint",
+	"t_unmaintained_warning": "Nutstash 目前已停止维护。在此期间，请考虑使用其他 Cashu 钱包，例如 cashu.me。"
 }

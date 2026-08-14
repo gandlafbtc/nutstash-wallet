@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "Чтобы использовать кошелек, добавьте Mint.",
 	"no_known_action_for_pasted": "Нет известных действий для вставленного содержимого",
 	"paste_from_clipboard": "Вставить из буфера обмена...",
-	"all_mints": "Все Mint"
+	"all_mints": "Все Mint",
+	"t_unmaintained_warning": "Nutstash в настоящее время не поддерживается. Пока рассмотрите возможность использования другого кошелька Cashu, например cashu.me ."
 }

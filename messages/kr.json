@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "지갑을 사용하려면 Mint를 추가하세요.",
 	"no_known_action_for_pasted": "붙여넣은 정보에 대한 알려진 작업이 없습니다",
 	"paste_from_clipboard": "클립보드에서 붙여넣기...",
-	"all_mints": "모든 Mint"
+	"all_mints": "모든 Mint",
+	"t_unmaintained_warning": "Nutstash는 현재 유지 관리되지 않습니다. 당분간 cashu.me와 같은 다른 Cashu 지갑을 사용하는 것을 고려해 주세요."
 }

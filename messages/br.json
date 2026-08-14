@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "Para usar a carteira, adicione um Mint.",
 	"no_known_action_for_pasted": "Nenhuma ação conhecida para o conteúdo colado",
 	"paste_from_clipboard": "Colar da área de transferência...",
-	"all_mints": "Todos os Mints"
+	"all_mints": "Todos os Mints",
+	"t_unmaintained_warning": "O Nutstash não está sendo mantido atualmente. Por enquanto, considere usar outra carteira Cashu, como o cashu.me ."
 }

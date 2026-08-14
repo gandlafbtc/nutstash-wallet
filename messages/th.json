@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "เพื่อใช้กระเป๋าเงิน ให้เพิ่ม Mint",
 	"no_known_action_for_pasted": "ไม่มีการดำเนินการที่รู้จักสำหรับเนื้อห���ที่วาง",
 	"paste_from_clipboard": "วางจากคลิปบอร์ด...",
-	"all_mints": "Mint ทั้งหมด"
+	"all_mints": "Mint ทั้งหมด",
+	"t_unmaintained_warning": "ขณะนี้ Nutstash ไม่ได้รับการดูแลรักษาแล้ว ในระหว่างนี้ โปรดพิจารณาใช้กระเป๋าเงิน Cashu อื่น เช่น cashu.me"
 }

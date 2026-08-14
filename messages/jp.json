@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "ウォレットを使用するにはミントを追加してください。",
 	"no_known_action_for_pasted": "貼り付けられた情報に対する既知のアクションはありません",
 	"paste_from_clipboard": "クリップボードから貼り付け...",
-	"all_mints": "すべてのミント"
+	"all_mints": "すべてのミント",
+	"t_unmaintained_warning": "Nutstashは現在メンテナンスされていません。当面の間、cashu.meなど別のCashuウォレットのご利用をご検討ください。"
 }

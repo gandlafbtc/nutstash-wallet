@@ -413,5 +413,6 @@
 	"listen_ultrasound_description": "Receive tokens via ultrasonic data transmission",
 	"read_nfc_tag": "Read NFC tag",
 	"read_nfc_tag_description": "Scan an NFC tag containing a Cashu token",
-	"create_cashu_invoice_description": "Create a Cashu invoice that can be paid with ecash"
+	"create_cashu_invoice_description": "Create a Cashu invoice that can be paid with ecash",
+	"t_unmaintained_warning": "Nutstash is currently unmaintained. For the time being, please consider using a different cashu wallet like cashu.me ."
 }

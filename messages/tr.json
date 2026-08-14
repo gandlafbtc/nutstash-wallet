@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "Cüzdanı kullanmak için bir Mint ekleyin.",
 	"no_known_action_for_pasted": "Yapıştırılan içerik için bilinen bir işlem yok",
 	"paste_from_clipboard": "Panodan yapıştır...",
-	"all_mints": "Tüm Mint'ler"
+	"all_mints": "Tüm Mint'ler",
+	"t_unmaintained_warning": "Nutstash şu anda bakımı yapılmıyor. Bu süre zarfında cashu.me gibi başka bir Cashu cüzdanı kullanmayı düşünün."
 }

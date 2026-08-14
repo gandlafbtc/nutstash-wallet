@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "Um das Wallet zu verwenden, fügen Sie einen Mint hinzu.",
 	"no_known_action_for_pasted": "Keine bekannte Aktion für eingefügte Informationen",
 	"paste_from_clipboard": "Etwas aus der Zwischenablage einfügen...",
-	"all_mints": "Alle Mints"
+	"all_mints": "Alle Mints",
+	"t_unmaintained_warning": "Nutstash wird derzeit nicht mehr gewartet. Bitte erwägen Sie vorübergehend die Verwendung eines anderen Cashu-Wallets wie cashu.me ."
 }

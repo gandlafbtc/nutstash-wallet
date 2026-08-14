@@ -403,5 +403,6 @@
 	"to_use_the_wallet_add_mint": "Pour utiliser le portefeuille, ajoutez un mint.",
 	"no_known_action_for_pasted": "Aucune action connue pour les informations collées",
 	"paste_from_clipboard": "Collez quelque chose depuis le presse-papiers...",
-	"all_mints": "Tous les mints"
+	"all_mints": "Tous les mints",
+	"t_unmaintained_warning": "Nutstash n'est actuellement plus maintenu. En attendant, envisagez d'utiliser un autre portefeuille Cashu comme cashu.me ."
 }
